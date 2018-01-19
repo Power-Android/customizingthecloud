@@ -19,7 +19,7 @@ public class ShopFragment extends BaseFragment {
     }
 
     @Override
-    protected void initData() {
+    protected void initLazyData() {
 
     }
 }

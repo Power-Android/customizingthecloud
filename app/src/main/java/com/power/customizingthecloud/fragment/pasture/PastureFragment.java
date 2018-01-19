@@ -19,7 +19,7 @@ public class PastureFragment extends BaseFragment {
     }
 
     @Override
-    protected void initData() {
+    protected void initLazyData() {
 
     }
 }

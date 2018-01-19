@@ -55,10 +55,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
         super.setContentView(layoutResID);
-        initView();
     }
-
-    protected abstract void initView();
 
     /** 子类可以重写改变状态栏颜色 */
     protected int setStatusBarColor() {

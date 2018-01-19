@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseFragment;
 
 /**
@@ -15,11 +16,12 @@ import com.power.customizingthecloud.base.BaseFragment;
 public class MineFragment extends BaseFragment {
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return null;
+        View view = View.inflate(mContext, R.layout.fragment_mine, null);
+        return view;
     }
 
     @Override
-    protected void initData() {
+    protected void initLazyData() {
 
     }
 }

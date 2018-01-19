@@ -24,9 +24,6 @@ import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity {
 
-    @BindView(R.id.title_message_iv) ImageView titleMessageIv;
-    @BindView(R.id.title_content_tv) TextView titleContentTv;
-    @BindView(R.id.title_sign_in_iv) ImageView titleSignInIv;
     @BindView(R.id.fl_content) FrameLayout flContent;
     @BindView(R.id.iv_home) ImageView ivHome;
     @BindView(R.id.tv_home) TextView tvHome;
@@ -60,14 +57,13 @@ public class MainActivity extends BaseActivity {
         addFragments(homeFragment);
     }
 
-    @Override
-    protected void initView() {
+    /*private void initView() {
         titleMessageIv.setVisibility(View.VISIBLE);
         titleContentTv.setText("养驴啦");
         titleSignInIv.setVisibility(View.VISIBLE);
-    }
+    }*/
 
-    @OnClick(R.id.title_message_iv)
+    /*@OnClick(R.id.title_message_iv)
     public void titleMessage(){
         TUtils.showShort(mContext,"点击了---消息");
     }
@@ -75,7 +71,7 @@ public class MainActivity extends BaseActivity {
     @OnClick(R.id.title_sign_in_iv)
     public void titleSignIn(){
         TUtils.showShort(mContext,"点击了---签到");
-    }
+    }*/
 
     private void addFragments(BaseFragment f) {
         // 第一步：得到fragment管理类

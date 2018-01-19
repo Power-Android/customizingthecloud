@@ -103,12 +103,12 @@ public abstract class BaseFragment extends Fragment {
             return;
         }
         isFirstLoad = false;
-        initData();
+        initLazyData();
     }
 
     protected abstract View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
 
-    protected abstract void initData();
+    protected abstract void initLazyData();
 
     public String getTitle() {
         return TextUtils.isEmpty(fragmentTitle) ? "" : fragmentTitle;

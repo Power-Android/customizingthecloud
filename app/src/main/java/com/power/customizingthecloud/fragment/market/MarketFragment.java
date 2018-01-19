@@ -19,7 +19,7 @@ public class MarketFragment extends BaseFragment {
     }
 
     @Override
-    protected void initData() {
+    protected void initLazyData() {
 
     }
 }
