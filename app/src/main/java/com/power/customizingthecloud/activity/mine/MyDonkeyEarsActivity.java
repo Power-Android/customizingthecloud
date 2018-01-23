@@ -25,7 +25,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MyDonkeyEarsActivity extends BaseActivity implements View.OnClickListener {
+public class MyDonkeyEarsActivity extends BaseActivity implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener {
 
     @BindView(R.id.title_back_iv)
     ImageView titleBackIv;
@@ -70,18 +70,9 @@ public class MyDonkeyEarsActivity extends BaseActivity implements View.OnClickLi
         adapter = new DonkeyEarsAdapter(R.layout.item_donkey_ears, list);
         initHead();
         recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, final int position) {
-                TUtils.showShort(mContext,"点击了---item"+position);
-            }
-        });
-        adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                TUtils.showShort(mContext,"点击了---立即抢购"+position);
-            }
-        });
+
+        adapter.setOnItemClickListener(this);
+        adapter.setOnItemChildClickListener(this);
     }
 
     private void initHead() {
@@ -94,6 +85,16 @@ public class MyDonkeyEarsActivity extends BaseActivity implements View.OnClickLi
         gonglueRl.setOnClickListener(this);
         guizeLl.setOnClickListener(this);
         adapter.addHeaderView(headerTop);
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        TUtils.showShort(mContext,"点击了---item"+position);
+    }
+
+    @Override
+    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+        TUtils.showShort(mContext,"点击了---立即抢购"+position);
     }
 
     private class DonkeyEarsAdapter extends BaseQuickAdapter<DonkeyEarsBean, BaseViewHolder> {

@@ -29,7 +29,8 @@
 
         <activity android:name=".activity.mine.EditInfoActivity" />
         <activity android:name=".activity.mine.MyDonkeyEarsActivity" />
-        <activity android:name=".activity.mine.FortuneCenterAcitivity"></activity>
+        <activity android:name=".activity.mine.FortuneCenterAcitivity" />
+        <activity android:name=".activity.mine.MyFootprintActivity"></activity>
     </application>
 
 </manifest>
