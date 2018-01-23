@@ -57,22 +57,6 @@ public class MainActivity extends BaseActivity {
         addFragments(homeFragment);
     }
 
-    /*private void initView() {
-        titleMessageIv.setVisibility(View.VISIBLE);
-        titleContentTv.setText("养驴啦");
-        titleSignInIv.setVisibility(View.VISIBLE);
-    }*/
-
-    /*@OnClick(R.id.title_message_iv)
-    public void titleMessage(){
-        TUtils.showShort(mContext,"点击了---消息");
-    }
-
-    @OnClick(R.id.title_sign_in_iv)
-    public void titleSignIn(){
-        TUtils.showShort(mContext,"点击了---签到");
-    }*/
-
     private void addFragments(BaseFragment f) {
         // 第一步：得到fragment管理类
         FragmentManager manager = getSupportFragmentManager();

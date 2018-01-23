@@ -27,7 +27,8 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".activity.mine.EditInfoActivity"></activity>
+        <activity android:name=".activity.mine.EditInfoActivity" />
+        <activity android:name=".activity.mine.MyDonkeyEarsActivity"></activity>
     </application>
 
 </manifest>

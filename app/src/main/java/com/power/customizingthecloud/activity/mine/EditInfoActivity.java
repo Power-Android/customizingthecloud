@@ -90,6 +90,7 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
             case R.id.title_content_right_tv:
+                finish();
                 break;
             case R.id.edit_face_rl:
                 cameraList = new ArrayList<>();
