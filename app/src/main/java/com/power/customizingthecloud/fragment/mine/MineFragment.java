@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.EditInfoActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.view.CircleImageView;
 
@@ -87,8 +89,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         mineKefuRl.setOnClickListener(this);
     }
 
-
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -103,6 +103,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case R.id.title_setting_iv://设置
                 break;
             case R.id.mine_face_iv://头像
+                startActivity(new Intent(mContext,EditInfoActivity.class));
                 break;
             case R.id.mine_sign_tv://签到有礼
                 break;

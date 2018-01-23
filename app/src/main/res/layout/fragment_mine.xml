@@ -28,6 +28,7 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_centerHorizontal="true"
+                    android:src="@drawable/face"
                     android:layout_marginTop="24dp"/>
                 <TextView
                     android:id="@+id/mine_name_tv"
