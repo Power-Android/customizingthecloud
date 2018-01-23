@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.EditInfoActivity;
+import com.power.customizingthecloud.activity.mine.FortuneCenterAcitivity;
 import com.power.customizingthecloud.activity.mine.MyDonkeyEarsActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.view.CircleImageView;
@@ -111,13 +112,15 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.mine_shop_cart_ll://购物车
                 break;
-            case R.id.mine_lv_quan_ll://驴圈
+            case R.id.mine_lv_quan_ll://驴圈---财富中心
+                startActivity(new Intent(mContext,FortuneCenterAcitivity.class));
                 break;
             case R.id.mine_zu_ji_ll://足迹
                 break;
             case R.id.mine_lingxianjin_tv://领现金
                 break;
             case R.id.mine_lverduo_ll://驴耳朵
+                startActivity(new Intent(mContext, MyDonkeyEarsActivity.class));
                 break;
             case R.id.mine_daijinquan_ll://代金券
                 break;
