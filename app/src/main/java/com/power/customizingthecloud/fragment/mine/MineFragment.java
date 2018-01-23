@@ -15,6 +15,7 @@ import com.power.customizingthecloud.activity.mine.EditInfoActivity;
 import com.power.customizingthecloud.activity.mine.FortuneCenterAcitivity;
 import com.power.customizingthecloud.activity.mine.MyDonkeyEarsActivity;
 import com.power.customizingthecloud.activity.mine.MyFootprintActivity;
+import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.view.CircleImageView;
 
@@ -112,6 +113,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, MyDonkeyEarsActivity.class));
                 break;
             case R.id.mine_shop_cart_ll://购物车
+                startActivity(new Intent(mContext, ShopCartActivity.class));
                 break;
             case R.id.mine_lv_quan_ll://驴圈---财富中心
                 startActivity(new Intent(mContext,FortuneCenterAcitivity.class));
