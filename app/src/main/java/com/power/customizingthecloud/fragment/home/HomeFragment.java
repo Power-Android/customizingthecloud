@@ -1,14 +1,17 @@
 package com.power.customizingthecloud.fragment.home;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -81,6 +84,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private List<Integer> topPicList = new ArrayList<>();
     private TopAdapter mTopAdapter;
     private MiddleAdapter mMiddleAdapter;
+    private JianKongAdapter mJianKongAdapter;
+    private GoodAdapter mGoodAdapter;
+    private MiaoshaAdapter mMiaoshaAdapter;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -132,9 +138,26 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         List<String> list = new ArrayList<>();
         list.add("");
         list.add("");
-        list.add("");
+        mRecyclerMiddle.setNestedScrollingEnabled(false);
+        mRecyclerMiddle.setLayoutManager(new LinearLayoutManager(mContext));
         mMiddleAdapter = new MiddleAdapter(R.layout.home_middle, list);
         mRecyclerMiddle.setAdapter(mMiddleAdapter);
+        List<String> list2 = new ArrayList<>();
+        list2.add("运动一区");
+        list2.add("运动二区");
+        list2.add("饲养区");
+        mJianKongAdapter = new JianKongAdapter(R.layout.item_home_jiankong, list2);
+        mRecyclerJiankong.setLayoutManager(new GridLayoutManager(mContext, 3));
+        mRecyclerJiankong.setNestedScrollingEnabled(false);
+        mRecyclerJiankong.setAdapter(mJianKongAdapter);
+        mGoodAdapter = new GoodAdapter(R.layout.item_home_comment, list);
+        mRecyclerGood.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerGood.setNestedScrollingEnabled(false);
+        mRecyclerGood.setAdapter(mGoodAdapter);
+        mRecyclerMiaosha.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerMiaosha.setNestedScrollingEnabled(false);
+        mMiaoshaAdapter = new MiaoshaAdapter(R.layout.item_home_miaosha,list);
+        mRecyclerMiaosha.setAdapter(mMiaoshaAdapter);
     }
 
     @Override
@@ -169,6 +192,44 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         }
     }
 
+    private class JianKongAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+
+        public JianKongAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+            super(layoutResId, data);
+        }
+
+        @Override
+        protected void convert(BaseViewHolder helper, String item) {
+            helper.setText(R.id.tv_jiankong, item);
+        }
+    }
+
+    private class MiaoshaAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+
+        public MiaoshaAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+            super(layoutResId, data);
+        }
+
+        @Override
+        protected void convert(BaseViewHolder helper, String item) {
+            TextView tv_yuanjia = helper.getView(R.id.tv_yuanjia);
+            //添加删除线
+            tv_yuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        }
+    }
+
+    private class GoodAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+
+        public GoodAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+            super(layoutResId, data);
+        }
+
+        @Override
+        protected void convert(BaseViewHolder helper, String item) {
+
+        }
+    }
+
     private class MiddleAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
 
         public MiddleAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
@@ -177,6 +238,20 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
+            ProgressBar progressBar = helper.getView(R.id.progressBar);
+            TextView tv_shengyu = helper.getView(R.id.tv_shengyu);
+            TextView tv_state = helper.getView(R.id.tv_state);
+            if (helper.getAdapterPosition() == 1) {
+                helper.setVisible(R.id.view_line, false);
+                progressBar.setProgress(80);
+                tv_shengyu.setText("剩余数量：6头");
+                tv_shengyu.setTextColor(getResources().getColor(R.color.red1));
+                tv_state.setText("进行中");
+                tv_state.setBackgroundColor(getResources().getColor(R.color.red1));
+            } else {
+                helper.setVisible(R.id.view_line, true);
+            }
+
         }
     }
 
