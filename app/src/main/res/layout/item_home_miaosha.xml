@@ -93,7 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="距结束："
-                    android:textSize="15sp"
+                    android:textSize="14sp"
                 />
                 <cn.iwgang.countdownview.CountdownView
                     android:id="@+id/cv_countdownView"
@@ -108,7 +108,7 @@
                     app:isShowSecond="true"
                     app:suffixGravity="center"
                     app:suffixTextColor="#000000"
-                    app:suffixTextSize="30sp"
+                    app:suffixTextSize="14sp"
                     app:timeBgDivisionLineSize="1dp"
                     app:timeBgRadius="5dp"
                     app:timeBgSize="20dp"
