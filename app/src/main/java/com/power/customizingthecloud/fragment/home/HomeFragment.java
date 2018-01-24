@@ -129,11 +129,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mTitleMessageIv.setOnClickListener(this);
         mTitleSignInIv.setVisibility(View.VISIBLE);
         mTitleSignInIv.setOnClickListener(this);
-        List<String> list=new ArrayList<>();
+        List<String> list = new ArrayList<>();
         list.add("");
         list.add("");
         list.add("");
-        mMiddleAdapter=new MiddleAdapter(R.layout.home_middle,list);
+        mMiddleAdapter = new MiddleAdapter(R.layout.home_middle, list);
         mRecyclerMiddle.setAdapter(mMiddleAdapter);
     }
 
