@@ -15,9 +15,9 @@
     <color name="red3">#E3282C</color>
     <color name="text_black">#444444</color>
     <!--渐加减控件-->
-    <color name="pressblue">#5385d6</color>
+    <color name="pressblue">#F1F1F1</color>
     <color name="cl_snappingstepper_button_normal">#237bb6</color>
     <color name="cl_snappingstepper_button_press">#1f567b</color>
-    <color name="cl_snappingstepper_text_bg">#fff</color>
-    <color name="cl_snappingstepper_text">#6798e7</color>
+    <color name="cl_snappingstepper_text_bg">#EBEBEB</color>
+    <color name="cl_snappingstepper_text">#444444</color>
 </resources>
