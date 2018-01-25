@@ -27,11 +27,13 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <activity android:name=".activity.mine.EditInfoActivity" />
         <activity android:name=".activity.mine.MyDonkeyEarsActivity" />
         <activity android:name=".activity.mine.FortuneCenterAcitivity" />
         <activity android:name=".activity.mine.MyFootprintActivity" />
-        <activity android:name=".activity.mine.ShopCartActivity"></activity>
+        <activity android:name=".activity.mine.ShopCartActivity" />
+        <activity android:name=".activity.mine.MyVoucherActivity"></activity>
     </application>
 
 </manifest>
