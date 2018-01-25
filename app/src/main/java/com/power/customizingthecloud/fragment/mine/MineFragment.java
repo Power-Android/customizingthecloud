@@ -15,8 +15,10 @@ import com.power.customizingthecloud.activity.mine.EditInfoActivity;
 import com.power.customizingthecloud.activity.mine.FortuneCenterAcitivity;
 import com.power.customizingthecloud.activity.mine.MyDonkeyEarsActivity;
 import com.power.customizingthecloud.activity.mine.MyFootprintActivity;
+import com.power.customizingthecloud.activity.mine.MyOrderActivity;
 import com.power.customizingthecloud.activity.mine.MyRedPacketActivity;
 import com.power.customizingthecloud.activity.mine.MyVoucherActivity;
+import com.power.customizingthecloud.activity.mine.RefundAfterActivity;
 import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.view.CircleImageView;
@@ -49,6 +51,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.mine_huodong_rl) RelativeLayout mineHuodongRl;@BindView(R.id.mine_fenxiang_rl) RelativeLayout mineFenxiangRl;
     @BindView(R.id.mine_zijin_rl) RelativeLayout mineZijinRl;@BindView(R.id.mine_kefu_rl) RelativeLayout mineKefuRl;
     Unbinder unbinder;
+    private Intent intent;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -135,18 +138,35 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, MyRedPacketActivity.class));
                 break;
             case R.id.mine_yu_e_ll://余额
+                startActivity(new Intent(mContext,FortuneCenterAcitivity.class));
                 break;
             case R.id.mine_chakandingdan_tv://查看全部订单
+                intent = new Intent(mContext, MyOrderActivity.class);
+                intent.putExtra("type","0");
+                startActivity(intent);
                 break;
             case R.id.mine_daifukuan_ll://待付款
+                intent = new Intent(mContext, MyOrderActivity.class);
+                intent.putExtra("type","1");
+                startActivity(intent);
                 break;
             case R.id.mine_daifahuo_ll://待发货
+                intent = new Intent(mContext, MyOrderActivity.class);
+                intent.putExtra("type","2");
+                startActivity(intent);
                 break;
             case R.id.mine_daishouhuo_ll://待收货
+                intent = new Intent(mContext, MyOrderActivity.class);
+                intent.putExtra("type","3");
+                startActivity(intent);
                 break;
             case R.id.mine_daipingjia_ll://待评价
+                intent = new Intent(mContext, MyOrderActivity.class);
+                intent.putExtra("type","4");
+                startActivity(intent);
                 break;
             case R.id.mine_tuikuan_ll://退款、售后
+                startActivity(new Intent(mContext, RefundAfterActivity.class));
                 break;
             case R.id.mine_renyang_rl://我的认养
                 break;

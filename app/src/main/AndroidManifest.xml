@@ -34,7 +34,9 @@
         <activity android:name=".activity.mine.MyFootprintActivity" />
         <activity android:name=".activity.mine.ShopCartActivity" />
         <activity android:name=".activity.mine.MyVoucherActivity" />
-        <activity android:name=".activity.mine.MyRedPacketActivity"></activity>
+        <activity android:name=".activity.mine.MyRedPacketActivity" />
+        <activity android:name=".activity.mine.MyOrderActivity" />
+        <activity android:name=".activity.mine.RefundAfterActivity"></activity>
     </application>
 
 </manifest>
