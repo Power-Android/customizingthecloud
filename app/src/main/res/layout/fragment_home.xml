@@ -168,6 +168,7 @@
                 android:id="@+id/recycler_middle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
@@ -178,6 +179,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
+                android:background="@color/white"
                 android:orientation="vertical">
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -188,6 +190,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:text="牧场监控推荐"
+                        android:layout_marginLeft="10dp"
                         android:textColor="@color/black"
                         android:textSize="15sp"/>
                     <ImageView
@@ -196,7 +199,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:padding="10dp"
+                        android:padding="15dp"
                         android:src="@drawable/mine_go_iv"/>
                 </RelativeLayout>
                 <View
@@ -206,6 +209,7 @@
                 />
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_jiankong"
+                    android:padding="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
             </LinearLayout>
@@ -215,6 +219,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
+                android:background="@color/white"
                 android:orientation="vertical">
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -225,6 +230,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:text="热卖商品推荐"
+                        android:layout_marginLeft="10dp"
                         android:textColor="@color/black"
                         android:textSize="15sp"/>
                     <ImageView
@@ -233,7 +239,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:padding="10dp"
+                        android:padding="15dp"
                         android:src="@drawable/mine_go_iv"/>
                 </RelativeLayout>
                 <View
@@ -252,6 +258,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
+                android:background="@color/white"
                 android:orientation="vertical">
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -262,6 +269,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:text="精品秒杀推荐"
+                        android:layout_marginLeft="10dp"
                         android:textColor="@color/black"
                         android:textSize="15sp"/>
                     <ImageView
@@ -270,7 +278,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:padding="10dp"
+                        android:padding="15dp"
                         android:src="@drawable/mine_go_iv"/>
                 </RelativeLayout>
                 <View
