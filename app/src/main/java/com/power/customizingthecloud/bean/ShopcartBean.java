@@ -9,8 +9,8 @@ import java.io.Serializable;
 public class ShopcartBean implements Serializable {
     private String name;
     private String fenlei;
-    private String money;
-    private String num;
+    private double money;
+    private int num;
     private boolean isChecked;
 
     public String getName() {
@@ -29,19 +29,19 @@ public class ShopcartBean implements Serializable {
         this.fenlei = fenlei;
     }
 
-    public String getMoney() {
+    public double getMoney() {
         return money;
     }
 
-    public void setMoney(String money) {
+    public void setMoney(double money) {
         this.money = money;
     }
 
-    public String getNum() {
+    public int getNum() {
         return num;
     }
 
-    public void setNum(String num) {
+    public void setNum(int num) {
         this.num = num;
     }
 
