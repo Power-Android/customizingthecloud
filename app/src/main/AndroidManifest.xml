@@ -33,7 +33,8 @@
         <activity android:name=".activity.mine.FortuneCenterAcitivity" />
         <activity android:name=".activity.mine.MyFootprintActivity" />
         <activity android:name=".activity.mine.ShopCartActivity" />
-        <activity android:name=".activity.mine.MyVoucherActivity"></activity>
+        <activity android:name=".activity.mine.MyVoucherActivity" />
+        <activity android:name=".activity.mine.MyRedPacketActivity"></activity>
     </application>
 
 </manifest>
