@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.home;
 
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -17,9 +18,21 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.FortuneCenterAcitivity;
 import com.power.customizingthecloud.base.BaseFragment;
+import com.power.customizingthecloud.bean.EventBean;
+import com.power.customizingthecloud.fragment.home.renyang.RenYangListActivity;
+import com.power.customizingthecloud.fragment.home.top.CanWeiYuDingAcitivity;
+import com.power.customizingthecloud.fragment.home.top.KaiDianActivity;
+import com.power.customizingthecloud.fragment.home.top.MiaoShaActivity;
+import com.power.customizingthecloud.fragment.home.top.MyShareActivity;
+import com.power.customizingthecloud.fragment.home.top.ShengXianHuiActivity;
+import com.power.customizingthecloud.fragment.home.top.XinShouZhiYinActivity;
+import com.power.customizingthecloud.fragment.home.top.ZiXunActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
 import com.youth.banner.Banner;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,6 +141,43 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         if (mTopAdapter == null) {
             mTopAdapter = new TopAdapter(R.layout.item_hometop, topStringList);
             mRecyclerTop.setAdapter(mTopAdapter);
+            mTopAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                    switch (position){
+                        case 0:
+                            startActivity(new Intent(mContext,MiaoShaActivity.class));
+                            break;
+                        case 1:
+                            startActivity(new Intent(mContext,FortuneCenterAcitivity.class));
+                            break;
+                        case 2:
+                            EventBus.getDefault().postSticky(new EventBean("checkmuchang"));
+                            break;
+                        case 3:
+                            startActivity(new Intent(mContext,ShengXianHuiActivity.class));
+                            break;
+                        case 4:
+                            startActivity(new Intent(mContext,CanWeiYuDingAcitivity.class));
+                            break;
+                        case 5:
+                            startActivity(new Intent(mContext,KaiDianActivity.class));
+                            break;
+                        case 6:
+                            startActivity(new Intent(mContext,ZiXunActivity.class));
+                            break;
+                        case 7:
+                            startActivity(new Intent(mContext,XinShouZhiYinActivity.class));
+                            break;
+                        case 8:
+//                            startActivity(new Intent(mContext,ZuiXinActivity.class));
+                            break;
+                        case 9:
+                            startActivity(new Intent(mContext,MyShareActivity.class));
+                            break;
+                    }
+                }
+            });
         }
         mTvToutiao.requestFocus();//有趣，在布局文件中也设置了获取了焦点，但是没有，在代码中加上就好使了
         mTitleContentTv.setText("养驴啦");
@@ -158,6 +208,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mRecyclerMiaosha.setNestedScrollingEnabled(false);
         mMiaoshaAdapter = new MiaoshaAdapter(R.layout.item_home_miaosha,list);
         mRecyclerMiaosha.setAdapter(mMiaoshaAdapter);
+        mTvQiang.setOnClickListener(this);
     }
 
     @Override
@@ -173,6 +224,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.title_sign_in_iv://签到
 
+                break;
+            case R.id.tv_qiang:
+                startActivity(new Intent(mContext,RenYangListActivity.class));
                 break;
 
         }
