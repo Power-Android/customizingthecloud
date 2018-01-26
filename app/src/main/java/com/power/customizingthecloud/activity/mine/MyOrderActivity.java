@@ -155,7 +155,6 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-
     @OnClick(R.id.quanbu_ll)
     public void quanbu() {
         initQuanbuColor();
