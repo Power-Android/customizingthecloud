@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.power.customizingthecloud">
+<manifest package="com.power.customizingthecloud"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:name=".MyApplication"
@@ -12,9 +12,9 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
@@ -25,20 +25,39 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/file_paths"/>
         </provider>
 
-        <activity android:name=".activity.mine.EditInfoActivity" />
-        <activity android:name=".activity.mine.MyDonkeyEarsActivity" />
-        <activity android:name=".activity.mine.FortuneCenterAcitivity" />
-        <activity android:name=".activity.mine.MyFootprintActivity" />
-        <activity android:name=".activity.mine.ShopCartActivity" />
-        <activity android:name=".activity.mine.MyVoucherActivity" />
-        <activity android:name=".activity.mine.MyRedPacketActivity" />
-        <activity android:name=".activity.mine.MyOrderActivity" />
-        <activity android:name=".activity.mine.RefundAfterActivity" />
+        <activity android:name=".activity.mine.EditInfoActivity"/>
+        <activity android:name=".activity.mine.MyDonkeyEarsActivity"/>
+        <activity android:name=".activity.mine.FortuneCenterAcitivity"/>
+        <activity android:name=".activity.mine.MyFootprintActivity"/>
+        <activity android:name=".activity.mine.ShopCartActivity"/>
+        <activity android:name=".activity.mine.MyVoucherActivity"/>
+        <activity android:name=".activity.mine.MyRedPacketActivity"/>
+        <activity android:name=".activity.mine.MyOrderActivity"/>
+        <activity android:name=".activity.mine.RefundAfterActivity"/>
+        <activity android:name=".fragment.home.top.MiaoShaActivity">
+        </activity>
+        <activity android:name=".fragment.home.top.CanWeiYuDingAcitivity">
+        </activity>
+        <activity android:name=".fragment.home.top.ShengXianHuiActivity">
+        </activity>
+        <activity android:name=".fragment.home.top.ZiXunActivity">
+        </activity>
+        <activity android:name=".fragment.home.top.XinShouZhiYinActivity">
+        </activity>
+        <activity android:name=".fragment.home.top.KaiDianActivity">
+        </activity>
+        <activity android:name=".fragment.home.top.ZuiXinActivity">
+        </activity>
+        <activity android:name=".fragment.home.top.MyShareActivity">
+        </activity>
+        <activity android:name=".fragment.home.renyang.RenYangListActivity">
+        </activity>
+        <activity android:name=".fragment.home.jiankong.JianKongActivity">
         <activity android:name=".activity.mine.LatestActivity" />
-        <activity android:name=".activity.mine.MyMessageActivity"></activity>
+        <activity android:name=".activity.mine.MyMessageActivity"/>
     </application>
 
 </manifest>

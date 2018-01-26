@@ -3,7 +3,6 @@ package com.power.customizingthecloud;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -11,12 +10,16 @@ import android.widget.TextView;
 
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.base.BaseFragment;
+import com.power.customizingthecloud.bean.EventBean;
 import com.power.customizingthecloud.fragment.home.HomeFragment;
 import com.power.customizingthecloud.fragment.market.MarketFragment;
 import com.power.customizingthecloud.fragment.mine.MineFragment;
 import com.power.customizingthecloud.fragment.pasture.PastureFragment;
 import com.power.customizingthecloud.fragment.shop.ShopFragment;
-import com.power.customizingthecloud.utils.TUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,6 +58,33 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         homeFragment = new HomeFragment();
         addFragments(homeFragment);
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("checkmuchang")){//选中牧场
+            if (pastureFragment == null) {
+                pastureFragment = new PastureFragment();
+            }
+            addFragments(pastureFragment);
+            ivHome.setImageResource(R.drawable.home_false);
+            ivShop.setImageResource(R.drawable.shop_false);
+            ivPasture.setImageResource(R.drawable.pasture_ture);
+            ivMarket.setImageResource(R.drawable.market_false);
+            ivMine.setImageResource(R.drawable.mine_false);
+            tvHome.setTextColor(getResources().getColor(R.color.text_gray));
+            tvShop.setTextColor(getResources().getColor(R.color.text_gray));
+            tvPasture.setTextColor(getResources().getColor(R.color.green));
+            tvMarket.setTextColor(getResources().getColor(R.color.text_gray));
+            tvMine.setTextColor(getResources().getColor(R.color.text_gray));
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     private void addFragments(BaseFragment f) {
