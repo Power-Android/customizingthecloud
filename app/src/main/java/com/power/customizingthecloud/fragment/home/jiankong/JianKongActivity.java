@@ -1,16 +1,15 @@
-package com.power.customizingthecloud.fragment.home.renyang;
+package com.power.customizingthecloud.fragment.home.jiankong;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.fragment.home.renyang.BaseTabAdapter;
 import com.power.customizingthecloud.view.NoScrollViewPager;
 
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RenYangListActivity extends BaseActivity implements View.OnClickListener {
+public class JianKongActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.title_message_iv)
     ImageView mTitleMessageIv;
@@ -43,33 +42,27 @@ public class RenYangListActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ren_yang_list);
+        setContentView(R.layout.activity_jian_kong);
         ButterKnife.bind(this);
         mTitleBackIv.setVisibility(View.VISIBLE);
         mTitleBackIv.setOnClickListener(this);
-        mTitleContentTv.setText("认养列表");
+        mTitleContentTv.setText("监控列表");
         if (tab_list.size() == 0) {
             tab_list.add("全部");
-            tab_list.add("进行中");
-            tab_list.add("即将开始");
-            tab_list.add("已结束");
+            tab_list.add("毛驴运动场一区");
+            tab_list.add("毛驴运动场二区");
+            tab_list.add("驴妈妈饲养区");
         }
         if (fragmentList.size() == 0) {
-            fragmentList.add(new RenYangAllFragment());
-            fragmentList.add(new IngFragment());
-            fragmentList.add(new JiJiangFragment());
-            fragmentList.add(new OverFragment());
+            fragmentList.add(new JiankongAllFragment());
+            fragmentList.add(new OneQuFragment());
+            fragmentList.add(new TwoQuFragment());
+            fragmentList.add(new MomFragment());
         }
-        mTablayout.setTabMode(TabLayout.MODE_FIXED);
+        mTablayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         for (int i = 0; i < tab_list.size(); i++) {
             mTablayout.addTab(mTablayout.newTab().setText(tab_list.get(i)));
         }
-        //设置中间竖线
-        LinearLayout linearLayout = (LinearLayout) mTablayout.getChildAt(0);
-        linearLayout.setDividerPadding(20);
-        linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-        linearLayout.setDividerDrawable(ContextCompat.getDrawable(this,
-                R.drawable.layout_divider_vertical));
         BaseTabAdapter adapter = new BaseTabAdapter(getSupportFragmentManager(), fragmentList, tab_list);
         mViewpager.setAdapter(adapter);
         mTablayout.setupWithViewPager(mViewpager);

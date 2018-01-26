@@ -22,7 +22,7 @@ import butterknife.Unbinder;
  * Created by Administrator on 2018/1/26.
  */
 
-public class JiJiangFragment extends BaseFragment{
+public class RenYangAllFragment extends BaseFragment {
     @BindView(R.id.recycler)
     RecyclerView mRecyclerRenyang;
     Unbinder unbinder;
@@ -47,7 +47,7 @@ public class JiJiangFragment extends BaseFragment{
         list.add("");
         list.add("");
         mRecyclerRenyang.setLayoutManager(new LinearLayoutManager(mContext));
-        RenYangAdapter renYangAdapter=new RenYangAdapter(R.layout.home_middle,list,mContext,3);
+        RenYangAdapter renYangAdapter=new RenYangAdapter(R.layout.home_middle,list,mContext,1);
         mRecyclerRenyang.setAdapter(renYangAdapter);
     }
 

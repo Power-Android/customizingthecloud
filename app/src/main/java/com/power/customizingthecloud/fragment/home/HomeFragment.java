@@ -21,6 +21,7 @@ import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.FortuneCenterAcitivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.EventBean;
+import com.power.customizingthecloud.fragment.home.jiankong.JianKongActivity;
 import com.power.customizingthecloud.fragment.home.renyang.RenYangListActivity;
 import com.power.customizingthecloud.fragment.home.top.CanWeiYuDingAcitivity;
 import com.power.customizingthecloud.fragment.home.top.KaiDianActivity;
@@ -209,6 +210,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mMiaoshaAdapter = new MiaoshaAdapter(R.layout.item_home_miaosha,list);
         mRecyclerMiaosha.setAdapter(mMiaoshaAdapter);
         mTvQiang.setOnClickListener(this);
+        mIvJiankongMore.setOnClickListener(this);
     }
 
     @Override
@@ -228,7 +230,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             case R.id.tv_qiang:
                 startActivity(new Intent(mContext,RenYangListActivity.class));
                 break;
-
+            case R.id.iv_jiankong_more:
+                startActivity(new Intent(mContext,JianKongActivity.class));
+                break;
         }
     }
 

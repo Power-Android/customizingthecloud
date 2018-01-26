@@ -1,8 +1,8 @@
-package com.power.customizingthecloud.fragment.home.renyang;
+package com.power.customizingthecloud.fragment.home.jiankong;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,14 +22,14 @@ import butterknife.Unbinder;
  * Created by Administrator on 2018/1/26.
  */
 
-public class JiJiangFragment extends BaseFragment{
+public class JiankongAllFragment extends BaseFragment {
     @BindView(R.id.recycler)
-    RecyclerView mRecyclerRenyang;
+    RecyclerView mRecycler;
     Unbinder unbinder;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_renyang, null);
+        View view = inflater.inflate(R.layout.fragment_jiankong, null);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
@@ -46,9 +46,15 @@ public class JiJiangFragment extends BaseFragment{
         list.add("");
         list.add("");
         list.add("");
-        mRecyclerRenyang.setLayoutManager(new LinearLayoutManager(mContext));
-        RenYangAdapter renYangAdapter=new RenYangAdapter(R.layout.home_middle,list,mContext,3);
-        mRecyclerRenyang.setAdapter(renYangAdapter);
+        list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
+        mRecycler.setLayoutManager(new GridLayoutManager(mContext,3));
+        JianKongAdapter jianKongAdapter=new JianKongAdapter(R.layout.item_jiankong,list,mContext,1);
+        mRecycler.setAdapter(jianKongAdapter);
     }
 
     @Override
