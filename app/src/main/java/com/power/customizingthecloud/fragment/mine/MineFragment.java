@@ -13,8 +13,10 @@ import android.widget.TextView;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.EditInfoActivity;
 import com.power.customizingthecloud.activity.mine.FortuneCenterAcitivity;
+import com.power.customizingthecloud.activity.mine.LatestActivity;
 import com.power.customizingthecloud.activity.mine.MyDonkeyEarsActivity;
 import com.power.customizingthecloud.activity.mine.MyFootprintActivity;
+import com.power.customizingthecloud.activity.mine.MyMessageActivity;
 import com.power.customizingthecloud.activity.mine.MyOrderActivity;
 import com.power.customizingthecloud.activity.mine.MyRedPacketActivity;
 import com.power.customizingthecloud.activity.mine.MyVoucherActivity;
@@ -108,6 +110,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.title_message_iv://消息
+                startActivity(new Intent(mContext,MyMessageActivity.class));
                 break;
             case R.id.title_setting_iv://设置
                 break;
@@ -127,6 +130,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, MyFootprintActivity.class));
                 break;
             case R.id.mine_lingxianjin_tv://领现金
+                startActivity(new Intent(mContext,LatestActivity.class));
                 break;
             case R.id.mine_lverduo_ll://驴耳朵
                 startActivity(new Intent(mContext, MyDonkeyEarsActivity.class));
@@ -177,6 +181,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case R.id.mine_zhuanzhang_rl://我的转账
                 break;
             case R.id.mine_huodong_rl://我的活动
+                startActivity(new Intent(mContext,LatestActivity.class));
                 break;
             case R.id.mine_fenxiang_rl://我的分享
                 break;
