@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+        <TextView
+            android:id="@+id/item_date_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2018.01.25"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"/>
+        <ImageView
+            android:id="@+id/item_is_read_iv"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:src="@drawable/is_read_iv"
+            android:layout_below="@+id/item_date_tv"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"/>
+        <TextView
+            android:id="@+id/item_content_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="此处是消息内容------------------此处是消息内容------------------此处是消息内容------------------此处是消息内容------------------"
+            android:textColor="@color/text_black"
+            android:layout_below="@+id/item_is_read_iv"
+            android:layout_marginTop="2dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/item_content_tv"
+            android:background="@color/backgourd"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"/>
+    </RelativeLayout>
+
+</LinearLayout>
