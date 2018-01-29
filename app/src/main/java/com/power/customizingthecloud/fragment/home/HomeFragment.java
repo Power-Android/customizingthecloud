@@ -19,9 +19,11 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.FortuneCenterAcitivity;
+import com.power.customizingthecloud.activity.mine.LatestActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.EventBean;
 import com.power.customizingthecloud.fragment.home.jiankong.JianKongActivity;
+import com.power.customizingthecloud.fragment.home.renyang.detail.RenYangDetailActivity;
 import com.power.customizingthecloud.fragment.home.renyang.RenYangListActivity;
 import com.power.customizingthecloud.fragment.home.top.CanWeiYuDingAcitivity;
 import com.power.customizingthecloud.fragment.home.top.KaiDianActivity;
@@ -171,7 +173,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             startActivity(new Intent(mContext,XinShouZhiYinActivity.class));
                             break;
                         case 8:
-//                            startActivity(new Intent(mContext,ZuiXinActivity.class));
+                            startActivity(new Intent(mContext,LatestActivity.class));
                             break;
                         case 9:
                             startActivity(new Intent(mContext,MyShareActivity.class));
@@ -193,6 +195,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mRecyclerMiddle.setLayoutManager(new LinearLayoutManager(mContext));
         mMiddleAdapter = new MiddleAdapter(R.layout.home_middle, list);
         mRecyclerMiddle.setAdapter(mMiddleAdapter);
+        mMiddleAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(mContext, RenYangDetailActivity.class));
+            }
+        });
         List<String> list2 = new ArrayList<>();
         list2.add("运动一区");
         list2.add("运动二区");
@@ -201,6 +209,14 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mRecyclerJiankong.setLayoutManager(new GridLayoutManager(mContext, 3));
         mRecyclerJiankong.setNestedScrollingEnabled(false);
         mRecyclerJiankong.setAdapter(mJianKongAdapter);
+        mJianKongAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent intent = new Intent(mContext, JianKongActivity.class);
+                intent.putExtra("position",position+1);
+                startActivity(intent);
+            }
+        });
         mGoodAdapter = new GoodAdapter(R.layout.item_home_comment, list);
         mRecyclerGood.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerGood.setNestedScrollingEnabled(false);
@@ -309,7 +325,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             } else {
                 helper.setVisible(R.id.view_line, true);
             }
-
+            helper.getView(R.id.tv_jiankong).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(mContext,JianKongActivity.class));
+                }
+            });
         }
     }
 

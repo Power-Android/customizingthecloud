@@ -66,6 +66,8 @@ public class JianKongActivity extends BaseActivity implements View.OnClickListen
         BaseTabAdapter adapter = new BaseTabAdapter(getSupportFragmentManager(), fragmentList, tab_list);
         mViewpager.setAdapter(adapter);
         mTablayout.setupWithViewPager(mViewpager);
+        int position = getIntent().getIntExtra("position",0);
+        mViewpager.setCurrentItem(position);
     }
 
     @Override

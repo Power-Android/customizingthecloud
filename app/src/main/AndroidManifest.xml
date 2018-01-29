@@ -54,8 +54,10 @@
         <activity android:name=".fragment.home.renyang.RenYangListActivity">
         </activity>
         <activity android:name=".fragment.home.jiankong.JianKongActivity"/>
-        <activity android:name=".activity.mine.LatestActivity" />
+        <activity android:name=".activity.mine.LatestActivity"/>
         <activity android:name=".activity.mine.MyMessageActivity"/>
+        <activity android:name=".fragment.home.renyang.detail.RenYangDetailActivity">
+        </activity>
     </application>
 
 </manifest>

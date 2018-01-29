@@ -1,6 +1,7 @@
 package com.power.customizingthecloud.fragment.home.renyang;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.fragment.home.jiankong.JianKongActivity;
 
 import java.util.List;
 
@@ -65,5 +67,11 @@ public class RenYangAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
         if (helper.getAdapterPosition() == 2) {
             helper.setVisible(R.id.view_line, false);
         }
+        helper.getView(R.id.tv_jiankong).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.startActivity(new Intent(mContext,JianKongActivity.class));
+            }
+        });
     }
 }
