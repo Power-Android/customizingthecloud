@@ -36,4 +36,5 @@ public class NoScrollViewPager extends ViewPager {
     public void setCurrentItem(int item) {
         setCurrentItem(item, false);
     }
+
 }

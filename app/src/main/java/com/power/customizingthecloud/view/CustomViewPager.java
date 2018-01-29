@@ -3,11 +3,16 @@ package com.power.customizingthecloud.view;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
+import android.view.View;
+
+/**
+ * Created by Administrator on 2018/1/29.
+ */
 
 public class CustomViewPager extends ViewPager {
-    private boolean enabled = false;
-
+    /*
+    * 解决scrollView嵌套viewpager导致的viewpager不显示的问题
+    * */
     public CustomViewPager(Context context) {
         super(context);
     }
@@ -17,33 +22,19 @@ public class CustomViewPager extends ViewPager {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        // 触摸事件不触发
-        if (this.enabled) {
-            return super.onTouchEvent(event);
-        }
-        return false;
-    }
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
-        // 不处理触摸拦截事件
-        if (this.enabled) {
-            return super.onInterceptTouchEvent(event);
+        int height = 0;
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            child.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+            int h = child.getMeasuredHeight();
+            if (h > height)
+                height = h;
         }
-        return false;
-    }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        // 分发事件，这个是必须要的，如果把这个方法覆盖了，那么ViewPager的子View就接收不到事件了
-        if (this.enabled) {
-            return super.dispatchTouchEvent(event);
-        }
-        return super.dispatchTouchEvent(event);
-    }
+        heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
 
-    public void setPagingEnabled(boolean enabled) {
-        this.enabled = enabled;
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 }
