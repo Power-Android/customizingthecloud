@@ -238,6 +238,7 @@
             android:drawableTop="@drawable/lianximaijia"
             android:paddingBottom="3dp"
             android:paddingLeft="20dp"
+            android:background="@drawable/bg_huise_line2"
             android:paddingRight="20dp"
             android:paddingTop="3dp"
             android:text="联系卖家"/>
