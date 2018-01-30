@@ -82,6 +82,10 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
     RecyclerView mRecyclerCanshu;
     @BindView(R.id.ll_canshu)
     LinearLayout mLlCanshu;
+    @BindView(R.id.tv_lianximaijia)
+    TextView mTvLianximaijia;
+    @BindView(R.id.tv_buy)
+    TextView mTvBuy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +97,8 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
         mTitleContentTv.setText("商品详情");
         mTitleShareIv.setVisibility(View.VISIBLE);
         mTitleShareIv.setOnClickListener(this);
+        mTvLianximaijia.setOnClickListener(this);
+        mTvBuy.setOnClickListener(this);
         //添加删除线
         mTvYuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         BannerUtils.startBanner(mBanner, new ArrayList<String>());
@@ -107,6 +113,12 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.title_share_iv:
+
+                break;
+            case R.id.tv_lianximaijia:
+
+                break;
+            case R.id.tv_buy:
 
                 break;
         }

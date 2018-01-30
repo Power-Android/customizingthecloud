@@ -5,7 +5,7 @@ android {
     buildToolsVersion "27.0.1"
     defaultConfig {
         applicationId "com.power.customizingthecloud"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 25
         multiDexEnabled false
         versionCode 1
@@ -46,4 +46,5 @@ dependencies {
     compile 'com.github.iwgang:countdownview:2.1.6'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    compile 'cn.jzvd:jiaozivideoplayer:6.2.7'
 }
