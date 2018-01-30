@@ -137,6 +137,12 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         TopAdapter topAdapter = new TopAdapter(R.layout.item_renyang_detail_top, list);
         mRecyclerTop.setAdapter(topAdapter);
         mRecycler.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecycler.setNestedScrollingEnabled(false);
+        mItemStepper.setContentBackground(R.drawable.bg_stepper_green);
+        mItemStepper.setButtonBackGround(R.color.green);
+        mItemStepper.setContentTextColor(R.color.green);
+        mItemStepper.setLeftButtonResources(R.drawable.jianhao_white);
+        mItemStepper.setRightButtonResources(R.drawable.jiahao_white);
     }
 
     private class TopAdapter extends BaseQuickAdapter<String, BaseViewHolder> {

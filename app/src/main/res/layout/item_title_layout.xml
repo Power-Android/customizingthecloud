@@ -50,6 +50,26 @@
         android:src="@drawable/mine_setting_iv"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true" />
+    <ImageView
+        android:id="@+id/title_shopcar_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:src="@drawable/icon_shopcar"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true" />
+    <ImageView
+        android:id="@+id/title_share_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:src="@drawable/icon_share"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true" />
     <TextView
         android:id="@+id/title_content_right_tv"
         android:layout_width="wrap_content"

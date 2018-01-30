@@ -221,12 +221,25 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mRecyclerGood.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerGood.setNestedScrollingEnabled(false);
         mRecyclerGood.setAdapter(mGoodAdapter);
+        mGoodAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(mContext,ShopListActivity.class));
+            }
+        });
         mRecyclerMiaosha.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerMiaosha.setNestedScrollingEnabled(false);
         mMiaoshaAdapter = new MiaoshaAdapter(R.layout.item_home_miaosha,list);
         mRecyclerMiaosha.setAdapter(mMiaoshaAdapter);
+        mMiaoshaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(mContext,MiaoShaDetailActivity.class));
+            }
+        });
         mTvQiang.setOnClickListener(this);
         mIvJiankongMore.setOnClickListener(this);
+        mIvMiaoshaMore.setOnClickListener(this);
     }
 
     @Override
@@ -248,6 +261,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.iv_jiankong_more:
                 startActivity(new Intent(mContext,JianKongActivity.class));
+                break;
+            case R.id.iv_miaosha_more:
+                startActivity(new Intent(mContext,MiaoShaActivity.class));
                 break;
         }
     }

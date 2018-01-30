@@ -7,6 +7,9 @@ import android.support.annotation.Nullable;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.bean.EventBean;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -29,5 +32,11 @@ public class JianKongAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
     @Override
     protected void convert(BaseViewHolder helper, String item) {
         helper.setText(R.id.tv_jiankong, "五号楼前");
+    }
+
+    @Override
+    public void setOnItemClickListener(@Nullable OnItemClickListener listener) {
+        super.setOnItemClickListener(listener);
+        EventBus.getDefault().postSticky(new EventBean("player"));
     }
 }
