@@ -21,6 +21,7 @@ import com.power.customizingthecloud.activity.mine.MyOrderActivity;
 import com.power.customizingthecloud.activity.mine.MyRedPacketActivity;
 import com.power.customizingthecloud.activity.mine.MyVoucherActivity;
 import com.power.customizingthecloud.activity.mine.RefundAfterActivity;
+import com.power.customizingthecloud.activity.mine.SettingActivity;
 import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.view.CircleImageView;
@@ -113,6 +114,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext,MyMessageActivity.class));
                 break;
             case R.id.title_setting_iv://设置
+                startActivity(new Intent(mContext,SettingActivity.class));
                 break;
             case R.id.mine_face_iv://头像
                 startActivity(new Intent(mContext,EditInfoActivity.class));
