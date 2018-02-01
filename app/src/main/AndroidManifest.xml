@@ -56,22 +56,23 @@
         <activity android:name=".activity.mine.MyRedPacketActivity" />
         <activity android:name=".activity.mine.MyOrderActivity" />
         <activity android:name=".activity.mine.RefundAfterActivity" />
-        <activity android:name=".fragment.home.top.MiaoShaActivity"></activity>
-        <activity android:name=".fragment.home.top.CanWeiYuDingAcitivity"></activity>
-        <activity android:name=".fragment.home.top.ShengXianHuiActivity"></activity>
-        <activity android:name=".fragment.home.top.ZiXunActivity"></activity>
-        <activity android:name=".fragment.home.top.XinShouZhiYinActivity"></activity>
-        <activity android:name=".fragment.home.top.KaiDianActivity"></activity>
-        <activity android:name=".fragment.home.top.MyShareActivity"></activity>
-        <activity android:name=".fragment.home.renyang.RenYangListActivity"></activity>
+        <activity android:name=".fragment.home.top.MiaoShaActivity" />
+        <activity android:name=".fragment.home.top.CanWeiYuDingAcitivity" />
+        <activity android:name=".fragment.home.top.ShengXianHuiActivity" />
+        <activity android:name=".fragment.home.top.ZiXunActivity" />
+        <activity android:name=".fragment.home.top.XinShouZhiYinActivity" />
+        <activity android:name=".fragment.home.top.KaiDianActivity" />
+        <activity android:name=".fragment.home.top.MyShareActivity" />
+        <activity android:name=".fragment.home.renyang.RenYangListActivity" />
         <activity android:name=".fragment.home.jiankong.JianKongActivity" />
         <activity android:name=".activity.mine.LatestActivity" />
         <activity android:name=".activity.mine.MyMessageActivity" />
-        <activity android:name=".fragment.home.renyang.detail.RenYangDetailActivity"></activity>
-        <activity android:name=".fragment.home.GoodListActivity"></activity>
-        <activity android:name=".fragment.home.MiaoShaDetailActivity"></activity>
-        <activity android:name=".fragment.home.GoodDetailActivity"></activity>
-        <activity android:name=".activity.mine.SettingActivity"></activity>
+        <activity android:name=".fragment.home.renyang.detail.RenYangDetailActivity" />
+        <activity android:name=".fragment.home.GoodListActivity" />
+        <activity android:name=".fragment.home.MiaoShaDetailActivity" />
+        <activity android:name=".fragment.home.GoodDetailActivity" />
+        <activity android:name=".activity.mine.SettingActivity" />
+        <activity android:name=".activity.mine.MyRenyangCenterActivity"></activity>
     </application>
 
 </manifest>

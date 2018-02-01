@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/backgourd"
+    android:orientation="vertical"
+    tools:context="com.power.customizingthecloud.fragment.home.top.MiaoShaActivity">
+    <include layout="@layout/item_title_layout"/>
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tablayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:tabTextColor="#999999"
+        app:tabIndicatorColor="@color/green"
+        app:tabIndicatorHeight="4px"
+        android:background="@color/white"
+        app:tabSelectedTextColor="@color/green"
+        app:tabTextAppearance="@style/MyCustomTabTextAppearance"/>
+    <com.power.customizingthecloud.view.NoScrollViewPager
+        android:id="@+id/viewpager"
+        android:background="@color/backgourd"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>
+
