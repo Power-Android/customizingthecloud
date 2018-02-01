@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.home.top;
 
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -14,6 +15,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.fragment.home.MiaoShaDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +58,12 @@ public class MiaoShaActivity extends BaseActivity implements View.OnClickListene
         mRecyclerMiaosha.setLayoutManager(new LinearLayoutManager(mContext));
         mMiaoshaAdapter = new MiaoshaAdapter(R.layout.item_home_miaosha,list);
         mRecyclerMiaosha.setAdapter(mMiaoshaAdapter);
+        mMiaoshaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(MiaoShaActivity.this, MiaoShaDetailActivity.class));
+            }
+        });
     }
 
     private class MiaoshaAdapter extends BaseQuickAdapter<String, BaseViewHolder> {

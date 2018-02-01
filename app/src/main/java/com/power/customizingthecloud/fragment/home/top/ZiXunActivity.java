@@ -45,7 +45,7 @@ public class ZiXunActivity extends BaseActivity implements View.OnClickListener 
         ButterKnife.bind(this);
         mTitleBackIv.setVisibility(View.VISIBLE);
         mTitleBackIv.setOnClickListener(this);
-        mTitleContentTv.setText("限量秒杀");
+        mTitleContentTv.setText("资讯");
         List<String> list = new ArrayList<>();
         list.add("");
         list.add("");

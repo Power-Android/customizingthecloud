@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -20,7 +21,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ShopListActivity extends BaseActivity implements View.OnClickListener {
+public class GoodListActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.title_message_iv)
     ImageView mTitleMessageIv;
@@ -58,6 +59,12 @@ public class ShopListActivity extends BaseActivity implements View.OnClickListen
         mRecyclerShop.setLayoutManager(new GridLayoutManager(this,2));
         ShopAdapter shopAdapter=new ShopAdapter(R.layout.item_shengxian,list);
         mRecyclerShop.setAdapter(shopAdapter);
+        shopAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(GoodListActivity.this,GoodDetailActivity.class));
+            }
+        });
     }
 
     private class ShopAdapter extends BaseQuickAdapter<String, BaseViewHolder> {

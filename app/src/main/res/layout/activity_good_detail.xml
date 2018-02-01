@@ -21,84 +21,91 @@
                     android:id="@+id/banner"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"/>
-                <TextView
-                    android:id="@+id/tv_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:text="特惠驴奶粉"
-                    android:textColor="@color/text_black"
-                    android:textSize="17sp"/>
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp">
-                    <LinearLayout
+                    android:background="@color/white"
+                    android:padding="10dp">
+                    <TextView
+                        android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                    >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="¥"
-                            android:textColor="@color/red1"/>
-                        <TextView
-                            android:id="@+id/tv_price"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="99.00"
-                            android:textColor="@color/red1"
-                            android:textSize="17sp"/>
-                        <TextView
-                            android:id="@+id/tv_yuanjia"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:text="¥299.00"
-                            android:textSize="13sp"/>
-                    </LinearLayout>
+                        android:gravity="center"
+                        android:text="特惠驴奶粉"
+                        android:textColor="@color/text_black"
+                        android:textSize="17sp"/>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginRight="10dp"
                     >
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="剩余数量："
+                            android:text="价格："
                             android:textColor="@color/text_black"
                             android:textSize="16sp"/>
                         <TextView
                             android:id="@+id/tv_shengyu"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="10"
+                            android:text="30"
                             android:textColor="@color/red1"
                             android:textSize="16sp"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="罐"
+                            android:text="/罐"
                             android:textColor="@color/text_black"
                             android:textSize="16sp"/>
                     </LinearLayout>
                 </RelativeLayout>
-                <TextView
-                    android:id="@+id/tv_time"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:background="#FFDCDD"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:text="距离秒杀结束还有0天12小时"
-                    android:textColor="@color/red1"/>
+                    android:background="@color/white"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp">
+                    <TextView
+                        android:id="@+id/tv_good_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="商品分类：驴奶粉"
+                        android:textColor="@color/text_gray"/>
+                    <TextView
+                        android:id="@+id/tv_diyong"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
+                        android:text="可用100驴耳朵抵用10元"
+                        android:textColor="@color/text_gray"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/white"
+                    android:padding="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="购买数量"
+                        android:textColor="@color/text_black"
+                        android:textSize="15sp"/>
+                    <com.power.customizingthecloud.view.SnappingStepper
+                        android:id="@+id/item_stepper"
+                        android:layout_width="100dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                    />
+                </RelativeLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:orientation="vertical">
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -233,21 +240,34 @@
         android:layout_gravity="bottom">
         <TextView
             android:id="@+id/tv_lianximaijia"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_huise_line2"
             android:drawablePadding="5dp"
             android:drawableTop="@drawable/lianximaijia"
             android:paddingBottom="3dp"
-            android:paddingLeft="20dp"
-            android:background="@drawable/bg_huise_line2"
-            android:paddingRight="20dp"
             android:gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
             android:paddingTop="3dp"
             android:text="联系卖家"/>
         <TextView
-            android:id="@+id/tv_buy"
-            android:layout_width="match_parent"
+            android:id="@+id/tv_insertcar"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1.3"
+            android:background="@color/red2"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="加入购物车"
+            android:textColor="@color/white"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/tv_buy"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.3"
             android:background="@color/red1"
             android:gravity="center"
             android:padding="10dp"

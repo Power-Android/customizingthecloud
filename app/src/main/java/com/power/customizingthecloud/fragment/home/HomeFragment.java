@@ -224,7 +224,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mGoodAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(mContext,ShopListActivity.class));
+                startActivity(new Intent(mContext,GoodListActivity.class));
             }
         });
         mRecyclerMiaosha.setLayoutManager(new LinearLayoutManager(mContext));

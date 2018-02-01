@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.home.top;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +60,12 @@ public class ShengXianHuiActivity extends BaseActivity implements View.OnClickLi
         list.add("");
         mShopAdapter = new XianAdapter(R.layout.item_shengxian, list);
         mRecyclerXian.setAdapter(mShopAdapter);
+        mShopAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(ShengXianHuiActivity.this, GoodDetailActivity.class));
+            }
+        });
     }
 
     private class XianAdapter extends BaseQuickAdapter<String, BaseViewHolder> {

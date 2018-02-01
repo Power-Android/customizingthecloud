@@ -77,9 +77,11 @@
         <activity android:name=".activity.mine.MyMessageActivity"/>
         <activity android:name=".fragment.home.renyang.detail.RenYangDetailActivity">
         </activity>
-        <activity android:name=".fragment.home.ShopListActivity">
+        <activity android:name=".fragment.home.GoodListActivity">
         </activity>
         <activity android:name=".fragment.home.MiaoShaDetailActivity">
+        </activity>
+        <activity android:name=".fragment.home.GoodDetailActivity">
         </activity>
     </application>
 

@@ -1,6 +1,5 @@
 package com.power.customizingthecloud.fragment.home;
 
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -19,6 +18,7 @@ import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
 import com.power.customizingthecloud.view.BaseDialog;
+import com.power.customizingthecloud.view.SnappingStepper;
 import com.youth.banner.Banner;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickListener {
+public class GoodDetailActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.title_message_iv)
     ImageView mTitleMessageIv;
@@ -50,12 +50,14 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
     Banner mBanner;
     @BindView(R.id.tv_name)
     TextView mTvName;
-    @BindView(R.id.tv_price)
-    TextView mTvPrice;
     @BindView(R.id.tv_shengyu)
     TextView mTvShengyu;
-    @BindView(R.id.tv_time)
-    TextView mTvTime;
+    @BindView(R.id.tv_good_type)
+    TextView mTvGoodType;
+    @BindView(R.id.tv_diyong)
+    TextView mTvDiyong;
+    @BindView(R.id.item_stepper)
+    SnappingStepper mItemStepper;
     @BindView(R.id.detail_tv)
     TextView mDetailTv;
     @BindView(R.id.indicator_detail)
@@ -78,14 +80,14 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
     WebView mWebview;
     @BindView(R.id.recycler)
     RecyclerView mRecycler;
-    @BindView(R.id.tv_yuanjia)
-    TextView mTvYuanjia;
     @BindView(R.id.recycler_canshu)
     RecyclerView mRecyclerCanshu;
     @BindView(R.id.ll_canshu)
     LinearLayout mLlCanshu;
     @BindView(R.id.tv_lianximaijia)
     TextView mTvLianximaijia;
+    @BindView(R.id.tv_insertcar)
+    TextView mTvInsertcar;
     @BindView(R.id.tv_buy)
     TextView mTvBuy;
     private BaseDialog mDialog;
@@ -94,7 +96,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_miao_sha_detail);
+        setContentView(R.layout.activity_good_detail);
         ButterKnife.bind(this);
         mTitleBackIv.setVisibility(View.VISIBLE);
         mTitleBackIv.setOnClickListener(this);
@@ -103,11 +105,14 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
         mTitleShareIv.setOnClickListener(this);
         mTvLianximaijia.setOnClickListener(this);
         mTvBuy.setOnClickListener(this);
-        //添加删除线
-        mTvYuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         BannerUtils.startBanner(mBanner, new ArrayList<String>());
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
         mRecycler.setNestedScrollingEnabled(false);
+        mItemStepper.setContentBackground(R.drawable.bg_stepper_green);
+        mItemStepper.setButtonBackGround(R.color.green);
+        mItemStepper.setContentTextColor(R.color.green);
+        mItemStepper.setLeftButtonResources(R.drawable.jianhao_white);
+        mItemStepper.setRightButtonResources(R.drawable.jiahao_white);
     }
 
     @Override
@@ -246,7 +251,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
         list.add("");
         list.add("");
         list.add("");
-        PingJiaAdapter paiHangAdapter = new PingJiaAdapter(R.layout.item_pingjia, list);
+        PingJiaAdapter paiHangAdapter = new PingJiaAdapter(R.layout.item_pingjia2, list);
         mRecycler.setAdapter(paiHangAdapter);
     }
 
