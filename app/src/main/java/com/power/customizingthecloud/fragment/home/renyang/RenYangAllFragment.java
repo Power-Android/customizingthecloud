@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.adapter.RenYangAdapter;
 import com.power.customizingthecloud.base.BaseFragment;
 
 import java.util.ArrayList;

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+        <com.power.customizingthecloud.view.CircleImageView
+            android:id="@+id/item_face_iv"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/face"/>
+        <TextView
+            android:id="@+id/item_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="豆沙包"
+            android:textColor="@color/text_black"
+            android:layout_toRightOf="@+id/item_face_iv"
+            android:layout_marginTop="18dp"
+            android:layout_marginLeft="10dp"/>
+        <TextView
+            android:id="@+id/item_content_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="@color/gray1"
+            android:text="评论：小伙，拍照技术不错"
+            android:layout_below="@+id/item_name_tv"
+            android:layout_toRightOf="@+id/item_face_iv"
+            android:layout_toLeftOf="@+id/item_pic_iv"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"/>
+        <ImageView
+            android:id="@+id/item_pic_iv"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/face"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+</LinearLayout>

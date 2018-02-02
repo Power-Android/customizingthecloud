@@ -1,4 +1,4 @@
-package com.power.customizingthecloud.fragment.home.renyang;
+package com.power.customizingthecloud.adapter;
 
 import android.content.Context;
 import android.content.Intent;

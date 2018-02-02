@@ -1,7 +1,6 @@
-package com.power.customizingthecloud.fragment.home.renyang;
+package com.power.customizingthecloud.fragment.mine;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.power.customizingthecloud.R;
-import com.power.customizingthecloud.adapter.RenYangAdapter;
+import com.power.customizingthecloud.adapter.MyRenYangAdapter;
 import com.power.customizingthecloud.base.BaseFragment;
 
 import java.util.ArrayList;
@@ -20,10 +19,11 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * Created by Administrator on 2018/1/26.
+ * Created by Administrator on 2018/2/1.
  */
 
-public class IngFragment extends BaseFragment{
+public class AllRenyangFragment extends BaseFragment {
+
     @BindView(R.id.recycler)
     RecyclerView mRecyclerRenyang;
     Unbinder unbinder;
@@ -32,29 +32,22 @@ public class IngFragment extends BaseFragment{
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_renyang, null);
         unbinder = ButterKnife.bind(this, view);
+        initData();
         return view;
     }
 
-    @Override
-    protected void initLazyData() {
-
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    private void initData() {
         List<String> list = new ArrayList<>();
         list.add("");
         list.add("");
         list.add("");
         mRecyclerRenyang.setLayoutManager(new LinearLayoutManager(mContext));
-        RenYangAdapter renYangAdapter=new RenYangAdapter(R.layout.home_middle,list,mContext,2);
+        MyRenYangAdapter renYangAdapter=new MyRenYangAdapter(R.layout.item_my_renyang,list,mContext,1);
         mRecyclerRenyang.setAdapter(renYangAdapter);
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
+    protected void initLazyData() {
+
     }
 }
