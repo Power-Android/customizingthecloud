@@ -1,6 +1,7 @@
 package com.power.customizingthecloud.fragment.home.top;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -40,6 +41,8 @@ public class ShengXianHuiActivity extends BaseActivity implements View.OnClickLi
     ImageView mBanner;
     @BindView(R.id.recycler_xian)
     RecyclerView mRecyclerXian;
+    @BindView(R.id.iv_eye)
+    ImageView mIvEye;
     private XianAdapter mShopAdapter;
 
     @Override
@@ -66,6 +69,9 @@ public class ShengXianHuiActivity extends BaseActivity implements View.OnClickLi
                 startActivity(new Intent(ShengXianHuiActivity.this, GoodDetailActivity.class));
             }
         });
+        //开启在布局文件中设置的帧动画
+        AnimationDrawable drawable = (AnimationDrawable) mIvEye.getDrawable();
+        drawable.start();
     }
 
     private class XianAdapter extends BaseQuickAdapter<String, BaseViewHolder> {

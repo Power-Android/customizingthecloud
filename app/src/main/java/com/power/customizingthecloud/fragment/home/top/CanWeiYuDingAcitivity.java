@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.home.top;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.fragment.home.ShopDetailActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
 import com.youth.banner.Banner;
 
@@ -61,6 +63,12 @@ public class CanWeiYuDingAcitivity extends BaseActivity implements View.OnClickL
         mRecyclerShop.setNestedScrollingEnabled(false);
         mShopAdapter = new ShopAdapter(R.layout.item_canweiyuding,list);
         mRecyclerShop.setAdapter(mShopAdapter);
+        mShopAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(CanWeiYuDingAcitivity.this,ShopDetailActivity.class));
+            }
+        });
     }
 
     private class ShopAdapter extends BaseQuickAdapter<String,BaseViewHolder>{
