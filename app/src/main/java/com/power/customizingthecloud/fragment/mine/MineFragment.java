@@ -20,6 +20,7 @@ import com.power.customizingthecloud.activity.mine.MyMessageActivity;
 import com.power.customizingthecloud.activity.mine.MyOrderActivity;
 import com.power.customizingthecloud.activity.mine.MyRedPacketActivity;
 import com.power.customizingthecloud.activity.mine.MyRenyangCenterActivity;
+import com.power.customizingthecloud.activity.mine.MyReserveActivity;
 import com.power.customizingthecloud.activity.mine.MyVoucherActivity;
 import com.power.customizingthecloud.activity.mine.RefundAfterActivity;
 import com.power.customizingthecloud.activity.mine.SettingActivity;
@@ -179,6 +180,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, MyRenyangCenterActivity.class));
                 break;
             case R.id.mine_yuding_rl://我的预订
+                startActivity(new Intent(mContext, MyReserveActivity.class));
                 break;
             case R.id.mine_dianpu_rl://我的店铺
                 break;
