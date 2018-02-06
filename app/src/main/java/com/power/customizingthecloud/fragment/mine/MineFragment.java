@@ -26,6 +26,7 @@ import com.power.customizingthecloud.activity.mine.RefundAfterActivity;
 import com.power.customizingthecloud.activity.mine.SettingActivity;
 import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseFragment;
+import com.power.customizingthecloud.fragment.home.top.KaiDianActivity;
 import com.power.customizingthecloud.view.CircleImageView;
 
 import butterknife.BindView;
@@ -183,6 +184,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, MyReserveActivity.class));
                 break;
             case R.id.mine_dianpu_rl://我的店铺
+                startActivity(new Intent(mContext, KaiDianActivity.class));
                 break;
             case R.id.mine_zhuanzhang_rl://我的转账
                 break;
