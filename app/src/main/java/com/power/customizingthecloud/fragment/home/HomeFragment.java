@@ -243,6 +243,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        mTvToutiao.requestFocus();//解决切换fragment之后回来不滚动的问题
+    }
+
+    @Override
     protected void initLazyData() {
 
     }
