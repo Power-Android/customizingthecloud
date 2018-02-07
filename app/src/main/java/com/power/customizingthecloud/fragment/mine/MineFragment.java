@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.CustomerCenterActivity;
 import com.power.customizingthecloud.activity.mine.EditInfoActivity;
 import com.power.customizingthecloud.activity.mine.FortuneCenterAcitivity;
 import com.power.customizingthecloud.activity.mine.LatestActivity;
@@ -202,6 +203,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, MyMoneyRecordActivity.class));
                 break;
             case R.id.mine_kefu_rl://联系客服
+                startActivity(new Intent(mContext, CustomerCenterActivity.class));
                 break;
         }
     }
