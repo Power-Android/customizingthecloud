@@ -29,7 +29,7 @@ public class KaiDianActivity extends BaseActivity implements View.OnClickListene
 
     @BindView(R.id.title_back_iv) ImageView titleBackIv;
     @BindView(R.id.title_content_tv) TextView titleContentTv;
-    @BindView(R.id.title_content_right_tv) TextView titleContentRightTv;
+    @BindView(R.id.title_qrcode_iv) ImageView titleQrcodeIv;
     @BindView(R.id.dianpu_face_iv) CircleImageView dianpuFaceIv;
     @BindView(R.id.dianpu_name_tv) TextView dianpuNameTv;
     @BindView(R.id.money_tv) TextView moneyTv;
@@ -58,10 +58,9 @@ public class KaiDianActivity extends BaseActivity implements View.OnClickListene
         titleBackIv.setVisibility(View.VISIBLE);
         titleBackIv.setOnClickListener(this);
         titleContentTv.setText("我的店铺");
-        titleContentRightTv.setVisibility(View.VISIBLE);
-        titleContentRightTv.setOnClickListener(this);
-        titleContentRightTv.setText("开店规则");
-        titleContentRightTv.setOnClickListener(this);
+        titleQrcodeIv.setVisibility(View.VISIBLE);
+        titleQrcodeIv.setOnClickListener(this);
+
         dianpuFaceIv.setOnClickListener(this);
         moneyTv.setOnClickListener(this);
         tixianTv.setOnClickListener(this);
@@ -142,7 +141,7 @@ public class KaiDianActivity extends BaseActivity implements View.OnClickListene
             case R.id.title_back_iv:
                 finish();
                 break;
-            case R.id.title_content_right_tv:
+            case R.id.title_qrcode_iv:
                 break;
             case R.id.money_tv:
                 break;

@@ -60,6 +60,16 @@
         android:src="@drawable/mine_setting_iv"
         android:visibility="gone"/>
     <ImageView
+        android:id="@+id/title_qrcode_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:src="@drawable/qrcode_iv"
+        android:visibility="gone"/>
+    <ImageView
         android:id="@+id/title_shopcar_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

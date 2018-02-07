@@ -17,6 +17,7 @@ import com.power.customizingthecloud.activity.mine.LatestActivity;
 import com.power.customizingthecloud.activity.mine.MyDonkeyEarsActivity;
 import com.power.customizingthecloud.activity.mine.MyFootprintActivity;
 import com.power.customizingthecloud.activity.mine.MyMessageActivity;
+import com.power.customizingthecloud.activity.mine.MyMoneyRecordActivity;
 import com.power.customizingthecloud.activity.mine.MyOrderActivity;
 import com.power.customizingthecloud.activity.mine.MyRedPacketActivity;
 import com.power.customizingthecloud.activity.mine.MyRenyangCenterActivity;
@@ -198,6 +199,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, MyShareActivity.class));
                 break;
             case R.id.mine_zijin_rl://资金记录
+                startActivity(new Intent(mContext, MyMoneyRecordActivity.class));
                 break;
             case R.id.mine_kefu_rl://联系客服
                 break;
