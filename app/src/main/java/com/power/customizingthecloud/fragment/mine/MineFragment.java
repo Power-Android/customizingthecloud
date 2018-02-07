@@ -28,6 +28,7 @@ import com.power.customizingthecloud.activity.mine.SettingActivity;
 import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.fragment.home.top.KaiDianActivity;
+import com.power.customizingthecloud.fragment.home.top.MyShareActivity;
 import com.power.customizingthecloud.view.CircleImageView;
 
 import butterknife.BindView;
@@ -194,6 +195,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext,LatestActivity.class));
                 break;
             case R.id.mine_fenxiang_rl://我的分享
+                startActivity(new Intent(mContext, MyShareActivity.class));
                 break;
             case R.id.mine_zijin_rl://资金记录
                 break;
