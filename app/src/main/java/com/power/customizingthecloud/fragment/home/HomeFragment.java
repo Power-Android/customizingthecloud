@@ -20,19 +20,20 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.FortuneCenterAcitivity;
 import com.power.customizingthecloud.activity.mine.LatestActivity;
+import com.power.customizingthecloud.activity.mine.MyDonkeyEarsActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.EventBean;
 import com.power.customizingthecloud.fragment.home.jiankong.JianKongActivity;
-import com.power.customizingthecloud.fragment.home.renyang.detail.RenYangDetailActivity;
 import com.power.customizingthecloud.fragment.home.renyang.RenYangListActivity;
+import com.power.customizingthecloud.fragment.home.renyang.detail.RenYangDetailActivity;
 import com.power.customizingthecloud.fragment.home.top.CanWeiYuDingAcitivity;
 import com.power.customizingthecloud.fragment.home.top.KaiDianActivity;
 import com.power.customizingthecloud.fragment.home.top.MiaoShaActivity;
-import com.power.customizingthecloud.fragment.home.top.MyShareActivity;
 import com.power.customizingthecloud.fragment.home.top.ShengXianHuiActivity;
 import com.power.customizingthecloud.fragment.home.top.XinShouZhiYinActivity;
 import com.power.customizingthecloud.fragment.home.top.ZiXunActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
+import com.power.customizingthecloud.view.CommonPopupWindow;
 import com.youth.banner.Banner;
 
 import org.greenrobot.eventbus.EventBus;
@@ -93,6 +94,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     RecyclerView mRecyclerGood;
     @BindView(R.id.iv_miaosha_more)
     ImageView mIvMiaoshaMore;
+    @BindView(R.id.title_jia_iv)
+    ImageView mTitleJiaiv;
     @BindView(R.id.recycler_miaosha)
     RecyclerView mRecyclerMiaosha;
     Unbinder unbinder;
@@ -103,6 +106,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private JianKongAdapter mJianKongAdapter;
     private GoodAdapter mGoodAdapter;
     private MiaoshaAdapter mMiaoshaAdapter;
+    private CommonPopupWindow popupWindow;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -126,7 +130,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             topStringList.add("媒体资讯");
             topStringList.add("新手指引");
             topStringList.add("最新活动");
-            topStringList.add("我的分享");
+            topStringList.add("每日签到");
         }
         if (topPicList.size() == 0) {
             topPicList.add(R.drawable.miaosha);
@@ -138,7 +142,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             topPicList.add(R.drawable.meitizixun);
             topPicList.add(R.drawable.xinshouzhiyin);
             topPicList.add(R.drawable.newactivity);
-            topPicList.add(R.drawable.myshare);
+            topPicList.add(R.drawable.meiriqiandao);
         }
         BannerUtils.startBanner(mBanner, new ArrayList<String>());
         if (mTopAdapter == null) {
@@ -147,36 +151,36 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             mTopAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    switch (position){
+                    switch (position) {
                         case 0:
-                            startActivity(new Intent(mContext,MiaoShaActivity.class));
+                            startActivity(new Intent(mContext, MiaoShaActivity.class));
                             break;
                         case 1:
-                            startActivity(new Intent(mContext,FortuneCenterAcitivity.class));
+                            startActivity(new Intent(mContext, FortuneCenterAcitivity.class));
                             break;
                         case 2:
                             EventBus.getDefault().postSticky(new EventBean("checkmuchang"));
                             break;
                         case 3:
-                            startActivity(new Intent(mContext,ShengXianHuiActivity.class));
+                            startActivity(new Intent(mContext, ShengXianHuiActivity.class));
                             break;
                         case 4:
-                            startActivity(new Intent(mContext,CanWeiYuDingAcitivity.class));
+                            startActivity(new Intent(mContext, CanWeiYuDingAcitivity.class));
                             break;
                         case 5:
-                            startActivity(new Intent(mContext,KaiDianActivity.class));
+                            startActivity(new Intent(mContext, KaiDianActivity.class));
                             break;
                         case 6:
-                            startActivity(new Intent(mContext,ZiXunActivity.class));
+                            startActivity(new Intent(mContext, ZiXunActivity.class));
                             break;
                         case 7:
-                            startActivity(new Intent(mContext,XinShouZhiYinActivity.class));
+                            startActivity(new Intent(mContext, XinShouZhiYinActivity.class));
                             break;
                         case 8:
-                            startActivity(new Intent(mContext,LatestActivity.class));
+                            startActivity(new Intent(mContext, LatestActivity.class));
                             break;
                         case 9:
-                            startActivity(new Intent(mContext,MyShareActivity.class));
+                            startActivity(new Intent(mContext, MyDonkeyEarsActivity.class));
                             break;
                     }
                 }
@@ -186,8 +190,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mTitleContentTv.setText("养驴啦");
         mTitleMessageIv.setVisibility(View.VISIBLE);
         mTitleMessageIv.setOnClickListener(this);
-        mTitleSignInIv.setVisibility(View.VISIBLE);
-        mTitleSignInIv.setOnClickListener(this);
+        mTitleJiaiv.setVisibility(View.VISIBLE);
+        mTitleJiaiv.setOnClickListener(this);
         List<String> list = new ArrayList<>();
         list.add("");
         list.add("");
@@ -213,7 +217,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(mContext, JianKongActivity.class);
-                intent.putExtra("position",position+1);
+                intent.putExtra("position", position + 1);
                 startActivity(intent);
             }
         });
@@ -224,17 +228,17 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mGoodAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(mContext,GoodListActivity.class));
+                startActivity(new Intent(mContext, GoodListActivity.class));
             }
         });
         mRecyclerMiaosha.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerMiaosha.setNestedScrollingEnabled(false);
-        mMiaoshaAdapter = new MiaoshaAdapter(R.layout.item_home_miaosha,list);
+        mMiaoshaAdapter = new MiaoshaAdapter(R.layout.item_home_miaosha, list);
         mRecyclerMiaosha.setAdapter(mMiaoshaAdapter);
         mMiaoshaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(mContext,MiaoShaDetailActivity.class));
+                startActivity(new Intent(mContext, MiaoShaDetailActivity.class));
             }
         });
         mTvQiang.setOnClickListener(this);
@@ -259,19 +263,38 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             case R.id.title_message_iv://消息
 
                 break;
-            case R.id.title_sign_in_iv://签到
-
+            case R.id.title_jia_iv://加号
+                showDownPop(mTitleJiaiv);
                 break;
             case R.id.tv_qiang:
-                startActivity(new Intent(mContext,RenYangListActivity.class));
+                startActivity(new Intent(mContext, RenYangListActivity.class));
                 break;
             case R.id.iv_jiankong_more:
-                startActivity(new Intent(mContext,JianKongActivity.class));
+                startActivity(new Intent(mContext, JianKongActivity.class));
                 break;
             case R.id.iv_miaosha_more:
-                startActivity(new Intent(mContext,MiaoShaActivity.class));
+                startActivity(new Intent(mContext, MiaoShaActivity.class));
                 break;
         }
+    }
+
+    //向下弹出
+    public void showDownPop(View view) {
+        if (popupWindow != null && popupWindow.isShowing())
+            return;
+        popupWindow = new CommonPopupWindow.Builder(mContext)
+                .setView(R.layout.popup_home)
+                .setWidthAndHeight(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .setAnimationStyle(R.style.AnimDown)
+                .setViewOnclickListener(new CommonPopupWindow.ViewInterface() {
+                    @Override
+                    public void getChildView(View view, int layoutResId) {
+
+                    }
+                })
+                .setOutsideTouchable(true)
+                .create();
+        popupWindow.showAsDropDown(view);
     }
 
     private class TopAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
@@ -350,7 +373,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             helper.getView(R.id.tv_jiankong).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(mContext,JianKongActivity.class));
+                    startActivity(new Intent(mContext, JianKongActivity.class));
                 }
             });
         }

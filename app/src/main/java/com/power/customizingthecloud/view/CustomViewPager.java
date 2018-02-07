@@ -12,6 +12,8 @@ import android.view.View;
 public class CustomViewPager extends ViewPager {
     /*
     * 解决scrollView嵌套viewpager导致的viewpager不显示的问题
+    * 遍历ViewPager所有的子View,得到高度，赋值给ViewPager。这样写，是解决了view为null的问题，并且也给ViewPager设置了高度，
+      但是，切换页面时，子View的高度与最大的子View的高度不匹配，就会导致，页面下一大片空白部分。
     * */
     public CustomViewPager(Context context) {
         super(context);
