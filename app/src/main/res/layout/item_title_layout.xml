@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="40dp"
     android:background="@color/title">
     <ImageView
         android:id="@+id/title_message_iv"
@@ -98,6 +98,16 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:src="@drawable/icon_search"
+        android:visibility="gone"/>
+    <ImageView
+        android:id="@+id/title_jia_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:src="@drawable/home_jiahao"
         android:visibility="gone"/>
     <TextView
         android:id="@+id/title_content_right_tv"
