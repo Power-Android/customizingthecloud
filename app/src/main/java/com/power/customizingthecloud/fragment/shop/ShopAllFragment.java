@@ -8,10 +8,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -23,6 +25,7 @@ import com.power.customizingthecloud.fragment.home.GoodListActivity;
 import com.power.customizingthecloud.fragment.home.MiaoShaDetailActivity;
 import com.power.customizingthecloud.fragment.home.top.MiaoShaActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
+import com.power.customizingthecloud.view.BaseDialog;
 import com.youth.banner.Banner;
 
 import java.util.ArrayList;
@@ -68,11 +71,15 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
     ImageView mIvQuanMore;
     @BindView(R.id.recycler_quan)
     RecyclerView mRecyclerQuan;
+    @BindView(R.id.ll_miaosha)
+    LinearLayout ll_miaosha;
     Unbinder unbinder;
     private HotProductAdapter mHotProductAdapter;
     private NewProductAdapter mNewProductAdapter;
     private MiaoshaAdapter mMiaoshaAdapter;
     private QuanAdapter mQuanAdapter;
+    private BaseDialog mDialog;
+    private BaseDialog.Builder mBuilder;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -130,6 +137,8 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
         mRecyclerQuan.setLayoutManager(new LinearLayoutManager(mContext));
         mQuanAdapter = new QuanAdapter(R.layout.item_daijinquan, list);
         mRecyclerQuan.setAdapter(mQuanAdapter);
+        ll_miaosha.setOnClickListener(this);
+        mIvQuanMore.setOnClickListener(this);
     }
 
     @Override
@@ -143,6 +152,12 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                 break;
             case R.id.iv_miaosha_more:
                 startActivity(new Intent(mContext, MiaoShaActivity.class));
+                break;
+            case R.id.ll_miaosha:
+                startActivity(new Intent(mContext, MiaoShaDetailActivity.class));
+                break;
+            case R.id.iv_quan_more:
+                startActivity(new Intent(mContext, QuanListActivity.class));
                 break;
         }
     }
@@ -193,7 +208,44 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
+            TextView tv_lingqu = helper.getView(R.id.tv_lingqu);
+            tv_lingqu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showLingquDialog();
+                }
+            });
         }
+    }
+
+    private void showLingquDialog() {
+        mBuilder = new BaseDialog.Builder(mContext);
+        mDialog = mBuilder.setViewId(R.layout.dialog_getquan)
+                //设置dialogpadding
+                .setPaddingdp(0, 0, 0, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Alpah_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
     }
 
     @Override
