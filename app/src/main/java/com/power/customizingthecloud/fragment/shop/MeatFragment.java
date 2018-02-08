@@ -49,6 +49,7 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_shopmeat, null);
         unbinder = ButterKnife.bind(this, view);
+        mIvCar.setOnClickListener(this);
         return view;
     }
 
@@ -74,7 +75,6 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
         list.add("");
         XianAdapter xianAdapter = new XianAdapter(R.layout.item_shengxian, list);
         mRecyclerMeat.setAdapter(xianAdapter);
-        mIvCar.setOnClickListener(this);
         xianAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {

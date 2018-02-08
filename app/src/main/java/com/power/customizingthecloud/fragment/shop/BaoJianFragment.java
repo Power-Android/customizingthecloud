@@ -44,6 +44,7 @@ public class BaoJianFragment extends BaseFragment implements View.OnClickListene
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pinpai, null);
         unbinder = ButterKnife.bind(this, view);
+        mIvCar.setOnClickListener(this);
         return view;
     }
 
@@ -66,7 +67,6 @@ public class BaoJianFragment extends BaseFragment implements View.OnClickListene
         list.add("");
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(R.layout.item_shengxian, list);
         mRecyclerView.setAdapter(recyclerAdapter);
-        mIvCar.setOnClickListener(this);
         recyclerAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
