@@ -116,7 +116,7 @@ public class GoodTypeActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void switchData(String name) {
-        mTvContent.setText("——————"+name+"——————");
+        mTvContent.setText(name);
     }
 
     class TitleAdapter extends BaseQuickAdapter<GoodTypeBean, BaseViewHolder> {
