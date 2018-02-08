@@ -78,6 +78,7 @@ public class GoodTypeActivity extends BaseActivity implements View.OnClickListen
             mTypeBeanList.add(new GoodTypeBean("农特产品"));
             mTypeBeanList.add(new GoodTypeBean("休闲食品"));
             mTypeBeanList.add(new GoodTypeBean("大单预定"));
+            mTypeBeanList.add(new GoodTypeBean("VIP私人定制专享"));
             mTypeBeanList.add(new GoodTypeBean("成为会员"));
         }
         mTypeBeanList.get(0).setChecked(true);
