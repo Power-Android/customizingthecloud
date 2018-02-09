@@ -84,6 +84,8 @@
         </activity>
         <activity android:name=".fragment.shop.GoodTypeActivity">
         </activity>
+        <activity android:name=".fragment.shop.SearchActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -133,6 +133,7 @@ public class ShopFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext,GoodTypeActivity.class));
                 break;
             case R.id.title_search_iv:
+                startActivity(new Intent(mContext,SearchActivity.class));
                 break;
         }
     }
