@@ -139,6 +139,7 @@ public class CustomerCenterActivity extends BaseActivity implements View.OnClick
     }
 
     @OnClick(R.id.wuliu_ll)
+
     public void setWuliuLl(){
         initWuliuColor();
     }

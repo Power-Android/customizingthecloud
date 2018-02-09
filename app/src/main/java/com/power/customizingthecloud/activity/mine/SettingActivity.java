@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -41,12 +42,12 @@ public class SettingActivity extends BaseActivity {
 
     @OnClick(R.id.userinfo_rl)
     public void setUserinfoRl(){
-
+        startActivity(new Intent(mContext,EditInfoActivity.class));
     }
 
     @OnClick(R.id.shiming_rl)
     public void setShimingRl(){
-
+        startActivity(new Intent(mContext,CertificationActivity.class));
     }
 
     @OnClick(R.id.shopadress_rl)
@@ -56,7 +57,7 @@ public class SettingActivity extends BaseActivity {
 
     @OnClick(R.id.acountsafe_rl)
     public void setAcountsafeRl(){
-
+        startActivity(new Intent(mContext,AccountSafeActivity.class));
     }
 
     @OnClick(R.id.aboutyanglv_rl)
