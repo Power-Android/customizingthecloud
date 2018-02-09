@@ -47,7 +47,7 @@ public class SettingActivity extends BaseActivity {
 
     @OnClick(R.id.shiming_rl)
     public void setShimingRl(){
-
+        startActivity(new Intent(mContext,CertificationActivity.class));
     }
 
     @OnClick(R.id.shopadress_rl)

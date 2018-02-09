@@ -78,10 +78,11 @@
         <activity android:name=".activity.mine.MyTransferAccountsActivity" />
         <activity android:name=".activity.mine.MyMoneyRecordActivity" />
         <activity android:name=".activity.mine.CustomerCenterActivity" />
-        <activity android:name=".fragment.shop.QuanListActivity"></activity>
-        <activity android:name=".fragment.shop.VideoListActivity"></activity>
-        <activity android:name=".fragment.shop.GoodTypeActivity"></activity>
-        <activity android:name=".activity.mine.AccountSafeActivity"></activity>
+        <activity android:name=".fragment.shop.QuanListActivity" />
+        <activity android:name=".fragment.shop.VideoListActivity" />
+        <activity android:name=".fragment.shop.GoodTypeActivity" />
+        <activity android:name=".activity.mine.AccountSafeActivity" />
+        <activity android:name=".activity.mine.CertificationActivity"></activity>
     </application>
 
 </manifest>

@@ -17,6 +17,7 @@
     <color name="pink">#FFEEEE</color>
     <color name="gray">#A4A4A4</color>
     <color name="gray1">#F0F0F0</color>
+    <color name="gray2">#F4F4F4</color>
     <!--渐加减控件-->
     <color name="pressblue">#F1F1F1</color>
     <color name="cl_snappingstepper_button_normal">#237bb6</color>
