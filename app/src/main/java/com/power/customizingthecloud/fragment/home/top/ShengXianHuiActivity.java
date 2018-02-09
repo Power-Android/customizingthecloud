@@ -44,6 +44,7 @@ public class ShengXianHuiActivity extends BaseActivity implements View.OnClickLi
     @BindView(R.id.iv_eye)
     ImageView mIvEye;
     private XianAdapter mShopAdapter;
+    private AnimationDrawable mAnimationDrawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +71,15 @@ public class ShengXianHuiActivity extends BaseActivity implements View.OnClickLi
             }
         });
         //开启在布局文件中设置的帧动画
-        AnimationDrawable drawable = (AnimationDrawable) mIvEye.getDrawable();
-        drawable.start();
+        mAnimationDrawable = (AnimationDrawable) mIvEye.getDrawable();
+        mAnimationDrawable.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mAnimationDrawable.stop();
+        mAnimationDrawable=null;
     }
 
     private class XianAdapter extends BaseQuickAdapter<String, BaseViewHolder> {

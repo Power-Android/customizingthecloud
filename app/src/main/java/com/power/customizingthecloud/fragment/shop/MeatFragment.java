@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.shop;
 
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -14,7 +15,9 @@ import android.widget.ImageView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseFragment;
+import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
 import com.youth.banner.Banner;
 
@@ -29,7 +32,7 @@ import butterknife.Unbinder;
  * Created by Administrator on 2018/2/2.
  */
 
-public class MeatFragment extends BaseFragment {
+public class MeatFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.banner)
     Banner mBanner;
     @BindView(R.id.iv_buwei)
@@ -46,6 +49,7 @@ public class MeatFragment extends BaseFragment {
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_shopmeat, null);
         unbinder = ButterKnife.bind(this, view);
+        mIvCar.setOnClickListener(this);
         return view;
     }
 
@@ -71,6 +75,21 @@ public class MeatFragment extends BaseFragment {
         list.add("");
         XianAdapter xianAdapter = new XianAdapter(R.layout.item_shengxian, list);
         mRecyclerMeat.setAdapter(xianAdapter);
+        xianAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(mContext, GoodDetailActivity.class));
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.iv_car:
+                startActivity(new Intent(mContext, ShopCartActivity.class));
+                break;
+        }
     }
 
     private class XianAdapter extends BaseQuickAdapter<String, BaseViewHolder> {

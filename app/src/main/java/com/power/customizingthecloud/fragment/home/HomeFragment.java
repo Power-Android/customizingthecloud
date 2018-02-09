@@ -8,10 +8,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -33,6 +35,7 @@ import com.power.customizingthecloud.fragment.home.top.ShengXianHuiActivity;
 import com.power.customizingthecloud.fragment.home.top.XinShouZhiYinActivity;
 import com.power.customizingthecloud.fragment.home.top.ZiXunActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
+import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.CommonPopupWindow;
 import com.youth.banner.Banner;
 
@@ -107,6 +110,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private GoodAdapter mGoodAdapter;
     private MiaoshaAdapter mMiaoshaAdapter;
     private CommonPopupWindow popupWindow;
+    private BaseDialog mDialog;
+    private BaseDialog.Builder mBuilder;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -289,12 +294,49 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 .setViewOnclickListener(new CommonPopupWindow.ViewInterface() {
                     @Override
                     public void getChildView(View view, int layoutResId) {
-
+                        TextView tv_shopma= (TextView) view.findViewById(R.id.tv_shopma);
+                        tv_shopma.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                showShopMaDialog();
+                                popupWindow.dismiss();
+                            }
+                        });
                     }
                 })
                 .setOutsideTouchable(true)
                 .create();
         popupWindow.showAsDropDown(view);
+    }
+
+    private void showShopMaDialog() {
+        mBuilder = new BaseDialog.Builder(mContext);
+        mDialog = mBuilder.setViewId(R.layout.dialog_shopma)
+                //设置dialogpadding
+                .setPaddingdp(0, 0, 0, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Alpah_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
     }
 
     private class TopAdapter extends BaseQuickAdapter<String, BaseViewHolder> {

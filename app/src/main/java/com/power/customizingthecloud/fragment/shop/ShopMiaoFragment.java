@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.shop;
 
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -15,6 +16,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseFragment;
+import com.power.customizingthecloud.fragment.home.MiaoShaDetailActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
 import com.youth.banner.Banner;
 
@@ -62,6 +64,12 @@ public class ShopMiaoFragment extends BaseFragment {
         list.add("");
         MiaoShaAdapter miaoShaAdapter = new MiaoShaAdapter(R.layout.item_home_miaosha, list);
         mRecyclerMiao.setAdapter(miaoShaAdapter);
+        miaoShaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(mContext, MiaoShaDetailActivity.class));
+            }
+        });
     }
 
     private class MiaoShaAdapter extends BaseQuickAdapter<String, BaseViewHolder> {

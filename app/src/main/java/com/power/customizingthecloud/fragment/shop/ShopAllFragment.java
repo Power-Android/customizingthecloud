@@ -8,22 +8,30 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.LatestActivity;
 import com.power.customizingthecloud.base.BaseFragment;
+import com.power.customizingthecloud.bean.EventBean;
 import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
 import com.power.customizingthecloud.fragment.home.GoodListActivity;
 import com.power.customizingthecloud.fragment.home.MiaoShaDetailActivity;
+import com.power.customizingthecloud.fragment.home.top.KaiDianActivity;
 import com.power.customizingthecloud.fragment.home.top.MiaoShaActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
+import com.power.customizingthecloud.view.BaseDialog;
 import com.youth.banner.Banner;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,11 +76,15 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
     ImageView mIvQuanMore;
     @BindView(R.id.recycler_quan)
     RecyclerView mRecyclerQuan;
+    @BindView(R.id.ll_miaosha)
+    LinearLayout ll_miaosha;
     Unbinder unbinder;
     private HotProductAdapter mHotProductAdapter;
     private NewProductAdapter mNewProductAdapter;
     private MiaoshaAdapter mMiaoshaAdapter;
     private QuanAdapter mQuanAdapter;
+    private BaseDialog mDialog;
+    private BaseDialog.Builder mBuilder;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,6 +93,12 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
         mIvNewproductMore.setOnClickListener(this);
         mIvHotproductMore.setOnClickListener(this);
         mIvMiaoshaMore.setOnClickListener(this);
+        ll_miaosha.setOnClickListener(this);
+        mIvQuanMore.setOnClickListener(this);
+        mTvSaishangjishi.setOnClickListener(this);
+        mTvKaidian.setOnClickListener(this);
+        mTvMeichu.setOnClickListener(this);
+        mTvNewactivity.setOnClickListener(this);
         return view;
     }
 
@@ -144,6 +162,24 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
             case R.id.iv_miaosha_more:
                 startActivity(new Intent(mContext, MiaoShaActivity.class));
                 break;
+            case R.id.ll_miaosha:
+                startActivity(new Intent(mContext, MiaoShaDetailActivity.class));
+                break;
+            case R.id.iv_quan_more:
+                startActivity(new Intent(mContext, QuanListActivity.class));
+                break;
+            case R.id.tv_saishangjishi:
+                EventBus.getDefault().postSticky(new EventBean("checkganji"));
+                break;
+            case R.id.tv_kaidian:
+                startActivity(new Intent(mContext, KaiDianActivity.class));
+                break;
+            case R.id.tv_meichu:
+                startActivity(new Intent(mContext, VideoListActivity.class));
+                break;
+            case R.id.tv_newactivity:
+                startActivity(new Intent(mContext, LatestActivity.class));
+                break;
         }
     }
 
@@ -193,7 +229,44 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
+            TextView tv_lingqu = helper.getView(R.id.tv_lingqu);
+            tv_lingqu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showLingquDialog();
+                }
+            });
         }
+    }
+
+    private void showLingquDialog() {
+        mBuilder = new BaseDialog.Builder(mContext);
+        mDialog = mBuilder.setViewId(R.layout.dialog_getquan)
+                //设置dialogpadding
+                .setPaddingdp(0, 0, 0, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Alpah_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
     }
 
     @Override

@@ -78,6 +78,21 @@ public class MainActivity extends BaseActivity {
             tvPasture.setTextColor(getResources().getColor(R.color.green));
             tvMarket.setTextColor(getResources().getColor(R.color.text_gray));
             tvMine.setTextColor(getResources().getColor(R.color.text_gray));
+        }else if (eventBean.getMsg().equals("checkganji")){//选中赶集啦
+            if (marketFragment == null) {
+                marketFragment = new MarketFragment();
+            }
+            addFragments(marketFragment);
+            ivHome.setImageResource(R.drawable.home_false);
+            ivShop.setImageResource(R.drawable.shop_false);
+            ivPasture.setImageResource(R.drawable.pasture_false);
+            ivMarket.setImageResource(R.drawable.market_true);
+            ivMine.setImageResource(R.drawable.mine_false);
+            tvHome.setTextColor(getResources().getColor(R.color.text_gray));
+            tvShop.setTextColor(getResources().getColor(R.color.text_gray));
+            tvPasture.setTextColor(getResources().getColor(R.color.text_gray));
+            tvMarket.setTextColor(getResources().getColor(R.color.green));
+            tvMine.setTextColor(getResources().getColor(R.color.text_gray));
         }
     }
 
