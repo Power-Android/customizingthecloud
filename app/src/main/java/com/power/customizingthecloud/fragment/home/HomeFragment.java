@@ -233,7 +233,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mGoodAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(mContext, GoodListActivity.class));
+                startActivity(new Intent(mContext, GoodDetailActivity.class));
             }
         });
         mRecyclerMiaosha.setLayoutManager(new LinearLayoutManager(mContext));
@@ -249,6 +249,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mTvQiang.setOnClickListener(this);
         mIvJiankongMore.setOnClickListener(this);
         mIvMiaoshaMore.setOnClickListener(this);
+        mIvGoodMore.setOnClickListener(this);
     }
 
     @Override
@@ -279,6 +280,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.iv_miaosha_more:
                 startActivity(new Intent(mContext, MiaoShaActivity.class));
+                break;
+            case R.id.iv_good_more:
+                startActivity(new Intent(mContext, GoodListActivity.class));
                 break;
         }
     }

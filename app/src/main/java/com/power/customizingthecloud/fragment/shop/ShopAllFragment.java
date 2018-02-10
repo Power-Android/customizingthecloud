@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -191,7 +192,13 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-
+            ImageView iv_insertcar=helper.getView(R.id.iv_insertcar);
+            iv_insertcar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
@@ -203,7 +210,13 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-
+            ImageView iv_insertcar=helper.getView(R.id.iv_insertcar);
+            iv_insertcar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 

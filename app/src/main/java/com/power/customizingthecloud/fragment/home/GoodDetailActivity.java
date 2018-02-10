@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -11,11 +12,13 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.fragment.shop.GoodConfirmOrderActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.SnappingStepper;
@@ -104,6 +107,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
         mTitleShareIv.setVisibility(View.VISIBLE);
         mTitleShareIv.setOnClickListener(this);
         mTvLianximaijia.setOnClickListener(this);
+        mTvInsertcar.setOnClickListener(this);
         mTvBuy.setOnClickListener(this);
         BannerUtils.startBanner(mBanner, new ArrayList<String>());
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -127,8 +131,11 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
             case R.id.tv_lianximaijia:
 
                 break;
+            case R.id.tv_insertcar:
+                Toast.makeText(this, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
+                break;
             case R.id.tv_buy:
-
+                startActivity(new Intent(this, GoodConfirmOrderActivity.class));
                 break;
         }
     }

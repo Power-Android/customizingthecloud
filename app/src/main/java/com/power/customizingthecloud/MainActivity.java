@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.base.BaseFragment;
@@ -50,6 +51,7 @@ public class MainActivity extends BaseActivity {
     private PastureFragment pastureFragment;
     private MarketFragment marketFragment;
     private MineFragment mineFragment;
+    private long preTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,5 +214,16 @@ public class MainActivity extends BaseActivity {
         tvPasture.setTextColor(getResources().getColor(R.color.text_gray));
         tvMarket.setTextColor(getResources().getColor(R.color.text_gray));
         tvMine.setTextColor(getResources().getColor(R.color.green));
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() > preTime + 2000) {
+            Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show();
+            preTime = System.currentTimeMillis();
+        } else {
+            super.onBackPressed();//相当于finish()
+            realBack();//删除所有引用
+        }
     }
 }

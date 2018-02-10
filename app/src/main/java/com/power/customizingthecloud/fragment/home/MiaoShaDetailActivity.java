@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.home;
 
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -123,7 +124,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
 
                 break;
             case R.id.tv_buy:
-
+                startActivity(new Intent(this,MiaoConfirmOrderActivity.class));
                 break;
         }
     }

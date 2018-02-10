@@ -7,8 +7,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,6 +20,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.CustomViewPager;
 import com.power.customizingthecloud.view.SnappingStepper;
 
@@ -89,8 +93,12 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
     WebView mWebview;
     @BindView(R.id.recycler)
     RecyclerView mRecycler;
+    @BindView(R.id.tv_commit)
+    TextView mTvCommit;
     private List<Fragment> fragmentList = new ArrayList<>();
     private List<String> tab_list = new ArrayList<>();
+    private BaseDialog mDialog;
+    private BaseDialog.Builder mBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +108,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         mTitleBackIv.setVisibility(View.VISIBLE);
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("认养详情");
+        mTvCommit.setOnClickListener(this);
         /*if (tab_list.size() == 0) {
             tab_list.add("项目详情");
             tab_list.add("购买记录");
@@ -164,7 +173,70 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
             case R.id.title_back_iv:
                 finish();
                 break;
+            case R.id.tv_commit:
+                showPayStyleDialog();
+                break;
         }
+    }
+
+    private void showPayStyleDialog() {
+        mBuilder = new BaseDialog.Builder(this);
+        mDialog = mBuilder.setViewId(R.layout.dialog_paystyle)
+                //设置dialogpadding
+                .setPaddingdp(0, 0, 0, 0)
+                //设置显示位置
+                .setGravity(Gravity.BOTTOM)
+                //设置动画
+                .setAnimation(R.style.Bottom_Top_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.iv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_pay).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //                mDialog.dismiss();
+            }
+        });
+        final CheckBox cb_alipay = mDialog.getView(R.id.cb_alipay);
+        final CheckBox cb_weixin = mDialog.getView(R.id.cb_weixin);
+        final CheckBox cb_yinlian = mDialog.getView(R.id.cb_yinlian);
+        cb_alipay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    cb_weixin.setChecked(false);
+                    cb_yinlian.setChecked(false);
+                }
+            }
+        });
+        cb_weixin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    cb_alipay.setChecked(false);
+                    cb_yinlian.setChecked(false);
+                }
+            }
+        });
+        cb_yinlian.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    cb_weixin.setChecked(false);
+                    cb_alipay.setChecked(false);
+                }
+            }
+        });
     }
 
     @OnClick(R.id.xiangmu_ll)

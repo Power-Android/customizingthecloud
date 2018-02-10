@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.shop;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.fragment.home.GoodListActivity;
 import com.power.customizingthecloud.view.FluidLayout;
 
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         ButterKnife.bind(this);
         setHot();
         mIvBack.setOnClickListener(this);
+        mTvSearch.setOnClickListener(this);
     }
 
     private void setHot() {
@@ -71,7 +74,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    doSearchHot(tv.getText().toString());
+                    //                    doSearchHot(tv.getText().toString());
+                    startActivity(new Intent(SearchActivity.this, GoodListActivity.class));
                 }
             });
         }
@@ -79,9 +83,12 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.iv_back:
                 finish();
+                break;
+            case R.id.tv_search:
+                startActivity(new Intent(SearchActivity.this, GoodListActivity.class));
                 break;
         }
     }

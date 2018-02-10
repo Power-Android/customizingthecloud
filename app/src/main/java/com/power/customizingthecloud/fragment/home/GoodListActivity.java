@@ -9,10 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 
 import java.util.ArrayList;
@@ -75,7 +77,13 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-
+            ImageView iv_insertcar=helper.getView(R.id.iv_insertcar);
+            iv_insertcar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(GoodListActivity.this, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
@@ -86,7 +94,7 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
             case R.id.title_shopcar_iv:
-
+                startActivity(new Intent(this, ShopCartActivity.class));
                 break;
         }
     }
