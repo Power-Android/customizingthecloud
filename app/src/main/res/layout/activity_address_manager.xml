@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/backgourd"
+    tools:context="com.power.customizingthecloud.activity.mine.AddressManagerActivity">
+    <include
+        android:id="@+id/view_01"
+        layout="@layout/item_title_layout"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view_01"
+        android:layout_marginBottom="50dp">
+
+    </android.support.v7.widget.RecyclerView>
+    <TextView
+        android:id="@+id/xinzeng_tv"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/red2"
+        android:text="新增"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textColor="@color/white"/>
+</RelativeLayout>
