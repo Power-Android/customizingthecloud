@@ -62,17 +62,17 @@ public class SettingActivity extends BaseActivity {
 
     @OnClick(R.id.aboutyanglv_rl)
     public void setAboutyanglvRl(){
-
+        startActivity(new Intent(mContext,AboutUsActivity.class));
     }
 
     @OnClick(R.id.kefu_rl)
     public void setKefuRl(){
-
+        startActivity(new Intent(mContext, CustomerCenterActivity.class));
     }
 
     @OnClick(R.id.yijian_rl)
     public void setYijianRl(){
-
+        startActivity(new Intent(mContext,FeedbackActivity.class));
     }
 
     @OnClick(R.id.logout_tv)

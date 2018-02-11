@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.power.customizingthecloud"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.power.customizingthecloud">
 
     <!-- 这个权限用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- 这个权限用于访问GPS定位 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <!-- 用于读取手机当前的状态 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 访问网络，网络定位需要上网 -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".MyApplication"
@@ -31,9 +31,9 @@
         android:theme="@style/AppTheme">
         <activity android:name=".login.LoginActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -44,53 +44,55 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".activity.mine.EditInfoActivity"/>
-        <activity android:name=".activity.mine.MyDonkeyEarsActivity"/>
-        <activity android:name=".activity.mine.FortuneCenterAcitivity"/>
-        <activity android:name=".activity.mine.MyFootprintActivity"/>
-        <activity android:name=".activity.mine.ShopCartActivity"/>
-        <activity android:name=".activity.mine.MyVoucherActivity"/>
-        <activity android:name=".activity.mine.MyRedPacketActivity"/>
-        <activity android:name=".activity.mine.MyOrderActivity"/>
-        <activity android:name=".activity.mine.RefundAfterActivity"/>
-        <activity android:name=".fragment.home.top.MiaoShaActivity"/>
-        <activity android:name=".fragment.home.top.CanWeiYuDingAcitivity"/>
-        <activity android:name=".fragment.home.top.ShengXianHuiActivity"/>
-        <activity android:name=".fragment.home.top.ZiXunActivity"/>
-        <activity android:name=".fragment.home.top.XinShouZhiYinActivity"/>
-        <activity android:name=".fragment.home.top.KaiDianActivity"/>
-        <activity android:name=".fragment.home.top.MyShareActivity"/>
-        <activity android:name=".fragment.home.renyang.RenYangListActivity"/>
-        <activity android:name=".fragment.home.jiankong.JianKongActivity"/>
-        <activity android:name=".activity.mine.LatestActivity"/>
-        <activity android:name=".activity.mine.MyMessageActivity"/>
-        <activity android:name=".fragment.home.renyang.detail.RenYangDetailActivity"/>
-        <activity android:name=".fragment.home.GoodListActivity"/>
-        <activity android:name=".fragment.home.MiaoShaDetailActivity"/>
-        <activity android:name=".fragment.home.GoodDetailActivity"/>
-        <activity android:name=".activity.mine.SettingActivity"/>
-        <activity android:name=".activity.mine.MyRenyangCenterActivity"/>
-        <activity android:name=".fragment.home.ShopDetailActivity"/>
-        <activity android:name=".activity.mine.MyReserveActivity"/>
-        <activity android:name=".activity.mine.MyTransferAccountsActivity"/>
-        <activity android:name=".activity.mine.MyMoneyRecordActivity"/>
-        <activity android:name=".activity.mine.CustomerCenterActivity"/>
-        <activity android:name=".fragment.shop.QuanListActivity"/>
-        <activity android:name=".fragment.shop.VideoListActivity"/>
-        <activity android:name=".fragment.shop.GoodTypeActivity"/>
-        <activity android:name=".fragment.shop.SearchActivity"/>
-        <activity android:name=".activity.mine.AccountSafeActivity"/>
-        <activity android:name=".activity.mine.CertificationActivity"/>
-        <activity android:name=".fragment.home.MiaoConfirmOrderActivity"/>
-        <activity android:name=".fragment.shop.GoodConfirmOrderActivity"/>
-        <activity android:name=".login.RegisterActivity"/>
-        <activity android:name=".login.ForgetPswActivity"/>
-        <activity android:name=".login.RegistAgreementActivity"/>
-
+        <activity android:name=".activity.mine.EditInfoActivity" />
+        <activity android:name=".activity.mine.MyDonkeyEarsActivity" />
+        <activity android:name=".activity.mine.FortuneCenterAcitivity" />
+        <activity android:name=".activity.mine.MyFootprintActivity" />
+        <activity android:name=".activity.mine.ShopCartActivity" />
+        <activity android:name=".activity.mine.MyVoucherActivity" />
+        <activity android:name=".activity.mine.MyRedPacketActivity" />
+        <activity android:name=".activity.mine.MyOrderActivity" />
+        <activity android:name=".activity.mine.RefundAfterActivity" />
+        <activity android:name=".fragment.home.top.MiaoShaActivity" />
+        <activity android:name=".fragment.home.top.CanWeiYuDingAcitivity" />
+        <activity android:name=".fragment.home.top.ShengXianHuiActivity" />
+        <activity android:name=".fragment.home.top.ZiXunActivity" />
+        <activity android:name=".fragment.home.top.XinShouZhiYinActivity" />
+        <activity android:name=".fragment.home.top.KaiDianActivity" />
+        <activity android:name=".fragment.home.top.MyShareActivity" />
+        <activity android:name=".fragment.home.renyang.RenYangListActivity" />
+        <activity android:name=".fragment.home.jiankong.JianKongActivity" />
+        <activity android:name=".activity.mine.LatestActivity" />
+        <activity android:name=".activity.mine.MyMessageActivity" />
+        <activity android:name=".fragment.home.renyang.detail.RenYangDetailActivity" />
+        <activity android:name=".fragment.home.GoodListActivity" />
+        <activity android:name=".fragment.home.MiaoShaDetailActivity" />
+        <activity android:name=".fragment.home.GoodDetailActivity" />
+        <activity android:name=".activity.mine.SettingActivity" />
+        <activity android:name=".activity.mine.MyRenyangCenterActivity" />
+        <activity android:name=".fragment.home.ShopDetailActivity" />
+        <activity android:name=".activity.mine.MyReserveActivity" />
+        <activity android:name=".activity.mine.MyTransferAccountsActivity" />
+        <activity android:name=".activity.mine.MyMoneyRecordActivity" />
+        <activity android:name=".activity.mine.CustomerCenterActivity" />
+        <activity android:name=".fragment.shop.QuanListActivity" />
+        <activity android:name=".fragment.shop.VideoListActivity" />
+        <activity android:name=".fragment.shop.GoodTypeActivity" />
+        <activity android:name=".activity.mine.AccountSafeActivity" />
+        <activity android:name=".activity.mine.CertificationActivity" />
+        <activity android:name=".activity.mine.AddressManagerActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".fragment.home.MiaoConfirmOrderActivity" />
+        <activity android:name=".fragment.shop.GoodConfirmOrderActivity" />
+        <activity android:name=".login.RegisterActivity" />
+        <activity android:name=".login.ForgetPswActivity" />
+        <activity android:name=".activity.mine.EditAddressActivity" />
+        <activity android:name=".login.RegistAgreementActivity" />
+        <activity android:name=".activity.mine.AboutUsActivity" />
+        <activity android:name=".activity.mine.FeedbackActivity"></activity>
     </application>
 
 </manifest>
