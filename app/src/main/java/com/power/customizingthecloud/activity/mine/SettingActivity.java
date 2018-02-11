@@ -52,7 +52,7 @@ public class SettingActivity extends BaseActivity {
 
     @OnClick(R.id.shopadress_rl)
     public void setShopadressRl(){
-
+        startActivity(new Intent(mContext,AddressManagerActivity.class));
     }
 
     @OnClick(R.id.acountsafe_rl)
