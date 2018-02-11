@@ -200,6 +200,9 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                     Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
                 }
             });
+            ImageView iv_top=helper.getView(R.id.iv_top);
+            int width = iv_top.getMeasuredWidth();
+            Toast.makeText(mContext, " "+width, Toast.LENGTH_SHORT).show();
         }
     }
 
