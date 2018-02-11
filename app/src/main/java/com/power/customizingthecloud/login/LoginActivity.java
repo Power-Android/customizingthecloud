@@ -2,6 +2,7 @@ package com.power.customizingthecloud.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -9,11 +10,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.power.customizingthecloud.MainActivity;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.utils.SendSmsTimerUtils;
+import com.power.customizingthecloud.utils.SpUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,8 +75,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_login:
-                startActivity(new Intent(this, MainActivity.class));
-                finish();
+                login();
                 break;
             case R.id.tv_regist:
                 startActivity(new Intent(this, RegisterActivity.class));
@@ -94,18 +95,43 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 isPswVisible = !isPswVisible;
                 break;
             case R.id.tv_loginby_phone:
-                isPhoneLogin=true;
+                isPhoneLogin = true;
                 mLlCode.setVisibility(View.VISIBLE);
                 mViewLineCode.setVisibility(View.VISIBLE);
                 mLlMima.setVisibility(View.GONE);
                 mViewLineMima.setVisibility(View.GONE);
                 break;
             case R.id.tv_getcode:
-                SendSmsTimerUtils.sendSms(mTvGetcode,R.color.green,R.color.green);
+                SendSmsTimerUtils.sendSms(mTvGetcode, R.color.green, R.color.green);
                 break;
             case R.id.iv_finish:
                 finish();
                 break;
         }
+    }
+
+    private void login() {
+        String username = mEdtZhanghao.getText().toString();
+        if (TextUtils.isEmpty(username)) {
+            Toast.makeText(this, "请输入账号~", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (isPhoneLogin) {
+            String code = mEdtCode.getText().toString();
+            if (TextUtils.isEmpty(code)) {
+                Toast.makeText(this, "请输入验证码~", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } else {
+            String psw = mEdtPsw.getText().toString();
+            if (TextUtils.isEmpty(psw)) {
+                Toast.makeText(this, "请输入密码~", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+        Toast.makeText(this, "登陆成功", Toast.LENGTH_SHORT).show();
+        SpUtils.putString(this, "userid", "1");
+//        startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 }

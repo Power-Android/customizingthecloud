@@ -6,6 +6,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,6 +18,8 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.fragment.home.GoodListActivity;
+import com.power.customizingthecloud.login.LoginActivity;
+import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.view.BaseDialog;
 
 import java.util.ArrayList;
@@ -88,6 +91,12 @@ public class QuanListActivity extends BaseActivity implements View.OnClickListen
             tv_lingqu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String userid = SpUtils.getString(mContext, "userid", "");
+                    if (TextUtils.isEmpty(userid)){
+                        startActivity(new Intent(mContext, LoginActivity.class));
+                        overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                        return;
+                    }
                     showLingquDialog();
                 }
             });

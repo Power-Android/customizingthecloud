@@ -7,6 +7,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,7 +19,9 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
+import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.MyUtils;
+import com.power.customizingthecloud.utils.SpUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +100,12 @@ public class ShengXianHuiActivity extends BaseActivity implements View.OnClickLi
             iv_insertcar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String userid = SpUtils.getString(mContext, "userid", "");
+                    if (TextUtils.isEmpty(userid)){
+                        startActivity(new Intent(mContext, LoginActivity.class));
+                        overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                        return;
+                    }
                     Toast.makeText(ShengXianHuiActivity.this, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
                 }
             });

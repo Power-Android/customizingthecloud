@@ -6,6 +6,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,7 +18,9 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.MyUtils;
+import com.power.customizingthecloud.utils.SpUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +86,12 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
             iv_insertcar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String userid = SpUtils.getString(mContext, "userid", "");
+                    if (TextUtils.isEmpty(userid)){
+                        startActivity(new Intent(mContext, LoginActivity.class));
+                        overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                        return;
+                    }
                     Toast.makeText(GoodListActivity.this, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -101,6 +110,12 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
             case R.id.title_shopcar_iv:
+                String userid = SpUtils.getString(mContext, "userid", "");
+                if (TextUtils.isEmpty(userid)){
+                    startActivity(new Intent(mContext, LoginActivity.class));
+                    overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    return;
+                }
                 startActivity(new Intent(this, ShopCartActivity.class));
                 break;
         }

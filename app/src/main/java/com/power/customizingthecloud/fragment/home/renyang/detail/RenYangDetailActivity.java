@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.home.renyang.detail;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -7,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebView;
@@ -20,6 +22,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.login.LoginActivity;
+import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.CustomViewPager;
 import com.power.customizingthecloud.view.SnappingStepper;
@@ -174,6 +178,12 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.tv_commit:
+                String userid = SpUtils.getString(mContext, "userid", "");
+                if (TextUtils.isEmpty(userid)){
+                    startActivity(new Intent(mContext, LoginActivity.class));
+                    overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    return;
+                }
                 showPayStyleDialog();
                 break;
         }

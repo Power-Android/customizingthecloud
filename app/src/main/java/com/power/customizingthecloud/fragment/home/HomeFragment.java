@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,8 +35,10 @@ import com.power.customizingthecloud.fragment.home.top.MiaoShaActivity;
 import com.power.customizingthecloud.fragment.home.top.ShengXianHuiActivity;
 import com.power.customizingthecloud.fragment.home.top.XinShouZhiYinActivity;
 import com.power.customizingthecloud.fragment.home.top.ZiXunActivity;
+import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
 import com.power.customizingthecloud.utils.MyUtils;
+import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.CommonPopupWindow;
 import com.youth.banner.Banner;
@@ -269,7 +272,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.title_message_iv://消息
-
+                String userid = SpUtils.getString(mContext, "userid", "");
+                if (TextUtils.isEmpty(userid)){
+                    startActivity(new Intent(mContext, LoginActivity.class));
+                    mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    return;
+                }
                 break;
             case R.id.title_jia_iv://加号
                 showDownPop(mTitleJiaiv);

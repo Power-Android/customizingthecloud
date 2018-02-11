@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +29,10 @@ import com.power.customizingthecloud.fragment.home.GoodListActivity;
 import com.power.customizingthecloud.fragment.home.MiaoShaDetailActivity;
 import com.power.customizingthecloud.fragment.home.top.KaiDianActivity;
 import com.power.customizingthecloud.fragment.home.top.MiaoShaActivity;
+import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
 import com.power.customizingthecloud.utils.MyUtils;
+import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.youth.banner.Banner;
 
@@ -198,6 +201,12 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
             iv_insertcar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String userid = SpUtils.getString(mContext, "userid", "");
+                    if (TextUtils.isEmpty(userid)){
+                        startActivity(new Intent(mContext, LoginActivity.class));
+                        mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                        return;
+                    }
                     Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -221,6 +230,12 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
             iv_insertcar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String userid = SpUtils.getString(mContext, "userid", "");
+                    if (TextUtils.isEmpty(userid)){
+                        startActivity(new Intent(mContext, LoginActivity.class));
+                        mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                        return;
+                    }
                     Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -260,6 +275,12 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
             tv_lingqu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String userid = SpUtils.getString(mContext, "userid", "");
+                    if (TextUtils.isEmpty(userid)){
+                        startActivity(new Intent(mContext, LoginActivity.class));
+                        mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                        return;
+                    }
                     showLingquDialog();
                 }
             });

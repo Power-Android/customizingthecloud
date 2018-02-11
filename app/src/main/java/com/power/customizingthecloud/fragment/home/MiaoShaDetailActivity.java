@@ -7,6 +7,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebView;
@@ -18,7 +19,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
+import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.youth.banner.Banner;
 
@@ -121,9 +124,20 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
                 showShareDialog();
                 break;
             case R.id.tv_lianximaijia:
-
+                String userid = SpUtils.getString(this, "userid", "");
+                if (TextUtils.isEmpty(userid)){
+                    startActivity(new Intent(this, LoginActivity.class));
+                    overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    return;
+                }
                 break;
             case R.id.tv_buy:
+                String userid2 = SpUtils.getString(this, "userid", "");
+                if (TextUtils.isEmpty(userid2)){
+                    startActivity(new Intent(this, LoginActivity.class));
+                    overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    return;
+                }
                 startActivity(new Intent(this,MiaoConfirmOrderActivity.class));
                 break;
         }

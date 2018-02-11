@@ -2,11 +2,13 @@ package com.power.customizingthecloud.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
@@ -72,6 +74,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         mTitleContentTv.setText("注册");
         mTvGetcode.setOnClickListener(this);
         mTvAgreenment.setOnClickListener(this);
+        mTvLogin.setOnClickListener(this);
+        mTvRegist.setOnClickListener(this);
     }
 
     @Override
@@ -81,11 +85,42 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
             case R.id.tv_getcode:
-                SendSmsTimerUtils.sendSms(mTvGetcode,R.color.green,R.color.green);
+                SendSmsTimerUtils.sendSms(mTvGetcode, R.color.green, R.color.green);
                 break;
             case R.id.tv_agreement:
-                startActivity(new Intent(this,RegistAgreementActivity.class));
+                startActivity(new Intent(this, RegistAgreementActivity.class));
+                break;
+            case R.id.tv_login:
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+                break;
+            case R.id.tv_regist:
+                regist();
                 break;
         }
+    }
+
+    private void regist() {
+        String phone = mEdtPhone.getText().toString();
+        String code = mEdtCode.getText().toString();
+        String psw1 = mEdtPsw.getText().toString();
+        String psw2 = mEdtPsw2.getText().toString();
+        if (TextUtils.isEmpty(phone)) {
+            Toast.makeText(this, "请输入手机号~", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(code)) {
+            Toast.makeText(this, "请输入验证码~", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(psw1)) {
+            Toast.makeText(this, "请输入新密码~", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(psw2)) {
+            Toast.makeText(this, "请输入确认新密码~", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        startActivity(new Intent(this, LoginActivity.class));
     }
 }

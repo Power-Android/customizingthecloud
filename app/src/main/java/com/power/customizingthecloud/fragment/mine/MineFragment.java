@@ -2,6 +2,7 @@ package com.power.customizingthecloud.fragment.mine;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,11 +32,12 @@ import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.fragment.home.top.KaiDianActivity;
 import com.power.customizingthecloud.fragment.home.top.MyShareActivity;
+import com.power.customizingthecloud.login.LoginActivity;
+import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.view.CircleImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -106,6 +108,16 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         mineFenxiangRl.setOnClickListener(this);
         mineZijinRl.setOnClickListener(this);
         mineKefuRl.setOnClickListener(this);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        String userid = SpUtils.getString(mContext, "userid", "");
+        if (TextUtils.isEmpty(userid)){
+            startActivity(new Intent(mContext, LoginActivity.class));
+            mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+        }
     }
 
     @Override

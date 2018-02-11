@@ -6,6 +6,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,10 @@ import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
+import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
 import com.power.customizingthecloud.utils.MyUtils;
+import com.power.customizingthecloud.utils.SpUtils;
 import com.youth.banner.Banner;
 
 import java.util.ArrayList;
@@ -81,6 +84,12 @@ public class TeChanFragment extends BaseFragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.iv_car:
+                String userid = SpUtils.getString(mContext, "userid", "");
+                if (TextUtils.isEmpty(userid)){
+                    startActivity(new Intent(mContext, LoginActivity.class));
+                    mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    return;
+                }
                 startActivity(new Intent(mContext, ShopCartActivity.class));
                 break;
         }
@@ -98,6 +107,12 @@ public class TeChanFragment extends BaseFragment implements View.OnClickListener
             iv_insertcar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String userid = SpUtils.getString(mContext, "userid", "");
+                    if (TextUtils.isEmpty(userid)){
+                        startActivity(new Intent(mContext, LoginActivity.class));
+                        mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                        return;
+                    }
                     Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
                 }
             });

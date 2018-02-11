@@ -6,6 +6,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebView;
@@ -19,7 +20,9 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.fragment.shop.GoodConfirmOrderActivity;
+import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
+import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.SnappingStepper;
 import com.youth.banner.Banner;
@@ -129,12 +132,29 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
                 showShareDialog();
                 break;
             case R.id.tv_lianximaijia:
-
+                String userid = SpUtils.getString(mContext, "userid", "");
+                if (TextUtils.isEmpty(userid)){
+                    startActivity(new Intent(mContext, LoginActivity.class));
+                    overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    return;
+                }
                 break;
             case R.id.tv_insertcar:
+                String userid2 = SpUtils.getString(mContext, "userid", "");
+                if (TextUtils.isEmpty(userid2)){
+                    startActivity(new Intent(mContext, LoginActivity.class));
+                    overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    return;
+                }
                 Toast.makeText(this, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.tv_buy:
+                String userid3 = SpUtils.getString(mContext, "userid", "");
+                if (TextUtils.isEmpty(userid3)){
+                    startActivity(new Intent(mContext, LoginActivity.class));
+                    overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    return;
+                }
                 startActivity(new Intent(this, GoodConfirmOrderActivity.class));
                 break;
         }

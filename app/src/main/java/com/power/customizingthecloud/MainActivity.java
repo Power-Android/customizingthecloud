@@ -1,8 +1,10 @@
 package com.power.customizingthecloud;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,6 +19,8 @@ import com.power.customizingthecloud.fragment.market.MarketFragment;
 import com.power.customizingthecloud.fragment.mine.MineFragment;
 import com.power.customizingthecloud.fragment.pasture.PastureFragment;
 import com.power.customizingthecloud.fragment.shop.ShopFragment;
+import com.power.customizingthecloud.login.LoginActivity;
+import com.power.customizingthecloud.utils.SpUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -200,6 +204,12 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.ll_mine)
     public void mine(){
+        String userid = SpUtils.getString(this, "userid", "");
+        if (TextUtils.isEmpty(userid)){
+            startActivity(new Intent(this, LoginActivity.class));
+            overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+            return;
+        }
         if (mineFragment == null) {
             mineFragment = new MineFragment();
         }
