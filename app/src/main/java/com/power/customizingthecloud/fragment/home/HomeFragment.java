@@ -35,6 +35,7 @@ import com.power.customizingthecloud.fragment.home.top.ShengXianHuiActivity;
 import com.power.customizingthecloud.fragment.home.top.XinShouZhiYinActivity;
 import com.power.customizingthecloud.fragment.home.top.ZiXunActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
+import com.power.customizingthecloud.utils.MyUtils;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.CommonPopupWindow;
 import com.youth.banner.Banner;
@@ -367,6 +368,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         @Override
         protected void convert(BaseViewHolder helper, String item) {
             helper.setText(R.id.tv_jiankong, item);
+            ImageView iv_top=helper.getView(R.id.iv_jiankong);
+            int width = MyUtils.getScreenWidth(mContext) - MyUtils.dip2px(mContext, 60);
+            ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
+            layoutParams.height=width/3;
+            iv_top.setLayoutParams(layoutParams);
         }
     }
 

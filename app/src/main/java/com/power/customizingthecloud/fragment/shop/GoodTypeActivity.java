@@ -8,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.GoodTypeBean;
 import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
+import com.power.customizingthecloud.utils.MyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -148,6 +150,11 @@ public class GoodTypeActivity extends BaseActivity implements View.OnClickListen
         @Override
         protected void convert(BaseViewHolder helper, String item) {
             helper.setText(R.id.tv_jiankong,"精品驴奶粉");
+            ImageView iv_top=helper.getView(R.id.iv_top);
+            int width = MyUtils.getScreenWidth(mContext)*3/4 - MyUtils.dip2px(mContext, 25);
+            ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
+            layoutParams.height=width/3;
+            iv_top.setLayoutParams(layoutParams);
         }
     }
 

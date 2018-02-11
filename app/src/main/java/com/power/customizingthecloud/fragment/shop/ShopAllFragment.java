@@ -29,6 +29,7 @@ import com.power.customizingthecloud.fragment.home.MiaoShaDetailActivity;
 import com.power.customizingthecloud.fragment.home.top.KaiDianActivity;
 import com.power.customizingthecloud.fragment.home.top.MiaoShaActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
+import com.power.customizingthecloud.utils.MyUtils;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.youth.banner.Banner;
 
@@ -201,8 +202,10 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                 }
             });
             ImageView iv_top=helper.getView(R.id.iv_top);
-            int width = iv_top.getMeasuredWidth();
-            Toast.makeText(mContext, " "+width, Toast.LENGTH_SHORT).show();
+            int width = MyUtils.getScreenWidth(mContext) - MyUtils.dip2px(mContext, 50);
+            ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
+            layoutParams.height=width/2;
+            iv_top.setLayoutParams(layoutParams);
         }
     }
 
@@ -221,6 +224,11 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                     Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
                 }
             });
+            ImageView iv_top=helper.getView(R.id.iv_top);
+            int width = MyUtils.getScreenWidth(mContext) - MyUtils.dip2px(mContext, 50);
+            ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
+            layoutParams.height=width/2;
+            iv_top.setLayoutParams(layoutParams);
         }
     }
 

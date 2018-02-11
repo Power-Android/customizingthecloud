@@ -2,12 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:layout_margin="5dp"
               android:orientation="vertical">
     <ImageView
         android:id="@+id/iv_jiankong"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:src="@drawable/face"
+        android:scaleType="fitXY"
         android:layout_gravity="center_horizontal"/>
     <TextView
         android:id="@+id/tv_jiankong"

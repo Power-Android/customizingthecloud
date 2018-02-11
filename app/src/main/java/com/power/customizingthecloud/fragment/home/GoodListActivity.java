@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.utils.MyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +86,11 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
                     Toast.makeText(GoodListActivity.this, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
                 }
             });
+            ImageView iv_top=helper.getView(R.id.iv_top);
+            int width = MyUtils.getScreenWidth(mContext) - MyUtils.dip2px(mContext, 50);
+            ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
+            layoutParams.height=width/2;
+            iv_top.setLayoutParams(layoutParams);
         }
     }
 

@@ -19,6 +19,7 @@ import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
+import com.power.customizingthecloud.utils.MyUtils;
 import com.youth.banner.Banner;
 
 import java.util.ArrayList;
@@ -100,6 +101,11 @@ public class TeChanFragment extends BaseFragment implements View.OnClickListener
                     Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
                 }
             });
+            ImageView iv_top=helper.getView(R.id.iv_top);
+            int width = MyUtils.getScreenWidth(mContext) - MyUtils.dip2px(mContext, 50);
+            ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
+            layoutParams.height=width/2;
+            iv_top.setLayoutParams(layoutParams);
         }
     }
 

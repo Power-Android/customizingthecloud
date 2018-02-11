@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.fragment.home.ShopDetailActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
+import com.power.customizingthecloud.utils.MyUtils;
 import com.youth.banner.Banner;
 
 import java.util.ArrayList;
@@ -79,7 +81,11 @@ public class CanWeiYuDingAcitivity extends BaseActivity implements View.OnClickL
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-
+            ImageView iv_top=helper.getView(R.id.iv_top);
+            int width = MyUtils.getScreenWidth(mContext) - MyUtils.dip2px(mContext, 50);
+            ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
+            layoutParams.height=width/2;
+            iv_top.setLayoutParams(layoutParams);
         }
     }
 
