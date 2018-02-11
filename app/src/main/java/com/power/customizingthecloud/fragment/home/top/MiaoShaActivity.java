@@ -22,6 +22,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.iwgang.countdownview.CountdownView;
 
 public class MiaoShaActivity extends BaseActivity implements View.OnClickListener {
 
@@ -77,6 +78,8 @@ public class MiaoShaActivity extends BaseActivity implements View.OnClickListene
             TextView tv_yuanjia = helper.getView(R.id.tv_yuanjia);
             //添加删除线
             tv_yuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            CountdownView cv_countdownView=helper.getView(R.id.cv_countdownView);
+            cv_countdownView.start(995550000); // Millisecond
         }
     }
 

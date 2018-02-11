@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/backgourd"
     android:orientation="vertical"
     tools:context="com.power.customizingthecloud.fragment.home.top.MiaoShaActivity">
@@ -18,6 +18,11 @@
             android:orientation="vertical">
             <com.youth.banner.Banner
                 android:id="@+id/banner"
+                app:indicator_drawable_selected="@drawable/green_point"
+                app:indicator_drawable_unselected="@drawable/white_point"
+                app:indicator_height="8dp"
+                app:indicator_margin="5dp"
+                app:indicator_width="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"/>
             <FrameLayout

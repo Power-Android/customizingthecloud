@@ -89,6 +89,7 @@
         <activity android:name=".fragment.shop.GoodConfirmOrderActivity"/>
         <activity android:name=".login.RegisterActivity"/>
         <activity android:name=".login.ForgetPswActivity"/>
+        <activity android:name=".login.RegistAgreementActivity"/>
     </application>
 
 </manifest>

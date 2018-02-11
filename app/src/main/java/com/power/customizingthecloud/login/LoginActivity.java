@@ -66,6 +66,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mIvPswStatus.setOnClickListener(this);
         mTvLoginbyPhone.setOnClickListener(this);
         mTvGetcode.setOnClickListener(this);
+        mIvFinish.setOnClickListener(this);
     }
 
     @Override
@@ -101,6 +102,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.tv_getcode:
                 SendSmsTimerUtils.sendSms(mTvGetcode,R.color.green,R.color.green);
+                break;
+            case R.id.iv_finish:
+                finish();
                 break;
         }
     }

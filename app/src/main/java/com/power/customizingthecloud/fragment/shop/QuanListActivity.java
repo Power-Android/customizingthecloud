@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.shop;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.fragment.home.GoodListActivity;
 import com.power.customizingthecloud.view.BaseDialog;
 
 import java.util.ArrayList;
@@ -118,6 +120,7 @@ public class QuanListActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
+                startActivity(new Intent(QuanListActivity.this,GoodListActivity.class));
             }
         });
     }

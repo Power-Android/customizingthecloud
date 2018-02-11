@@ -149,6 +149,7 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
         mRecyclerQuan.setLayoutManager(new LinearLayoutManager(mContext));
         mQuanAdapter = new QuanAdapter(R.layout.item_daijinquan, list);
         mRecyclerQuan.setAdapter(mQuanAdapter);
+        mCvCountdownView.start(995550000);
     }
 
     @Override
@@ -231,6 +232,8 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
             TextView tv_yuanjia = helper.getView(R.id.tv_yuanjia);
             //添加删除线
             tv_yuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            CountdownView cv_countdownView=helper.getView(R.id.cv_countdownView);
+            cv_countdownView.start(995550000); // Millisecond
         }
     }
 
@@ -278,6 +281,7 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
+                startActivity(new Intent(mContext,GoodListActivity.class));
             }
         });
     }

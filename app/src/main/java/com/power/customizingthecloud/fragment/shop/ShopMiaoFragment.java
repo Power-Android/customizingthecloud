@@ -26,6 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cn.iwgang.countdownview.CountdownView;
 
 /**
  * Created by Administrator on 2018/2/2.
@@ -83,6 +84,8 @@ public class ShopMiaoFragment extends BaseFragment {
             TextView tv_yuanjia = helper.getView(R.id.tv_yuanjia);
             //添加删除线
             tv_yuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            CountdownView cv_countdownView=helper.getView(R.id.cv_countdownView);
+            cv_countdownView.start(995550000); // Millisecond
         }
     }
 

@@ -17,6 +17,11 @@
             <com.youth.banner.Banner
                 android:id="@+id/banner"
                 android:layout_width="match_parent"
+                app:indicator_drawable_selected="@drawable/green_point"
+                app:indicator_drawable_unselected="@drawable/white_point"
+                app:indicator_height="8dp"
+                app:indicator_margin="5dp"
+                app:indicator_width="8dp"
                 android:layout_height="200dp"/>
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_top"

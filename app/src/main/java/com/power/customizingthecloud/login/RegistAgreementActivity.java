@@ -1,42 +1,18 @@
 package com.power.customizingthecloud.login;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
-import com.power.customizingthecloud.utils.SendSmsTimerUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RegisterActivity extends BaseActivity implements View.OnClickListener {
+public class RegistAgreementActivity extends BaseActivity implements View.OnClickListener {
 
-    @BindView(R.id.edt_phone)
-    EditText mEdtPhone;
-    @BindView(R.id.edt_code)
-    EditText mEdtCode;
-    @BindView(R.id.tv_getcode)
-    TextView mTvGetcode;
-    @BindView(R.id.edt_psw)
-    EditText mEdtPsw;
-    @BindView(R.id.edt_psw2)
-    EditText mEdtPsw2;
-    @BindView(R.id.edt_person_phone)
-    EditText mEdtPersonPhone;
-    @BindView(R.id.tv_login)
-    TextView mTvLogin;
-    @BindView(R.id.tv_regist)
-    TextView mTvRegist;
-    @BindView(R.id.tv_agreement)
-    TextView mTvAgreenment;
-    @BindView(R.id.activity_login)
-    LinearLayout mActivityLogin;
     @BindView(R.id.title_message_iv)
     ImageView mTitleMessageIv;
     @BindView(R.id.title_back_iv)
@@ -65,13 +41,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_regist_agreement);
         ButterKnife.bind(this);
         mTitleBackIv.setVisibility(View.VISIBLE);
         mTitleBackIv.setOnClickListener(this);
-        mTitleContentTv.setText("注册");
-        mTvGetcode.setOnClickListener(this);
-        mTvAgreenment.setOnClickListener(this);
+        mTitleContentTv.setText("塞上云端用户协议");
     }
 
     @Override
@@ -79,12 +53,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         switch (v.getId()) {
             case R.id.title_back_iv:
                 finish();
-                break;
-            case R.id.tv_getcode:
-                SendSmsTimerUtils.sendSms(mTvGetcode,R.color.green,R.color.green);
-                break;
-            case R.id.tv_agreement:
-                startActivity(new Intent(this,RegistAgreementActivity.class));
                 break;
         }
     }
