@@ -50,7 +50,7 @@ public class SendSmsTimerUtils extends CountDownTimer {//验证码倒计时的�
     @Override
     public void onTick(long millisUntilFinished) {
         mTextView.setClickable(false);
-        mTextView.setText(millisUntilFinished / 1000 + "s");
+        mTextView.setText(millisUntilFinished / 1000 + "S");
         int color = MyApplication.getGloableContext().getResources().getColor(downInterval);
         mTextView.setTextColor(color);
         SpannableString spannableString = new SpannableString(mTextView.getText().toString());

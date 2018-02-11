@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.power.customizingthecloud.MainActivity;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.utils.SendSmsTimerUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +40,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     LinearLayout mActivityLogin;
     @BindView(R.id.iv_psw_status)
     ImageView mIvPswStatus;
+    @BindView(R.id.edt_code)
+    EditText mEdtCode;
+    @BindView(R.id.tv_getcode)
+    TextView mTvGetcode;
+    @BindView(R.id.ll_code)
+    LinearLayout mLlCode;
+    @BindView(R.id.view_line_code)
+    View mViewLineCode;
+    @BindView(R.id.ll_mima)
+    LinearLayout mLlMima;
+    @BindView(R.id.view_line_mima)
+    View mViewLineMima;
     private boolean isPswVisible;
+    private boolean isPhoneLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +64,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mTvRegist.setOnClickListener(this);
         mTvForgetPsw.setOnClickListener(this);
         mIvPswStatus.setOnClickListener(this);
+        mTvLoginbyPhone.setOnClickListener(this);
+        mTvGetcode.setOnClickListener(this);
     }
 
     @Override
@@ -66,15 +82,25 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 startActivity(new Intent(this, ForgetPswActivity.class));
                 break;
             case R.id.iv_psw_status:
-                if (isPswVisible){
+                if (isPswVisible) {
                     mIvPswStatus.setImageResource(R.drawable.login_eye_open);
                     //设置密码是否可见
                     mEdtPsw.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                }else {
+                } else {
                     mIvPswStatus.setImageResource(R.drawable.login_eye_close);
                     mEdtPsw.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 }
-                isPswVisible=!isPswVisible;
+                isPswVisible = !isPswVisible;
+                break;
+            case R.id.tv_loginby_phone:
+                isPhoneLogin=true;
+                mLlCode.setVisibility(View.VISIBLE);
+                mViewLineCode.setVisibility(View.VISIBLE);
+                mLlMima.setVisibility(View.GONE);
+                mViewLineMima.setVisibility(View.GONE);
+                break;
+            case R.id.tv_getcode:
+                SendSmsTimerUtils.sendSms(mTvGetcode,R.color.green,R.color.green);
                 break;
         }
     }
