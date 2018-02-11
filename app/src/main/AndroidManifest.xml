@@ -90,6 +90,8 @@
         <activity android:name=".login.RegisterActivity"/>
         <activity android:name=".login.ForgetPswActivity"/>
         <activity android:name=".login.RegistAgreementActivity"/>
+
+
     </application>
 
 </manifest>
