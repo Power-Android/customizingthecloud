@@ -7,8 +7,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.power.customizingthecloud.MainActivity;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.wevey.selector.dialog.DialogInterface;
+import com.wevey.selector.dialog.NormalAlertDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,6 +80,34 @@ public class SettingActivity extends BaseActivity {
 
     @OnClick(R.id.logout_tv)
     public void setLogoutTv(){
+        showTip();
+    }
 
+    private void showTip() {
+        new NormalAlertDialog.Builder(this)
+                .setTitleVisible(false).setTitleText("退出登录").setTitleTextSize(16)
+                .setTitleTextColor(R.color.text_black)
+                .setContentText("是否退出")
+                .setContentTextSize(18)
+                .setContentTextColor(R.color.text_black)
+                .setLeftButtonText("是")
+                .setLeftButtonTextColor(R.color.text_black)
+                .setRightButtonText("否")
+                .setRightButtonTextColor(R.color.text_black)
+                .setCanceledOnTouchOutside(false)
+                .setOnclickListener(new DialogInterface.OnLeftAndRightClickListener<NormalAlertDialog>() {
+                    @Override
+                    public void clickLeftButton(NormalAlertDialog dialog, View view) {
+                        startActivity(new Intent(mContext, MainActivity.class));
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void clickRightButton(NormalAlertDialog dialog, View view) {
+                        dialog.dismiss();
+                    }
+                })
+                .build()
+                .show();
     }
 }
