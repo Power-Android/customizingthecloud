@@ -255,6 +255,7 @@
             android:paddingBottom="3dp"
             android:gravity="center"
             android:paddingLeft="20dp"
+            android:textSize="13sp"
             android:paddingRight="20dp"
             android:paddingTop="3dp"
             android:text="联系卖家"/>

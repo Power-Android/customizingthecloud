@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.AddressManagerActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.SpUtils;
@@ -80,6 +81,8 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
     TextView mTvTotalprice;
     @BindView(R.id.tv_commit)
     TextView mTvCommit;
+    @BindView(R.id.iv_address)
+    ImageView mIvAddress;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     private CommonPopupWindow popupWindow;
@@ -95,6 +98,7 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
         mTvCommit.setOnClickListener(this);
         mTvTime.setOnClickListener(this);
         mIvTime.setOnClickListener(this);
+        mIvAddress.setOnClickListener(this);
     }
 
     private void showPayStyleDialog() {
@@ -122,7 +126,7 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
         mDialog.getView(R.id.tv_pay).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                mDialog.dismiss();
+                //                mDialog.dismiss();
             }
         });
         final CheckBox cb_alipay = mDialog.getView(R.id.cb_alipay);
@@ -131,7 +135,7 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
         cb_alipay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
+                if (isChecked) {
                     cb_weixin.setChecked(false);
                     cb_yinlian.setChecked(false);
                 }
@@ -140,7 +144,7 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
         cb_weixin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
+                if (isChecked) {
                     cb_alipay.setChecked(false);
                     cb_yinlian.setChecked(false);
                 }
@@ -149,7 +153,7 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
         cb_yinlian.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
+                if (isChecked) {
                     cb_weixin.setChecked(false);
                     cb_alipay.setChecked(false);
                 }
@@ -159,7 +163,8 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
 
     //向下弹出
     public void showDownPop(View view, final List<String> list) {
-        if (popupWindow != null && popupWindow.isShowing()) return;
+        if (popupWindow != null && popupWindow.isShowing())
+            return;
         popupWindow = new CommonPopupWindow.Builder(this)
                 .setView(R.layout.popup_down)
                 .setWidthAndHeight(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -169,7 +174,7 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
                     public void getChildView(View view, int layoutResId) {
                         RecyclerView recycle_view = (RecyclerView) view.findViewById(R.id.recycle_view);
                         recycle_view.setLayoutManager(new LinearLayoutManager(MiaoConfirmOrderActivity.this));
-                        PopupAdapter mAdapter = new PopupAdapter(R.layout.item_pop_textview,list);
+                        PopupAdapter mAdapter = new PopupAdapter(R.layout.item_pop_textview, list);
                         recycle_view.setAdapter(mAdapter);
                         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                             @Override
@@ -190,7 +195,7 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
         //        popupWindow.showAtLocation(findViewById(android.R.id.content), Gravity.NO_GRAVITY, 0, positions[1] + view.getHeight());
     }
 
-    private class PopupAdapter extends BaseQuickAdapter<String,BaseViewHolder>{
+    private class PopupAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
 
         public PopupAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
             super(layoutResId, data);
@@ -198,7 +203,7 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-            helper.setText(R.id.tv_pop,item);
+            helper.setText(R.id.tv_pop, item);
             TextView tv_pop = helper.getView(R.id.tv_pop);
             tv_pop.setBackgroundColor(getResources().getColor(R.color.red3));
         }
@@ -212,19 +217,22 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
                 break;
             case R.id.tv_commit:
                 String userid = SpUtils.getString(mContext, "userid", "");
-                if (TextUtils.isEmpty(userid)){
+                if (TextUtils.isEmpty(userid)) {
                     startActivity(new Intent(mContext, LoginActivity.class));
-                    overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
                 showPayStyleDialog();
                 break;
             case R.id.tv_time:
             case R.id.iv_time:
-                List<String> list=new ArrayList<String>();
+                List<String> list = new ArrayList<String>();
                 list.add("工作日");
                 list.add("休息日");
-                showDownPop(mTvTime,list);
+                showDownPop(mTvTime, list);
+                break;
+            case R.id.iv_address:
+                startActivity(new Intent(this, AddressManagerActivity.class));
                 break;
         }
     }

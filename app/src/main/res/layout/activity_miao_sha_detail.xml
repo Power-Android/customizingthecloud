@@ -248,6 +248,7 @@
             android:background="@drawable/bg_huise_line2"
             android:paddingRight="20dp"
             android:gravity="center"
+            android:textSize="13sp"
             android:paddingTop="3dp"
             android:text="联系卖家"/>
         <TextView
