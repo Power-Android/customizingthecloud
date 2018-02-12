@@ -30,11 +30,16 @@ import com.power.customizingthecloud.activity.mine.RefundAfterActivity;
 import com.power.customizingthecloud.activity.mine.SettingActivity;
 import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseFragment;
+import com.power.customizingthecloud.bean.EventBean;
 import com.power.customizingthecloud.fragment.home.top.KaiDianActivity;
 import com.power.customizingthecloud.fragment.home.top.MyShareActivity;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.view.CircleImageView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,22 +51,70 @@ import butterknife.Unbinder;
  */
 
 public class MineFragment extends BaseFragment implements View.OnClickListener {
-    @BindView(R.id.title_message_iv) ImageView titleMessageIv;@BindView(R.id.title_content_tv) TextView titleContentTv;
-    @BindView(R.id.title_setting_iv) ImageView titleSettingIv;@BindView(R.id.mine_face_iv) CircleImageView mineFaceIv;
-    @BindView(R.id.mine_name_tv) TextView mineNameTv;@BindView(R.id.mine_sign_tv) TextView mineSignTv;
-    @BindView(R.id.mine_shop_cart_ll) LinearLayout mineShopCartLl;@BindView(R.id.mine_lv_quan_ll) LinearLayout mineLvQuanLl;
-    @BindView(R.id.mine_zu_ji_ll) LinearLayout mineZuJiLl;@BindView(R.id.mine_lingxianjin_tv) TextView mineLingXianJinTv;
-    @BindView(R.id.mine_lverduo_tv) TextView mineLverduoTv;@BindView(R.id.mine_lverduo_ll) LinearLayout mineLverduoLl;
-    @BindView(R.id.mine_daijinquan_tv) TextView mineDaijinquanTv;@BindView(R.id.mine_daijinquan_ll) LinearLayout mineDaijinquanLl;
-    @BindView(R.id.mine_hongbao_tv) TextView mineHongbaoTv;@BindView(R.id.mine_hongbao_ll) LinearLayout mineHongbaoLl;
-    @BindView(R.id.mine_yu_e_tv) TextView mineYuETv;@BindView(R.id.mine_yu_e_ll) LinearLayout mineYuELl;
-    @BindView(R.id.mine_chakandingdan_tv) TextView mineChakandingdanTv;@BindView(R.id.mine_daifukuan_ll) LinearLayout mineDaifukuanLl;
-    @BindView(R.id.mine_daifahuo_ll) LinearLayout mineDaifahuoLl;@BindView(R.id.mine_daishouhuo_ll) LinearLayout mineDaishouhuoLl;
-    @BindView(R.id.mine_daipingjia_ll) LinearLayout mineDaipingjiaLl;@BindView(R.id.mine_tuikuan_ll) LinearLayout mineTuikuanLl;
-    @BindView(R.id.mine_renyang_rl) RelativeLayout mineRenyangRl;@BindView(R.id.mine_yuding_rl) RelativeLayout mineYudingRl;
-    @BindView(R.id.mine_dianpu_rl) RelativeLayout mineDianpuRl;@BindView(R.id.mine_zhuanzhang_rl) RelativeLayout mineZhuanzhangRl;
-    @BindView(R.id.mine_huodong_rl) RelativeLayout mineHuodongRl;@BindView(R.id.mine_fenxiang_rl) RelativeLayout mineFenxiangRl;
-    @BindView(R.id.mine_zijin_rl) RelativeLayout mineZijinRl;@BindView(R.id.mine_kefu_rl) RelativeLayout mineKefuRl;
+    @BindView(R.id.title_message_iv)
+    ImageView titleMessageIv;
+    @BindView(R.id.title_content_tv)
+    TextView titleContentTv;
+    @BindView(R.id.title_setting_iv)
+    ImageView titleSettingIv;
+    @BindView(R.id.mine_face_iv)
+    CircleImageView mineFaceIv;
+    @BindView(R.id.mine_name_tv)
+    TextView mineNameTv;
+    @BindView(R.id.mine_sign_tv)
+    TextView mineSignTv;
+    @BindView(R.id.mine_shop_cart_ll)
+    LinearLayout mineShopCartLl;
+    @BindView(R.id.mine_lv_quan_ll)
+    LinearLayout mineLvQuanLl;
+    @BindView(R.id.mine_zu_ji_ll)
+    LinearLayout mineZuJiLl;
+    @BindView(R.id.mine_lingxianjin_tv)
+    TextView mineLingXianJinTv;
+    @BindView(R.id.mine_lverduo_tv)
+    TextView mineLverduoTv;
+    @BindView(R.id.mine_lverduo_ll)
+    LinearLayout mineLverduoLl;
+    @BindView(R.id.mine_daijinquan_tv)
+    TextView mineDaijinquanTv;
+    @BindView(R.id.mine_daijinquan_ll)
+    LinearLayout mineDaijinquanLl;
+    @BindView(R.id.mine_hongbao_tv)
+    TextView mineHongbaoTv;
+    @BindView(R.id.mine_hongbao_ll)
+    LinearLayout mineHongbaoLl;
+    @BindView(R.id.mine_yu_e_tv)
+    TextView mineYuETv;
+    @BindView(R.id.mine_yu_e_ll)
+    LinearLayout mineYuELl;
+    @BindView(R.id.mine_chakandingdan_tv)
+    TextView mineChakandingdanTv;
+    @BindView(R.id.mine_daifukuan_ll)
+    LinearLayout mineDaifukuanLl;
+    @BindView(R.id.mine_daifahuo_ll)
+    LinearLayout mineDaifahuoLl;
+    @BindView(R.id.mine_daishouhuo_ll)
+    LinearLayout mineDaishouhuoLl;
+    @BindView(R.id.mine_daipingjia_ll)
+    LinearLayout mineDaipingjiaLl;
+    @BindView(R.id.mine_tuikuan_ll)
+    LinearLayout mineTuikuanLl;
+    @BindView(R.id.mine_renyang_rl)
+    RelativeLayout mineRenyangRl;
+    @BindView(R.id.mine_yuding_rl)
+    RelativeLayout mineYudingRl;
+    @BindView(R.id.mine_dianpu_rl)
+    RelativeLayout mineDianpuRl;
+    @BindView(R.id.mine_zhuanzhang_rl)
+    RelativeLayout mineZhuanzhangRl;
+    @BindView(R.id.mine_huodong_rl)
+    RelativeLayout mineHuodongRl;
+    @BindView(R.id.mine_fenxiang_rl)
+    RelativeLayout mineFenxiangRl;
+    @BindView(R.id.mine_zijin_rl)
+    RelativeLayout mineZijinRl;
+    @BindView(R.id.mine_kefu_rl)
+    RelativeLayout mineKefuRl;
     Unbinder unbinder;
     private Intent intent;
 
@@ -70,11 +123,23 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         View view = View.inflate(mContext, R.layout.fragment_mine, null);
         unbinder = ButterKnife.bind(this, view);
         initView();
+        EventBus.getDefault().register(this);
         return view;
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
     protected void initLazyData() {
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
 
     }
 
@@ -113,10 +178,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        String userid = SpUtils.getString(mContext, "userid", "");
-        if (TextUtils.isEmpty(userid)){
-            startActivity(new Intent(mContext, LoginActivity.class));
-            mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+        if (!hidden) {
+            String userid = SpUtils.getString(mContext, "userid", "");
+            if (TextUtils.isEmpty(userid)) {
+                startActivity(new Intent(mContext, LoginActivity.class));
+                mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
+            }
         }
     }
 
@@ -128,15 +195,15 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.title_message_iv://消息
-                startActivity(new Intent(mContext,MyMessageActivity.class));
+                startActivity(new Intent(mContext, MyMessageActivity.class));
                 break;
             case R.id.title_setting_iv://设置
-                startActivity(new Intent(mContext,SettingActivity.class));
+                startActivity(new Intent(mContext, SettingActivity.class));
                 break;
             case R.id.mine_face_iv://头像
-                startActivity(new Intent(mContext,EditInfoActivity.class));
+                startActivity(new Intent(mContext, EditInfoActivity.class));
                 break;
             case R.id.mine_sign_tv://签到有礼
                 startActivity(new Intent(mContext, MyDonkeyEarsActivity.class));
@@ -145,13 +212,13 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, ShopCartActivity.class));
                 break;
             case R.id.mine_lv_quan_ll://驴圈---财富中心
-                startActivity(new Intent(mContext,FortuneCenterAcitivity.class));
+                startActivity(new Intent(mContext, FortuneCenterAcitivity.class));
                 break;
             case R.id.mine_zu_ji_ll://足迹
                 startActivity(new Intent(mContext, MyFootprintActivity.class));
                 break;
             case R.id.mine_lingxianjin_tv://领现金
-                startActivity(new Intent(mContext,LatestActivity.class));
+                startActivity(new Intent(mContext, LatestActivity.class));
                 break;
             case R.id.mine_lverduo_ll://驴耳朵
                 startActivity(new Intent(mContext, MyDonkeyEarsActivity.class));
@@ -163,31 +230,31 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, MyRedPacketActivity.class));
                 break;
             case R.id.mine_yu_e_ll://余额
-                startActivity(new Intent(mContext,FortuneCenterAcitivity.class));
+                startActivity(new Intent(mContext, FortuneCenterAcitivity.class));
                 break;
             case R.id.mine_chakandingdan_tv://查看全部订单
                 intent = new Intent(mContext, MyOrderActivity.class);
-                intent.putExtra("type","0");
+                intent.putExtra("type", "0");
                 startActivity(intent);
                 break;
             case R.id.mine_daifukuan_ll://待付款
                 intent = new Intent(mContext, MyOrderActivity.class);
-                intent.putExtra("type","1");
+                intent.putExtra("type", "1");
                 startActivity(intent);
                 break;
             case R.id.mine_daifahuo_ll://待发货
                 intent = new Intent(mContext, MyOrderActivity.class);
-                intent.putExtra("type","2");
+                intent.putExtra("type", "2");
                 startActivity(intent);
                 break;
             case R.id.mine_daishouhuo_ll://待收货
                 intent = new Intent(mContext, MyOrderActivity.class);
-                intent.putExtra("type","3");
+                intent.putExtra("type", "3");
                 startActivity(intent);
                 break;
             case R.id.mine_daipingjia_ll://待评价
                 intent = new Intent(mContext, MyOrderActivity.class);
-                intent.putExtra("type","4");
+                intent.putExtra("type", "4");
                 startActivity(intent);
                 break;
             case R.id.mine_tuikuan_ll://退款、售后
@@ -206,7 +273,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, MyTransferAccountsActivity.class));
                 break;
             case R.id.mine_huodong_rl://我的活动
-                startActivity(new Intent(mContext,LatestActivity.class));
+                startActivity(new Intent(mContext, LatestActivity.class));
                 break;
             case R.id.mine_fenxiang_rl://我的分享
                 startActivity(new Intent(mContext, MyShareActivity.class));

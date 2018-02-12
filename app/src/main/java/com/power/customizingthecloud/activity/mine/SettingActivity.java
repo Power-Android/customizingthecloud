@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.power.customizingthecloud.MainActivity;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.utils.SpUtils;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
 
@@ -98,8 +99,11 @@ public class SettingActivity extends BaseActivity {
                 .setOnclickListener(new DialogInterface.OnLeftAndRightClickListener<NormalAlertDialog>() {
                     @Override
                     public void clickLeftButton(NormalAlertDialog dialog, View view) {
-                        startActivity(new Intent(mContext, MainActivity.class));
+                        SpUtils.putString(mContext,"userid","");
                         dialog.dismiss();
+                        finish();
+                        removeAllActivitys();
+                        startActivity(new Intent(mContext, MainActivity.class));
                     }
 
                     @Override

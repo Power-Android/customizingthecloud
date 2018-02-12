@@ -83,10 +83,11 @@ public class JianKongActivity extends BaseActivity implements View.OnClickListen
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("player")){//选中牧场
+            mVideoplayer.setVisibility(View.VISIBLE);
             mVideoplayer.setUp(""
                     , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "视频标题");
             Glide.with(MyApplication.getGloableContext())
-                    .load("http://img2.imgtn.bdimg.com/it/u=500808421,1575925585&fm=200&gp=0.jpg")
+                    .load("")
                     .into(mVideoplayer.thumbImageView);
         }
     }

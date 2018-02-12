@@ -134,4 +134,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 //        startActivity(new Intent(this, MainActivity.class));
         finish();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
 }
