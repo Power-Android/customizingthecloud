@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -41,6 +42,7 @@ import com.power.customizingthecloud.utils.MyUtils;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.CommonPopupWindow;
+import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.youth.banner.Banner;
 
 import org.greenrobot.eventbus.EventBus;
@@ -62,6 +64,7 @@ import static com.power.customizingthecloud.R.id.tv_toutiao;
 
 public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
+    private static final int REQUEST_CODE_ZXING = 5;
     @BindView(R.id.title_message_iv)
     ImageView mTitleMessageIv;
     @BindView(R.id.title_back_iv)
@@ -273,9 +276,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.title_message_iv://消息
                 String userid = SpUtils.getString(mContext, "userid", "");
-                if (TextUtils.isEmpty(userid)){
+                if (TextUtils.isEmpty(userid)) {
                     startActivity(new Intent(mContext, LoginActivity.class));
-                    mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
                 break;
@@ -299,8 +302,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     //向下弹出
     public void showDownPop(View view) {
-        if (popupWindow != null && popupWindow.isShowing())
+        if (popupWindow != null && popupWindow.isShowing()){
             return;
+        }
         popupWindow = new CommonPopupWindow.Builder(mContext)
                 .setView(R.layout.popup_home)
                 .setWidthAndHeight(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -308,11 +312,21 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 .setViewOnclickListener(new CommonPopupWindow.ViewInterface() {
                     @Override
                     public void getChildView(View view, int layoutResId) {
-                        TextView tv_shopma= (TextView) view.findViewById(R.id.tv_shopma);
+                        TextView tv_shopma = (TextView) view.findViewById(R.id.tv_shopma);
                         tv_shopma.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 showShopMaDialog();
+                                popupWindow.dismiss();
+                            }
+                        });
+                        TextView tv_scan = (TextView) view.findViewById(R.id.tv_scan);
+                        tv_scan.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(mContext, MyZxingActivity.class);
+                                startActivityForResult(intent, REQUEST_CODE_ZXING);
+                                //这里的REQUEST_CODE是我们定义的int型常量,这里设置为5，为了方便接受onActivityResult分别进行处理
                                 popupWindow.dismiss();
                             }
                         });
@@ -321,6 +335,26 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 .setOutsideTouchable(true)
                 .create();
         popupWindow.showAsDropDown(view);
+    }
+
+    /*zxing扫描的回调*/
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_ZXING) {
+            if (null != data) {
+                Bundle bundle = data.getExtras();
+                if (bundle == null) {
+                    return;
+                }
+                if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                    String result = bundle.getString(CodeUtils.RESULT_STRING);
+                    Toast.makeText(mContext, "解析结果:" + result, Toast.LENGTH_LONG).show();
+                } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+                    Toast.makeText(mContext, "解析二维码失败", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
     }
 
     private void showShopMaDialog() {
@@ -376,10 +410,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         @Override
         protected void convert(BaseViewHolder helper, String item) {
             helper.setText(R.id.tv_jiankong, item);
-            ImageView iv_top=helper.getView(R.id.iv_jiankong);
+            ImageView iv_top = helper.getView(R.id.iv_jiankong);
             int width = MyUtils.getScreenWidth(mContext) - MyUtils.dip2px(mContext, 60);
             ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
-            layoutParams.height=width/3;
+            layoutParams.height = width / 3;
             iv_top.setLayoutParams(layoutParams);
         }
     }
@@ -395,7 +429,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             TextView tv_yuanjia = helper.getView(R.id.tv_yuanjia);
             //添加删除线
             tv_yuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-            CountdownView cv_countdownView=helper.getView(R.id.cv_countdownView);
+            CountdownView cv_countdownView = helper.getView(R.id.cv_countdownView);
             cv_countdownView.start(995550000); // Millisecond
         }
     }

@@ -1,12 +1,9 @@
 package com.power.customizingthecloud;
 
 import android.app.Application;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
-import android.os.Environment;
 import android.support.multidex.MultiDex;
-import android.util.Log;
+
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
@@ -20,8 +17,11 @@ import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
+import com.uuzuche.lib_zxing.activity.ZXingLibrary;
+
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
+
 import okhttp3.OkHttpClient;
 
 /**
@@ -37,6 +37,8 @@ public class MyApplication extends Application {
         application = this;
         setLogger();
         setOkGo();//OkGo----第三方网络框架
+        //初始化二维码工具类
+        ZXingLibrary.initDisplayOpinion(this);
     }
 
     @Override

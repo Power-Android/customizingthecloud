@@ -1,6 +1,5 @@
 package com.power.customizingthecloud.fragment.shop;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -130,10 +129,10 @@ public class ShopFragment extends BaseFragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.title_list_iv:
-                startActivity(new Intent(mContext,GoodTypeActivity.class));
+//                startActivity(new Intent(mContext,GoodTypeActivity.class));
                 break;
             case R.id.title_search_iv:
-                startActivity(new Intent(mContext,SearchActivity.class));
+//                startActivity(new Intent(mContext,SearchActivity.class));
                 break;
         }
     }
