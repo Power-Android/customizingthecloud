@@ -44,6 +44,11 @@ public class SettingActivity extends BaseActivity {
         titleContentTv.setText("系统设置");
     }
 
+    @OnClick(R.id.title_back_iv)
+    public void setTitleBackIv(){
+        finish();
+    }
+
     @OnClick(R.id.userinfo_rl)
     public void setUserinfoRl(){
         startActivity(new Intent(mContext,EditInfoActivity.class));
