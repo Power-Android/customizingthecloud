@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.fragment.home.renyang.RenYangListActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,12 +63,16 @@ public class FortuneCenterAcitivity extends BaseActivity implements View.OnClick
                 startActivity(new Intent(mContext,TixianFirstActivity.class));
                 break;
             case R.id.ren_yang_zong_shu_rl:
+                startActivity(new Intent(mContext,MyRenyangCenterActivity.class));
                 break;
             case R.id.wo_de_ren_yang_rl:
+                startActivity(new Intent(mContext,MyRenyangCenterActivity.class));
                 break;
             case R.id.yi_jian_ren_yang_tv:
+                startActivity(new Intent(mContext, RenYangListActivity.class));
                 break;
             case R.id.yangzhi_shouyi_minxi_rl:
+                startActivity(new Intent(mContext,BreedIncomeDetailActivity.class));
                 break;
             case R.id.tixian_mingxi_rl:
                 break;
