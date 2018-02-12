@@ -24,4 +24,6 @@
     <color name="cl_snappingstepper_button_press">#1f567b</color>
     <color name="cl_snappingstepper_text_bg">#EBEBEB</color>
     <color name="cl_snappingstepper_text">#444444</color>
+    <!--在values的colors文件下添加颜色,决定了二维码四个边框的颜色-->
+    <color name="scan_corner_color">#47B546</color>
 </resources>
