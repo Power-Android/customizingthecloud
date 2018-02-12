@@ -75,6 +75,7 @@ public class FortuneCenterAcitivity extends BaseActivity implements View.OnClick
                 startActivity(new Intent(mContext,BreedIncomeDetailActivity.class));
                 break;
             case R.id.tixian_mingxi_rl:
+                startActivity(new Intent(mContext,TixianDetailActivity.class));
                 break;
             case R.id.quanbu_ziji_jilu_rl:
                 break;
