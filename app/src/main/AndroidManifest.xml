@@ -117,7 +117,8 @@
         <activity android:name=".activity.mine.TixianFirstActivity" />
         <activity android:name=".activity.mine.TixianSecondActivity" />
         <activity android:name=".activity.mine.TixianThreeActivity" />
-        <activity android:name=".activity.mine.SelectorBankCardActivity"></activity>
+        <activity android:name=".activity.mine.SelectorBankCardActivity" />
+        <activity android:name=".activity.mine.BreedIncomeDetailActivity"></activity>
     </application>
 
 </manifest>
