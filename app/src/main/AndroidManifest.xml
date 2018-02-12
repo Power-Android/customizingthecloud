@@ -84,7 +84,9 @@
         <activity android:name=".activity.mine.AccountSafeActivity" />
         <activity android:name=".activity.mine.CertificationActivity" />
         <activity android:name=".activity.mine.AddressManagerActivity" />
-        <activity android:name=".MainActivity" android:launchMode="singleTask"/>
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".fragment.home.MiaoConfirmOrderActivity" />
         <activity android:name=".fragment.shop.GoodConfirmOrderActivity" />
         <activity android:name=".login.RegisterActivity" />
@@ -92,9 +94,15 @@
         <activity android:name=".activity.mine.EditAddressActivity" />
         <activity android:name=".login.RegistAgreementActivity" />
         <activity android:name=".activity.mine.AboutUsActivity" />
-        <activity android:name=".activity.mine.FeedbackActivity"/>
-        <activity android:name=".login.GuidePageActivity"/>
-        <activity android:name=".login.LoginActivity" android:launchMode="singleTask"/>
+        <activity android:name=".activity.mine.FeedbackActivity" />
+        <activity android:name=".login.GuidePageActivity" />
+        <activity
+            android:name=".login.LoginActivity"
+            android:launchMode="singleTask" />
+        <activity android:name=".activity.mine.TixianFirstActivity" />
+        <activity android:name=".activity.mine.TixianSecondActivity" />
+        <activity android:name=".activity.mine.TixianThreeActivity" />
+        <activity android:name=".activity.mine.SelectorBankCardActivity"></activity>
     </application>
 
 </manifest>

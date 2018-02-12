@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -58,6 +59,7 @@ public class FortuneCenterAcitivity extends BaseActivity implements View.OnClick
                 finish();
                 break;
             case R.id.yi_jian_ti_xian_tv:
+                startActivity(new Intent(mContext,TixianFirstActivity.class));
                 break;
             case R.id.ren_yang_zong_shu_rl:
                 break;
