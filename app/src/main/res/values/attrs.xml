@@ -42,9 +42,9 @@
     <declare-styleable name="TagFlowLayout">
         <attr name="max_select" format="integer"></attr>
         <attr name="tag_gravity">
-            <enum name="left" value="-1" />
-            <enum name="center" value="0" />
-            <enum name="right" value="1" />
+            <enum name="left" value="-1"/>
+            <enum name="center" value="0"/>
+            <enum name="right" value="1"/>
         </attr>
     </declare-styleable>
     <declare-styleable name="FluidLayout_Layout">
@@ -55,4 +55,13 @@
         </attr>
     </declare-styleable>
     <!--流式布局-->
+    <!--自定义九宫格viewgroup-->
+    <declare-styleable name="RatioImageView">
+        <attr name="ratio" format="float"/>
+    </declare-styleable>
+
+    <declare-styleable name="NineGridLayout">
+        <attr name="sapcing" format="dimension"/>
+    </declare-styleable>
+    <!--自定义九宫格viewgroup-->
 </resources>

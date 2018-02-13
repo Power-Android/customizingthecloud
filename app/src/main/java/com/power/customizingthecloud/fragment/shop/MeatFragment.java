@@ -49,6 +49,7 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.recycler_meat)
     RecyclerView mRecyclerMeat;
     Unbinder unbinder;
+    private AnimationDrawable mAnimationDrawable;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,9 +69,9 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
         super.onActivityCreated(savedInstanceState);
         BannerUtils.startBanner(mBanner, new ArrayList<String>());
         //开启在布局文件中设置的帧动画
-        AnimationDrawable drawable = (AnimationDrawable) mIvEye.getDrawable();
-        drawable.start();
-        mRecyclerMeat.setLayoutManager(new GridLayoutManager(mContext,2));
+        mAnimationDrawable = (AnimationDrawable) mIvEye.getDrawable();
+        mAnimationDrawable.start();
+        mRecyclerMeat.setLayoutManager(new GridLayoutManager(mContext, 2));
         mRecyclerMeat.setNestedScrollingEnabled(false);
         List<String> list = new ArrayList<>();
         list.add("");
@@ -89,13 +90,19 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        mAnimationDrawable.stop();
+    }
+
+    @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.iv_car:
                 String userid = SpUtils.getString(mContext, "userid", "");
-                if (TextUtils.isEmpty(userid)){
+                if (TextUtils.isEmpty(userid)) {
                     startActivity(new Intent(mContext, LoginActivity.class));
-                    mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
                 startActivity(new Intent(mContext, ShopCartActivity.class));
@@ -111,23 +118,23 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-            ImageView iv_insertcar=helper.getView(R.id.iv_insertcar);
+            ImageView iv_insertcar = helper.getView(R.id.iv_insertcar);
             iv_insertcar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String userid = SpUtils.getString(mContext, "userid", "");
-                    if (TextUtils.isEmpty(userid)){
+                    if (TextUtils.isEmpty(userid)) {
                         startActivity(new Intent(mContext, LoginActivity.class));
-                        mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                        mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                         return;
                     }
                     Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
                 }
             });
-            ImageView iv_top=helper.getView(R.id.iv_top);
+            ImageView iv_top = helper.getView(R.id.iv_top);
             int width = MyUtils.getScreenWidth(mContext) - MyUtils.dip2px(mContext, 50);
             ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
-            layoutParams.height=width/2;
+            layoutParams.height = width / 2;
             iv_top.setLayoutParams(layoutParams);
         }
     }
@@ -136,5 +143,6 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        mAnimationDrawable=null;
     }
 }
