@@ -126,7 +126,6 @@
         <activity android:name=".activity.mine.DonkeyEarsDetailActivity" />
         <activity android:name=".activity.mine.ServiceRegulationsActivity" />
         <activity android:name=".activity.mine.RengyangDetailActivity"></activity>
-        <activity android:name=".activity.mine.TixianDetailActivity"/>
     </application>
 
 </manifest>
