@@ -19,5 +19,5 @@
         android:gravity="center"
         android:layout_marginTop="5dp"
         android:textSize="13sp"
-        android:textColor="@color/black"/>
+        android:textColor="@color/text_black"/>
 </LinearLayout>
