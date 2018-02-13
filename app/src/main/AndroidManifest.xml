@@ -127,7 +127,9 @@
         <activity android:name=".activity.mine.BindAliPayActivity" />
         <activity android:name=".activity.mine.BindBankCardActivity" />
         <activity android:name=".activity.mine.BindCardDetailActivity" />
-        <activity android:name=".activity.mine.BindCartActivity"></activity>
+        <activity android:name=".activity.mine.BindCartActivity" />
+        <activity android:name=".activity.mine.DonkeyEarsDetailActivity" />
+        <activity android:name=".activity.mine.ServiceRegulationsActivity"></activity>
     </application>
 
 </manifest>

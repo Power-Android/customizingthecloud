@@ -1,10 +1,12 @@
 package com.power.customizingthecloud.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,7 +19,9 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.DonkeyEarsBean;
+import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
 import com.power.customizingthecloud.utils.TUtils;
+import com.power.customizingthecloud.view.BaseDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +44,8 @@ public class MyDonkeyEarsActivity extends BaseActivity implements View.OnClickLi
     private RelativeLayout gonglueRl;
     private LinearLayout guizeLl;
     private DonkeyEarsAdapter adapter;
+    private BaseDialog mDialog;
+    private BaseDialog.Builder mBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,12 +95,12 @@ public class MyDonkeyEarsActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        TUtils.showShort(mContext,"点击了---item"+position);
+//        TUtils.showShort(mContext,"点击了---item"+position);
     }
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        TUtils.showShort(mContext,"点击了---立即抢购"+position);
+        startActivity(new Intent(mContext, GoodDetailActivity.class));
     }
 
     private class DonkeyEarsAdapter extends BaseQuickAdapter<DonkeyEarsBean, BaseViewHolder> {
@@ -119,15 +125,42 @@ public class MyDonkeyEarsActivity extends BaseActivity implements View.OnClickLi
                 finish();
                 break;
             case R.id.title_content_right_tv:
+                startActivity(new Intent(mContext,DonkeyEarsDetailActivity.class));
                 break;
             case R.id.item_qiandao_tv:
                 TUtils.showShort(mContext,"点击了---签到");
                 break;
             case R.id.item_gonglue_rl:
+                showShareDialog();
                 break;
             case R.id.item_guize_ll:
+                startActivity(new Intent(mContext,ServiceRegulationsActivity.class));
                 break;
         }
+    }
+
+    private void showShareDialog() {
+        mBuilder = new BaseDialog.Builder(this);
+        mDialog = mBuilder.setViewId(R.layout.diadlog_qdgl)
+                //设置dialogpadding
+                .setPaddingdp(0, 0, 0, 0)
+                //设置显示位置
+                .setGravity(Gravity.CENTER)
+                //设置动画
+                .setAnimation(R.style.Bottom_Top_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.jump_iv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
     }
 
 }
