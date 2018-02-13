@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,6 +35,11 @@ public class AccountSafeActivity extends BaseActivity implements View.OnClickLis
         titleBackIv.setVisibility(View.VISIBLE);
         titleBackIv.setOnClickListener(this);
         titleContentTv.setText("账户安全");
+        mmxgRl.setOnClickListener(this);
+        szzfmmRl.setOnClickListener(this);
+        yxbdRl.setOnClickListener(this);
+        zfbbdRl.setOnClickListener(this);
+        yhkbdRl.setOnClickListener(this);
     }
 
     @Override
@@ -43,14 +49,19 @@ public class AccountSafeActivity extends BaseActivity implements View.OnClickLis
                 finish();
                 break;
             case R.id.mmxg_rl://密码修改
+                startActivity(new Intent(mContext,ChangePasswordActivity.class));
                 break;
             case R.id.szzfmm_rl://设置支付密码
+                startActivity(new Intent(mContext,SetPayPwdFirstActivity.class));
                 break;
             case R.id.yxbd_rl://邮箱绑定
+                startActivity(new Intent(mContext,BindEmailActivity.class));
                 break;
             case R.id.zfbbd_rl://支付宝绑定
+                startActivity(new Intent(mContext,BindAliPayActivity.class));
                 break;
             case R.id.yhkbd_rl://银行卡绑定
+                startActivity(new Intent(mContext,BindBankCardActivity.class));
                 break;
         }
     }

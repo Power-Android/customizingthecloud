@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/backgourd"
+    tools:context="com.power.customizingthecloud.activity.mine.BindAliPayActivity">
+    <include layout="@layout/item_title_layout"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/view_01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/alipay_bind_iv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="80dp"/>
+        <TextView
+            android:id="@+id/bind_show_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="当前已绑定"
+            android:textColor="@color/text_black"
+            android:textSize="16sp"
+            android:layout_below="@+id/view_01"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"/>
+        <TextView
+            android:id="@+id/content_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请确认将要绑定帐号为本人所有"
+            android:textSize="16sp"
+            android:layout_below="@+id/bind_show_tv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/gray"/>
+        <TextView
+            android:id="@+id/is_bind_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_green_button"
+            android:text="立即绑定"
+            android:textColor="@color/white"
+            android:padding="10dp"
+            android:gravity="center"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_below="@+id/content_tv" />
+    </RelativeLayout>
+
+</LinearLayout>

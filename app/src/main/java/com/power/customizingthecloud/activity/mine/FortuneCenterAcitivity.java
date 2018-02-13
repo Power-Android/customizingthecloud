@@ -60,25 +60,25 @@ public class FortuneCenterAcitivity extends BaseActivity implements View.OnClick
                 finish();
                 break;
             case R.id.yi_jian_ti_xian_tv:
-//                startActivity(new Intent(mContext,TixianFirstActivity.class));
+                startActivity(new Intent(mContext,TixianFirstActivity.class));
                 break;
             case R.id.ren_yang_zong_shu_rl:
-//                startActivity(new Intent(mContext,MyRenyangCenterActivity.class));
+                startActivity(new Intent(mContext,MyRenyangCenterActivity.class));
                 break;
             case R.id.wo_de_ren_yang_rl:
-//                startActivity(new Intent(mContext,MyRenyangCenterActivity.class));
+                startActivity(new Intent(mContext,MyRenyangCenterActivity.class));
                 break;
             case R.id.yi_jian_ren_yang_tv:
-//                startActivity(new Intent(mContext, RenYangListActivity.class));
+                startActivity(new Intent(mContext, RenYangListActivity.class));
                 break;
             case R.id.yangzhi_shouyi_minxi_rl:
-//                startActivity(new Intent(mContext,BreedIncomeDetailActivity.class));
+                startActivity(new Intent(mContext,BreedIncomeDetailActivity.class));
                 break;
             case R.id.tixian_mingxi_rl:
-//                startActivity(new Intent(mContext,TixianDetailActivity.class));
+                startActivity(new Intent(mContext,TixianDetailActivity.class));
                 break;
             case R.id.quanbu_ziji_jilu_rl:
-//                startActivity(new Intent(mContext, MyMoneyRecordActivity.class));
+                startActivity(new Intent(mContext, MyMoneyRecordActivity.class));
                 break;
         }
     }

@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.MyVoucherBean;
+import com.power.customizingthecloud.fragment.home.GoodListActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MyVoucherActivity extends BaseActivity implements View.OnClickListener {
+public class MyVoucherActivity extends BaseActivity implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener {
 
     @BindView(R.id.title_back_iv)
     ImageView titleBackIv;
@@ -29,6 +31,7 @@ public class MyVoucherActivity extends BaseActivity implements View.OnClickListe
     TextView titleContentTv;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    private List<MyVoucherBean> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +49,7 @@ public class MyVoucherActivity extends BaseActivity implements View.OnClickListe
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
 
-        List<MyVoucherBean> list = new ArrayList<>();
+        list = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             MyVoucherBean bean = new MyVoucherBean();
             bean.setMoney("20");
@@ -57,8 +60,16 @@ public class MyVoucherActivity extends BaseActivity implements View.OnClickListe
             bean.setIsguoqi(i+"");
             list.add(bean);
         }
-        MyVoucherAdapter adapter = new MyVoucherAdapter(R.layout.item_my_voucher,list);
+        MyVoucherAdapter adapter = new MyVoucherAdapter(R.layout.item_my_voucher, list);
         recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        if (!list.get(position).getIsguoqi().equals("1")){
+            startActivity(new Intent(mContext, GoodListActivity.class));
+        }
     }
 
     private class MyVoucherAdapter extends BaseQuickAdapter<MyVoucherBean,BaseViewHolder>{

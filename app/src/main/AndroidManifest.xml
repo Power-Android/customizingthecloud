@@ -114,6 +114,18 @@
         <activity android:name=".activity.mine.TixianThreeActivity" />
         <activity android:name=".activity.mine.SelectorBankCardActivity" />
         <activity android:name=".activity.mine.BreedIncomeDetailActivity" />
+        <activity android:name=".activity.mine.TixianDetailActivity" />
+        <activity android:name=".activity.mine.ChangePasswordActivity" />
+        <activity android:name=".activity.mine.SetPayPwdFirstActivity" />
+        <activity android:name=".activity.mine.SetPayPwdSecondActivity" />
+        <activity android:name=".activity.mine.BindEmailActivity" />
+        <activity android:name=".activity.mine.BindAliPayActivity" />
+        <activity android:name=".activity.mine.BindBankCardActivity" />
+        <activity android:name=".activity.mine.BindCardDetailActivity" />
+        <activity android:name=".activity.mine.BindCartActivity" />
+        <activity android:name=".activity.mine.DonkeyEarsDetailActivity" />
+        <activity android:name=".activity.mine.ServiceRegulationsActivity" />
+        <activity android:name=".activity.mine.RengyangDetailActivity"></activity>
         <activity android:name=".activity.mine.TixianDetailActivity"/>
     </application>
 

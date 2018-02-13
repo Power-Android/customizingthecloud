@@ -1,10 +1,7 @@
 package com.power.customizingthecloud.activity.mine;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,26 +11,27 @@ import com.power.customizingthecloud.base.BaseActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TixianSecondActivity extends BaseActivity implements View.OnClickListener {
+public class BindCardDetailActivity extends BaseActivity implements View.OnClickListener {
 
-    @BindView(R.id.name_et)
-    EditText nameEt;
-    @BindView(R.id.card_et)
-    EditText cardEt;
-    @BindView(R.id.bank_et)
-    EditText bankEt;
-    @BindView(R.id.jump_tv)
-    TextView jumpTv;
     @BindView(R.id.title_back_iv)
     ImageView titleBackIv;
     @BindView(R.id.title_content_tv)
     TextView titleContentTv;
-    private String type;
+    @BindView(R.id.pic_iv)
+    ImageView picIv;
+    @BindView(R.id.name_tv)
+    TextView nameTv;
+    @BindView(R.id.num_tv)
+    TextView numTv;
+    @BindView(R.id.dbxe_tv)
+    TextView dbxeTv;
+    @BindView(R.id.mrxe_tv)
+    TextView mrxeTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tixian_second);
+        setContentView(R.layout.activity_bind_card_detail);
         ButterKnife.bind(this);
         initView();
     }
@@ -41,11 +39,7 @@ public class TixianSecondActivity extends BaseActivity implements View.OnClickLi
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
         titleBackIv.setOnClickListener(this);
-        titleContentTv.setText("个人信息");
-        jumpTv.setOnClickListener(this);
-
-        type = getIntent().getStringExtra("type");
-
+        titleContentTv.setText("银行卡详情");
     }
 
     @Override
@@ -53,13 +47,6 @@ public class TixianSecondActivity extends BaseActivity implements View.OnClickLi
         switch (v.getId()){
             case R.id.title_back_iv:
                 finish();
-                break;
-            case R.id.jump_tv:
-                if (TextUtils.equals("addCard",type)){
-                    startActivity(new Intent(mContext,BindCartActivity.class));
-                }else {
-                    startActivity(new Intent(mContext,TixianThreeActivity.class));
-                }
                 break;
         }
     }

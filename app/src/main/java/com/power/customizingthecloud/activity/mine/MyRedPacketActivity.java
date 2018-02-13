@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -15,6 +16,8 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.RedPacketBean;
+import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
+import com.power.customizingthecloud.fragment.shop.GoodConfirmOrderActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +25,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MyRedPacketActivity extends BaseActivity implements View.OnClickListener {
+public class MyRedPacketActivity extends BaseActivity implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener {
 
     @BindView(R.id.title_back_iv)
     ImageView titleBackIv;
@@ -30,6 +33,7 @@ public class MyRedPacketActivity extends BaseActivity implements View.OnClickLis
     TextView titleContentTv;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    private List<RedPacketBean> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +50,7 @@ public class MyRedPacketActivity extends BaseActivity implements View.OnClickLis
 
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
-        List<RedPacketBean> list = new ArrayList<>();
+        list = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             RedPacketBean bean = new RedPacketBean();
             bean.setName("驴奶粉");
@@ -56,8 +60,20 @@ public class MyRedPacketActivity extends BaseActivity implements View.OnClickLis
             bean.setIsguoqi(i+"");
             list.add(bean);
         }
-        MyRedPacketAdapter adapter = new MyRedPacketAdapter(R.layout.item_red_packet,list);
+        MyRedPacketAdapter adapter = new MyRedPacketAdapter(R.layout.item_red_packet, list);
         recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(this);
+        adapter.setOnItemChildClickListener(this);
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        startActivity(new Intent(mContext, GoodDetailActivity.class));
+    }
+
+    @Override
+    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+        startActivity(new Intent(mContext, GoodConfirmOrderActivity.class));
     }
 
     private class MyRedPacketAdapter extends BaseQuickAdapter<RedPacketBean,BaseViewHolder>{
@@ -71,7 +87,8 @@ public class MyRedPacketActivity extends BaseActivity implements View.OnClickLis
             helper.setText(R.id.item_name_tv,item.getName())
                     .setText(R.id.item_date_tv,item.getDate())
                     .setText(R.id.item_money_tv,item.getMoney())
-                    .setText(R.id.item_num_tv,item.getNum());
+                    .setText(R.id.item_num_tv,item.getNum())
+                    .addOnClickListener(R.id.item_liji_lingqu_tv);
             TextView lijilingquTv = helper.getView(R.id.item_liji_lingqu_tv);
             ImageView yiguoqiIv = helper.getView(R.id.yi_guo_qi_iv);
             if (item.getIsguoqi().equals("1")){
