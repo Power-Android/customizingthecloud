@@ -95,6 +95,9 @@ public class BindBankCardActivity extends BaseActivity implements View.OnClickLi
                 finish();
                 break;
             case R.id.add_bank_rl:
+                Intent intent = new Intent(mContext,TixianSecondActivity.class);
+                intent.putExtra("type","addCard");
+                startActivity(intent);
                 break;
         }
     }

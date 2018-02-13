@@ -23,12 +23,17 @@
 
     <!-- zxing需要的权限start -->
     <uses-permission android:name="android.permission.FLASHLIGHT" />
+
     <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <!-- zxing需要的权限end -->
     <application
         android:name=".MyApplication"
@@ -121,7 +126,8 @@
         <activity android:name=".activity.mine.BindEmailActivity" />
         <activity android:name=".activity.mine.BindAliPayActivity" />
         <activity android:name=".activity.mine.BindBankCardActivity" />
-        <activity android:name=".activity.mine.BindCardDetailActivity"></activity>
+        <activity android:name=".activity.mine.BindCardDetailActivity" />
+        <activity android:name=".activity.mine.BindCartActivity"></activity>
     </application>
 
 </manifest>

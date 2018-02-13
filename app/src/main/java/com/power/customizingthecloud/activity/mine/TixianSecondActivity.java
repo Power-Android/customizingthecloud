@@ -2,6 +2,7 @@ package com.power.customizingthecloud.activity.mine;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ public class TixianSecondActivity extends BaseActivity implements View.OnClickLi
     ImageView titleBackIv;
     @BindView(R.id.title_content_tv)
     TextView titleContentTv;
+    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,9 @@ public class TixianSecondActivity extends BaseActivity implements View.OnClickLi
         titleBackIv.setOnClickListener(this);
         titleContentTv.setText("个人信息");
         jumpTv.setOnClickListener(this);
+
+        type = getIntent().getStringExtra("type");
+
     }
 
     @Override
@@ -50,7 +55,11 @@ public class TixianSecondActivity extends BaseActivity implements View.OnClickLi
                 finish();
                 break;
             case R.id.jump_tv:
-                startActivity(new Intent(mContext,TixianThreeActivity.class));
+                if (TextUtils.equals("addCard",type)){
+                    startActivity(new Intent(mContext,BindCartActivity.class));
+                }else {
+                    startActivity(new Intent(mContext,TixianThreeActivity.class));
+                }
                 break;
         }
     }
