@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -7,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.RengyangDetailActivity;
 import com.power.customizingthecloud.adapter.MyRenYangAdapter;
 import com.power.customizingthecloud.base.BaseFragment;
 
@@ -22,7 +25,7 @@ import butterknife.Unbinder;
  * Created by Administrator on 2018/2/1.
  */
 
-public class OverRenyangFragment extends BaseFragment {
+public class OverRenyangFragment extends BaseFragment implements BaseQuickAdapter.OnItemClickListener {
 
     @BindView(R.id.recycler)
     RecyclerView mRecyclerRenyang;
@@ -44,10 +47,16 @@ public class OverRenyangFragment extends BaseFragment {
         mRecyclerRenyang.setLayoutManager(new LinearLayoutManager(mContext));
         MyRenYangAdapter renYangAdapter=new MyRenYangAdapter(R.layout.item_my_renyang,list,mContext,3);
         mRecyclerRenyang.setAdapter(renYangAdapter);
+        renYangAdapter.setOnItemClickListener(this);
     }
 
     @Override
     protected void initLazyData() {
 
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        startActivity(new Intent(mContext,RengyangDetailActivity.class));
     }
 }
