@@ -3,6 +3,7 @@ package com.power.customizingthecloud.fragment.home.jiankong;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -35,16 +36,23 @@ public class JianKongAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
     @Override
     protected void convert(BaseViewHolder helper, String item) {
         helper.setText(R.id.tv_jiankong, "五号楼前");
-        ImageView iv_top=helper.getView(R.id.iv_jiankong);
+        ImageView iv_top = helper.getView(R.id.iv_jiankong);
         int width = MyUtils.getScreenWidth(mContext) - MyUtils.dip2px(mContext, 50);
         ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
-        layoutParams.height=width/3;
+        layoutParams.height = width / 3;
         iv_top.setLayoutParams(layoutParams);
+        iv_top.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().postSticky(new EventBean("player"));
+            }
+        });
     }
 
+    /*这个回调不调用是怎么回事*/
     @Override
     public void setOnItemClickListener(@Nullable OnItemClickListener listener) {
         super.setOnItemClickListener(listener);
-        EventBus.getDefault().postSticky(new EventBean("player"));
+//        EventBus.getDefault().postSticky(new EventBean("player"));
     }
 }

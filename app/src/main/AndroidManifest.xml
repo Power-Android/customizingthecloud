@@ -23,17 +23,12 @@
 
     <!-- zxing需要的权限start -->
     <uses-permission android:name="android.permission.FLASHLIGHT" />
-
     <uses-feature android:name="android.hardware.camera" />
-
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-feature android:name="android.hardware.camera.autofocus" />
-
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <!-- zxing需要的权限end -->
     <application
         android:name=".MyApplication"
@@ -130,9 +125,10 @@
         <activity android:name=".activity.mine.BindCartActivity" />
         <activity android:name=".activity.mine.DonkeyEarsDetailActivity" />
         <activity android:name=".activity.mine.ServiceRegulationsActivity" />
-        <activity android:name=".activity.mine.RengyangDetailActivity" />
+        <activity android:name=".activity.mine.RengyangDetailActivity"/>
+        <activity android:name=".fragment.shop.SearchActivity"/>
         <activity android:name=".activity.mine.RengYangHeTongActivity" />
-        <activity android:name=".activity.mine.ProductListActivoty"></activity>
+        <activity android:name=".activity.mine.ProductListActivoty"/>
     </application>
 
 </manifest>

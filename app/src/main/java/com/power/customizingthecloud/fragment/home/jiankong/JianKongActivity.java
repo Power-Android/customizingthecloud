@@ -15,6 +15,7 @@ import com.power.customizingthecloud.bean.EventBean;
 import com.power.customizingthecloud.fragment.home.renyang.BaseTabAdapter;
 import com.power.customizingthecloud.view.NoScrollViewPager;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -54,6 +55,7 @@ public class JianKongActivity extends BaseActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jian_kong);
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         mTitleBackIv.setVisibility(View.VISIBLE);
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("监控列表");
@@ -82,12 +84,13 @@ public class JianKongActivity extends BaseActivity implements View.OnClickListen
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
-        if (eventBean.getMsg().equals("player")){//选中牧场
+        if (eventBean.getMsg().equals("player")){//播放视频
             mVideoplayer.setVisibility(View.VISIBLE);
-            mVideoplayer.setUp(""
-                    , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "视频标题");
+            mVideoplayer.setUp("http://www.170mv.com/tool/jiexi/ajax/pid/13053/vid/3155386.mp4"
+                    , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
+            mVideoplayer.thumbImageView.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(MyApplication.getGloableContext())
-                    .load("")
+                    .load("http://jzvd-pic.nathen.cn/jzvd-pic/00b026e7-b830-4994-bc87-38f4033806a6.jpg")
                     .into(mVideoplayer.thumbImageView);
         }
     }
@@ -99,6 +102,12 @@ public class JianKongActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override

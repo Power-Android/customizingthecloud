@@ -230,9 +230,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mJianKongAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-//                Intent intent = new Intent(mContext, JianKongActivity.class);
-//                intent.putExtra("position", position + 1);
-//                startActivity(intent);
+                Intent intent = new Intent(mContext, JianKongActivity.class);
+                intent.putExtra("position", position + 1);
+                startActivity(intent);
             }
         });
         mGoodAdapter = new GoodAdapter(R.layout.item_home_comment, list);
@@ -290,7 +290,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, RenYangListActivity.class));
                 break;
             case R.id.iv_jiankong_more:
-//                startActivity(new Intent(mContext, JianKongActivity.class));
+                startActivity(new Intent(mContext, JianKongActivity.class));
                 break;
             case R.id.iv_miaosha_more:
                 startActivity(new Intent(mContext, MiaoShaActivity.class));
