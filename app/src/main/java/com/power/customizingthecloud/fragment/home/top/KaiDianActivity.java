@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.ProductListActivoty;
 import com.power.customizingthecloud.activity.mine.TixianFirstActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.TeamBean;
@@ -146,6 +147,7 @@ public class KaiDianActivity extends BaseActivity implements View.OnClickListene
             case R.id.title_qrcode_iv:
                 break;
             case R.id.money_tv:
+                startActivity(new Intent(mContext,ProductListActivoty.class));
                 break;
             case R.id.tixian_tv:
                 startActivity(new Intent(mContext,TixianFirstActivity.class));

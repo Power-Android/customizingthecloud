@@ -131,7 +131,8 @@
         <activity android:name=".activity.mine.DonkeyEarsDetailActivity" />
         <activity android:name=".activity.mine.ServiceRegulationsActivity" />
         <activity android:name=".activity.mine.RengyangDetailActivity" />
-        <activity android:name=".activity.mine.RengYangHeTongActivity"></activity>
+        <activity android:name=".activity.mine.RengYangHeTongActivity" />
+        <activity android:name=".activity.mine.ProductListActivoty"></activity>
     </application>
 
 </manifest>
