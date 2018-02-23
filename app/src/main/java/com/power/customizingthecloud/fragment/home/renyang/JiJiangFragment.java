@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.home.renyang;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,9 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.adapter.RenYangAdapter;
 import com.power.customizingthecloud.base.BaseFragment;
+import com.power.customizingthecloud.fragment.home.renyang.detail.RenYangDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +53,12 @@ public class JiJiangFragment extends BaseFragment{
         mRecyclerRenyang.setLayoutManager(new LinearLayoutManager(mContext));
         RenYangAdapter renYangAdapter=new RenYangAdapter(R.layout.home_middle,list,mContext,3);
         mRecyclerRenyang.setAdapter(renYangAdapter);
+        renYangAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(mContext, RenYangDetailActivity.class));
+            }
+        });
     }
 
     @Override

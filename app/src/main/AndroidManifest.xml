@@ -130,10 +130,11 @@
         <activity android:name=".activity.mine.BindCartActivity" />
         <activity android:name=".activity.mine.DonkeyEarsDetailActivity" />
         <activity android:name=".activity.mine.ServiceRegulationsActivity" />
-        <activity android:name=".activity.mine.RengyangDetailActivity" />
+        <activity android:name=".activity.mine.RengyangDetailActivity"/>
+        <activity android:name=".fragment.shop.SearchActivity"/>
         <activity android:name=".activity.mine.RengYangHeTongActivity" />
         <activity android:name=".activity.mine.ProductListActivoty" />
-        <activity android:name=".activity.mine.MaolvDetailActivity"></activity>
+        <activity android:name=".activity.mine.MaolvDetailActivity"/>
     </application>
 
 </manifest>
