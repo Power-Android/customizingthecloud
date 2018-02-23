@@ -132,7 +132,8 @@
         <activity android:name=".activity.mine.ServiceRegulationsActivity" />
         <activity android:name=".activity.mine.RengyangDetailActivity" />
         <activity android:name=".activity.mine.RengYangHeTongActivity" />
-        <activity android:name=".activity.mine.ProductListActivoty"></activity>
+        <activity android:name=".activity.mine.ProductListActivoty" />
+        <activity android:name=".activity.mine.MaolvDetailActivity"></activity>
     </application>
 
 </manifest>

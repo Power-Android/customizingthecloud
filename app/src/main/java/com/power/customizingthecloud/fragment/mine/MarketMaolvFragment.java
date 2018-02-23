@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.MaolvDetailActivity;
 import com.power.customizingthecloud.adapter.MyRenYangAdapter;
 import com.power.customizingthecloud.adapter.ProductListAdapter;
 import com.power.customizingthecloud.base.BaseFragment;
@@ -61,6 +63,6 @@ public class MarketMaolvFragment extends BaseFragment implements BaseQuickAdapte
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
+        startActivity(new Intent(mContext,MaolvDetailActivity.class));
     }
 }
