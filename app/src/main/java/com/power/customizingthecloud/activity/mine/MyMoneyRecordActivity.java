@@ -174,6 +174,7 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
     }
 
     private void initYongjinColor() {
+
         quanbuTv.setTextColor(getResources().getColor(R.color.gray));
         indicatorQuanbu.setBackgroundColor(getResources().getColor(R.color.white));
         shouyiTv.setTextColor(getResources().getColor(R.color.gray));
