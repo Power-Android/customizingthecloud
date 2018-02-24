@@ -6,7 +6,10 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,6 +20,7 @@ import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.MyOderBean;
 import com.power.customizingthecloud.utils.TUtils;
+import com.power.customizingthecloud.view.BaseDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +56,9 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     private MyOderBean bean3;
     private MyOderBean bean4;
     private MyOrderAdapter adapter;
+    private BaseDialog mDialog;
+    private BaseDialog.Builder mBuilder;
+    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +81,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
 
         list = new ArrayList<>();
         initData();
-        String type = getIntent().getStringExtra("type");
+        type = getIntent().getStringExtra("type");
         switchType(type);
     }
 
@@ -157,6 +164,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
 
     @OnClick(R.id.quanbu_ll)
     public void quanbu() {
+        list.clear();
         initQuanbuColor();
         list.add(bean1);
         list.add(bean2);
@@ -266,13 +274,87 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         switch (view.getId()){
             case R.id.item_use_tv:
-                TUtils.showShort(mContext,"点击了---订单"+position);
+                switch (list.get(position).getType()){
+                    case "1":
+                        showPayStyleDialog();
+                        break;
+                    case "2":
+                        TUtils.showShort(mContext,"点击了---提醒发货"+position);
+                        break;
+                    case "3":
+                        TUtils.showShort(mContext,"点击了---评价"+position);
+                        break;
+                    case "4":
+                        TUtils.showShort(mContext,"点击了---确认收货"+position);
+                        break;
+                }
                 break;
             case R.id.item_cancle_order_tv:
                 TUtils.showShort(mContext,"点击了---取消订单"+position);
                 break;
         }
     }
+
+    private void showPayStyleDialog() {
+        mBuilder = new BaseDialog.Builder(this);
+        mDialog = mBuilder.setViewId(R.layout.dialog_paystyle)
+                //设置dialogpadding
+                .setPaddingdp(0, 0, 0, 0)
+                //设置显示位置
+                .setGravity(Gravity.BOTTOM)
+                //设置动画
+                .setAnimation(R.style.Bottom_Top_aniamtion)
+                //设置dialog的宽高
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                //设置触摸dialog外围是否关闭
+                .isOnTouchCanceled(true)
+                //设置监听事件
+                .builder();
+        mDialog.show();
+        mDialog.getView(R.id.iv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
+        mDialog.getView(R.id.tv_pay).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //                mDialog.dismiss();
+            }
+        });
+        final CheckBox cb_alipay = mDialog.getView(R.id.cb_alipay);
+        final CheckBox cb_weixin = mDialog.getView(R.id.cb_weixin);
+        final CheckBox cb_yinlian = mDialog.getView(R.id.cb_yinlian);
+        cb_alipay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    cb_weixin.setChecked(false);
+                    cb_yinlian.setChecked(false);
+                }
+            }
+        });
+        cb_weixin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    cb_alipay.setChecked(false);
+                    cb_yinlian.setChecked(false);
+                }
+            }
+        });
+        cb_yinlian.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    cb_weixin.setChecked(false);
+                    cb_alipay.setChecked(false);
+                }
+            }
+        });
+    }
+
 
     private class MyOrderAdapter extends BaseQuickAdapter<MyOderBean,BaseViewHolder>{
 

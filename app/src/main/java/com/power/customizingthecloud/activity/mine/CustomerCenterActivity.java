@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -163,6 +164,7 @@ public class CustomerCenterActivity extends BaseActivity implements View.OnClick
                 finish();
                 break;
             case R.id.shsq_ll://售后申请
+                startActivity(new Intent(mContext,IssuesListActivity.class));
                 break;
             case R.id.xgdz_ll://修改地址
                 break;

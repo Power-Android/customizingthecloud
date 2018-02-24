@@ -109,6 +109,16 @@
         android:paddingRight="10dp"
         android:src="@drawable/home_jiahao"
         android:visibility="gone"/>
+    <ImageView
+        android:id="@+id/title_kefu_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:src="@drawable/title_kefu_iv"
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/title_content_right_tv"
         android:layout_width="wrap_content"
