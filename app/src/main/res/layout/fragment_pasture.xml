@@ -46,11 +46,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="205dp"
             android:drawableLeft="@drawable/muchang_jianshi"
             android:drawablePadding="5dp"
             android:text="驴妈妈饲养区"
-            android:layout_marginTop="205dp"
-            android:layout_marginLeft="35dp"
             android:textColor="@color/white"/>
         <TextView
             android:layout_width="wrap_content"
@@ -64,11 +64,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="290dp"
             android:drawableLeft="@drawable/muchang_jianshi"
             android:drawablePadding="5dp"
             android:text="驴宝宝饲养区"
-            android:layout_marginTop="290dp"
-            android:layout_marginLeft="20dp"
             android:textColor="@color/white"/>
         <TextView
             android:layout_width="wrap_content"
