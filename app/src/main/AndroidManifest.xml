@@ -139,7 +139,8 @@
         <activity android:name=".fragment.market.ViewPagerActivity" />
         <activity android:name=".activity.mine.TixianMingxiDetailActivity" />
         <activity android:name=".fragment.home.ShareSuccessActivity" />
-        <activity android:name=".activity.mine.GoodConfirmOrder1Activity"></activity>
+        <activity android:name=".activity.mine.GoodConfirmOrder1Activity" />
+        <activity android:name=".activity.mine.OrderDetailActivity"></activity>
     </application>
 
 </manifest>
