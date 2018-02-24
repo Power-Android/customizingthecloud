@@ -15,4 +15,12 @@ public class NineGridTestModel implements Serializable {
     public List<String> urlList = new ArrayList<>();
 
     public boolean isShowAll = false;
+
+    public List<String> getUrlList() {
+        return urlList;
+    }
+
+    public void setUrlList(List<String> urlList) {
+        this.urlList = urlList;
+    }
 }

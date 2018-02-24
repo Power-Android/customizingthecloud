@@ -1,14 +1,17 @@
 package com.power.customizingthecloud.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.power.customizingthecloud.fragment.market.ViewPagerActivity;
 import com.power.customizingthecloud.utils.ImageLoaderUtil;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -77,6 +80,9 @@ public class NineGridTestLayout extends NineGridLayout {
     @Override
     protected void onClickImage(int i, String url, List<String> urlList) {
         //        Toast.makeText(mContext, "点击了图片" + url, Toast.LENGTH_SHORT).show();
-
+        Intent intent = new Intent(mContext, ViewPagerActivity.class);
+        intent.putExtra("pics", (Serializable) urlList);
+        intent.putExtra("position", i);
+        mContext.startActivity(intent);
     }
 }

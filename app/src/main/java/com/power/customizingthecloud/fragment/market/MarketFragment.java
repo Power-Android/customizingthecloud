@@ -99,26 +99,23 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
         mList.add(model1);
 
         NineGridTestModel model2 = new NineGridTestModel();
-        model2.urlList.add(mUrls[4]);
+        model2.urlList.add(mUrls[0]);
+        model2.urlList.add(mUrls[1]);
         mList.add(model2);
-        //
-        //        NineGridTestModel model3 = new NineGridTestModel();
-        //        model3.urlList.add(mUrls[2]);
-        //        mList.add(model3);
 
-        NineGridTestModel model4 = new NineGridTestModel();
-        for (int i = 0; i < mUrls.length; i++) {
-            model4.urlList.add(mUrls[i]);
-        }
-        model4.isShowAll = false;
-        mList.add(model4);
-
-        NineGridTestModel model5 = new NineGridTestModel();
-        for (int i = 0; i < mUrls.length; i++) {
-            model5.urlList.add(mUrls[i]);
-        }
-        model5.isShowAll = true;//显示全部图片
-        mList.add(model5);
+//        NineGridTestModel model4 = new NineGridTestModel();
+//        for (int i = 0; i < mUrls.length; i++) {
+//            model4.urlList.add(mUrls[i]);
+//        }
+//        model4.isShowAll = false;
+//        mList.add(model4);
+//
+//        NineGridTestModel model5 = new NineGridTestModel();
+//        for (int i = 0; i < mUrls.length; i++) {
+//            model5.urlList.add(mUrls[i]);
+//        }
+//        model5.isShowAll = true;//显示全部图片
+//        mList.add(model5);
 
         NineGridTestModel model6 = new NineGridTestModel();
         for (int i = 0; i < 9; i++) {
@@ -156,7 +153,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, NineGridTestModel item) {
+        protected void convert(final BaseViewHolder helper, NineGridTestModel item) {
             NineGridTestLayout nineGridlayout = helper.getView(R.id.nine_gridlayout);
             nineGridlayout.setIsShowAll(mList.get(helper.getAdapterPosition()).isShowAll);
             nineGridlayout.setUrlList(mList.get(helper.getAdapterPosition()).urlList);
