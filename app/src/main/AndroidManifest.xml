@@ -137,7 +137,8 @@
         <activity android:name=".activity.mine.MaolvDetailActivity" />
         <activity android:name=".activity.mine.IssuesListActivity" />
         <activity android:name=".fragment.market.ViewPagerActivity" />
-        <activity android:name=".activity.mine.TixianMingxiDetailActivity"></activity>
+        <activity android:name=".activity.mine.TixianMingxiDetailActivity"/>
+        <activity android:name=".fragment.home.ShareSuccessActivity"/>
     </application>
 
 </manifest>

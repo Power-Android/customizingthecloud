@@ -16,8 +16,8 @@ import com.power.customizingthecloud.base.BaseFragment;
 public class PastureFragment extends BaseFragment {
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_pasture,null);
-       return view;
+        View view = inflater.inflate(R.layout.fragment_pasture, null);
+        return view;
     }
 
     @Override
