@@ -73,7 +73,7 @@ public class MyRedPacketActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        startActivity(new Intent(mContext, GoodConfirmOrderActivity.class));
+        startActivity(new Intent(mContext, GoodConfirmOrder1Activity.class));
     }
 
     private class MyRedPacketAdapter extends BaseQuickAdapter<RedPacketBean,BaseViewHolder>{
