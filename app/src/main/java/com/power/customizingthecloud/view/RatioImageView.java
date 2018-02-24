@@ -32,6 +32,7 @@ public class RatioImageView extends ImageView {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RatioImageView);
 
         mRatio = typedArray.getFloat(R.styleable.RatioImageView_ratio, 0f);
+//        Toast.makeText(context, " "+mRatio, Toast.LENGTH_SHORT).show();
         typedArray.recycle();
     }
 
@@ -59,7 +60,7 @@ public class RatioImageView extends ImageView {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(MotionEvent event) {//触摸时候的阴影
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:

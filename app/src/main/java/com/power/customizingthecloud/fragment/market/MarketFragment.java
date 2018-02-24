@@ -1,10 +1,14 @@
 package com.power.customizingthecloud.fragment.market;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -157,6 +161,30 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             NineGridTestLayout nineGridlayout = helper.getView(R.id.nine_gridlayout);
             nineGridlayout.setIsShowAll(mList.get(helper.getAdapterPosition()).isShowAll);
             nineGridlayout.setUrlList(mList.get(helper.getAdapterPosition()).urlList);
+            RecyclerView recycler_chat=helper.getView(R.id.recycler_chat);
+            recycler_chat.setLayoutManager(new LinearLayoutManager(mContext));
+            recycler_chat.setNestedScrollingEnabled(false);
+            List<String> list=new ArrayList<>();
+            list.add("");
+            list.add("");
+            ChatAdapter chatAdapter=new ChatAdapter(R.layout.item_market_chat,list);
+            recycler_chat.setAdapter(chatAdapter);
+        }
+    }
+
+    private class ChatAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+
+        public ChatAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+            super(layoutResId, data);
+        }
+
+        @Override
+        protected void convert(final BaseViewHolder helper, String item) {
+            TextView tv_content=helper.getView(R.id.tv_content);
+            SpannableString spannableString = new SpannableString("小豆：的撒娇的卡萨京东卡拉萨街坊邻居");
+            StyleSpan styleSpan_B  = new StyleSpan(Typeface.BOLD);
+            spannableString.setSpan(styleSpan_B, 0, 2, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            tv_content.setText(spannableString);
         }
     }
 
