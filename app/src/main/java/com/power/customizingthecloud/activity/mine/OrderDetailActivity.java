@@ -114,13 +114,11 @@ public class OrderDetailActivity extends BaseActivity {
                         showTip();
                         break;
                     case "2"://待发货
-
                         break;
                     case "3"://待收货
                         TUtils.showShort(mContext,"点击了---退款");
                         break;
                     case "4"://待评价
-
                         break;
                 }
                 break;
