@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -22,14 +22,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scaleType="fitXY"
-                    android:src="@drawable/mine_background_iv"/>
+                    android:src="@drawable/mine_background_iv" />
                 <com.power.customizingthecloud.view.CircleImageView
                     android:id="@+id/mine_face_iv"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/face"
-                    android:layout_marginTop="24dp"/>
+                    android:layout_marginTop="24dp"
+                    app:border_color="@color/white"
+                    app:border_width="3dp"/>
                 <TextView
                     android:id="@+id/mine_name_tv"
                     android:layout_width="wrap_content"

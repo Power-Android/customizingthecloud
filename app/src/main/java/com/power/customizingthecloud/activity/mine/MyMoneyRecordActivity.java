@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -185,7 +186,10 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        TUtils.showShort(mContext,"点击了---item" + position);
+        if (TextUtils.equals("tixian",list.get(position).getType())){
+            TUtils.showShort(mContext,"点击了---item" + position);
+            startActivity(new Intent(mContext,TixianMingxiDetailActivity.class));
+        }
     }
 
     private class MyMoneyRecordAdapter extends BaseQuickAdapter<MyMoneyRecordBean,BaseViewHolder>{

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseFragment;
 
 /**
@@ -15,7 +16,8 @@ import com.power.customizingthecloud.base.BaseFragment;
 public class PastureFragment extends BaseFragment {
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-       return null;
+        View view = inflater.inflate(R.layout.fragment_pasture,null);
+       return view;
     }
 
     @Override

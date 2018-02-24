@@ -135,8 +135,9 @@
         <activity android:name=".activity.mine.RengYangHeTongActivity" />
         <activity android:name=".activity.mine.ProductListActivoty" />
         <activity android:name=".activity.mine.MaolvDetailActivity" />
-        <activity android:name=".activity.mine.IssuesListActivity"/>
-        <activity android:name=".fragment.market.ViewPagerActivity"/>
+        <activity android:name=".activity.mine.IssuesListActivity" />
+        <activity android:name=".fragment.market.ViewPagerActivity" />
+        <activity android:name=".activity.mine.TixianMingxiDetailActivity"></activity>
     </application>
 
 </manifest>

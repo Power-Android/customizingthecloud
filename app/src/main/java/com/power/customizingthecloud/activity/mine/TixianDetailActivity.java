@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -62,6 +63,7 @@ public class TixianDetailActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         TUtils.showShort(mContext,"点击了---item"+position);
+        startActivity(new Intent(mContext,TixianMingxiDetailActivity.class));
     }
 
     private class TixianDetailAdapter extends BaseQuickAdapter<TixianDetailBean,BaseViewHolder>{
