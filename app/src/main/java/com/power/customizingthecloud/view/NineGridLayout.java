@@ -132,7 +132,7 @@ public abstract class NineGridLayout extends ViewGroup {//注意抽象类的view
             //避免在ListView中一张图未加载成功时，布局高度受其他item影响
             LayoutParams params = getLayoutParams();
             params.height = mSingleWidth;
-            setLayoutParams(params);
+            setLayoutParams(params);//设置整个viewgroup的高度
             imageView.layout(0, 0, mSingleWidth, mSingleWidth);
 
             boolean isShowDefualt = displayOneImage(imageView, url, mTotalWidth);

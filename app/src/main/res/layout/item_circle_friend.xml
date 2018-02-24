@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_marginBottom="0.5dp"
               android:background="@color/white"
               android:orientation="horizontal"
@@ -41,8 +41,8 @@
             android:id="@+id/nine_gridlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:sapcing="4dp"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="5dp"
+            app:sapcing="4dp"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -84,6 +84,36 @@
                     android:textColor="@color/text_gray"
                     android:textSize="13sp"/>
             </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/friend_chat_bg"
+            android:orientation="vertical"
+            android:paddingBottom="5dp"
+            android:paddingTop="15dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/ganji_like"
+                android:paddingLeft="15dp"
+                android:drawablePadding="10dp"
+                android:paddingRight="15dp"
+                android:text="小豆子，大头，兔子"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:background="#E5E5E5"></View>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_chat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+            />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
