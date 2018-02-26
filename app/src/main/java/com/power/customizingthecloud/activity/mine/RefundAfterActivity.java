@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -65,6 +66,7 @@ public class RefundAfterActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         TUtils.showShort(mContext,"点击了---查看详情");
+        startActivity(new Intent(mContext,RefundGoodActivity.class));
     }
 
     private class RefundAfterAdapter extends BaseQuickAdapter<RefundAfterBean,BaseViewHolder>{
