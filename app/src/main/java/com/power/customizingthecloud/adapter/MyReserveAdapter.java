@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.fragment.home.ShopDetailActivity;
 import com.power.customizingthecloud.fragment.home.jiankong.JianKongActivity;
+import com.power.customizingthecloud.utils.TUtils;
 
 import java.util.List;
 
@@ -36,6 +38,8 @@ public class MyReserveAdapter extends BaseQuickAdapter<String,BaseViewHolder> {
         ImageView waitIv = helper.getView(R.id.item_wait_iv);
         ImageView successIv = helper.getView(R.id.item_success_iv);
         ImageView filedIv = helper.getView(R.id.item_filed_iv);
+        helper.addOnClickListener(R.id.content_rl)
+                .addOnClickListener(R.id.shachu_tv);
 
         if (mPosition == 1){//待确认
 
@@ -47,5 +51,6 @@ public class MyReserveAdapter extends BaseQuickAdapter<String,BaseViewHolder> {
             successIv.setVisibility(View.GONE);
             filedIv.setVisibility(View.VISIBLE);
         }
+
     }
 }
