@@ -21,6 +21,8 @@ import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.MyOderBean;
 import com.power.customizingthecloud.utils.TUtils;
 import com.power.customizingthecloud.view.BaseDialog;
+import com.wevey.selector.dialog.DialogInterface;
+import com.wevey.selector.dialog.NormalAlertDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MyOrderActivity extends BaseActivity implements View.OnClickListener, BaseQuickAdapter.OnItemChildClickListener {
+public class MyOrderActivity extends BaseActivity implements View.OnClickListener, BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener {
 
     @BindView(R.id.title_back_iv) ImageView titleBackIv;
     @BindView(R.id.title_content_tv) TextView titleContentTv;
@@ -59,6 +61,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     private String type;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +132,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                 list.add(bean4);
                 adapter = new MyOrderAdapter(R.layout.item_my_order, list);
                 recyclerView.setAdapter(adapter);
+                adapter.setOnItemClickListener(this);
                 adapter.setOnItemChildClickListener(this);
                 break;
             case "1":
@@ -136,6 +140,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                 list.add(bean1);
                 adapter = new MyOrderAdapter(R.layout.item_my_order, list);
                 recyclerView.setAdapter(adapter);
+                adapter.setOnItemClickListener(this);
                 adapter.setOnItemChildClickListener(this);
                 break;
             case "2":
@@ -143,6 +148,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                 list.add(bean2);
                 adapter = new MyOrderAdapter(R.layout.item_my_order, list);
                 recyclerView.setAdapter(adapter);
+                adapter.setOnItemClickListener(this);
                 adapter.setOnItemChildClickListener(this);
                 break;
             case "3":
@@ -150,6 +156,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                 list.add(bean3);
                 adapter = new MyOrderAdapter(R.layout.item_my_order, list);
                 recyclerView.setAdapter(adapter);
+                adapter.setOnItemClickListener(this);
                 adapter.setOnItemChildClickListener(this);
                 break;
             case "4":
@@ -157,6 +164,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                 list.add(bean4);
                 adapter = new MyOrderAdapter(R.layout.item_my_order, list);
                 recyclerView.setAdapter(adapter);
+                adapter.setOnItemClickListener(this);
                 adapter.setOnItemChildClickListener(this);
                 break;
         }
@@ -291,8 +299,37 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.item_cancle_order_tv:
                 TUtils.showShort(mContext,"点击了---取消订单"+position);
+                showTip(position);
                 break;
         }
+    }
+
+    private void showTip(final int position) {
+        new NormalAlertDialog.Builder(this)
+                .setTitleVisible(false).setTitleText("提示")
+                .setTitleTextColor(R.color.text_black)
+                .setContentText("您确定要取消此订单吗？")
+                .setContentTextColor(R.color.text_black)
+                .setLeftButtonText("确定")
+                .setLeftButtonTextColor(R.color.text_black)
+                .setRightButtonText("取消")
+                .setRightButtonTextColor(R.color.text_black)
+                .setCanceledOnTouchOutside(false)
+                .setOnclickListener(new DialogInterface.OnLeftAndRightClickListener<NormalAlertDialog>() {
+                    @Override
+                    public void clickLeftButton(NormalAlertDialog dialog, View view) {
+                        list.remove(position);
+                        adapter.notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void clickRightButton(NormalAlertDialog dialog, View view) {
+                        dialog.dismiss();
+                    }
+                })
+                .build()
+                .show();
     }
 
     private void showPayStyleDialog() {
@@ -355,6 +392,32 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        switch (list.get(position).getType()){
+            case "1":
+                intent = new Intent(mContext,OrderDetailActivity.class);
+                intent.putExtra("type",list.get(position).getType());
+                startActivity(intent);
+                break;
+            case "2":
+                intent = new Intent(mContext,OrderDetailActivity.class);
+                intent.putExtra("type",list.get(position).getType());
+                startActivity(intent);
+                break;
+            case "3":
+                intent = new Intent(mContext,OrderDetailActivity.class);
+                intent.putExtra("type",list.get(position).getType());
+                startActivity(intent);
+                break;
+            case "4":
+                intent = new Intent(mContext,OrderDetailActivity.class);
+                intent.putExtra("type",list.get(position).getType());
+                startActivity(intent);
+                break;
+        }
+    }
+
 
     private class MyOrderAdapter extends BaseQuickAdapter<MyOderBean,BaseViewHolder>{
 
@@ -384,11 +447,11 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                     break;
                 case "3":
                     cancleTv.setVisibility(View.GONE);
-                    useTv.setText("评价");
+                    useTv.setText("确认收货");
                     break;
                 case "4":
                     cancleTv.setVisibility(View.GONE);
-                    useTv.setText("确认收货");
+                    useTv.setText("评价");
                     break;
             }
         }
