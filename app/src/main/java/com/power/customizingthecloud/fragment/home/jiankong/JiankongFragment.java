@@ -22,7 +22,7 @@ import butterknife.Unbinder;
  * Created by Administrator on 2018/1/26.
  */
 
-public class OneQuFragment extends BaseFragment {
+public class JiankongFragment extends BaseFragment {
     @BindView(R.id.recycler)
     RecyclerView mRecycler;
     Unbinder unbinder;
@@ -53,7 +53,7 @@ public class OneQuFragment extends BaseFragment {
         list.add("");
         list.add("");
         mRecycler.setLayoutManager(new GridLayoutManager(mContext,3));
-        JianKongAdapter jianKongAdapter=new JianKongAdapter(R.layout.item_jiankong,list,mContext,2);
+        JianKongAdapter jianKongAdapter=new JianKongAdapter(R.layout.item_jiankong,list,mContext,1);
         mRecycler.setAdapter(jianKongAdapter);
     }
 

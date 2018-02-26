@@ -60,16 +60,22 @@ public class JianKongActivity extends BaseActivity implements View.OnClickListen
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("监控列表");
         if (tab_list.size() == 0) {
-            tab_list.add("全部");
-            tab_list.add("毛驴运动场一区");
-            tab_list.add("毛驴运动场二区");
+            //            tab_list.add("全部");
+            tab_list.add("毛驴运动场A区");
+            tab_list.add("毛驴运动场B区");
+            tab_list.add("粗饲料仓储区");
             tab_list.add("驴妈妈饲养区");
+            tab_list.add("驴妈妈繁殖区");
+            tab_list.add("驴宝宝饲养区");
+            tab_list.add("精料加工厂");
+            tab_list.add("隔离检疫区");
+            tab_list.add("屠宰车间");
+            tab_list.add("驴肉食品及阿胶深加工车间");
         }
         if (fragmentList.size() == 0) {
-            fragmentList.add(new JiankongAllFragment());
-            fragmentList.add(new OneQuFragment());
-            fragmentList.add(new TwoQuFragment());
-            fragmentList.add(new MomFragment());
+            for (int i = 0; i < tab_list.size(); i++) {
+                fragmentList.add(new JiankongFragment());
+            }
         }
         mTablayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         for (int i = 0; i < tab_list.size(); i++) {
@@ -84,7 +90,7 @@ public class JianKongActivity extends BaseActivity implements View.OnClickListen
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
-        if (eventBean.getMsg().equals("player")){//播放视频
+        if (eventBean.getMsg().equals("player")) {//播放视频
             mVideoplayer.setVisibility(View.VISIBLE);
             mVideoplayer.setUp("http://www.170mv.com/tool/jiexi/ajax/pid/13053/vid/3155386.mp4"
                     , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");

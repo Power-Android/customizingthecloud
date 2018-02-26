@@ -25,6 +25,7 @@ import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.FortuneCenterAcitivity;
 import com.power.customizingthecloud.activity.mine.LatestActivity;
 import com.power.customizingthecloud.activity.mine.MyDonkeyEarsActivity;
+import com.power.customizingthecloud.activity.mine.MyMessageActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.EventBean;
 import com.power.customizingthecloud.fragment.home.jiankong.JianKongActivity;
@@ -181,7 +182,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             startActivity(new Intent(mContext, CanWeiYuDingAcitivity.class));
                             break;
                         case 5:
-//                            showRenYangDialog();
+                            //                            showRenYangDialog();
                             startActivity(new Intent(mContext, KaiDianActivity.class));
                             break;
                         case 6:
@@ -231,7 +232,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(mContext, JianKongActivity.class);
-                intent.putExtra("position", position + 1);
+                if (position == 2) {
+                    intent.putExtra("position", 3);
+                } else {
+                    intent.putExtra("position", position);
+                }
                 startActivity(intent);
             }
         });
@@ -282,6 +287,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                     mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
+                startActivity(new Intent(mContext, MyMessageActivity.class));
                 break;
             case R.id.title_jia_iv://加号
                 showDownPop(mTitleJiaiv);
@@ -303,7 +309,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     //向下弹出
     public void showDownPop(View view) {
-        if (popupWindow != null && popupWindow.isShowing()){
+        if (popupWindow != null && popupWindow.isShowing()) {
             return;
         }
         popupWindow = new CommonPopupWindow.Builder(mContext)
@@ -318,6 +324,22 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             @Override
                             public void onClick(View v) {
                                 showShopMaDialog();
+                                popupWindow.dismiss();
+                            }
+                        });
+                        TextView tv_mycode = (TextView) view.findViewById(R.id.tv_mycode);
+                        tv_mycode.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(mContext, MyCodeActivity.class));
+                                popupWindow.dismiss();
+                            }
+                        });
+                        TextView tv_dian_rule = (TextView) view.findViewById(R.id.tv_dian_rule);
+                        tv_dian_rule.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(mContext, DianRuleActivity.class));
                                 popupWindow.dismiss();
                             }
                         });

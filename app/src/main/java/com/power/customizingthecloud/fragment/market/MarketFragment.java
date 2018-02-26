@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.market;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.MyMessageActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.NineGridTestModel;
 import com.power.customizingthecloud.view.CircleImageView;
@@ -66,6 +68,8 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
     CircleImageView mIvHead;
     @BindView(R.id.recycler)
     RecyclerView mRecycler;
+    @BindView(R.id.iv_photo)
+    ImageView iv_photo;
     Unbinder unbinder;
     private List<NineGridTestModel> mList = new ArrayList<>();
     private String[] mUrls = new String[]{"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=202447557,2967022603&fm=27&gp=0.jpg",
@@ -78,7 +82,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             "http://img2.imgtn.bdimg.com/it/u=2557022909,3736713361&fm=27&gp=0.jpg",
             "http://img2.imgtn.bdimg.com/it/u=1830359176,654163576&fm=200&gp=0.jpg",
             "http://img4.imgtn.bdimg.com/it/u=4193964417,1586871857&fm=27&gp=0.jpg",
-            };
+    };
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,8 +91,11 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
         mTitleMessageIv.setVisibility(View.VISIBLE);
         mTitleMessageIv.setOnClickListener(this);
         mTitleContentTv.setText("我的圈子");
+        mTitleContentRightTv.setVisibility(View.VISIBLE);
         mTitleContentRightTv.setText("发动态");
         mTitleContentRightTv.setOnClickListener(this);
+        iv_photo.setOnClickListener(this);
+        mIvHead.setOnClickListener(this);
         return view;
     }
 
@@ -107,19 +114,19 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
         model2.urlList.add(mUrls[1]);
         mList.add(model2);
 
-//        NineGridTestModel model4 = new NineGridTestModel();
-//        for (int i = 0; i < mUrls.length; i++) {
-//            model4.urlList.add(mUrls[i]);
-//        }
-//        model4.isShowAll = false;
-//        mList.add(model4);
-//
-//        NineGridTestModel model5 = new NineGridTestModel();
-//        for (int i = 0; i < mUrls.length; i++) {
-//            model5.urlList.add(mUrls[i]);
-//        }
-//        model5.isShowAll = true;//显示全部图片
-//        mList.add(model5);
+        //        NineGridTestModel model4 = new NineGridTestModel();
+        //        for (int i = 0; i < mUrls.length; i++) {
+        //            model4.urlList.add(mUrls[i]);
+        //        }
+        //        model4.isShowAll = false;
+        //        mList.add(model4);
+        //
+        //        NineGridTestModel model5 = new NineGridTestModel();
+        //        for (int i = 0; i < mUrls.length; i++) {
+        //            model5.urlList.add(mUrls[i]);
+        //        }
+        //        model5.isShowAll = true;//显示全部图片
+        //        mList.add(model5);
 
         NineGridTestModel model6 = new NineGridTestModel();
         for (int i = 0; i < 9; i++) {
@@ -161,13 +168,13 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             NineGridTestLayout nineGridlayout = helper.getView(R.id.nine_gridlayout);
             nineGridlayout.setIsShowAll(mList.get(helper.getAdapterPosition()).isShowAll);
             nineGridlayout.setUrlList(mList.get(helper.getAdapterPosition()).urlList);
-            RecyclerView recycler_chat=helper.getView(R.id.recycler_chat);
+            RecyclerView recycler_chat = helper.getView(R.id.recycler_chat);
             recycler_chat.setLayoutManager(new LinearLayoutManager(mContext));
             recycler_chat.setNestedScrollingEnabled(false);
-            List<String> list=new ArrayList<>();
+            List<String> list = new ArrayList<>();
             list.add("");
             list.add("");
-            ChatAdapter chatAdapter=new ChatAdapter(R.layout.item_market_chat,list);
+            ChatAdapter chatAdapter = new ChatAdapter(R.layout.item_market_chat, list);
             recycler_chat.setAdapter(chatAdapter);
         }
     }
@@ -180,9 +187,9 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
 
         @Override
         protected void convert(final BaseViewHolder helper, String item) {
-            TextView tv_content=helper.getView(R.id.tv_content);
+            TextView tv_content = helper.getView(R.id.tv_content);
             SpannableString spannableString = new SpannableString("小豆：的撒娇的卡萨京东卡拉萨街坊邻居");
-            StyleSpan styleSpan_B  = new StyleSpan(Typeface.BOLD);
+            StyleSpan styleSpan_B = new StyleSpan(Typeface.BOLD);
             spannableString.setSpan(styleSpan_B, 0, 2, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             tv_content.setText(spannableString);
         }
@@ -198,8 +205,15 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.title_message_iv:
+                startActivity(new Intent(mContext, MyMessageActivity.class));
                 break;
             case R.id.title_content_right_tv:
+                startActivity(new Intent(mContext,FaDongTaiActivity.class));
+                break;
+            case R.id.iv_head:
+                startActivity(new Intent(mContext,MyDongTaiActivity.class));
+                break;
+            case R.id.iv_photo:
                 break;
         }
     }

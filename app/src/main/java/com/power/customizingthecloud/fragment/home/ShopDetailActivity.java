@@ -1,6 +1,7 @@
 package com.power.customizingthecloud.fragment.home;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.MyReserveActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
@@ -129,6 +131,7 @@ public class ShopDetailActivity extends BaseActivity implements View.OnClickList
         mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(ShopDetailActivity.this, MyReserveActivity.class));
                 mDialog.dismiss();
             }
         });
@@ -208,6 +211,9 @@ public class ShopDetailActivity extends BaseActivity implements View.OnClickList
                 finish();
                 break;
             case R.id.tv_phone:
+                Intent dialIntent = new Intent(Intent.ACTION_DIAL,
+                        Uri.parse("tel:" + mTvPhone.getText().toString()));//跳转到拨号界面，同时传递电话号码
+                startActivity(dialIntent);
                 break;
             case R.id.tv_order:
                 String userid = SpUtils.getString(mContext, "userid", "");

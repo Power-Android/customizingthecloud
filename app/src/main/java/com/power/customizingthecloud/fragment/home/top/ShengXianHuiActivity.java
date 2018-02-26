@@ -19,6 +19,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
+import com.power.customizingthecloud.fragment.home.GoodListActivity;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.MyUtils;
 import com.power.customizingthecloud.utils.SpUtils;
@@ -49,6 +50,32 @@ public class ShengXianHuiActivity extends BaseActivity implements View.OnClickLi
     RecyclerView mRecyclerXian;
     @BindView(R.id.iv_eye)
     ImageView mIvEye;
+    @BindView(R.id.title_list_iv)
+    ImageView mTitleListIv;
+    @BindView(R.id.title_qrcode_iv)
+    ImageView mTitleQrcodeIv;
+    @BindView(R.id.title_shopcar_iv)
+    ImageView mTitleShopcarIv;
+    @BindView(R.id.title_share_iv)
+    ImageView mTitleShareIv;
+    @BindView(R.id.title_search_iv)
+    ImageView mTitleSearchIv;
+    @BindView(R.id.title_jia_iv)
+    ImageView mTitleJiaIv;
+    @BindView(R.id.title_kefu_iv)
+    ImageView mTitleKefuIv;
+    @BindView(R.id.view_beibu)
+    View mViewBeibu;
+    @BindView(R.id.view_leibu)
+    View mViewLeibu;
+    @BindView(R.id.view_jianbu)
+    View mViewJianbu;
+    @BindView(R.id.view_fubu)
+    View mViewFubu;
+    @BindView(R.id.view_qiantuibu)
+    View mViewQiantuibu;
+    @BindView(R.id.view_houtuibu)
+    View mViewHoutuibu;
     private XianAdapter mShopAdapter;
     private AnimationDrawable mAnimationDrawable;
 
@@ -79,13 +106,19 @@ public class ShengXianHuiActivity extends BaseActivity implements View.OnClickLi
         //开启在布局文件中设置的帧动画
         mAnimationDrawable = (AnimationDrawable) mIvEye.getDrawable();
         mAnimationDrawable.start();
+        mViewBeibu.setOnClickListener(this);
+        mViewLeibu.setOnClickListener(this);
+        mViewJianbu.setOnClickListener(this);
+        mViewFubu.setOnClickListener(this);
+        mViewQiantuibu.setOnClickListener(this);
+        mViewHoutuibu.setOnClickListener(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mAnimationDrawable.stop();
-        mAnimationDrawable=null;
+        mAnimationDrawable = null;
     }
 
     private class XianAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
@@ -96,23 +129,23 @@ public class ShengXianHuiActivity extends BaseActivity implements View.OnClickLi
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-            ImageView iv_insertcar=helper.getView(R.id.iv_insertcar);
+            ImageView iv_insertcar = helper.getView(R.id.iv_insertcar);
             iv_insertcar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String userid = SpUtils.getString(mContext, "userid", "");
-                    if (TextUtils.isEmpty(userid)){
+                    if (TextUtils.isEmpty(userid)) {
                         startActivity(new Intent(mContext, LoginActivity.class));
-                        overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                        overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                         return;
                     }
                     Toast.makeText(ShengXianHuiActivity.this, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
                 }
             });
-            ImageView iv_top=helper.getView(R.id.iv_top);
+            ImageView iv_top = helper.getView(R.id.iv_top);
             int width = MyUtils.getScreenWidth(mContext) - MyUtils.dip2px(mContext, 50);
             ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
-            layoutParams.height=width/2;
+            layoutParams.height = width / 2;
             iv_top.setLayoutParams(layoutParams);
         }
     }
@@ -122,6 +155,24 @@ public class ShengXianHuiActivity extends BaseActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.title_back_iv:
                 finish();
+                break;
+            case R.id.view_beibu:
+                startActivity(new Intent(ShengXianHuiActivity.this, GoodListActivity.class));
+                break;
+            case R.id.view_leibu:
+                startActivity(new Intent(ShengXianHuiActivity.this, GoodListActivity.class));
+                break;
+            case R.id.view_jianbu:
+                startActivity(new Intent(ShengXianHuiActivity.this, GoodListActivity.class));
+                break;
+            case R.id.view_fubu:
+                startActivity(new Intent(ShengXianHuiActivity.this, GoodListActivity.class));
+                break;
+            case R.id.view_qiantuibu:
+                startActivity(new Intent(ShengXianHuiActivity.this, GoodListActivity.class));
+                break;
+            case R.id.view_houtuibu:
+                startActivity(new Intent(ShengXianHuiActivity.this, GoodListActivity.class));
                 break;
         }
     }

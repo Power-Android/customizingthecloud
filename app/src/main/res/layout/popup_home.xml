@@ -22,6 +22,7 @@
         android:layout_height="1dp"
         android:background="@color/backgourd"></View>
     <TextView
+        android:id="@+id/tv_mycode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/home_erweima"
@@ -49,6 +50,7 @@
         android:layout_height="1dp"
         android:background="@color/backgourd"></View>
     <TextView
+        android:id="@+id/tv_dian_rule"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/home_shoprule"

@@ -20,6 +20,7 @@ import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
+import com.power.customizingthecloud.fragment.home.GoodListActivity;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
 import com.power.customizingthecloud.utils.MyUtils;
@@ -49,6 +50,18 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.recycler_meat)
     RecyclerView mRecyclerMeat;
     Unbinder unbinder;
+    @BindView(R.id.view_beibu)
+    View mViewBeibu;
+    @BindView(R.id.view_leibu)
+    View mViewLeibu;
+    @BindView(R.id.view_jianbu)
+    View mViewJianbu;
+    @BindView(R.id.view_fubu)
+    View mViewFubu;
+    @BindView(R.id.view_qiantuibu)
+    View mViewQiantuibu;
+    @BindView(R.id.view_houtuibu)
+    View mViewHoutuibu;
     private AnimationDrawable mAnimationDrawable;
 
     @Override
@@ -56,6 +69,12 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_shopmeat, null);
         unbinder = ButterKnife.bind(this, view);
         mIvCar.setOnClickListener(this);
+        mViewBeibu.setOnClickListener(this);
+        mViewLeibu.setOnClickListener(this);
+        mViewJianbu.setOnClickListener(this);
+        mViewFubu.setOnClickListener(this);
+        mViewQiantuibu.setOnClickListener(this);
+        mViewHoutuibu.setOnClickListener(this);
         return view;
     }
 
@@ -107,6 +126,24 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
                 }
                 startActivity(new Intent(mContext, ShopCartActivity.class));
                 break;
+            case R.id.view_beibu:
+                startActivity(new Intent(mContext, GoodListActivity.class));
+                break;
+            case R.id.view_leibu:
+                startActivity(new Intent(mContext, GoodListActivity.class));
+                break;
+            case R.id.view_jianbu:
+                startActivity(new Intent(mContext, GoodListActivity.class));
+                break;
+            case R.id.view_fubu:
+                startActivity(new Intent(mContext, GoodListActivity.class));
+                break;
+            case R.id.view_qiantuibu:
+                startActivity(new Intent(mContext, GoodListActivity.class));
+                break;
+            case R.id.view_houtuibu:
+                startActivity(new Intent(mContext, GoodListActivity.class));
+                break;
         }
     }
 
@@ -143,6 +180,6 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        mAnimationDrawable=null;
+        mAnimationDrawable = null;
     }
 }

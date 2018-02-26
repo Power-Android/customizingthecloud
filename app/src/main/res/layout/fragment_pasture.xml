@@ -8,8 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/muchang_bg">
-
         <ImageView
+            android:id="@+id/iv_lv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
@@ -17,6 +17,7 @@
             android:layout_marginRight="20dp"
             android:src="@drawable/muchang_lv"/>
         <LinearLayout
+            android:id="@+id/ll_sportA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -35,6 +36,7 @@
                 android:textSize="12sp"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/ll_sportB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="130dp"
@@ -61,6 +63,7 @@
                 android:textSize="12sp"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/ll_cusiliao"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -81,6 +84,7 @@
                 android:textSize="12sp"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/ll_lvmumsiyang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="150dp"
@@ -100,6 +104,7 @@
                 android:textSize="12sp"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/ll_lvmumfanzhi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="150dp"
@@ -119,6 +124,7 @@
                 android:textSize="12sp"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/ll_lvbaby"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="230dp"
@@ -139,6 +145,7 @@
                 android:textSize="12sp"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/ll_jingliao"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -157,19 +164,29 @@
                 android:textColor="@color/white"
                 android:textSize="12sp"/>
         </LinearLayout>
-        <TextView
+        <LinearLayout
+            android:id="@+id/ll_gelijianyi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_marginRight="30dp"
-            android:layout_marginTop="270dp"
-            android:drawableLeft="@drawable/muchang_jianshi"
-            android:drawablePadding="5dp"
-            android:drawableTop="@drawable/cusiliao"
-            android:text="隔离检疫区"
-            android:textColor="@color/white"
-            android:textSize="12sp"/>
+            android:layout_marginTop="260dp"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/cusiliao"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/muchang_jianshi"
+                android:drawablePadding="5dp"
+                android:text="隔离检疫区"
+                android:textColor="@color/white"
+                android:textSize="12sp"/>
+        </LinearLayout>
         <LinearLayout
+            android:id="@+id/ll_tuzaichejian"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|bottom"
@@ -191,6 +208,7 @@
                 android:textSize="12sp"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/ll_lvmeat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|bottom"
