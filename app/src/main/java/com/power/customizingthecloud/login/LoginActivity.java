@@ -129,7 +129,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 return;
             }
         }
-        Toast.makeText(this, "登陆成功", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
         SpUtils.putString(this, "userid", "1");
 //        startActivity(new Intent(this, MainActivity.class));
         finish();

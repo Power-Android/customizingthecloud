@@ -167,14 +167,18 @@ public class CustomerCenterActivity extends BaseActivity implements View.OnClick
                 startActivity(new Intent(mContext,IssuesListActivity.class));
                 break;
             case R.id.xgdz_ll://修改地址
+                startActivity(new Intent(mContext,IssuesListActivity.class));
                 break;
             case R.id.zhaq_ll://帐号安全
+                startActivity(new Intent(mContext,IssuesListActivity.class));
                 break;
             case R.id.cnxw_ll://猜你想问
+                startActivity(new Intent(mContext,IssuesListActivity.class));
                 break;
             case R.id.zxkf_ll://咨询客服
                 break;
             case R.id.pjfk_ll://评价反馈
+                startActivity(new Intent(mContext,FeedbackActivity.class));
                 break;
         }
     }

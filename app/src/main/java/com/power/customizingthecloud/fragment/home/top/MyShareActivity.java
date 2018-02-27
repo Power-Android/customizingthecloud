@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.home.top;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -7,6 +8,7 @@ import android.widget.TextView;
 
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.fragment.home.ShareSuccessActivity;
 import com.power.customizingthecloud.view.CircleImageView;
 
 import butterknife.BindView;
@@ -30,6 +32,7 @@ public class MyShareActivity extends BaseActivity implements View.OnClickListene
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
         titleBackIv.setOnClickListener(this);
+        shareTv.setOnClickListener(this);
         titleContentTv.setText("分享");
     }
 
@@ -38,6 +41,9 @@ public class MyShareActivity extends BaseActivity implements View.OnClickListene
         switch (v.getId()){
             case R.id.title_back_iv:
                 finish();
+                break;
+            case R.id.share_tv:
+                startActivity(new Intent(mContext, ShareSuccessActivity.class));
                 break;
         }
     }
