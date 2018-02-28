@@ -8,7 +8,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.compress.Luban;
 import com.luck.picture.lib.config.PictureConfig;
@@ -21,7 +20,6 @@ import com.power.customizingthecloud.view.MyGridView;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalSelectionDialog;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 

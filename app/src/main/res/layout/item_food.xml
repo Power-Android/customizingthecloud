@@ -5,6 +5,6 @@
            android:src="@drawable/face"
            android:scaleType="fitXY"
            android:layout_marginLeft="5dp"
-           android:layout_height="110dp">
+           android:layout_height="75dp">
 
 </ImageView>

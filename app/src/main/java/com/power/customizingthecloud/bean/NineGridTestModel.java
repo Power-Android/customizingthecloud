@@ -23,4 +23,14 @@ public class NineGridTestModel implements Serializable {
     public void setUrlList(List<String> urlList) {
         this.urlList = urlList;
     }
+
+    private boolean isLike;
+
+    public boolean isLike() {
+        return isLike;
+    }
+
+    public void setLike(boolean like) {
+        isLike = like;
+    }
 }
