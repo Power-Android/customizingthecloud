@@ -46,6 +46,7 @@ public class FeedbackActivity extends BaseActivity {
     private List<String> cameraList;
     private List<LocalMedia> selectList = new ArrayList<>();
     List<LocalMedia> list = new ArrayList<>();
+    List<LocalMedia> listAll = new ArrayList<>();
     private GridViewAddImgesAdpter addImgesAdpter;
 
     @Override
@@ -128,7 +129,7 @@ public class FeedbackActivity extends BaseActivity {
                 .glideOverride(200, 200)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
 //                .withAspectRatio(aspect_ratio_x, aspect_ratio_y)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
                 .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
-                .isGif(true)// 是否显示gif图片
+                .isGif(false)// 是否显示gif图片
                 .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
                 .circleDimmedLayer(false)// 是否圆形裁剪
                 .showCropFrame(true)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
@@ -169,7 +170,9 @@ public class FeedbackActivity extends BaseActivity {
                 case PictureConfig.CHOOSE_REQUEST:
                     // 图片选择结果回调
                     selectList = PictureSelector.obtainMultipleResult(data);
-                    addImgesAdpter.setList(selectList);
+                    listAll.addAll(selectList);
+                    selectList.clear();
+                    addImgesAdpter.setList(listAll);
                     addImgesAdpter.notifyDataSetChanged();
                     break;
             }
