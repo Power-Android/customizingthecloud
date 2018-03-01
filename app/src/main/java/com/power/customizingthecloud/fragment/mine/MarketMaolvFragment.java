@@ -10,10 +10,9 @@ import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.power.customizingthecloud.R;
-import com.power.customizingthecloud.activity.mine.MaolvDetailActivity;
-import com.power.customizingthecloud.adapter.MyRenYangAdapter;
 import com.power.customizingthecloud.adapter.ProductListAdapter;
 import com.power.customizingthecloud.base.BaseFragment;
+import com.power.customizingthecloud.fragment.home.renyang.detail.RenYangDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +62,6 @@ public class MarketMaolvFragment extends BaseFragment implements BaseQuickAdapte
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        startActivity(new Intent(mContext,MaolvDetailActivity.class));
+        startActivity(new Intent(mContext,RenYangDetailActivity.class));
     }
 }

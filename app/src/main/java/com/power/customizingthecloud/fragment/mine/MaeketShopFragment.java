@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.GoodDetail1Activity;
 import com.power.customizingthecloud.adapter.MyRenYangAdapter;
 import com.power.customizingthecloud.adapter.ProductListAdapter;
 import com.power.customizingthecloud.base.BaseFragment;
@@ -63,6 +64,6 @@ public class MaeketShopFragment extends BaseFragment implements BaseQuickAdapter
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        startActivity(new Intent(mContext, GoodDetailActivity.class));
+        startActivity(new Intent(mContext, GoodDetail1Activity.class));
     }
 }

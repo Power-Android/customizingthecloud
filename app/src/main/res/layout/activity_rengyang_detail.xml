@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/backgourd"
-    tools:context="com.power.customizingthecloud.activity.mine.RengyangDetailActivity">
+    tools:context="com.power.customizingthecloud.activity.mine.RengyangDetail1Activity">
     <include layout="@layout/item_title_layout"/>
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"

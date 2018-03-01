@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.power.customizingthecloud.R;
-import com.power.customizingthecloud.activity.mine.RengyangDetailActivity;
+import com.power.customizingthecloud.activity.mine.RengyangDetail1Activity;
 import com.power.customizingthecloud.adapter.MyRenYangAdapter;
 import com.power.customizingthecloud.base.BaseFragment;
 
@@ -57,6 +57,6 @@ public class IngRenyangFragment extends BaseFragment implements BaseQuickAdapter
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        startActivity(new Intent(mContext,RengyangDetailActivity.class));
+        startActivity(new Intent(mContext,RengyangDetail1Activity.class));
     }
 }

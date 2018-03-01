@@ -25,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RengyangDetailActivity extends BaseActivity {
+public class RengyangDetail1Activity extends BaseActivity {
 
     @BindView(R.id.title_back_iv) ImageView titleBackIv;
     @BindView(R.id.title_content_tv) TextView titleContentTv;
