@@ -198,7 +198,6 @@ public class ShopDetailActivity extends BaseActivity implements View.OnClickList
                 .isDialog(true)
                 .build();
         pvTime.setDate(Calendar.getInstance());
-
         if (!pvTime.isShowing()) {
             pvTime.show();
         }
