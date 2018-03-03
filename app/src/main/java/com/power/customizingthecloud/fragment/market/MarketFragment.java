@@ -1,6 +1,5 @@
 package com.power.customizingthecloud.fragment.market;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,6 +31,7 @@ import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.MyMessageActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.NineGridTestModel;
+import com.power.customizingthecloud.utils.SoftKeyboardTool;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.BaseSelectPopupWindow;
 import com.power.customizingthecloud.view.CircleImageView;
@@ -221,10 +220,10 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             popWiw.setShowTitle(false);
         }
         popWiw.setFocusable(true);
-        InputMethodManager im = (InputMethodManager)
-                mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        im.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-
+//        InputMethodManager im = (InputMethodManager)
+//                mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+//        im.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        SoftKeyboardTool.showSoftKeyboard(view);
         final ImageView send = (ImageView) popWiw.getContentView().findViewById(R.id.query_iv);
         final EditText edt = (EditText) popWiw.getContentView().findViewById(R.id.edt_content);
         final ImageView close = (ImageView) popWiw.getContentView().findViewById(R.id.cancle_iv);
@@ -280,7 +279,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
         @Override
         protected void convert(final BaseViewHolder helper, String item) {
             TextView tv_content = helper.getView(R.id.tv_content);
-            SpannableString spannableString = new SpannableString("小豆：的撒娇的卡萨京东卡拉萨街坊邻居");
+            SpannableString spannableString = new SpannableString("小豆：的撒娇的卡萨京东设计费华科税费低卡拉萨街坊邻居");
             StyleSpan styleSpan_B = new StyleSpan(Typeface.BOLD);
             spannableString.setSpan(styleSpan_B, 0, 2, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             tv_content.setText(spannableString);

@@ -27,7 +27,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FaDongTaiActivity extends BaseActivity implements View.OnClickListener {
-
     @BindView(R.id.title_message_iv)
     ImageView mTitleMessageIv;
     @BindView(R.id.title_back_iv)

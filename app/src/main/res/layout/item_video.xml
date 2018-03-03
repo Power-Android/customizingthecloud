@@ -8,10 +8,22 @@
               android:background="@color/white"
               android:orientation="vertical"
 >
-    <cn.jzvd.JZVideoPlayerStandard
-        android:id="@+id/videoplayer"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="160dp"/>
+        android:layout_height="160dp">
+        <ImageView
+            android:id="@+id/iv_tupian"
+            android:layout_width="match_parent"
+            android:src="@drawable/dianpu_bg"
+            android:scaleType="fitXY"
+            android:layout_height="160dp"/>
+        <ImageView
+            android:id="@+id/iv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/icon_pause"/>
+    </FrameLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -178,7 +178,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
     }
 
     //向下弹出
-    public void showDownPop(View view, final List<String> list) {
+    public void showDownPop(final TextView textView, final List<String> list) {
         if (popupWindow != null && popupWindow.isShowing())
             return;
         popupWindow = new CommonPopupWindow.Builder(this)
@@ -195,6 +195,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                textView.setText(list.get(position));
                                 if (popupWindow != null) {
                                     popupWindow.dismiss();
                                 }
@@ -204,7 +205,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                 })
                 .setOutsideTouchable(true)
                 .create();
-        popupWindow.showAsDropDown(view);
+        popupWindow.showAsDropDown(textView);
         //得到button的左上角坐标
         //        int[] positions = new int[2];
         //        view.getLocationOnScreen(positions);
@@ -219,9 +220,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-            helper.setText(R.id.tv_pop, item);
-            TextView tv_pop = helper.getView(R.id.tv_pop);
-            tv_pop.setBackgroundColor(getResources().getColor(R.color.red3));
+            helper.setText(R.id.tv_pop,item);
         }
     }
 

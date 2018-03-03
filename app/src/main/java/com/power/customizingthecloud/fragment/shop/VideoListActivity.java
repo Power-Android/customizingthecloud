@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.shop;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -9,19 +10,17 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.bean.PlayerBean;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.jzvd.JZVideoPlayerStandard;
 
 public class VideoListActivity extends BaseActivity implements View.OnClickListener {
 
@@ -51,6 +50,8 @@ public class VideoListActivity extends BaseActivity implements View.OnClickListe
     TextView mTitleContentRightTv;
     @BindView(R.id.recylcer_video)
     RecyclerView mRecylcerVideo;
+    private VideoAdapter mVideoAdapter;
+    private List<PlayerBean> mList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,31 +62,46 @@ public class VideoListActivity extends BaseActivity implements View.OnClickListe
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("视频列表");
         mRecylcerVideo.setLayoutManager(new LinearLayoutManager(this));
-        List<String> list=new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        VideoAdapter videoAdapter=new VideoAdapter(R.layout.item_video,list);
-        mRecylcerVideo.setAdapter(videoAdapter);
+        mList = new ArrayList<>();
+        mList.add(new PlayerBean("视频标题1", "视频内容1"));
+        mList.add(new PlayerBean("视频标题2", "视频内容2"));
+        mList.add(new PlayerBean("视频标题3", "视频内容3"));
+        mVideoAdapter = new VideoAdapter(R.layout.item_video, mList);
+        mRecylcerVideo.setAdapter(mVideoAdapter);
     }
 
-    private class VideoAdapter extends BaseQuickAdapter<String,BaseViewHolder>{
+    private class VideoAdapter extends BaseQuickAdapter<PlayerBean, BaseViewHolder> {
 
-        public VideoAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public VideoAdapter(@LayoutRes int layoutResId, @Nullable List<PlayerBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
-            JZVideoPlayerStandard videoPlayer=helper.getView(R.id.videoplayer);
-            videoPlayer.setUp("http://www.170mv.com/tool/jiexi/ajax/pid/13053/vid/3155386.mp4"
-                    , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
-            videoPlayer.thumbImageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            Glide.with(MyApplication.getGloableContext())
-                    .load("http://jzvd-pic.nathen.cn/jzvd-pic/00b026e7-b830-4994-bc87-38f4033806a6.jpg")
-                    .into(videoPlayer.thumbImageView);
+        protected void convert(BaseViewHolder helper, final PlayerBean item) {
+            final ImageView iv_status = helper.getView(R.id.iv_status);
+            if (item.isPlaying()) {
+                iv_status.setImageResource(R.drawable.icon_playing);
+            } else {
+                iv_status.setImageResource(R.drawable.icon_pause);
+            }
+            iv_status.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    item.setPlaying(!item.isPlaying());
+                    iv_status.setImageResource(R.drawable.icon_playing);
+                    startActivity(new Intent(VideoListActivity.this, VideoDetailActivity.class));
+                }
+            });
         }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        for (int i = 0; i < mList.size(); i++) {
+            mList.get(i).setPlaying(false);
+        }
+        mVideoAdapter.notifyDataSetChanged();
     }
 
     @Override

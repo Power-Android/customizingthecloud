@@ -9,9 +9,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:paddingTop="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
+        android:paddingTop="10dp"
         android:src="@drawable/power_del"/>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -25,6 +25,7 @@
             android:textColor="@color/text_black"
             android:textSize="15sp"/>
         <EditText
+            android:id="@+id/edt_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -32,9 +33,9 @@
             android:layout_marginLeft="50dp"
             android:background="@null"
             android:gravity="right|center_vertical"
-            android:hint="张茱萸"
+            android:hint="请输入姓名"
             android:textColor="@color/text_black"
-            android:textColorHint="@color/text_black"
+            android:textColorHint="@color/text_gray"
             android:textSize="15sp"/>
     </RelativeLayout>
     <View
@@ -55,6 +56,7 @@
             android:textColor="@color/text_black"
             android:textSize="15sp"/>
         <EditText
+            android:id="@+id/edt_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -62,9 +64,9 @@
             android:layout_marginLeft="50dp"
             android:background="@null"
             android:gravity="right|center_vertical"
-            android:hint="232132434324"
+            android:hint="请输入电话号码"
             android:textColor="@color/text_black"
-            android:textColorHint="@color/text_black"
+            android:textColorHint="@color/text_gray"
             android:textSize="15sp"/>
     </RelativeLayout>
     <View
@@ -85,11 +87,13 @@
             android:textColor="@color/text_black"
             android:textSize="15sp"/>
         <LinearLayout
+            android:id="@+id/ll_person_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true">
             <TextView
+                android:id="@+id/tv_person_count"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
@@ -125,16 +129,18 @@
             android:textColor="@color/text_black"
             android:textSize="15sp"/>
         <LinearLayout
+            android:id="@+id/ll_zuowei"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true">
             <TextView
+                android:id="@+id/tv_zuowei"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:gravity="center"
                 android:background="@drawable/bg_huise_line2"
+                android:gravity="center"
                 android:text="散桌"
                 android:textColor="@color/text_black"
                 android:textSize="15sp"/>
@@ -145,6 +151,35 @@
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/green_sanjiao"/>
         </LinearLayout>
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/backgourd"></View>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="预定时间"
+            android:textColor="@color/text_black"
+            android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/tv_select_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="50dp"
+            android:gravity="right|center_vertical"
+            android:textColor="@color/text_black"
+            android:text="选择预定时间"
+            android:textSize="15sp"/>
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
@@ -171,9 +206,9 @@
             android:layout_marginLeft="50dp"
             android:background="@null"
             android:gravity="right|center_vertical"
-            android:hint="无"
+            android:hint="备注"
             android:textColor="@color/text_black"
-            android:textColorHint="@color/text_black"
+            android:textColorHint="@color/text_gray"
             android:textSize="15sp"/>
     </RelativeLayout>
     <View

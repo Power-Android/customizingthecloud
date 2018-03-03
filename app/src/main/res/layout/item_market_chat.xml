@@ -5,6 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
-    android:text="小豆：三局福建省咖啡来看撒娇的来看撒娇范德萨发大水了否都死了否都死了否都死了开放肯定是"
+    android:lineSpacingExtra="2dp"
+    android:text=""
     android:textColor="@color/text_black"
 />
