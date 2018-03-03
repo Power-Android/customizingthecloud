@@ -199,7 +199,7 @@ public class ShopDetailActivity extends BaseActivity implements View.OnClickList
                 .build();
         pvTime.setDate(Calendar.getInstance());
 
-        if (!pvTime.isShowing()){
+        if (!pvTime.isShowing()) {
             pvTime.show();
         }
     }
