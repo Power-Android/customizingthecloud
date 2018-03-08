@@ -51,12 +51,20 @@ public class RenYangAllFragment extends BaseFragment {
         list.add("");
         list.add("");
         mRecyclerRenyang.setLayoutManager(new LinearLayoutManager(mContext));
-        RenYangAdapter renYangAdapter=new RenYangAdapter(R.layout.home_middle,list,mContext,1);
+        RenYangAdapter renYangAdapter = new RenYangAdapter(R.layout.home_middle, list, mContext, 1);
         mRecyclerRenyang.setAdapter(renYangAdapter);
         renYangAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(mContext, RenYangDetailActivity.class));
+                Intent intent = new Intent(mContext, RenYangDetailActivity.class);
+                if (position == 0) {
+                    intent.putExtra("type", "jijiang");
+                } else if (position == 1) {
+                    intent.putExtra("type", "over");
+                } else if (position == 2) {
+                    intent.putExtra("type", "ing");
+                }
+                startActivity(intent);
             }
         });
     }

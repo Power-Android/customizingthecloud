@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.utils.MyUtils;
 import com.power.customizingthecloud.utils.SendSmsTimerUtils;
 import com.power.customizingthecloud.utils.SpUtils;
 
@@ -84,13 +85,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 startActivity(new Intent(this, ForgetPswActivity.class));
                 break;
             case R.id.iv_psw_status:
+                //设置密码是否可见
                 if (isPswVisible) {
-                    mIvPswStatus.setImageResource(R.drawable.login_eye_open);
-                    //设置密码是否可见
-                    mEdtPsw.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                } else {
                     mIvPswStatus.setImageResource(R.drawable.login_eye_close);
                     mEdtPsw.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else {
+                    mIvPswStatus.setImageResource(R.drawable.login_eye_open);
+                    mEdtPsw.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 }
                 isPswVisible = !isPswVisible;
                 break;
@@ -116,6 +117,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             Toast.makeText(this, "请输入账号~", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (!MyUtils.isMobileNO(username)){
+            Toast.makeText(this, "请正确输入手机号~", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (isPhoneLogin) {
             String code = mEdtCode.getText().toString();
             if (TextUtils.isEmpty(code)) {
@@ -128,10 +133,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 Toast.makeText(this, "请输入密码~", Toast.LENGTH_SHORT).show();
                 return;
             }
+            if (psw.length()<6) {
+                Toast.makeText(this, "请6位数及以上的密码~", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
         Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
         SpUtils.putString(this, "userid", "1");
-//        startActivity(new Intent(this, MainActivity.class));
+        //        startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 

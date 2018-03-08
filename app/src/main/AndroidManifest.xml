@@ -151,6 +151,7 @@
         <activity android:name=".fragment.shop.VideoDetailActivity"
                   android:configChanges="orientation|screenSize|keyboardHidden"
                   android:screenOrientation="portrait"/>
+        <activity android:name=".fragment.home.ServiceAgreementActivity"/>
     </application>
 
 </manifest>

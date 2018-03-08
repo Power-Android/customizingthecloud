@@ -17,11 +17,13 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.fragment.home.ServiceAgreementActivity;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.view.BaseDialog;
@@ -99,10 +101,15 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
     RecyclerView mRecycler;
     @BindView(R.id.tv_commit)
     TextView mTvCommit;
+    @BindView(R.id.iv_shouqing)
+    ImageView iv_shouqing;
+    @BindView(R.id.iv_check)
+    ImageView iv_check;
     private List<Fragment> fragmentList = new ArrayList<>();
     private List<String> tab_list = new ArrayList<>();
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
+    private boolean isChecked = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +163,21 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         mItemStepper.setContentTextColor(R.color.green);
         mItemStepper.setLeftButtonResources(R.drawable.jianhao_white);
         mItemStepper.setRightButtonResources(R.drawable.jiahao_white);
+        String type = getIntent().getStringExtra("type");
+        if (!TextUtils.isEmpty(type)) {
+            if (type.equals("over")) {
+                iv_shouqing.setVisibility(View.VISIBLE);
+                mTvCommit.setBackgroundResource(R.drawable.bg_yuanjiao_huise);
+            } else if (type.equals("jijiang")) {
+                iv_shouqing.setVisibility(View.GONE);
+                mTvCommit.setBackgroundResource(R.drawable.bg_yuanjiao_huise);
+            } else {
+                iv_shouqing.setVisibility(View.GONE);
+                mTvCommit.setBackgroundResource(R.drawable.bg_yuanjiao_green2);
+            }
+        }
+        mTvXieyi.setOnClickListener(this);
+        iv_check.setOnClickListener(this);
     }
 
     private class TopAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
@@ -166,8 +188,32 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-            helper.setText(R.id.tv_title, "第41期：")
-                    .setText(R.id.tv_content, "驴妈妈驴妈妈");
+            switch (helper.getAdapterPosition()) {
+                case 0:
+                    helper.setText(R.id.tv_title, "第41期：")
+                            .setText(R.id.tv_content, "【11.15日驴妈妈】");
+                    break;
+                case 1:
+                    helper.setText(R.id.tv_title, "产地：")
+                            .setText(R.id.tv_content, "宁夏青铜峡");
+                    break;
+                case 2:
+                    helper.setText(R.id.tv_title, "年利润率：")
+                            .setText(R.id.tv_content, "15%");
+                    break;
+                case 3:
+                    helper.setText(R.id.tv_title, "养殖周期：")
+                            .setText(R.id.tv_content, "360天");
+                    break;
+                case 4:
+                    helper.setText(R.id.tv_title, "养殖利润：")
+                            .setText(R.id.tv_content, "20000.00元");
+                    break;
+                case 5:
+                    helper.setText(R.id.tv_title, "利润获取：")
+                            .setText(R.id.tv_content, "到期一次性返本分红");
+                    break;
+            }
         }
     }
 
@@ -179,12 +225,27 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                 break;
             case R.id.tv_commit:
                 String userid = SpUtils.getString(mContext, "userid", "");
-                if (TextUtils.isEmpty(userid)){
+                if (TextUtils.isEmpty(userid)) {
                     startActivity(new Intent(mContext, LoginActivity.class));
-                    overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
+                    return;
+                }
+                if (!isChecked) {
+                    Toast.makeText(this, "请同意养驴啦服务协议~", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 showPayStyleDialog();
+                break;
+            case R.id.tv_xieyi:
+                startActivity(new Intent(this, ServiceAgreementActivity.class));
+                break;
+            case R.id.iv_check:
+                if (isChecked) {
+                    iv_check.setImageResource(R.drawable.weixuanzhong);
+                } else {
+                    iv_check.setImageResource(R.drawable.xuanzhong);
+                }
+                isChecked = !isChecked;
                 break;
         }
     }
@@ -223,7 +284,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         cb_alipay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
+                if (isChecked) {
                     cb_weixin.setChecked(false);
                     cb_yinlian.setChecked(false);
                 }
@@ -232,7 +293,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         cb_weixin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
+                if (isChecked) {
                     cb_alipay.setChecked(false);
                     cb_yinlian.setChecked(false);
                 }
@@ -241,7 +302,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         cb_yinlian.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
+                if (isChecked) {
                     cb_weixin.setChecked(false);
                     cb_alipay.setChecked(false);
                 }
@@ -326,18 +387,18 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         @Override
         protected void convert(BaseViewHolder helper, String item) {
             int adapterPosition = helper.getAdapterPosition();
-            ImageView iv_pai=helper.getView(R.id.iv_pai);
-            TextView tv_paixu=helper.getView(R.id.tv_paixu);
-            if (adapterPosition==0){
+            ImageView iv_pai = helper.getView(R.id.iv_pai);
+            TextView tv_paixu = helper.getView(R.id.tv_paixu);
+            if (adapterPosition == 0) {
                 iv_pai.setImageResource(R.drawable.jinpai);
-            }else if (adapterPosition==1){
+            } else if (adapterPosition == 1) {
                 iv_pai.setImageResource(R.drawable.yinpai);
-            }else if (adapterPosition==2){
+            } else if (adapterPosition == 2) {
                 iv_pai.setImageResource(R.drawable.tongpai);
-            }else {
+            } else {
                 iv_pai.setVisibility(View.GONE);
                 tv_paixu.setVisibility(View.VISIBLE);
-                tv_paixu.setText(adapterPosition+1+"");
+                tv_paixu.setText(adapterPosition + 1 + "");
             }
         }
     }

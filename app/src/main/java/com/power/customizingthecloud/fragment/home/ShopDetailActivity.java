@@ -148,7 +148,7 @@ public class ShopDetailActivity extends BaseActivity implements View.OnClickList
                 showDownPop(mTv_person_count, list);
             }
         });
-        final LinearLayout ll_zuowei = mDialog.getView(R.id.ll_zuowei);
+        final LinearLayout ll_zuowei =  mDialog.getView(R.id.ll_zuowei);
         mTv_zuowei = mDialog.getView(R.id.tv_zuowei);
         ll_zuowei.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,7 +194,7 @@ public class ShopDetailActivity extends BaseActivity implements View.OnClickList
             }
         })
                 //年月日时分秒 的显示与否，不设置则默认全部显示
-                .setType(new boolean[]{true, true, true, false, false, false})
+                .setType(new boolean[]{true, true, true, true, false, false})
                 .isDialog(true)
                 .build();
         pvTime.setDate(Calendar.getInstance());

@@ -217,7 +217,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mMiddleAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(mContext, RenYangDetailActivity.class));
+                Intent intent = new Intent(mContext, RenYangDetailActivity.class);
+                if (position == 0) {
+                    intent.putExtra("type", "jijiang");
+                } else if (position == 1) {
+                    intent.putExtra("type", "ing");
+                }
+                startActivity(intent);
             }
         });
         List<String> list2 = new ArrayList<>();
@@ -384,13 +390,13 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mBuilder = new BaseDialog.Builder(mContext);
         mDialog = mBuilder.setViewId(R.layout.dialog_shopma)
                 //设置dialogpadding
-                .setPaddingdp(0, 0, 0, 0)
+                .setPaddingdp(50, 0, 50, 0)
                 //设置显示位置
                 .setGravity(Gravity.CENTER)
                 //设置动画
                 .setAnimation(R.style.Alpah_aniamtion)
                 //设置dialog的宽高
-                .setWidthHeightpx(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 //设置触摸dialog外围是否关闭
                 .isOnTouchCanceled(true)
                 //设置监听事件
@@ -483,7 +489,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             //添加删除线
             tv_yuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             CountdownView cv_countdownView = helper.getView(R.id.cv_countdownView);
-            cv_countdownView.start(995550000); // Millisecond
+            cv_countdownView.start(10000000); // Millisecond
         }
     }
 

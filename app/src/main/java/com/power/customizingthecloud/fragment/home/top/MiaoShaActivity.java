@@ -79,7 +79,7 @@ public class MiaoShaActivity extends BaseActivity implements View.OnClickListene
             //添加删除线
             tv_yuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             CountdownView cv_countdownView=helper.getView(R.id.cv_countdownView);
-            cv_countdownView.start(995550000); // Millisecond
+            cv_countdownView.start(10000000); // Millisecond
         }
     }
 

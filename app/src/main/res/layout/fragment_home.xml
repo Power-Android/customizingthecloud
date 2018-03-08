@@ -17,12 +17,12 @@
             <com.youth.banner.Banner
                 android:id="@+id/banner"
                 android:layout_width="match_parent"
+                android:layout_height="200dp"
                 app:indicator_drawable_selected="@drawable/green_point"
                 app:indicator_drawable_unselected="@drawable/white_point"
                 app:indicator_height="8dp"
                 app:indicator_margin="5dp"
-                app:indicator_width="8dp"
-                android:layout_height="200dp"/>
+                app:indicator_width="8dp"/>
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_top"
                 android:layout_width="match_parent"
@@ -173,11 +173,11 @@
                 android:id="@+id/recycler_middle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="10dp"></android.support.v7.widget.RecyclerView>
+                android:layout_marginTop="10dp"
+                android:background="@color/white"></android.support.v7.widget.RecyclerView>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -194,8 +194,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="牧场监控推荐"
                         android:layout_marginLeft="10dp"
+                        android:text="牧场监控推荐"
                         android:textColor="@color/text_black"
                         android:textSize="15sp"/>
                     <ImageView
@@ -210,13 +210,15 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="15dp"
                     android:background="#eee"
                 />
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_jiankong"
-                    android:padding="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"></android.support.v7.widget.RecyclerView>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -234,8 +236,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="热卖商品推荐"
                         android:layout_marginLeft="10dp"
+                        android:text="热卖商品推荐"
                         android:textColor="@color/text_black"
                         android:textSize="15sp"/>
                     <ImageView
@@ -273,8 +275,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="精品秒杀推荐"
                         android:layout_marginLeft="10dp"
+                        android:text="精品秒杀推荐"
                         android:textColor="@color/text_black"
                         android:textSize="15sp"/>
                     <ImageView
@@ -289,6 +291,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="15dp"
                     android:background="#eee"
                 />
                 <android.support.v7.widget.RecyclerView

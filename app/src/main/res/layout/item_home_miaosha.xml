@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,9 +16,9 @@
             android:layout_gravity="center_horizontal"
             android:src="@drawable/face"/>
         <LinearLayout
-            android:layout_gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:orientation="vertical">
             <TextView
@@ -30,9 +30,9 @@
                 android:textColor="@color/text_black"
                 android:textSize="15sp"/>
             <LinearLayout
-                android:layout_marginTop="5dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -45,17 +45,17 @@
                     android:textColor="@color/red1"
                     android:textSize="17sp"/>
                 <TextView
-                    android:layout_marginLeft="10dp"
                     android:id="@+id/tv_yuanjia"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:text="¥299.00"
                     android:textSize="13sp"/>
             </LinearLayout>
             <LinearLayout
-                android:layout_marginTop="5dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -74,24 +74,25 @@
                     android:text="罐"
                 />
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
                     android:background="@drawable/bg_yuanjiao_red"
-                    android:text="立即抢购"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:paddingTop="5dp"
-                    android:layout_marginLeft="20dp"
-                    android:textColor="@color/white"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:text="立即抢购"
+                    android:textColor="@color/white"/>
             </LinearLayout>
             <LinearLayout
-                android:layout_marginTop="5dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="距结束："
                     android:textSize="14sp"
                 />
@@ -99,7 +100,8 @@
                     android:id="@+id/cv_countdownView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="2dp"
                     app:isHideTimeBackground="false"
                     app:isShowDay="false"
                     app:isShowHour="true"
@@ -108,18 +110,20 @@
                     app:isShowSecond="true"
                     app:suffixGravity="center"
                     app:suffixTextColor="#000000"
-                    app:suffixTextSize="14sp"
+                    app:suffixTextSize="13sp"
                     app:timeBgDivisionLineSize="1dp"
                     app:timeBgRadius="5dp"
-                    app:timeBgSize="20dp"
+                    app:timeBgSize="16dp"
                     app:timeTextColor="#FFFFFF"
-                    app:timeTextSize="14sp"/>
+                    app:timeTextSize="13sp"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="15dp"
         android:background="@color/backgourd"
-        ></View>
+    ></View>
 </LinearLayout>

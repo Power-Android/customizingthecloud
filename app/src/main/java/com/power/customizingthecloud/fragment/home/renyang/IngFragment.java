@@ -56,7 +56,9 @@ public class IngFragment extends BaseFragment{
         renYangAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(mContext, RenYangDetailActivity.class));
+                Intent intent = new Intent(mContext, RenYangDetailActivity.class);
+                intent.putExtra("type","ing");
+                startActivity(intent);
             }
         });
     }

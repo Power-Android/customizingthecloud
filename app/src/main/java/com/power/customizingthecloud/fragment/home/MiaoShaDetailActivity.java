@@ -266,7 +266,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
         list.add("");
         list.add("");
         list.add("");
-        PingJiaAdapter paiHangAdapter = new PingJiaAdapter(R.layout.item_pingjia, list);
+        PingJiaAdapter paiHangAdapter = new PingJiaAdapter(R.layout.item_pingjia2, list);
         mRecycler.setAdapter(paiHangAdapter);
     }
 
