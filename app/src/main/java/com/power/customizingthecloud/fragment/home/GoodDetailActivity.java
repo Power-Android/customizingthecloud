@@ -96,6 +96,8 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
     TextView mTvInsertcar;
     @BindView(R.id.tv_buy)
     TextView mTvBuy;
+    @BindView(R.id.lv_xiangqing)
+    ImageView mLvXiangqing;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
 
@@ -133,26 +135,26 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
                 break;
             case R.id.tv_lianximaijia:
                 String userid = SpUtils.getString(mContext, "userid", "");
-                if (TextUtils.isEmpty(userid)){
+                if (TextUtils.isEmpty(userid)) {
                     startActivity(new Intent(mContext, LoginActivity.class));
-                    overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
                 break;
             case R.id.tv_insertcar:
                 String userid2 = SpUtils.getString(mContext, "userid", "");
-                if (TextUtils.isEmpty(userid2)){
+                if (TextUtils.isEmpty(userid2)) {
                     startActivity(new Intent(mContext, LoginActivity.class));
-                    overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
                 Toast.makeText(this, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.tv_buy:
                 String userid3 = SpUtils.getString(mContext, "userid", "");
-                if (TextUtils.isEmpty(userid3)){
+                if (TextUtils.isEmpty(userid3)) {
                     startActivity(new Intent(mContext, LoginActivity.class));
-                    overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
                 startActivity(new Intent(this, GoodConfirmOrderActivity.class));
@@ -186,35 +188,35 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(GoodDetailActivity.this,ShareSuccessActivity.class));
+                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(GoodDetailActivity.this,ShareSuccessActivity.class));
+                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(GoodDetailActivity.this,ShareSuccessActivity.class));
+                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(GoodDetailActivity.this,ShareSuccessActivity.class));
+                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(GoodDetailActivity.this,ShareSuccessActivity.class));
+                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
     }
@@ -222,9 +224,12 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
     @OnClick(R.id.detail_ll)
     public void detail() {
         initDetailColor();
-        mWebview.setVisibility(View.VISIBLE);
+//        mWebview.setVisibility(View.VISIBLE);
+        mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.GONE);
         mLlCanshu.setVisibility(View.GONE);
+        mLvXiangqing.setVisibility(View.VISIBLE);
+
     }
 
     private void initDetailColor() {
@@ -249,6 +254,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
         mRecyclerCanshu.setLayoutManager(new LinearLayoutManager(this));
         CanShuAdapter recordAdapter = new CanShuAdapter(R.layout.item_canshu, list);
         mRecyclerCanshu.setAdapter(recordAdapter);
+        mLvXiangqing.setVisibility(View.GONE);
     }
 
     private class CanShuAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
@@ -285,6 +291,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
         list.add("");
         PingJiaAdapter paiHangAdapter = new PingJiaAdapter(R.layout.item_pingjia2, list);
         mRecycler.setAdapter(paiHangAdapter);
+        mLvXiangqing.setVisibility(View.GONE);
     }
 
     private class PingJiaAdapter extends BaseQuickAdapter<String, BaseViewHolder> {

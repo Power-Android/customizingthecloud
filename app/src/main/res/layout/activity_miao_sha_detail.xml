@@ -229,6 +229,12 @@
                     android:background="@color/white"
                     android:visibility="gone"
                 />
+                <ImageView
+                    android:id="@+id/lv_xiangqing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/lv_xiangqing"/>
                 <include layout="@layout/layout_canshu"/>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>

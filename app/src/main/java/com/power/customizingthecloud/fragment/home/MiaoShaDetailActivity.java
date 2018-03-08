@@ -92,6 +92,8 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
     TextView mTvLianximaijia;
     @BindView(R.id.tv_buy)
     TextView mTvBuy;
+    @BindView(R.id.lv_xiangqing)
+    ImageView mLvXiangqing;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
 
@@ -205,7 +207,9 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
     @OnClick(R.id.detail_ll)
     public void detail() {
         initDetailColor();
-        mWebview.setVisibility(View.VISIBLE);
+//        mWebview.setVisibility(View.VISIBLE);
+        mWebview.setVisibility(View.GONE);
+        mLvXiangqing.setVisibility(View.VISIBLE);
         mRecycler.setVisibility(View.GONE);
         mLlCanshu.setVisibility(View.GONE);
     }
@@ -232,6 +236,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
         mRecyclerCanshu.setLayoutManager(new LinearLayoutManager(this));
         CanShuAdapter recordAdapter = new CanShuAdapter(R.layout.item_canshu, list);
         mRecyclerCanshu.setAdapter(recordAdapter);
+        mLvXiangqing.setVisibility(View.GONE);
     }
 
     private class CanShuAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
@@ -268,6 +273,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
         list.add("");
         PingJiaAdapter paiHangAdapter = new PingJiaAdapter(R.layout.item_pingjia2, list);
         mRecycler.setAdapter(paiHangAdapter);
+        mLvXiangqing.setVisibility(View.GONE);
     }
 
     private class PingJiaAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
