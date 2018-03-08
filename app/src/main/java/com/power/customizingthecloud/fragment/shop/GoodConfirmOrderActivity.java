@@ -15,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -83,7 +84,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
     @BindView(R.id.tv_zongprice1)
     TextView mTvZongprice1;
     @BindView(R.id.tv_quan_price)
-    TextView mTvQuanPrice;
+    RelativeLayout mTvQuanPrice;
     @BindView(R.id.tv_zongprice2)
     TextView mTvZongprice2;
     @BindView(R.id.cb_ear)
@@ -97,7 +98,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
     @BindView(R.id.tv_commit)
     TextView mTvCommit;
     @BindView(R.id.iv_address)
-    ImageView mIvAddress;
+    LinearLayout mIvAddress;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     private CommonPopupWindow popupWindow;
@@ -246,7 +247,9 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                     overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
-                startActivity(new Intent(this, MyVoucherActivity.class));
+                Intent intent = new Intent(this, MyVoucherActivity.class);
+                intent.putExtra("type","query");
+                startActivity(intent);
                 break;
             case R.id.tv_time:
             case R.id.iv_time:

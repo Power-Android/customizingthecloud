@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.NotifaDetailActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.NotifacationBean;
 
@@ -26,7 +28,7 @@ import butterknife.Unbinder;
  * Created by Administrator on 2018/1/26.
  */
 
-public class MyNotifacationFragment extends BaseFragment {
+public class MyNotifacationFragment extends BaseFragment implements BaseQuickAdapter.OnItemClickListener {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     Unbinder unbinder;
@@ -52,6 +54,12 @@ public class MyNotifacationFragment extends BaseFragment {
         }
         NotifacationAdapter adapter = new NotifacationAdapter(R.layout.item_notifacation,list);
         recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        startActivity(new Intent(mContext,NotifaDetailActivity.class));
     }
 
     private class NotifacationAdapter extends BaseQuickAdapter<NotifacationBean,BaseViewHolder>{

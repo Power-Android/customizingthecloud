@@ -62,7 +62,7 @@ public class TixianDetailActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        TUtils.showShort(mContext,"点击了---item"+position);
+//        TUtils.showShort(mContext,"点击了---item"+position);
         startActivity(new Intent(mContext,TixianMingxiDetailActivity.class));
     }
 

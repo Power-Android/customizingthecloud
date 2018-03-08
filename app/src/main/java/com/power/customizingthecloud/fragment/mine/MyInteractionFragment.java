@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.InteractionBean;
+import com.power.customizingthecloud.fragment.market.MyDongTaiActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,7 @@ import butterknife.Unbinder;
  * Created by Administrator on 2018/1/26.
  */
 
-public class MyInteractionFragment extends BaseFragment {
+public class MyInteractionFragment extends BaseFragment implements BaseQuickAdapter.OnItemClickListener {
     @BindView(R.id.pinglun_tv)
     TextView pinglunTv;
     @BindView(R.id.huifu_tv)
@@ -67,6 +69,7 @@ public class MyInteractionFragment extends BaseFragment {
         list.add(bean3);
         InteractionAdapter adapter = new InteractionAdapter(R.layout.item_interacation,list);
         recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(this);
     }
 
     private void initData2() {
@@ -90,6 +93,7 @@ public class MyInteractionFragment extends BaseFragment {
         list1.add(bean3);
         InteractionAdapter adapter = new InteractionAdapter(R.layout.item_interacation,list1);
         recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(this);
     }
 
     @Override
@@ -109,6 +113,11 @@ public class MyInteractionFragment extends BaseFragment {
         huifuTv.setTextColor(mContext.getResources().getColor(R.color.green));
         pinglunTv.setTextColor(mContext.getResources().getColor(R.color.text_black));
         initData2();
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        startActivity(new Intent(mContext, MyDongTaiActivity.class));
     }
 
     private class InteractionAdapter extends BaseQuickAdapter<InteractionBean,BaseViewHolder>{

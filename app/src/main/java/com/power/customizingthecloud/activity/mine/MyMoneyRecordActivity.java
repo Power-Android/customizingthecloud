@@ -64,7 +64,7 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
 
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
-        titleContentTv.setText("我的订单");
+        titleContentTv.setText("全部记录");
         titleBackIv.setOnClickListener(this);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));

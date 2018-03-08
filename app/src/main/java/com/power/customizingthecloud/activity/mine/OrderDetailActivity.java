@@ -7,6 +7,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.power.customizingthecloud.R;
@@ -42,6 +43,7 @@ public class OrderDetailActivity extends BaseActivity {
     @BindView(R.id.wuliu_bianhao_tv) TextView mWuliuBianhaoTv;
     @BindView(R.id.item_use_tv) TextView mItemUseTv;
     @BindView(R.id.item_cancle_order_tv) TextView mItemCancleOrderTv;
+    @BindView(R.id.top_bg) RelativeLayout topBg;
     private String type;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
@@ -71,10 +73,12 @@ public class OrderDetailActivity extends BaseActivity {
                 break;
             case "2"://待发货
                 mTypeContentTv.setText("等待卖家发货");
+                topBg.setBackground(getResources().getDrawable(R.drawable.daifahuo_top_iv));
                 mItemUseTv.setText("提醒发货");
                 break;
             case "3"://待收货
-                mTypeContentTv.setText("卖家已发货");
+                mTypeContentTv.setText("交易成功");
+                topBg.setBackground(getResources().getDrawable(R.drawable.yifahuo_top_iv));
                 mItemCancleOrderTv.setVisibility(View.VISIBLE);
                 mItemCancleOrderTv.setText("退款");
                 mItemUseTv.setText("确认收货");

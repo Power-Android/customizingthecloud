@@ -152,6 +152,7 @@
                   android:configChanges="orientation|screenSize|keyboardHidden"
                   android:screenOrientation="portrait"/>
         <activity android:name=".fragment.home.ServiceAgreementActivity"/>
+        <activity android:name=".activity.mine.NotifaDetailActivity"/>
     </application>
 
 </manifest>

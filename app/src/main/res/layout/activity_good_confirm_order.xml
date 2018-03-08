@@ -18,6 +18,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
                 <LinearLayout
+                    android:id="@+id/iv_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
@@ -53,7 +54,6 @@
                             android:textColor="@color/text_black"/>
                     </LinearLayout>
                     <ImageView
-                        android:id="@+id/iv_address"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -227,23 +227,21 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/backgourd"></View>
+                        android:background="@color/backgourd"/>
                     <RelativeLayout
+                        android:id="@+id/tv_quan_price"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="10dp"
-                        android:paddingTop="10dp"
-                    >
+                        android:paddingTop="10dp">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:gravity="center"
                             android:text="代金券"
-                            android:textColor="@color/text_black"
-                        />
+                            android:textColor="@color/text_black" />
                         <TextView
-                            android:id="@+id/tv_quan_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"

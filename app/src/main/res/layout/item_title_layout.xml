@@ -38,7 +38,7 @@
         android:layout_centerInParent="true"
         android:padding="10dp"
         android:textColor="@color/white"
-        android:textSize="16dp"/>
+        android:textSize="18sp"/>
     <ImageView
         android:id="@+id/title_sign_in_iv"
         android:layout_width="wrap_content"

@@ -55,7 +55,7 @@ public class BreedIncomeDetailActivity extends BaseActivity implements View.OnCl
         ButterKnife.bind(this);
         mTitleBackIv.setVisibility(View.VISIBLE);
         mTitleBackIv.setOnClickListener(this);
-        mTitleContentTv.setText("认养中心");
+        mTitleContentTv.setText("养殖收益明细");
         if (tab_list.size() == 0) {
             tab_list.add("全部");
             tab_list.add("进行中");

@@ -32,6 +32,7 @@ public class MyVoucherActivity extends BaseActivity implements View.OnClickListe
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     private List<MyVoucherBean> list;
+    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,8 @@ public class MyVoucherActivity extends BaseActivity implements View.OnClickListe
 
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
+
+        type = getIntent().getStringExtra("type");
 
         list = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
@@ -68,7 +71,11 @@ public class MyVoucherActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         if (!list.get(position).getIsguoqi().equals("1")){
-            startActivity(new Intent(mContext, GoodListActivity.class));
+            if (type != null && type.equals("query")){
+                finish();
+            }else {
+                startActivity(new Intent(mContext, GoodListActivity.class));
+            }
         }
     }
 

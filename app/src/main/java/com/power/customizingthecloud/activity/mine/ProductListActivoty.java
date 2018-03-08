@@ -12,11 +12,8 @@ import android.widget.TextView;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.fragment.home.renyang.BaseTabAdapter;
-import com.power.customizingthecloud.fragment.mine.AllRenyangFragment;
-import com.power.customizingthecloud.fragment.mine.IngRenyangFragment;
 import com.power.customizingthecloud.fragment.mine.MaeketShopFragment;
 import com.power.customizingthecloud.fragment.mine.MarketMaolvFragment;
-import com.power.customizingthecloud.fragment.mine.OverRenyangFragment;
 import com.power.customizingthecloud.view.NoScrollViewPager;
 
 import java.util.ArrayList;
