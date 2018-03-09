@@ -105,6 +105,14 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
     ImageView iv_shouqing;
     @BindView(R.id.iv_check)
     ImageView iv_check;
+    @BindView(R.id.title_shopcar_iv)
+    ImageView mTitleShopcarIv;
+    @BindView(R.id.title_share_iv)
+    ImageView mTitleShareIv;
+    @BindView(R.id.lv_xiangqing)
+    ImageView mLvXiangqing;
+    @BindView(R.id.tv_intro)
+    TextView mTvIntro;
     private List<Fragment> fragmentList = new ArrayList<>();
     private List<String> tab_list = new ArrayList<>();
     private BaseDialog mDialog;
@@ -313,8 +321,13 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
     @OnClick(R.id.xiangmu_ll)
     public void xiangmu() {
         initXiangMuColor();
-        mWebview.setVisibility(View.VISIBLE);
+//        mWebview.setVisibility(View.VISIBLE);
+        mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.GONE);
+
+
+        mLvXiangqing.setVisibility(View.VISIBLE);
+        mTvIntro.setVisibility(View.GONE);
     }
 
     private void initXiangMuColor() {
@@ -339,6 +352,10 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         list.add("");
         RecordAdapter recordAdapter = new RecordAdapter(R.layout.item_record, list);
         mRecycler.setAdapter(recordAdapter);
+
+
+        mTvIntro.setVisibility(View.GONE);
+        mLvXiangqing.setVisibility(View.GONE);
     }
 
     private class RecordAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
@@ -376,6 +393,10 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         list.add("");
         PaiHangAdapter paiHangAdapter = new PaiHangAdapter(R.layout.item_paihangbang, list);
         mRecycler.setAdapter(paiHangAdapter);
+
+
+        mTvIntro.setVisibility(View.GONE);
+        mLvXiangqing.setVisibility(View.GONE);
     }
 
     private class PaiHangAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
@@ -417,8 +438,13 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
     @OnClick(R.id.des_ll)
     public void des() {
         initDesColor();
-        mWebview.setVisibility(View.VISIBLE);
+//        mWebview.setVisibility(View.VISIBLE);
+        mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.GONE);
+
+
+        mTvIntro.setVisibility(View.VISIBLE);
+        mLvXiangqing.setVisibility(View.GONE);
     }
 
     private void initDesColor() {

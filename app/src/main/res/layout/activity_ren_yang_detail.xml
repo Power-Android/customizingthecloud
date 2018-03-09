@@ -440,6 +440,21 @@
                     android:background="@color/white"
                     android:visibility="gone"
                 />
+                <ImageView
+                    android:id="@+id/lv_xiangqing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/lv_xiangqing"/>
+                <TextView
+                    android:id="@+id/tv_intro"
+                    android:text="撒旦教时空裂缝刷卡机放得开了房价多少路口附近的上课了附近的书房里看电视就废了看电视了反垄断速率法流失率反倒是浪费V领撒旦教时空裂缝刷卡机放得开了房价多少路口附近的上课了附近的书房里看电视就废了看电视了反垄断速率法流失率反倒是浪费V领撒旦教时空裂缝刷卡机放得开了房价多少路口附近的上课了附近的书房里看电视就废了看电视了反垄断速率法流失率反倒是浪费V领撒旦教时空裂缝刷卡机放得开了房价多少路口附近的上课了附近的书房里看电视就废了看电视了反垄断速率法流失率反倒是浪费V领"
+                    android:layout_width="match_parent"
+                    android:padding="10dp"
+                    android:lineSpacingExtra="2dp"
+                    android:background="@color/white"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
