@@ -88,10 +88,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 //设置密码是否可见
                 if (isPswVisible) {
                     mIvPswStatus.setImageResource(R.drawable.login_eye_close);
-                    mEdtPsw.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    mEdtPsw.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 } else {
                     mIvPswStatus.setImageResource(R.drawable.login_eye_open);
-                    mEdtPsw.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    mEdtPsw.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 }
                 isPswVisible = !isPswVisible;
                 break;

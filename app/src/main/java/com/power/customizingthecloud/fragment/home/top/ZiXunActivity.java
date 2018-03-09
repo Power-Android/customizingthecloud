@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.fragment.home.top;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.fragment.home.ZiXunDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +57,12 @@ public class ZiXunActivity extends BaseActivity implements View.OnClickListener 
         mRecyclerZixun.setLayoutManager(new GridLayoutManager(this,2));
         mZiXunAdapter=new ZiXunAdapter(R.layout.item_zixun,list);
         mRecyclerZixun.setAdapter(mZiXunAdapter);
+        mZiXunAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(ZiXunActivity.this,ZiXunDetailActivity.class));
+            }
+        });
     }
 
     private class ZiXunAdapter extends BaseQuickAdapter<String, BaseViewHolder> {

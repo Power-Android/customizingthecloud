@@ -2,6 +2,7 @@ package com.power.customizingthecloud.fragment.market;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -92,6 +93,14 @@ public class FaDongTaiActivity extends BaseActivity implements View.OnClickListe
                 showCamera();
             }
         });
+        String type = getIntent().getStringExtra("type");
+        if (!TextUtils.isEmpty(type)){
+            if (type.equals("photo")){
+                requestPhoto();
+            }else if (type.equals("camera")){
+                requestCamera();
+            }
+        }
     }
 
     private void showCamera() {

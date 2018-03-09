@@ -335,14 +335,18 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                startActivity(new Intent(mContext, FaDongTaiActivity.class));
+                Intent intent = new Intent(mContext, FaDongTaiActivity.class);
+                intent.putExtra("type","photo");
+                startActivity(intent);
             }
         });
         dialog.getView(R.id.tv_takephoto).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                startActivity(new Intent(mContext, FaDongTaiActivity.class));
+                Intent intent = new Intent(mContext, FaDongTaiActivity.class);
+                intent.putExtra("type","camera");
+                startActivity(intent);
             }
         });
         dialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {

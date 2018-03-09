@@ -198,11 +198,11 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         protected void convert(BaseViewHolder helper, String item) {
             switch (helper.getAdapterPosition()) {
                 case 0:
-                    helper.setText(R.id.tv_title, "第41期：")
+                    helper.setText(R.id.tv_title, "第  41 期：")
                             .setText(R.id.tv_content, "【11.15日驴妈妈】");
                     break;
                 case 1:
-                    helper.setText(R.id.tv_title, "产地：")
+                    helper.setText(R.id.tv_title, "产        地：")
                             .setText(R.id.tv_content, "宁夏青铜峡");
                     break;
                 case 2:

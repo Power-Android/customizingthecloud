@@ -148,14 +148,18 @@ public class MyDongTaiActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                startActivity(new Intent(mContext, FaDongTaiActivity.class));
+                Intent intent = new Intent(MyDongTaiActivity.this, FaDongTaiActivity.class);
+                intent.putExtra("type","photo");
+                startActivity(intent);
             }
         });
         dialog.getView(R.id.tv_takephoto).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                startActivity(new Intent(mContext, FaDongTaiActivity.class));
+                Intent intent = new Intent(MyDongTaiActivity.this, FaDongTaiActivity.class);
+                intent.putExtra("type","camera");
+                startActivity(intent);
             }
         });
         dialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
