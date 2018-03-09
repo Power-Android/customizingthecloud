@@ -130,7 +130,7 @@ public class MyDongTaiActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void showPhotoDialog(int grary, int animationStyle) {
-        BaseDialog.Builder builder = new BaseDialog.Builder(mContext);
+        BaseDialog.Builder builder = new BaseDialog.Builder(this);
         final BaseDialog dialog = builder.setViewId(R.layout.dialog_photo)
                 //设置dialogpadding
                 .setPaddingdp(20, 0, 20, 0)

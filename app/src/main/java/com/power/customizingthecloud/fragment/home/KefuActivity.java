@@ -1,4 +1,4 @@
-package com.power.customizingthecloud.fragment.home.top;
+package com.power.customizingthecloud.fragment.home;
 
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +11,7 @@ import com.power.customizingthecloud.base.BaseActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class XinShouZhiYinActivity extends BaseActivity implements View.OnClickListener {
+public class KefuActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.title_message_iv)
     ImageView mTitleMessageIv;
@@ -43,11 +43,11 @@ public class XinShouZhiYinActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_xin_shou_zhi_yin);
+        setContentView(R.layout.activity_kefu);
         ButterKnife.bind(this);
         mTitleBackIv.setVisibility(View.VISIBLE);
         mTitleBackIv.setOnClickListener(this);
-        mTitleContentTv.setText("新手指引");
+        mTitleContentTv.setText("客服驴妈妈");
     }
 
     @Override

@@ -208,6 +208,12 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                     notifyDataSetChanged();
                 }
             });
+            helper.getView(R.id.ll_pinglun).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showCommentPopWindow(v);
+                }
+            });
         }
     }
 

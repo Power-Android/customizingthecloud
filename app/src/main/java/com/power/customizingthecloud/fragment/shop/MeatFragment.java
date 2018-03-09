@@ -26,6 +26,7 @@ import com.power.customizingthecloud.utils.BannerUtils;
 import com.power.customizingthecloud.utils.MyUtils;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.youth.banner.Banner;
+import com.youth.banner.listener.OnBannerListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +88,12 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         BannerUtils.startBanner(mBanner, new ArrayList<String>());
+        mBanner.setOnBannerListener(new OnBannerListener() {
+            @Override
+            public void OnBannerClick(int position) {
+                startActivity(new Intent(mContext,GoodDetailActivity.class));
+            }
+        });
         //开启在布局文件中设置的帧动画
         mAnimationDrawable = (AnimationDrawable) mIvEye.getDrawable();
         mAnimationDrawable.start();

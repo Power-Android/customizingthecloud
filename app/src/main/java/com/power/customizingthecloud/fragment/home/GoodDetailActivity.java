@@ -140,6 +140,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
                     overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
+                startActivity(new Intent(this,KefuActivity.class));
                 break;
             case R.id.tv_insertcar:
                 String userid2 = SpUtils.getString(mContext, "userid", "");

@@ -16,9 +16,11 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseFragment;
+import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
 import com.power.customizingthecloud.fragment.home.MiaoShaDetailActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
 import com.youth.banner.Banner;
+import com.youth.banner.listener.OnBannerListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +57,12 @@ public class ShopMiaoFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         BannerUtils.startBanner(mBanner, new ArrayList<String>());
+        mBanner.setOnBannerListener(new OnBannerListener() {
+            @Override
+            public void OnBannerClick(int position) {
+                startActivity(new Intent(mContext,GoodDetailActivity.class));
+            }
+        });
         mRecyclerMiao.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerMiao.setNestedScrollingEnabled(false);
         List<String> list = new ArrayList<>();

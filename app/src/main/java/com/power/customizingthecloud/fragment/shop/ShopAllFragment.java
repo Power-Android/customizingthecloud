@@ -35,6 +35,7 @@ import com.power.customizingthecloud.utils.MyUtils;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.youth.banner.Banner;
+import com.youth.banner.listener.OnBannerListener;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -116,6 +117,12 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         BannerUtils.startBanner(mBanner, new ArrayList<String>());
+        mBanner.setOnBannerListener(new OnBannerListener() {
+            @Override
+            public void OnBannerClick(int position) {
+                startActivity(new Intent(mContext,GoodDetailActivity.class));
+            }
+        });
         List<String> list = new ArrayList<>();
         list.add("");
         list.add("");

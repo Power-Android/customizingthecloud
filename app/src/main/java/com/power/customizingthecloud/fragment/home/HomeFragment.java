@@ -45,6 +45,7 @@ import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.CommonPopupWindow;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.youth.banner.Banner;
+import com.youth.banner.listener.OnBannerListener;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -159,6 +160,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             topPicList.add(R.drawable.meiriqiandao);
         }
         BannerUtils.startBanner(mBanner, new ArrayList<String>());
+        mBanner.setOnBannerListener(new OnBannerListener() {
+            @Override
+            public void OnBannerClick(int position) {
+                startActivity(new Intent(mContext,RenYangDetailActivity.class));
+            }
+        });
         if (mTopAdapter == null) {
             mTopAdapter = new TopAdapter(R.layout.item_hometop, topStringList);
             mRecyclerTop.setAdapter(mTopAdapter);

@@ -19,6 +19,7 @@ import com.power.customizingthecloud.fragment.home.ShopDetailActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
 import com.power.customizingthecloud.utils.MyUtils;
 import com.youth.banner.Banner;
+import com.youth.banner.listener.OnBannerListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,12 @@ public class CanWeiYuDingAcitivity extends BaseActivity implements View.OnClickL
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("推荐商家");
         BannerUtils.startBanner(mBanner,new ArrayList<String>());
+        mBanner.setOnBannerListener(new OnBannerListener() {
+            @Override
+            public void OnBannerClick(int position) {
+                startActivity(new Intent(CanWeiYuDingAcitivity.this,ShopDetailActivity.class));
+            }
+        });
         List<String> list = new ArrayList<>();
         list.add("");
         list.add("");

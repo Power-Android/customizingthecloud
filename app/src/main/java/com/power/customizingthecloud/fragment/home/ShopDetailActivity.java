@@ -87,7 +87,7 @@ public class ShopDetailActivity extends BaseActivity implements View.OnClickList
         ButterKnife.bind(this);
         mTitleBackIv.setVisibility(View.VISIBLE);
         mTitleBackIv.setOnClickListener(this);
-        mTitleContentTv.setText("推荐商家");
+        mTitleContentTv.setText("商家详情");
         mTvPhone.setOnClickListener(this);
         mTvOrder.setOnClickListener(this);
         BannerUtils.startBanner(mBanner, new ArrayList<String>());

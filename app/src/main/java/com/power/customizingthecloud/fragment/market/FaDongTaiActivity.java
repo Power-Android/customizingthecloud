@@ -202,6 +202,9 @@ public class FaDongTaiActivity extends BaseActivity implements View.OnClickListe
             case R.id.title_back_iv:
                 finish();
                 break;
+            case R.id.title_content_right_tv:
+                finish();
+                break;
         }
     }
 }
