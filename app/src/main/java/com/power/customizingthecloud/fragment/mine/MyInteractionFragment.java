@@ -31,7 +31,7 @@ import butterknife.Unbinder;
  * Created by Administrator on 2018/1/26.
  */
 
-public class MyInteractionFragment extends BaseFragment implements BaseQuickAdapter.OnItemClickListener {
+public class MyInteractionFragment extends BaseFragment implements BaseQuickAdapter.OnItemChildClickListener {
     @BindView(R.id.pinglun_tv)
     TextView pinglunTv;
     @BindView(R.id.huifu_tv)
@@ -69,7 +69,7 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
         list.add(bean3);
         InteractionAdapter adapter = new InteractionAdapter(R.layout.item_interacation,list);
         recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(this);
+        adapter.setOnItemChildClickListener(this);
     }
 
     private void initData2() {
@@ -93,7 +93,7 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
         list1.add(bean3);
         InteractionAdapter adapter = new InteractionAdapter(R.layout.item_interacation,list1);
         recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(this);
+        adapter.setOnItemChildClickListener(this);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
     }
 
     @Override
-    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         startActivity(new Intent(mContext, MyDongTaiActivity.class));
     }
 
@@ -129,7 +129,8 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
         @Override
         protected void convert(BaseViewHolder helper, InteractionBean item) {
             helper.setText(R.id.item_name_tv,item.getName())
-                    .setText(R.id.item_content_tv,item.getContent());
+                    .setText(R.id.item_content_tv,item.getContent())
+                    .addOnClickListener(R.id.item_content_tv);
             ImageView imageView = helper.getView(R.id.item_pic_iv);
             if (item.getIsPic().equals("1")){
                 imageView.setVisibility(View.VISIBLE);
