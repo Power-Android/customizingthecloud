@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.ReserveDetailActivity;
 import com.power.customizingthecloud.adapter.MyRenYangAdapter;
 import com.power.customizingthecloud.adapter.MyReserveAdapter;
 import com.power.customizingthecloud.base.BaseFragment;
@@ -60,7 +61,7 @@ public class ReserveWaitqueryFragment extends BaseFragment implements BaseQuickA
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         switch (view.getId()){
             case R.id.content_rl:
-                startActivity(new Intent(mContext, ShopDetailActivity.class));
+                startActivity(new Intent(mContext, ReserveDetailActivity.class));
                 break;
             case R.id.shachu_tv:
                 TUtils.showShort(mContext,"点击了---删除"+position);

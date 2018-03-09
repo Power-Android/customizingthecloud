@@ -18,6 +18,7 @@ import com.power.customizingthecloud.activity.mine.ProductListActivoty;
 import com.power.customizingthecloud.activity.mine.TixianFirstActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.TeamBean;
+import com.power.customizingthecloud.fragment.home.MyCodeActivity;
 import com.power.customizingthecloud.fragment.home.renyang.detail.BuyRecordFragment;
 import com.power.customizingthecloud.view.CircleImageView;
 
@@ -145,6 +146,7 @@ public class KaiDianActivity extends BaseActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.title_qrcode_iv:
+                startActivity(new Intent(mContext, MyCodeActivity.class));
                 break;
             case R.id.money_tv:
                 startActivity(new Intent(mContext,ProductListActivoty.class));
