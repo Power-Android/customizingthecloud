@@ -22,6 +22,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.AddressManagerActivity;
+import com.power.customizingthecloud.activity.mine.MyOrderActivity;
 import com.power.customizingthecloud.activity.mine.MyVoucherActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.login.LoginActivity;
@@ -143,7 +144,10 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
         mDialog.getView(R.id.tv_pay).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //                mDialog.dismiss();
+                mDialog.dismiss();
+                Intent intent = new Intent(GoodConfirmOrderActivity.this, MyOrderActivity.class);
+                intent.putExtra("type","0");
+                startActivity(intent);
             }
         });
         final CheckBox cb_alipay = mDialog.getView(R.id.cb_alipay);
@@ -221,7 +225,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-            helper.setText(R.id.tv_pop,item);
+            helper.setText(R.id.tv_pop, item);
         }
     }
 
@@ -248,7 +252,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                     return;
                 }
                 Intent intent = new Intent(this, MyVoucherActivity.class);
-                intent.putExtra("type","query");
+                intent.putExtra("type", "query");
                 startActivity(intent);
                 break;
             case R.id.tv_time:
@@ -259,7 +263,9 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                 showDownPop(mTvTime, list);
                 break;
             case R.id.iv_address:
-                startActivity(new Intent(this, AddressManagerActivity.class));
+                Intent intent1 = new Intent(this, AddressManagerActivity.class);
+                intent1.putExtra("type", "order");
+                startActivity(intent1);
                 break;
         }
     }

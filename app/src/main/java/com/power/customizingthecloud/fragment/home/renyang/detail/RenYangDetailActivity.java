@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.MyOrderActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.fragment.home.ServiceAgreementActivity;
 import com.power.customizingthecloud.login.LoginActivity;
@@ -176,9 +177,11 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
             if (type.equals("over")) {
                 iv_shouqing.setVisibility(View.VISIBLE);
                 mTvCommit.setBackgroundResource(R.drawable.bg_yuanjiao_huise);
+                mTvCommit.setClickable(false);
             } else if (type.equals("jijiang")) {
                 iv_shouqing.setVisibility(View.GONE);
                 mTvCommit.setBackgroundResource(R.drawable.bg_yuanjiao_huise);
+                mTvCommit.setClickable(false);
             } else {
                 iv_shouqing.setVisibility(View.GONE);
                 mTvCommit.setBackgroundResource(R.drawable.bg_yuanjiao_green2);
@@ -283,7 +286,10 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         mDialog.getView(R.id.tv_pay).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //                mDialog.dismiss();
+                mDialog.dismiss();
+                Intent intent = new Intent(RenYangDetailActivity.this, MyOrderActivity.class);
+                intent.putExtra("type","0");
+                startActivity(intent);
             }
         });
         final CheckBox cb_alipay = mDialog.getView(R.id.cb_alipay);
@@ -321,7 +327,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
     @OnClick(R.id.xiangmu_ll)
     public void xiangmu() {
         initXiangMuColor();
-//        mWebview.setVisibility(View.VISIBLE);
+        //        mWebview.setVisibility(View.VISIBLE);
         mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.GONE);
 
@@ -438,7 +444,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
     @OnClick(R.id.des_ll)
     public void des() {
         initDesColor();
-//        mWebview.setVisibility(View.VISIBLE);
+        //        mWebview.setVisibility(View.VISIBLE);
         mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.GONE);
 

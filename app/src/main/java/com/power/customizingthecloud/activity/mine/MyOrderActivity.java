@@ -6,6 +6,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.CheckBox;
@@ -33,25 +34,44 @@ import butterknife.OnClick;
 
 public class MyOrderActivity extends BaseActivity implements View.OnClickListener, BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener {
 
-    @BindView(R.id.title_back_iv) ImageView titleBackIv;
-    @BindView(R.id.title_content_tv) TextView titleContentTv;
-    @BindView(R.id.title_content_right_tv) TextView titleContentRightTv;
-    @BindView(R.id.indicator_quanbu) View indicatorQuanbu;
-    @BindView(R.id.quanbu_ll) LinearLayout quanbuLl;
-    @BindView(R.id.indicator_daifukuan) View indicatorDaifukuan;
-    @BindView(R.id.daifukuan_ll) LinearLayout daifukuanLl;
-    @BindView(R.id.indicator_daifahuo) View indicatorDaifahuo;
-    @BindView(R.id.daifahuo_ll) LinearLayout daifahuoLl;
-    @BindView(R.id.indicator_daishouhuo) View indicatorDaishouhuo;
-    @BindView(R.id.daishouhuo_ll) LinearLayout daishouhuoLl;
-    @BindView(R.id.indicator_daipingjia) View indicatorDaipingjia;
-    @BindView(R.id.daipingjia_ll) LinearLayout daipingjiaLl;
-    @BindView(R.id.recyclerView) RecyclerView recyclerView;
-    @BindView(R.id.quanbu_tv) TextView quanbuTv;
-    @BindView(R.id.daifukuan_tv) TextView daifukuanTv;
-    @BindView(R.id.daifahuo_tv) TextView daifahuoTv;
-    @BindView(R.id.daishouhuo_tv) TextView daishouhuoTv;
-    @BindView(R.id.daipingjia_tv) TextView daipingjiaTv;
+    @BindView(R.id.title_back_iv)
+    ImageView titleBackIv;
+    @BindView(R.id.title_content_tv)
+    TextView titleContentTv;
+    @BindView(R.id.title_content_right_tv)
+    TextView titleContentRightTv;
+    @BindView(R.id.indicator_quanbu)
+    View indicatorQuanbu;
+    @BindView(R.id.quanbu_ll)
+    LinearLayout quanbuLl;
+    @BindView(R.id.indicator_daifukuan)
+    View indicatorDaifukuan;
+    @BindView(R.id.daifukuan_ll)
+    LinearLayout daifukuanLl;
+    @BindView(R.id.indicator_daifahuo)
+    View indicatorDaifahuo;
+    @BindView(R.id.daifahuo_ll)
+    LinearLayout daifahuoLl;
+    @BindView(R.id.indicator_daishouhuo)
+    View indicatorDaishouhuo;
+    @BindView(R.id.daishouhuo_ll)
+    LinearLayout daishouhuoLl;
+    @BindView(R.id.indicator_daipingjia)
+    View indicatorDaipingjia;
+    @BindView(R.id.daipingjia_ll)
+    LinearLayout daipingjiaLl;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
+    @BindView(R.id.quanbu_tv)
+    TextView quanbuTv;
+    @BindView(R.id.daifukuan_tv)
+    TextView daifukuanTv;
+    @BindView(R.id.daifahuo_tv)
+    TextView daifahuoTv;
+    @BindView(R.id.daishouhuo_tv)
+    TextView daishouhuoTv;
+    @BindView(R.id.daipingjia_tv)
+    TextView daipingjiaTv;
     private List<MyOderBean> list;
     private MyOderBean bean1;
     private MyOderBean bean2;
@@ -85,7 +105,9 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
         list = new ArrayList<>();
         initData();
         type = getIntent().getStringExtra("type");
-        switchType(type);
+        if (!TextUtils.isEmpty(type)) {
+            switchType(type);
+        }
     }
 
     private void initData() {
@@ -123,7 +145,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void switchType(String type) {
-        switch (type){
+        switch (type) {
             case "0":
                 initQuanbuColor();
                 list.add(bean1);
@@ -195,7 +217,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     }
 
     @OnClick(R.id.daifukuan_ll)
-    public void daifukuan(){
+    public void daifukuan() {
         initDaifukuanColor();
         list.clear();
         list.add(bean1);
@@ -216,7 +238,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     }
 
     @OnClick(R.id.daifahuo_ll)
-    public void daifahuo(){
+    public void daifahuo() {
         initDaifahuoColor();
         list.clear();
         list.add(bean2);
@@ -237,7 +259,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     }
 
     @OnClick(R.id.daishouhuo_ll)
-    public void daishouhuo(){
+    public void daishouhuo() {
         initDaishouhuoColor();
         list.clear();
         list.add(bean3);
@@ -258,7 +280,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     }
 
     @OnClick(R.id.daipingjia_ll)
-    public void daipingjia(){
+    public void daipingjia() {
         initDaipingjiaColor();
         list.clear();
         list.add(bean4);
@@ -280,25 +302,25 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.item_use_tv:
-                switch (list.get(position).getType()){
+                switch (list.get(position).getType()) {
                     case "1":
                         showPayStyleDialog();
                         break;
                     case "2":
-                        TUtils.showShort(mContext,"点击了---提醒发货"+position);
+                        TUtils.showShort(mContext, "点击了---提醒发货" + position);
                         break;
                     case "3":
-                        TUtils.showShort(mContext,"点击了---评价"+position);
+                        TUtils.showShort(mContext, "点击了---评价" + position);
                         break;
                     case "4":
-                        TUtils.showShort(mContext,"点击了---确认收货"+position);
+                        TUtils.showShort(mContext, "点击了---确认收货" + position);
                         break;
                 }
                 break;
             case R.id.item_cancle_order_tv:
-                TUtils.showShort(mContext,"点击了---取消订单"+position);
+                TUtils.showShort(mContext, "点击了---取消订单" + position);
                 showTip(position);
                 break;
         }
@@ -394,32 +416,32 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        switch (list.get(position).getType()){
+        switch (list.get(position).getType()) {
             case "1":
-                intent = new Intent(mContext,OrderDetailActivity.class);
-                intent.putExtra("type",list.get(position).getType());
+                intent = new Intent(mContext, OrderDetailActivity.class);
+                intent.putExtra("type", list.get(position).getType());
                 startActivity(intent);
                 break;
             case "2":
-                intent = new Intent(mContext,OrderDetailActivity.class);
-                intent.putExtra("type",list.get(position).getType());
+                intent = new Intent(mContext, OrderDetailActivity.class);
+                intent.putExtra("type", list.get(position).getType());
                 startActivity(intent);
                 break;
             case "3":
-                intent = new Intent(mContext,OrderDetailActivity.class);
-                intent.putExtra("type",list.get(position).getType());
+                intent = new Intent(mContext, OrderDetailActivity.class);
+                intent.putExtra("type", list.get(position).getType());
                 startActivity(intent);
                 break;
             case "4":
-                intent = new Intent(mContext,OrderDetailActivity.class);
-                intent.putExtra("type",list.get(position).getType());
+                intent = new Intent(mContext, OrderDetailActivity.class);
+                intent.putExtra("type", list.get(position).getType());
                 startActivity(intent);
                 break;
         }
     }
 
 
-    private class MyOrderAdapter extends BaseQuickAdapter<MyOderBean,BaseViewHolder>{
+    private class MyOrderAdapter extends BaseQuickAdapter<MyOderBean, BaseViewHolder> {
 
         public MyOrderAdapter(@LayoutRes int layoutResId, @Nullable List<MyOderBean> data) {
             super(layoutResId, data);
@@ -427,16 +449,16 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
 
         @Override
         protected void convert(BaseViewHolder helper, MyOderBean item) {
-            helper.setText(R.id.item_name_tv,item.getName())
-                    .setText(R.id.item_fenlei_tv,item.getFeilei())
-                    .setText(R.id.item_money_tv,item.getMoney())
-                    .setText(R.id.item_num_tv,item.getNum())
-                    .setText(R.id.item_des_tv,item.getYunfei())
+            helper.setText(R.id.item_name_tv, item.getName())
+                    .setText(R.id.item_fenlei_tv, item.getFeilei())
+                    .setText(R.id.item_money_tv, item.getMoney())
+                    .setText(R.id.item_num_tv, item.getNum())
+                    .setText(R.id.item_des_tv, item.getYunfei())
                     .addOnClickListener(R.id.item_use_tv)
                     .addOnClickListener(R.id.item_cancle_order_tv);
             TextView useTv = helper.getView(R.id.item_use_tv);
             TextView cancleTv = helper.getView(R.id.item_cancle_order_tv);
-            switch (item.getType()){
+            switch (item.getType()) {
                 case "1":
                     cancleTv.setVisibility(View.VISIBLE);
                     useTv.setText("付款");
@@ -464,7 +486,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.title_content_right_tv:
-                startActivity(new Intent(mContext,RefundAfterActivity.class));
+                startActivity(new Intent(mContext, RefundAfterActivity.class));
                 break;
         }
     }

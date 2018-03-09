@@ -93,6 +93,12 @@ public class AddressManagerActivity extends BaseActivity implements View.OnClick
             case R.id.item_checkBox:
                 TUtils.showShort(mContext,"点击了---默认地址");
                 break;
+            case R.id.ll_root:
+                String type = getIntent().getStringExtra("type");
+                if (!TextUtils.isEmpty(type) && type.equals("order")){
+                    AddressManagerActivity.this.finish();
+                }
+                break;
         }
     }
 
@@ -137,6 +143,7 @@ public class AddressManagerActivity extends BaseActivity implements View.OnClick
                     .setText(R.id.item_address_tv,item.getAddress())
                     .addOnClickListener(R.id.item_del_tv)
                     .addOnClickListener(R.id.item_edit_tv)
+                    .addOnClickListener(R.id.ll_root)
                     .addOnClickListener(R.id.item_checkBox);
             ImageView morenIv = helper.getView(R.id.item_moren_iv);
             RelativeLayout editRl = helper.getView(R.id.item_edit_rl);

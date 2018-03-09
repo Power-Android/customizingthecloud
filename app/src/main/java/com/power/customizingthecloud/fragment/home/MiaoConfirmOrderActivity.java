@@ -21,6 +21,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.AddressManagerActivity;
+import com.power.customizingthecloud.activity.mine.MyOrderActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.SpUtils;
@@ -126,7 +127,10 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
         mDialog.getView(R.id.tv_pay).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //                mDialog.dismiss();
+                mDialog.dismiss();
+                Intent intent = new Intent(MiaoConfirmOrderActivity.this, MyOrderActivity.class);
+                intent.putExtra("type","0");
+                startActivity(intent);
             }
         });
         final CheckBox cb_alipay = mDialog.getView(R.id.cb_alipay);
@@ -204,7 +208,7 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-            helper.setText(R.id.tv_pop,item);
+            helper.setText(R.id.tv_pop, item);
         }
     }
 
