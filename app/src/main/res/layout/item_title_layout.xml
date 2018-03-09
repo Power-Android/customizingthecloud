@@ -123,6 +123,7 @@
         android:id="@+id/title_content_right_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="16sp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:paddingLeft="10dp"

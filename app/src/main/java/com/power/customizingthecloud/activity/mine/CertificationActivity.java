@@ -71,6 +71,7 @@ public class CertificationActivity extends BaseActivity implements View.OnClickL
                 showCamera();
                 break;
             case R.id.commit_tv:
+                finish();
                 break;
             case R.id.shenhe_again_tv:
                 break;

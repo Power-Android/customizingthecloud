@@ -238,10 +238,16 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
         final EditText edt = (EditText) popWiw.getContentView().findViewById(R.id.edt_content);
         final ImageView close = (ImageView) popWiw.getContentView().findViewById(R.id.cancle_iv);
         if (type.equals("name")){
+            if (!TextUtils.isEmpty(edt.getText().toString())){
+                edt.getText().clear();
+            }
             edt.setHint("请输入昵称");
             edt.setInputType(EditorInfo.TYPE_CLASS_TEXT);
         }
         if (type.equals("age")){
+            if (!TextUtils.isEmpty(edt.getText().toString())){
+                edt.getText().clear();
+            }
             edt.setHint("请输入年龄");
             edt.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
         }
