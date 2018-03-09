@@ -2,6 +2,8 @@ package com.power.customizingthecloud.fragment.home.top;
 
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,6 +41,8 @@ public class XinShouZhiYinActivity extends BaseActivity implements View.OnClickL
     ImageView mTitleKefuIv;
     @BindView(R.id.title_content_right_tv)
     TextView mTitleContentRightTv;
+    @BindView(R.id.webview)
+    WebView mWebview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,9 @@ public class XinShouZhiYinActivity extends BaseActivity implements View.OnClickL
         mTitleBackIv.setVisibility(View.VISIBLE);
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("新手指引");
+        String url = "http://39.107.91.92/html/noviceGuidance.html";
+        mWebview.setWebChromeClient(new WebChromeClient());
+        mWebview.loadUrl(url);
     }
 
     @Override

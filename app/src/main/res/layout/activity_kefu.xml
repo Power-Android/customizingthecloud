@@ -7,5 +7,9 @@
     android:orientation="vertical"
 >
     <include layout="@layout/item_title_layout"/>
-
+    <ImageView
+        android:src="@drawable/chat_kefu"
+        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>
