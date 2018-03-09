@@ -60,6 +60,7 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
                 SendSmsTimerUtils.sendSms(getcodeTv, R.color.green, R.color.green);
                 break;
             case R.id.change_tv:
+                finish();
                 break;
         }
     }

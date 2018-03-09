@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -46,6 +47,7 @@ public class SetPayPwdSecondActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.query_tv:
+                startActivity(new Intent(mContext,AccountSafeActivity.class));
                 break;
         }
     }
