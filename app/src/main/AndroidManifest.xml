@@ -159,6 +159,7 @@
         <activity android:name=".activity.mine.ReserveDetailActivity"/>
         <activity android:name=".fragment.home.KefuActivity"/>
         <activity android:name=".fragment.home.ZiXunDetailActivity"/>
+        <activity android:name=".fragment.market.DongTaiDetailActivity"/>
     </application>
 
 </manifest>

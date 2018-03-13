@@ -2,8 +2,6 @@ package com.power.customizingthecloud.fragment.market;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -12,14 +10,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.bean.MultiItemBean;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.CircleImageView;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,46 +72,40 @@ public class MyDongTaiActivity extends BaseActivity implements View.OnClickListe
         mTitleContentTv.setText("我的动态");
         mRecycler.setLayoutManager(new LinearLayoutManager(mContext));
         mRecycler.setNestedScrollingEnabled(false);
-        final List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        MyAdapter myAdapter = new MyAdapter(R.layout.item_mydongtai, list);
+        final List<MultiItemBean> list = new ArrayList<>();
+        list.add(new MultiItemBean(MultiItemBean.NOIMAGE));
+        list.add(new MultiItemBean(MultiItemBean.ONEIMAGE));
+        list.add(new MultiItemBean(MultiItemBean.TWOIMAGE));
+        list.add(new MultiItemBean(MultiItemBean.THREEIMAGE));
+        list.add(new MultiItemBean(MultiItemBean.FOURIMAGE));
+        MyAdapter myAdapter = new MyAdapter(list);
         mRecycler.setAdapter(myAdapter);
         myAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (position != 0) {
-                    Intent intent = new Intent(MyDongTaiActivity.this, ViewPagerActivity.class);
-                    List<String> urlList = new ArrayList<String>();
-                    urlList.add("http://img5.imgtn.bdimg.com/it/u=222615259,2947254622&fm=27&gp=0.jpg");
-                    urlList.add("http://img5.imgtn.bdimg.com/it/u=222615259,2947254622&fm=27&gp=0.jpg");
-                    urlList.add("http://img5.imgtn.bdimg.com/it/u=222615259,2947254622&fm=27&gp=0.jpg");
-                    intent.putExtra("pics", (Serializable) urlList);
-                    intent.putExtra("position", 0);
-                    startActivity(intent);
+                    startActivity(new Intent(MyDongTaiActivity.this,DongTaiDetailActivity.class));
                 }
             }
         });
         mIvPhoto.setOnClickListener(this);
     }
 
-    private class MyAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class MyAdapter extends BaseMultiItemQuickAdapter<MultiItemBean, BaseViewHolder> {
 
-        public MyAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
-            super(layoutResId, data);
+        public MyAdapter(List<MultiItemBean> data) {
+            super(data);
+            addItemType(MultiItemBean.NOIMAGE,R.layout.item_mydongtai0);
+            addItemType(MultiItemBean.ONEIMAGE,R.layout.item_mydongtai1);
+            addItemType(MultiItemBean.TWOIMAGE,R.layout.item_mydongtai2);
+            addItemType(MultiItemBean.THREEIMAGE,R.layout.item_mydongtai3);
+            addItemType(MultiItemBean.FOURIMAGE,R.layout.item_mydongtai4);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
-            if (helper.getAdapterPosition() == 0) {
-                helper.setVisible(R.id.tv_only_text, true);
-                helper.setVisible(R.id.ll_photoandtext, false);
+        protected void convert(BaseViewHolder helper, MultiItemBean item) {
+            if (item.getItemType() == MultiItemBean.NOIMAGE) {
             } else {
-                helper.setVisible(R.id.tv_only_text, false);
-                helper.setVisible(R.id.ll_photoandtext, true);
             }
         }
     }
@@ -149,7 +142,7 @@ public class MyDongTaiActivity extends BaseActivity implements View.OnClickListe
             public void onClick(View v) {
                 dialog.dismiss();
                 Intent intent = new Intent(MyDongTaiActivity.this, FaDongTaiActivity.class);
-                intent.putExtra("type","photo");
+                intent.putExtra("type", "photo");
                 startActivity(intent);
             }
         });
@@ -158,7 +151,7 @@ public class MyDongTaiActivity extends BaseActivity implements View.OnClickListe
             public void onClick(View v) {
                 dialog.dismiss();
                 Intent intent = new Intent(MyDongTaiActivity.this, FaDongTaiActivity.class);
-                intent.putExtra("type","camera");
+                intent.putExtra("type", "camera");
                 startActivity(intent);
             }
         });
