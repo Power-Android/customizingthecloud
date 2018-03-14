@@ -10,9 +10,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.login.bean.RegisterBean;
 import com.power.customizingthecloud.utils.SendSmsTimerUtils;
+import com.power.customizingthecloud.utils.Urls;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -121,6 +127,20 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             Toast.makeText(this, "请输入确认新密码~", Toast.LENGTH_SHORT).show();
             return;
         }
-        startActivity(new Intent(this, LoginActivity.class));
+        HttpParams params=new HttpParams();
+        params.put("user_mobile",phone);
+        params.put("password",psw1);
+        params.put("code",code);
+        params.put("inviter_code","");
+        OkGo.<RegisterBean>post(Urls.BASEURL + "api/v2/register")
+                .tag(this)
+                .params(params)
+                .execute(new DialogCallback<RegisterBean>(RegisterActivity.this, RegisterBean.class) {
+                    @Override
+                    public void onSuccess(Response<RegisterBean> response) {
+                        int code = response.code();
+                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                    }
+                });
     }
 }
