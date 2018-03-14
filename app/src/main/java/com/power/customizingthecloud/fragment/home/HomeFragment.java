@@ -178,7 +178,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         } else if (code == 1) {
                             bannerList.clear();
                             HomeBean.DataEntity data = homeBean.getData();
-                            List<HomeBean.DataEntity.HomeslidEntity> homeslid = data.getHomeslid();
+                            final List<HomeBean.DataEntity.HomeslidEntity> homeslid = data.getHomeslid();
                             for (int i = 0; i < homeslid.size(); i++) {
                                 String image_url = homeslid.get(i).getImage_url();
                                 bannerList.add(image_url);
@@ -187,7 +187,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             mBanner.setOnBannerListener(new OnBannerListener() {
                                 @Override
                                 public void OnBannerClick(int position) {
-                                    startActivity(new Intent(mContext, RenYangDetailActivity.class));
+                                    int state = homeslid.get(position).getState();
+                                    Intent intent = new Intent(mContext, RenYangDetailActivity.class);
+                                    intent.putExtra("state",state);
+                                    startActivity(intent);
                                 }
                             });
                             mTvToutiao.setText(data.getToutiao().getContent());
@@ -202,13 +205,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(mContext, RenYangDetailActivity.class);
-                                    if (mDonkey.get(position).getState() == 1) {
-                                        intent.putExtra("type", "jijiang");
-                                    } else if (position == 2) {
-                                        intent.putExtra("type", "ing");
-                                    }else {
-                                        intent.putExtra("type", "over");
-                                    }
+                                    intent.putExtra("state",mDonkey.get(position).getState());
                                     startActivity(intent);
                                 }
                             });
@@ -219,11 +216,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(mContext, JianKongActivity.class);
-                                    if (position == 2) {
-                                        intent.putExtra("position", 3);
-                                    } else {
-                                        intent.putExtra("position", position);
-                                    }
+                                    intent.putExtra("class_id", mMuchang.get(position).getId());
                                     startActivity(intent);
                                 }
                             });
@@ -248,9 +241,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         }
                     }
                 });
-
-
-
     }
 
     private void initTop() {
@@ -543,11 +533,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             CountdownView cv_countdownView = helper.getView(R.id.cv_countdownView);
             int time = item.getSeckill_end_time() - item.getSeckill_start_time();
             cv_countdownView.start(time); // Millisecond
-            ImageView iv_img=helper.getView(R.id.iv_image);
+            ImageView iv_img = helper.getView(R.id.iv_image);
             Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_img);
-            helper.setText(R.id.tv_title,item.getName())
-                    .setText(R.id.tv_curprice,item.getSeckill_price())
-                    .setText(R.id.tv_last_count,item.getSeckill_storage()+"");
+            helper.setText(R.id.tv_title, item.getName())
+                    .setText(R.id.tv_curprice, item.getSeckill_price())
+                    .setText(R.id.tv_last_count, item.getSeckill_storage() + "");
         }
     }
 
@@ -559,7 +549,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
         @Override
         protected void convert(BaseViewHolder helper, HomeBean.DataEntity.HotGoodsEntity item) {
-            ImageView iv_img=helper.getView(R.id.iv_comment);
+            ImageView iv_img = helper.getView(R.id.iv_comment);
             Glide.with(MyApplication.getGloableContext()).load(item.getHot_imgurl()).into(iv_img);
         }
     }
@@ -577,10 +567,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             TextView tv_state = helper.getView(R.id.tv_state);
             tv_shengyu.setText("剩余数量：" + item.getLast_amount());
             helper.setText(R.id.tv_totalcount, "总数量：" + item.getAmount())
-            .setText(R.id.tv_nianshouyi,item.getProfit())
-            .setText(R.id.tv_yangzhichengben,item.getPrice())
-            .setText(R.id.tv_touzizhouqi,item.getPeriod());
-            ImageView iv_img=helper.getView(R.id.iv_img);
+                    .setText(R.id.tv_nianshouyi, item.getProfit())
+                    .setText(R.id.tv_yangzhichengben, item.getPrice())
+                    .setText(R.id.tv_touzizhouqi, item.getPeriod());
+            ImageView iv_shouqing = helper.getView(R.id.iv_shouqing);
+            ImageView iv_img = helper.getView(R.id.iv_img);
             Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_img);
             String lastCount = item.getLast_amount().substring(0, item.getLast_amount().length() - 1);
             String totalCount = item.getAmount().substring(0, item.getAmount().length() - 1);
@@ -590,9 +581,14 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 tv_shengyu.setTextColor(getResources().getColor(R.color.red1));
                 tv_state.setText("进行中");
                 tv_state.setBackgroundColor(getResources().getColor(R.color.red1));
-            } else {
+            } else if (item.getState()==1){
                 progressBar.setProgress(0);
                 tv_state.setText("即将开始");
+            }else if (item.getState()==3){
+                progressBar.setProgress(0);
+                tv_state.setText("已结束");
+                tv_state.setBackgroundColor(getResources().getColor(R.color.huise));
+                iv_shouqing.setVisibility(View.VISIBLE);
             }
             if (helper.getAdapterPosition() == mDonkey.size() - 1) {
                 helper.setVisible(R.id.view_line, false);

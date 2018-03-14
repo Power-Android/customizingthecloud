@@ -63,11 +63,13 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
         mTitleContentTv.setText("视频详情");
         mTitleShareIv.setVisibility(View.VISIBLE);
         mTitleShareIv.setOnClickListener(this);
-        mVideoplayer.setUp("http://www.170mv.com/tool/jiexi/ajax/pid/13053/vid/3155386.mp4"
+        String videourl = getIntent().getStringExtra("videourl");
+        String imgurl = getIntent().getStringExtra("imgurl");
+        mVideoplayer.setUp(videourl
                 , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
         mVideoplayer.thumbImageView.setScaleType(ImageView.ScaleType.FIT_XY);
         Glide.with(MyApplication.getGloableContext())
-                .load("http://jzvd-pic.nathen.cn/jzvd-pic/00b026e7-b830-4994-bc87-38f4033806a6.jpg")
+                .load(imgurl)
                 .into(mVideoplayer.thumbImageView);
         //模拟点击事件，在调用performClick之前必须设置了点击事件，不然无效
         mVideoplayer.startButton.performClick();

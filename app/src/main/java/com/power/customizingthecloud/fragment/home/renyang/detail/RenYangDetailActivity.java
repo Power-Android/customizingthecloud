@@ -129,31 +129,6 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("认养详情");
         mTvCommit.setOnClickListener(this);
-        /*if (tab_list.size() == 0) {
-            tab_list.add("项目详情");
-            tab_list.add("购买记录");
-            tab_list.add("排行榜");
-            tab_list.add("牧场介绍");
-        }
-        if (fragmentList.size() == 0) {
-            fragmentList.add(new XiangmuFragment());
-            fragmentList.add(new BuyRecordFragment());
-            fragmentList.add(new PaiHangFragment());
-            fragmentList.add(new MuChangDesFragment());
-        }
-        mTablayout.setTabMode(TabLayout.MODE_FIXED);
-        for (int i = 0; i < tab_list.size(); i++) {
-            mTablayout.addTab(mTablayout.newTab().setText(tab_list.get(i)));
-        }
-        //设置中间竖线
-        LinearLayout linearLayout = (LinearLayout) mTablayout.getChildAt(0);
-        linearLayout.setDividerPadding(30);
-        linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-        linearLayout.setDividerDrawable(ContextCompat.getDrawable(this,
-                R.drawable.layout_divider_vertical));
-        BaseTabAdapter adapter = new BaseTabAdapter(getSupportFragmentManager(), fragmentList, tab_list);
-        mViewpager.setAdapter(adapter);
-        mTablayout.setupWithViewPager(mViewpager);*/
         List<String> list = new ArrayList<>();
         list.add("");
         list.add("");
@@ -172,20 +147,18 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         mItemStepper.setContentTextColor(R.color.green);
         mItemStepper.setLeftButtonResources(R.drawable.jianhao_white);
         mItemStepper.setRightButtonResources(R.drawable.jiahao_white);
-        String type = getIntent().getStringExtra("type");
-        if (!TextUtils.isEmpty(type)) {
-            if (type.equals("over")) {
-                iv_shouqing.setVisibility(View.VISIBLE);
-                mTvCommit.setBackgroundResource(R.drawable.bg_yuanjiao_huise);
-                mTvCommit.setClickable(false);
-            } else if (type.equals("jijiang")) {
-                iv_shouqing.setVisibility(View.GONE);
-                mTvCommit.setBackgroundResource(R.drawable.bg_yuanjiao_huise);
-                mTvCommit.setClickable(false);
-            } else {
-                iv_shouqing.setVisibility(View.GONE);
-                mTvCommit.setBackgroundResource(R.drawable.bg_yuanjiao_green2);
-            }
+        int state = getIntent().getIntExtra("state", 0);
+        if (state == 1) {
+            iv_shouqing.setVisibility(View.GONE);
+            mTvCommit.setBackgroundResource(R.drawable.bg_yuanjiao_huise);
+            mTvCommit.setClickable(false);
+        } else if (state == 2) {
+            iv_shouqing.setVisibility(View.GONE);
+            mTvCommit.setBackgroundResource(R.drawable.bg_yuanjiao_green2);
+        } else {
+            iv_shouqing.setVisibility(View.VISIBLE);
+            mTvCommit.setBackgroundResource(R.drawable.bg_yuanjiao_huise);
+            mTvCommit.setClickable(false);
         }
         mTvXieyi.setOnClickListener(this);
         iv_check.setOnClickListener(this);
@@ -288,7 +261,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
             public void onClick(View v) {
                 mDialog.dismiss();
                 Intent intent = new Intent(RenYangDetailActivity.this, MyOrderActivity.class);
-                intent.putExtra("type","0");
+                intent.putExtra("type", "0");
                 startActivity(intent);
             }
         });

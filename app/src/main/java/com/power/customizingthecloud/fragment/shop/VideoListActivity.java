@@ -9,14 +9,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
-import com.power.customizingthecloud.bean.PlayerBean;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.fragment.shop.bean.VideoListBean;
+import com.power.customizingthecloud.utils.Urls;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -51,7 +58,7 @@ public class VideoListActivity extends BaseActivity implements View.OnClickListe
     @BindView(R.id.recylcer_video)
     RecyclerView mRecylcerVideo;
     private VideoAdapter mVideoAdapter;
-    private List<PlayerBean> mList;
+    private List<VideoListBean.DataEntity> mData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,34 +69,53 @@ public class VideoListActivity extends BaseActivity implements View.OnClickListe
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("视频列表");
         mRecylcerVideo.setLayoutManager(new LinearLayoutManager(this));
-        mList = new ArrayList<>();
-        mList.add(new PlayerBean("视频标题1", "视频内容1"));
-        mList.add(new PlayerBean("视频标题2", "视频内容2"));
-        mList.add(new PlayerBean("视频标题3", "视频内容3"));
-        mVideoAdapter = new VideoAdapter(R.layout.item_video, mList);
-        mRecylcerVideo.setAdapter(mVideoAdapter);
+        HttpParams params=new HttpParams();
+        params.put("after","");
+        OkGo.<VideoListBean>get(Urls.BASEURL + "api/v2/kitchen")
+                .tag(this)
+                .params(params)
+                .execute(new DialogCallback<VideoListBean>(this, VideoListBean.class) {
+                    @Override
+                    public void onSuccess(Response<VideoListBean> response) {
+                        VideoListBean videoListBean = response.body();
+                        int code = videoListBean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, videoListBean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            mData = videoListBean.getData();
+                            mVideoAdapter = new VideoAdapter(R.layout.item_video, mData);
+                            mRecylcerVideo.setAdapter(mVideoAdapter);
+                        }
+                    }
+                });
     }
 
-    private class VideoAdapter extends BaseQuickAdapter<PlayerBean, BaseViewHolder> {
+    private class VideoAdapter extends BaseQuickAdapter<VideoListBean.DataEntity, BaseViewHolder> {
 
-        public VideoAdapter(@LayoutRes int layoutResId, @Nullable List<PlayerBean> data) {
+        public VideoAdapter(@LayoutRes int layoutResId, @Nullable List<VideoListBean.DataEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, final PlayerBean item) {
+        protected void convert(BaseViewHolder helper, final VideoListBean.DataEntity item) {
             final ImageView iv_status = helper.getView(R.id.iv_status);
             if (item.isPlaying()) {
                 iv_status.setImageResource(R.drawable.icon_playing);
             } else {
                 iv_status.setImageResource(R.drawable.icon_pause);
             }
+            Glide.with(MyApplication.getGloableContext()).load(item.getImgurl())
+                    .into((ImageView) helper.getView(R.id.iv_tupian));
+            helper.setText(R.id.tv_title,item.getTitle());
             iv_status.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     item.setPlaying(!item.isPlaying());
                     iv_status.setImageResource(R.drawable.icon_playing);
-                    startActivity(new Intent(VideoListActivity.this, VideoDetailActivity.class));
+                    Intent intent = new Intent(VideoListActivity.this, VideoDetailActivity.class);
+                    intent.putExtra("videourl",item.getVideo_url());
+                    intent.putExtra("imgurl",item.getImgurl());
+                    startActivity(intent);
                 }
             });
         }
@@ -98,8 +124,8 @@ public class VideoListActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onRestart() {
         super.onRestart();
-        for (int i = 0; i < mList.size(); i++) {
-            mList.get(i).setPlaying(false);
+        for (int i = 0; i < mData.size(); i++) {
+            mData.get(i).setPlaying(false);
         }
         mVideoAdapter.notifyDataSetChanged();
     }

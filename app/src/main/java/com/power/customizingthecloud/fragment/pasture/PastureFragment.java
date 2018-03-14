@@ -118,43 +118,16 @@ public class PastureFragment extends BaseFragment implements View.OnClickListene
                 startActivity(new Intent(mContext, RenYangListActivity.class));
                 break;
             case R.id.ll_sportA:
-                intent.putExtra("position", 0);
-                startActivity(intent);
-                break;
             case R.id.ll_sportB:
-                intent.putExtra("position", 1);
-                startActivity(intent);
-                break;
             case R.id.ll_cusiliao:
-                intent.putExtra("position", 2);
-                startActivity(intent);
-                break;
             case R.id.ll_lvmumsiyang:
-                intent.putExtra("position", 3);
-                startActivity(intent);
-                break;
             case R.id.ll_lvmumfanzhi:
-                intent.putExtra("position", 4);
-                startActivity(intent);
-                break;
             case R.id.ll_lvbaby:
-                intent.putExtra("position", 5);
-                startActivity(intent);
-                break;
             case R.id.ll_jingliao:
-                intent.putExtra("position", 6);
-                startActivity(intent);
-                break;
             case R.id.ll_gelijianyi:
-                intent.putExtra("position", 7);
-                startActivity(intent);
-                break;
             case R.id.ll_tuzaichejian:
-                intent.putExtra("position", 8);
-                startActivity(intent);
-                break;
             case R.id.ll_lvmeat:
-                intent.putExtra("position", 9);
+                intent.putExtra("class_id", 0);
                 startActivity(intent);
                 break;
         }

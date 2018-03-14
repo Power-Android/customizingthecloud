@@ -7,10 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
-import com.power.customizingthecloud.bean.EventBean;
+import com.power.customizingthecloud.bean.PlayerBean;
+import com.power.customizingthecloud.fragment.home.bean.MuChangListBean;
 import com.power.customizingthecloud.utils.MyUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -21,22 +24,20 @@ import java.util.List;
  * Created by Administrator on 2018/1/26.
  */
 
-public class JianKongAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+public class JianKongAdapter extends BaseQuickAdapter<MuChangListBean.DataEntity, BaseViewHolder> {
     private Context mContext;
-    private int mPosition;
-    private List<String> mData;
+    private List<MuChangListBean.DataEntity> mData;
 
-    public JianKongAdapter(@LayoutRes int layoutResId, @Nullable List<String> data, Context context, int position) {
+    public JianKongAdapter(@LayoutRes int layoutResId, @Nullable List<MuChangListBean.DataEntity> data, Context context) {
         super(layoutResId, data);
         mContext = context;
-        mPosition = position;
         mData = data;
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, String item) {
-        helper.setText(R.id.tv_jiankong, "五号楼前");
-        ImageView iv_top = helper.getView(R.id.iv_jiankong);
+    protected void convert(BaseViewHolder helper, final MuChangListBean.DataEntity item) {
+        helper.setText(R.id.tv_jiankong, item.getTitle());
+        final ImageView iv_top = helper.getView(R.id.iv_jiankong);
         int width = MyUtils.getScreenWidth(mContext) - MyUtils.dip2px(mContext, 50);
         ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
         layoutParams.height = width / 3;
@@ -44,9 +45,13 @@ public class JianKongAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
         iv_top.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().postSticky(new EventBean("player"));
+                PlayerBean playerBean = new PlayerBean();
+                playerBean.setImage(item.getImage());
+                playerBean.setVideo_url(item.getVideo_url());
+                EventBus.getDefault().postSticky(playerBean);
             }
         });
+        Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_top);
     }
 
     /*这个回调不调用是怎么回事*/

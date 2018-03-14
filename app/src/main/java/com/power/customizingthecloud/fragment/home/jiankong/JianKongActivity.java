@@ -6,13 +6,19 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
-import com.power.customizingthecloud.bean.EventBean;
+import com.power.customizingthecloud.bean.PlayerBean;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.fragment.home.bean.MuChangTypeBean;
 import com.power.customizingthecloud.fragment.home.renyang.BaseTabAdapter;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.NoScrollViewPager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -49,6 +55,7 @@ public class JianKongActivity extends BaseActivity implements View.OnClickListen
     JZVideoPlayerStandard mVideoplayer;
     private List<Fragment> fragmentList = new ArrayList<>();
     private List<String> tab_list = new ArrayList<>();
+    private List<MuChangTypeBean.DataEntity> mData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,46 +66,64 @@ public class JianKongActivity extends BaseActivity implements View.OnClickListen
         mTitleBackIv.setVisibility(View.VISIBLE);
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("监控列表");
-        if (tab_list.size() == 0) {
-            //            tab_list.add("全部");
-            tab_list.add("毛驴运动场A区");
-            tab_list.add("毛驴运动场B区");
-            tab_list.add("粗饲料仓储区");
-            tab_list.add("驴妈妈饲养区");
-            tab_list.add("驴妈妈繁殖区");
-            tab_list.add("驴宝宝饲养区");
-            tab_list.add("精料加工厂");
-            tab_list.add("隔离检疫区");
-            tab_list.add("屠宰车间");
-            tab_list.add("驴肉食品及阿胶深加工车间");
-        }
-        if (fragmentList.size() == 0) {
-            for (int i = 0; i < tab_list.size(); i++) {
-                fragmentList.add(new JiankongFragment());
+        OkGo.<MuChangTypeBean>get(Urls.BASEURL + "api/v2/muchang")
+                .tag(this)
+                .execute(new DialogCallback<MuChangTypeBean>(this, MuChangTypeBean.class) {
+                    @Override
+                    public void onSuccess(Response<MuChangTypeBean> response) {
+                        MuChangTypeBean typeBean = response.body();
+                        int code = typeBean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, typeBean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            mData = typeBean.getData();
+                            tab_list.clear();
+                            for (int i = 0; i < mData.size(); i++) {
+                                tab_list.add(mData.get(i).getName());
+                            }
+                            if (fragmentList.size() == 0) {
+                                for (int i = 0; i < tab_list.size(); i++) {
+                                    JiankongFragment jiankongFragment = new JiankongFragment();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("class_id", mData.get(i).getId() + "");
+                                    jiankongFragment.setArguments(bundle);
+                                    fragmentList.add(jiankongFragment);
+                                }
+                            }
+                            mTablayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+                            for (int i = 0; i < tab_list.size(); i++) {
+                                mTablayout.addTab(mTablayout.newTab().setText(tab_list.get(i)));
+                            }
+                            BaseTabAdapter adapter = new BaseTabAdapter(getSupportFragmentManager(), fragmentList, tab_list);
+                            mViewpager.setAdapter(adapter);
+                            mTablayout.setupWithViewPager(mViewpager);
+                            int class_id = getIntent().getIntExtra("class_id", 0);
+                            int position=getClassIdPosition(class_id);
+                            mViewpager.setCurrentItem(position);
+                        }
+                    }
+                });
+    }
+
+    private int getClassIdPosition(int classid) {
+        for (int i = 0; i < mData.size(); i++) {
+            if (mData.get(i).getId() == classid) {
+                return i;
             }
         }
-        mTablayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        for (int i = 0; i < tab_list.size(); i++) {
-            mTablayout.addTab(mTablayout.newTab().setText(tab_list.get(i)));
-        }
-        BaseTabAdapter adapter = new BaseTabAdapter(getSupportFragmentManager(), fragmentList, tab_list);
-        mViewpager.setAdapter(adapter);
-        mTablayout.setupWithViewPager(mViewpager);
-        int position = getIntent().getIntExtra("position", 0);
-        mViewpager.setCurrentItem(position);
+        return 0;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void myEvent(EventBean eventBean) {
-        if (eventBean.getMsg().equals("player")) {//播放视频
-            mVideoplayer.setVisibility(View.VISIBLE);
-            mVideoplayer.setUp("http://www.170mv.com/tool/jiexi/ajax/pid/13053/vid/3155386.mp4"
-                    , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
-            mVideoplayer.thumbImageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            Glide.with(MyApplication.getGloableContext())
-                    .load("http://jzvd-pic.nathen.cn/jzvd-pic/00b026e7-b830-4994-bc87-38f4033806a6.jpg")
-                    .into(mVideoplayer.thumbImageView);
-        }
+    public void myEvent(PlayerBean playerBean) {
+        //播放视频
+        mVideoplayer.setVisibility(View.VISIBLE);
+        mVideoplayer.setUp(playerBean.getVideo_url()
+                , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
+        mVideoplayer.thumbImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        Glide.with(MyApplication.getGloableContext())
+                .load(playerBean.getImage())
+                .into(mVideoplayer.thumbImageView);
     }
 
     @Override
