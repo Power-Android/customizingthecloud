@@ -19,8 +19,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.FortuneCenterAcitivity;
 import com.power.customizingthecloud.activity.mine.LatestActivity;
@@ -28,6 +32,8 @@ import com.power.customizingthecloud.activity.mine.MyDonkeyEarsActivity;
 import com.power.customizingthecloud.activity.mine.MyMessageActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.EventBean;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.fragment.home.bean.HomeBean;
 import com.power.customizingthecloud.fragment.home.jiankong.JianKongActivity;
 import com.power.customizingthecloud.fragment.home.renyang.RenYangListActivity;
 import com.power.customizingthecloud.fragment.home.renyang.detail.RenYangDetailActivity;
@@ -41,6 +47,7 @@ import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
 import com.power.customizingthecloud.utils.MyUtils;
 import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.CommonPopupWindow;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
@@ -122,6 +129,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private CommonPopupWindow popupWindow;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
+    private List<String> bannerList = new ArrayList<>();
+    private List<HomeBean.DataEntity.DonkeyEntity> mDonkey;
+    private List<HomeBean.DataEntity.MuchangEntity> mMuchang;
+    private List<HomeBean.DataEntity.HotGoodsEntity> mHot_goods;
+    private List<HomeBean.DataEntity.SeckillGoodEntity> mSeckill_good;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -133,8 +145,115 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mTitleContentTv.setText("养驴啦");
+        mTitleMessageIv.setVisibility(View.VISIBLE);
+        mTitleMessageIv.setOnClickListener(this);
+        mTitleJiaiv.setVisibility(View.VISIBLE);
+        mTitleJiaiv.setOnClickListener(this);
+        mTvToutiao.requestFocus();//有趣，在布局文件中也设置了获取了焦点，但是没有，在代码中加上就好使了
         mRecyclerTop.setNestedScrollingEnabled(false);
         mRecyclerTop.setLayoutManager(new GridLayoutManager(mContext, 5));
+        initTop();
+        mRecyclerMiddle.setNestedScrollingEnabled(false);
+        mRecyclerMiddle.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerJiankong.setLayoutManager(new GridLayoutManager(mContext, 3));
+        mRecyclerJiankong.setNestedScrollingEnabled(false);
+        mRecyclerGood.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerGood.setNestedScrollingEnabled(false);
+        mRecyclerMiaosha.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerMiaosha.setNestedScrollingEnabled(false);
+        mTvQiang.setOnClickListener(this);
+        mIvJiankongMore.setOnClickListener(this);
+        mIvMiaoshaMore.setOnClickListener(this);
+        mIvGoodMore.setOnClickListener(this);
+        OkGo.<HomeBean>get(Urls.BASEURL + "api/v2/index")
+                .tag(this)
+                .execute(new DialogCallback<HomeBean>(mActivity, HomeBean.class) {
+                    @Override
+                    public void onSuccess(Response<HomeBean> response) {
+                        HomeBean homeBean = response.body();
+                        int code = homeBean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, homeBean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            bannerList.clear();
+                            HomeBean.DataEntity data = homeBean.getData();
+                            List<HomeBean.DataEntity.HomeslidEntity> homeslid = data.getHomeslid();
+                            for (int i = 0; i < homeslid.size(); i++) {
+                                String image_url = homeslid.get(i).getImage_url();
+                                bannerList.add(image_url);
+                            }
+                            BannerUtils.startBanner(mBanner, bannerList);
+                            mBanner.setOnBannerListener(new OnBannerListener() {
+                                @Override
+                                public void OnBannerClick(int position) {
+                                    startActivity(new Intent(mContext, RenYangDetailActivity.class));
+                                }
+                            });
+                            mTvToutiao.setText(data.getToutiao().getContent());
+                            mTvNianshouyi.setText(data.getGrab_donkey().getProfit());
+                            mTvYangzhichengben.setText(data.getGrab_donkey().getPrice());
+                            mTvTouzizhouqi.setText(data.getGrab_donkey().getPeriod());
+                            mTvShengyu.setText(data.getGrab_donkey().getLast_amount());
+                            mDonkey = data.getDonkey();
+                            mMiddleAdapter = new MiddleAdapter(R.layout.home_middle, mDonkey);
+                            mRecyclerMiddle.setAdapter(mMiddleAdapter);
+                            mMiddleAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                    Intent intent = new Intent(mContext, RenYangDetailActivity.class);
+                                    if (mDonkey.get(position).getState() == 1) {
+                                        intent.putExtra("type", "jijiang");
+                                    } else if (position == 2) {
+                                        intent.putExtra("type", "ing");
+                                    }else {
+                                        intent.putExtra("type", "over");
+                                    }
+                                    startActivity(intent);
+                                }
+                            });
+                            mMuchang = data.getMuchang();
+                            mJianKongAdapter = new JianKongAdapter(R.layout.item_home_jiankong, mMuchang);
+                            mRecyclerJiankong.setAdapter(mJianKongAdapter);
+                            mJianKongAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                    Intent intent = new Intent(mContext, JianKongActivity.class);
+                                    if (position == 2) {
+                                        intent.putExtra("position", 3);
+                                    } else {
+                                        intent.putExtra("position", position);
+                                    }
+                                    startActivity(intent);
+                                }
+                            });
+                            mHot_goods = data.getHot_goods();
+                            mGoodAdapter = new GoodAdapter(R.layout.item_home_comment, mHot_goods);
+                            mRecyclerGood.setAdapter(mGoodAdapter);
+                            mGoodAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                    startActivity(new Intent(mContext, GoodDetailActivity.class));
+                                }
+                            });
+                            mSeckill_good = data.getSeckill_good();
+                            mMiaoshaAdapter = new MiaoshaAdapter(R.layout.item_home_miaosha, mSeckill_good);
+                            mRecyclerMiaosha.setAdapter(mMiaoshaAdapter);
+                            mMiaoshaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                    startActivity(new Intent(mContext, MiaoShaDetailActivity.class));
+                                }
+                            });
+                        }
+                    }
+                });
+
+
+
+    }
+
+    private void initTop() {
         if (topStringList.size() == 0) {
             topStringList.add("秒杀");
             topStringList.add("财富中心");
@@ -159,13 +278,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             topPicList.add(R.drawable.newactivity);
             topPicList.add(R.drawable.meiriqiandao);
         }
-        BannerUtils.startBanner(mBanner, new ArrayList<String>());
-        mBanner.setOnBannerListener(new OnBannerListener() {
-            @Override
-            public void OnBannerClick(int position) {
-                startActivity(new Intent(mContext,RenYangDetailActivity.class));
-            }
-        });
         if (mTopAdapter == null) {
             mTopAdapter = new TopAdapter(R.layout.item_hometop, topStringList);
             mRecyclerTop.setAdapter(mTopAdapter);
@@ -208,75 +320,6 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 }
             });
         }
-        mTvToutiao.requestFocus();//有趣，在布局文件中也设置了获取了焦点，但是没有，在代码中加上就好使了
-        mTitleContentTv.setText("养驴啦");
-        mTitleMessageIv.setVisibility(View.VISIBLE);
-        mTitleMessageIv.setOnClickListener(this);
-        mTitleJiaiv.setVisibility(View.VISIBLE);
-        mTitleJiaiv.setOnClickListener(this);
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        mRecyclerMiddle.setNestedScrollingEnabled(false);
-        mRecyclerMiddle.setLayoutManager(new LinearLayoutManager(mContext));
-        mMiddleAdapter = new MiddleAdapter(R.layout.home_middle, list);
-        mRecyclerMiddle.setAdapter(mMiddleAdapter);
-        mMiddleAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(mContext, RenYangDetailActivity.class);
-                if (position == 0) {
-                    intent.putExtra("type", "jijiang");
-                } else if (position == 1) {
-                    intent.putExtra("type", "ing");
-                }
-                startActivity(intent);
-            }
-        });
-        List<String> list2 = new ArrayList<>();
-        list2.add("运动一区");
-        list2.add("运动二区");
-        list2.add("饲养区");
-        mJianKongAdapter = new JianKongAdapter(R.layout.item_home_jiankong, list2);
-        mRecyclerJiankong.setLayoutManager(new GridLayoutManager(mContext, 3));
-        mRecyclerJiankong.setNestedScrollingEnabled(false);
-        mRecyclerJiankong.setAdapter(mJianKongAdapter);
-        mJianKongAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(mContext, JianKongActivity.class);
-                if (position == 2) {
-                    intent.putExtra("position", 3);
-                } else {
-                    intent.putExtra("position", position);
-                }
-                startActivity(intent);
-            }
-        });
-        mGoodAdapter = new GoodAdapter(R.layout.item_home_comment, list);
-        mRecyclerGood.setLayoutManager(new LinearLayoutManager(mContext));
-        mRecyclerGood.setNestedScrollingEnabled(false);
-        mRecyclerGood.setAdapter(mGoodAdapter);
-        mGoodAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(mContext, GoodDetailActivity.class));
-            }
-        });
-        mRecyclerMiaosha.setLayoutManager(new LinearLayoutManager(mContext));
-        mRecyclerMiaosha.setNestedScrollingEnabled(false);
-        mMiaoshaAdapter = new MiaoshaAdapter(R.layout.item_home_miaosha, list);
-        mRecyclerMiaosha.setAdapter(mMiaoshaAdapter);
-        mMiaoshaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(mContext, MiaoShaDetailActivity.class));
-            }
-        });
-        mTvQiang.setOnClickListener(this);
-        mIvJiankongMore.setOnClickListener(this);
-        mIvMiaoshaMore.setOnClickListener(this);
-        mIvGoodMore.setOnClickListener(this);
     }
 
     @Override
@@ -467,71 +510,92 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         }
     }
 
-    private class JianKongAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class JianKongAdapter extends BaseQuickAdapter<HomeBean.DataEntity.MuchangEntity, BaseViewHolder> {
 
-        public JianKongAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public JianKongAdapter(@LayoutRes int layoutResId, @Nullable List<HomeBean.DataEntity.MuchangEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
-            helper.setText(R.id.tv_jiankong, item);
+        protected void convert(BaseViewHolder helper, HomeBean.DataEntity.MuchangEntity item) {
+            helper.setText(R.id.tv_jiankong, item.getTitle());
             ImageView iv_top = helper.getView(R.id.iv_jiankong);
             int width = MyUtils.getScreenWidth(mContext) - MyUtils.dip2px(mContext, 60);
             ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
             layoutParams.height = width / 3;
             iv_top.setLayoutParams(layoutParams);
+            Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_top);
         }
     }
 
-    private class MiaoshaAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class MiaoshaAdapter extends BaseQuickAdapter<HomeBean.DataEntity.SeckillGoodEntity, BaseViewHolder> {
 
-        public MiaoshaAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public MiaoshaAdapter(@LayoutRes int layoutResId, @Nullable List<HomeBean.DataEntity.SeckillGoodEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, HomeBean.DataEntity.SeckillGoodEntity item) {
             TextView tv_yuanjia = helper.getView(R.id.tv_yuanjia);
+            tv_yuanjia.setText(item.getPrice());
             //添加删除线
             tv_yuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             CountdownView cv_countdownView = helper.getView(R.id.cv_countdownView);
-            cv_countdownView.start(10000000); // Millisecond
+            int time = item.getSeckill_end_time() - item.getSeckill_start_time();
+            cv_countdownView.start(time); // Millisecond
+            ImageView iv_img=helper.getView(R.id.iv_image);
+            Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_img);
+            helper.setText(R.id.tv_title,item.getName())
+                    .setText(R.id.tv_curprice,item.getSeckill_price())
+                    .setText(R.id.tv_last_count,item.getSeckill_storage()+"");
         }
     }
 
-    private class GoodAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class GoodAdapter extends BaseQuickAdapter<HomeBean.DataEntity.HotGoodsEntity, BaseViewHolder> {
 
-        public GoodAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public GoodAdapter(@LayoutRes int layoutResId, @Nullable List<HomeBean.DataEntity.HotGoodsEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
-
+        protected void convert(BaseViewHolder helper, HomeBean.DataEntity.HotGoodsEntity item) {
+            ImageView iv_img=helper.getView(R.id.iv_comment);
+            Glide.with(MyApplication.getGloableContext()).load(item.getHot_imgurl()).into(iv_img);
         }
     }
 
-    private class MiddleAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class MiddleAdapter extends BaseQuickAdapter<HomeBean.DataEntity.DonkeyEntity, BaseViewHolder> {
 
-        public MiddleAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public MiddleAdapter(@LayoutRes int layoutResId, @Nullable List<HomeBean.DataEntity.DonkeyEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, HomeBean.DataEntity.DonkeyEntity item) {
             ProgressBar progressBar = helper.getView(R.id.progressBar);
             TextView tv_shengyu = helper.getView(R.id.tv_shengyu);
             TextView tv_state = helper.getView(R.id.tv_state);
-            if (helper.getAdapterPosition() == 1) {
-                helper.setVisible(R.id.view_line, false);
-                progressBar.setProgress(80);
-                tv_shengyu.setText("剩余数量：6头");
+            tv_shengyu.setText("剩余数量：" + item.getLast_amount());
+            helper.setText(R.id.tv_totalcount, "总数量：" + item.getAmount())
+            .setText(R.id.tv_nianshouyi,item.getProfit())
+            .setText(R.id.tv_yangzhichengben,item.getPrice())
+            .setText(R.id.tv_touzizhouqi,item.getPeriod());
+            ImageView iv_img=helper.getView(R.id.iv_img);
+            Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_img);
+            String lastCount = item.getLast_amount().substring(0, item.getLast_amount().length() - 1);
+            String totalCount = item.getAmount().substring(0, item.getAmount().length() - 1);
+            int bili = Integer.parseInt(lastCount) / Integer.parseInt(totalCount);
+            if (item.getState() == 2) {
+                progressBar.setProgress(bili * 100);
                 tv_shengyu.setTextColor(getResources().getColor(R.color.red1));
                 tv_state.setText("进行中");
                 tv_state.setBackgroundColor(getResources().getColor(R.color.red1));
             } else {
-                helper.setVisible(R.id.view_line, true);
+                progressBar.setProgress(0);
+                tv_state.setText("即将开始");
+            }
+            if (helper.getAdapterPosition() == mDonkey.size() - 1) {
+                helper.setVisible(R.id.view_line, false);
             }
             helper.getView(R.id.tv_jiankong).setOnClickListener(new View.OnClickListener() {
                 @Override

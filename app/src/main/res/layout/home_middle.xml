@@ -16,9 +16,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <ImageView
+                    android:id="@+id/iv_img"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:src="@drawable/face"/>
+                    />
                 <View
                     android:layout_width="100dp"
                     android:layout_height="30dp"
@@ -83,6 +84,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp">
                     <TextView
+                        android:id="@+id/tv_totalcount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -106,6 +108,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/tv_nianshouyi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -131,6 +134,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/tv_yangzhichengben"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -156,6 +160,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/tv_touzizhouqi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
