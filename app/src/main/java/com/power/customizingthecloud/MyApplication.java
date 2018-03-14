@@ -90,7 +90,6 @@ public class MyApplication extends Application {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.put("X-Header-Sms","HxP&sU1YFs78RL&Src@G3YnN5ne3HYvR");
         HttpParams params = new HttpParams();
         //log相关
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor("TAG");

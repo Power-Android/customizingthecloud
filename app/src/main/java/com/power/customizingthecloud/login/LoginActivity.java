@@ -12,11 +12,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.power.customizingthecloud.MainActivity;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.login.bean.LoginBean;
+import com.power.customizingthecloud.login.bean.RegisterBean;
 import com.power.customizingthecloud.utils.MyUtils;
 import com.power.customizingthecloud.utils.SendSmsTimerUtils;
 import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -103,7 +112,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 mViewLineMima.setVisibility(View.GONE);
                 break;
             case R.id.tv_getcode:
-                SendSmsTimerUtils.sendSms(mTvGetcode, R.color.green, R.color.green);
+                getCode(mEdtZhanghao.getText().toString());
                 break;
             case R.id.iv_finish:
                 finish();
@@ -114,11 +123,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private void login() {
         String username = mEdtZhanghao.getText().toString();
         if (TextUtils.isEmpty(username)) {
-            Toast.makeText(this, "请输入账号~", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "请输入手机号~", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (!MyUtils.isMobileNO(username)){
-            Toast.makeText(this, "请正确输入手机号~", Toast.LENGTH_SHORT).show();
+        if (!MyUtils.isMobileNO(username)) {
+            Toast.makeText(this, "请输入正确格式的手机号~", Toast.LENGTH_SHORT).show();
             return;
         }
         if (isPhoneLogin) {
@@ -133,15 +142,71 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 Toast.makeText(this, "请输入密码~", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (psw.length()<6) {
+            if (psw.length() < 6) {
                 Toast.makeText(this, "请6位数及以上的密码~", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
-        Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
-        SpUtils.putString(this, "userid", "1");
-        //        startActivity(new Intent(this, MainActivity.class));
-        finish();
+        HttpParams params = new HttpParams();
+        params.put("user_mobile", username);
+        String url="";
+        if (isPhoneLogin) {
+            params.put("code", mEdtCode.getText().toString());
+            url=Urls.BASEURL + "api/v2/code-login";
+        } else {
+            params.put("password", mEdtPsw.getText().toString());
+            url=Urls.BASEURL + "api/v2/mobile-login";
+        }
+        params.put("device_token", "111");
+        OkGo.<LoginBean>post(url)
+                .tag(this)
+                .params(params)
+                .execute(new DialogCallback<LoginBean>(LoginActivity.this, LoginBean.class) {
+                    @Override
+                    public void onSuccess(Response<LoginBean> response) {
+                        LoginBean loginBean = response.body();
+                        int code = loginBean.getCode();
+                        Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        if (code == 0) {
+                        } else if (code == 1) {
+                            LoginBean.DataEntity dataEntity = loginBean.getData().get(0);
+                            SpUtils.putString(LoginActivity.this, "userid", dataEntity.getUser_id() + "");
+                            SpUtils.putString(LoginActivity.this, "token", dataEntity.getToken());
+                            long ttlMs = dataEntity.getTtl() * 60 * 1000L;
+                            long timeMillis = System.currentTimeMillis();
+                            long totalMs = ttlMs + timeMillis;
+                            SpUtils.putString(LoginActivity.this, "totalMs", totalMs + "");
+                            finish();
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        }
+                    }
+                });
+    }
+
+    private void getCode(String phone) {
+        if (TextUtils.isEmpty(phone)) {
+            Toast.makeText(this, "请输入手机号~", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("X-Header-Sms", "HxP&sU1YFs78RL&Src@G3YnN5ne3HYvR");
+        HttpParams params = new HttpParams();
+        params.put("mobile", phone);
+        OkGo.<RegisterBean>post(Urls.BASEURL + "api/v2/verifycodes")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<RegisterBean>(LoginActivity.this, RegisterBean.class) {
+                    @Override
+                    public void onSuccess(Response<RegisterBean> response) {
+                        int code = response.body().getCode();
+                        Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        if (code == 0) {
+                        } else if (code == 1) {
+                            SendSmsTimerUtils.sendSms(mTvGetcode, R.color.green, R.color.green);
+                        }
+                    }
+                });
     }
 
     @Override

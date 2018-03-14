@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
@@ -91,7 +92,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
             case R.id.tv_getcode:
-                SendSmsTimerUtils.sendSms(mTvGetcode, R.color.green, R.color.green);
+                getCode(mEdtPhone.getText().toString());
                 break;
             case R.id.tv_agreement:
                 startActivity(new Intent(this, RegistAgreementActivity.class));
@@ -127,20 +128,51 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             Toast.makeText(this, "请输入确认新密码~", Toast.LENGTH_SHORT).show();
             return;
         }
-        HttpParams params=new HttpParams();
-        params.put("user_mobile",phone);
-        params.put("password",psw1);
-        params.put("code",code);
-        params.put("inviter_code","");
+        HttpParams params = new HttpParams();
+        params.put("user_mobile", phone);
+        params.put("password", psw1);
+        params.put("code", code);
+        params.put("inviter_code", "");
         OkGo.<RegisterBean>post(Urls.BASEURL + "api/v2/register")
                 .tag(this)
                 .params(params)
                 .execute(new DialogCallback<RegisterBean>(RegisterActivity.this, RegisterBean.class) {
                     @Override
                     public void onSuccess(Response<RegisterBean> response) {
-                        int code = response.code();
-                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                        int code = response.body().getCode();
+                        Toast.makeText(RegisterActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        if (code == 0) {
+                        } else if (code == 1) {
+                            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                        }
                     }
                 });
     }
+
+    private void getCode(String phone) {
+        if (TextUtils.isEmpty(phone)) {
+            Toast.makeText(this, "请输入手机号~", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("X-Header-Sms", "HxP&sU1YFs78RL&Src@G3YnN5ne3HYvR");
+        HttpParams params = new HttpParams();
+        params.put("mobile", phone);
+        OkGo.<RegisterBean>post(Urls.BASEURL + "api/v2/verifycodes")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<RegisterBean>(RegisterActivity.this, RegisterBean.class) {
+                    @Override
+                    public void onSuccess(Response<RegisterBean> response) {
+                        int code = response.body().getCode();
+                        Toast.makeText(RegisterActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        if (code == 0) {
+                        } else if (code == 1) {
+                            SendSmsTimerUtils.sendSms(mTvGetcode, R.color.green, R.color.green);
+                        }
+                    }
+                });
+    }
+
 }
