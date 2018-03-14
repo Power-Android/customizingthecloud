@@ -11,6 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.CustomerCenterActivity;
 import com.power.customizingthecloud.activity.mine.EditInfoActivity;
@@ -30,11 +34,15 @@ import com.power.customizingthecloud.activity.mine.RefundAfterActivity;
 import com.power.customizingthecloud.activity.mine.SettingActivity;
 import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseFragment;
+import com.power.customizingthecloud.bean.DonkeyEarsBean;
 import com.power.customizingthecloud.bean.EventBean;
+import com.power.customizingthecloud.bean.UserBean;
+import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.top.KaiDianActivity;
 import com.power.customizingthecloud.fragment.home.top.MyShareActivity;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.CircleImageView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -173,6 +181,32 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         mineFenxiangRl.setOnClickListener(this);
         mineZijinRl.setOnClickListener(this);
         mineKefuRl.setOnClickListener(this);
+        initData();
+    }
+
+    private void initData() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+
+        OkGo.<UserBean>get(Urls.BASEURL + "api/v2/user")
+                .tag(this)
+                .headers(headers)
+                .execute(new DialogCallback<UserBean>(mActivity,UserBean.class) {
+                    @Override
+                    public void onSuccess(Response<UserBean> response) {
+                        UserBean userBean = response.body();
+                        if (userBean.getCode() == 1){
+                            mineNameTv.setText(userBean.getData().getUser_name());
+                            mineLverduoTv.setText(userBean.getData().getUser_eselsohr()+"只");
+                            mineDaijinquanTv.setText(userBean.getData().getVoucher_count()+"张");
+                            mineHongbaoTv.setText(userBean.getData().getPackage_count()+"个");
+                            mineYuETv.setText(userBean.getData().getUser_balance()+"元");
+                            if (!TextUtils.isEmpty(userBean.getData().getUser_avatar())){
+                                Glide.with(mContext).load(userBean.getData().getUser_avatar()).into(mineFaceIv);
+                            }
+                        }
+                    }
+                });
     }
 
     @Override
