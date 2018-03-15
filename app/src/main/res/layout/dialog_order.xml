@@ -64,6 +64,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="50dp"
             android:background="@null"
+            android:inputType="number"
             android:gravity="right|center_vertical"
             android:hint="请输入电话号码"
             android:textColor="@color/text_black"
@@ -200,6 +201,7 @@
             android:textColor="@color/text_black"
             android:textSize="15sp"/>
         <EditText
+            android:id="@+id/edt_remarks"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

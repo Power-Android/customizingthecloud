@@ -127,7 +127,9 @@ public class ForgetPswActivity extends BaseActivity implements View.OnClickListe
                         Toast.makeText(ForgetPswActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         if (code == 0) {
                         } else if (code == 1) {
-                            startActivity(new Intent(ForgetPswActivity.this, LoginActivity.class));
+                            Intent intent = new Intent(ForgetPswActivity.this, LoginActivity.class);
+                            intent.putExtra("type","main");
+                            startActivity(intent);
                         }
                     }
                 });

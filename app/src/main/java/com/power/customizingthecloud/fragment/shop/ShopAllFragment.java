@@ -18,21 +18,28 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.LatestActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.EventBean;
+import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
 import com.power.customizingthecloud.fragment.home.GoodListActivity;
 import com.power.customizingthecloud.fragment.home.MiaoShaDetailActivity;
 import com.power.customizingthecloud.fragment.home.top.KaiDianActivity;
 import com.power.customizingthecloud.fragment.home.top.MiaoShaActivity;
+import com.power.customizingthecloud.fragment.shop.bean.ShopAllBean;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
 import com.power.customizingthecloud.utils.MyUtils;
 import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
@@ -80,6 +87,8 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
     RecyclerView mRecyclerMiaosha;
     @BindView(R.id.iv_quan_more)
     ImageView mIvQuanMore;
+    @BindView(R.id.iv_miaosha)
+    ImageView iv_miaosha;
     @BindView(R.id.recycler_quan)
     RecyclerView mRecyclerQuan;
     @BindView(R.id.ll_miaosha)
@@ -91,6 +100,7 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
     private QuanAdapter mQuanAdapter;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
+    private List<String> imgList = new ArrayList<>();
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -116,51 +126,77 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        BannerUtils.startBanner(mBanner, new ArrayList<String>());
-        mBanner.setOnBannerListener(new OnBannerListener() {
-            @Override
-            public void OnBannerClick(int position) {
-                startActivity(new Intent(mContext,GoodDetailActivity.class));
-            }
-        });
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
         mRecyclerNew.setNestedScrollingEnabled(false);
         mRecyclerNew.setLayoutManager(new GridLayoutManager(mContext, 2));
-        mNewProductAdapter = new NewProductAdapter(R.layout.item_product, list);
-        mRecyclerNew.setAdapter(mNewProductAdapter);
-        mNewProductAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(mContext, GoodDetailActivity.class));
-            }
-        });
         mRecyclerHot.setNestedScrollingEnabled(false);
         mRecyclerHot.setLayoutManager(new GridLayoutManager(mContext, 2));
-        mHotProductAdapter = new HotProductAdapter(R.layout.item_product, list);
-        mRecyclerHot.setAdapter(mHotProductAdapter);
-        mHotProductAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(mContext, GoodDetailActivity.class));
-            }
-        });
         mRecyclerMiaosha.setNestedScrollingEnabled(false);
         mRecyclerMiaosha.setLayoutManager(new LinearLayoutManager(mContext));
-        mMiaoshaAdapter = new MiaoshaAdapter(R.layout.item_home_miaosha, list);
-        mRecyclerMiaosha.setAdapter(mMiaoshaAdapter);
-        mMiaoshaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(mContext, MiaoShaDetailActivity.class));
-            }
-        });
         mRecyclerQuan.setNestedScrollingEnabled(false);
         mRecyclerQuan.setLayoutManager(new LinearLayoutManager(mContext));
-        mQuanAdapter = new QuanAdapter(R.layout.item_daijinquan, list);
-        mRecyclerQuan.setAdapter(mQuanAdapter);
-        mCvCountdownView.start(995550000);
+        OkGo.<ShopAllBean>get(Urls.BASEURL + "api/v2/good")
+                .tag(this)
+                .execute(new DialogCallback<ShopAllBean>(mActivity, ShopAllBean.class) {
+                    @Override
+                    public void onSuccess(Response<ShopAllBean> response) {
+                        ShopAllBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            ShopAllBean.DataEntity data = bean.getData();
+                            final List<ShopAllBean.DataEntity.GoodSlidEntity> good_slid = data.getGood_slid();
+                            imgList.clear();
+                            for (int i = 0; i < good_slid.size(); i++) {
+                                imgList.add(good_slid.get(i).getImage_url());
+                            }
+                            BannerUtils.startBanner(mBanner, imgList);
+                            mBanner.setOnBannerListener(new OnBannerListener() {
+                                @Override
+                                public void OnBannerClick(int position) {
+                                    if (good_slid.get(position).getType() == 1) {
+                                        startActivity(new Intent(mContext, GoodDetailActivity.class));
+                                    }
+                                }
+                            });
+                            List<ShopAllBean.DataEntity.NewGoodEntity> new_good = data.getNew_good();
+                            mNewProductAdapter = new NewProductAdapter(R.layout.item_product, new_good);
+                            mRecyclerNew.setAdapter(mNewProductAdapter);
+                            mNewProductAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                    startActivity(new Intent(mContext, GoodDetailActivity.class));
+                                }
+                            });
+                            List<ShopAllBean.DataEntity.HotGoodEntity> hot_good = data.getHot_good();
+                            mHotProductAdapter = new HotProductAdapter(R.layout.item_product, hot_good);
+                            mRecyclerHot.setAdapter(mHotProductAdapter);
+                            mHotProductAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                    startActivity(new Intent(mContext, GoodDetailActivity.class));
+                                }
+                            });
+                            List<ShopAllBean.DataEntity.SeckillGoodEntity> seckill_good = data.getSeckill_good();
+                            mMiaoshaAdapter = new MiaoshaAdapter(R.layout.item_home_miaosha, seckill_good);
+                            mRecyclerMiaosha.setAdapter(mMiaoshaAdapter);
+                            mMiaoshaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                    startActivity(new Intent(mContext, MiaoShaDetailActivity.class));
+                                }
+                            });
+                            List<ShopAllBean.DataEntity.VoucherTemplateEntity> voucher_template = data.getVoucher_template();
+                            mQuanAdapter = new QuanAdapter(R.layout.item_daijinquan, voucher_template);
+                            mRecyclerQuan.setAdapter(mQuanAdapter);
+
+                            ShopAllBean.DataEntity.HotSeckillEntity hot_seckill = data.getHot_seckill();
+                            Glide.with(MyApplication.getGloableContext()).load(hot_seckill.getImage()).into(iv_miaosha);
+                            mTvXianlianggou.setText(hot_seckill.getPrice()+"元");
+                            mCvCountdownView.start(hot_seckill.getSeckill_end_time()-hot_seckill.getSeckill_start_time());
+                        }
+                    }
+                });
     }
 
     @Override
@@ -196,101 +232,118 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
         }
     }
 
-    private class NewProductAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class NewProductAdapter extends BaseQuickAdapter<ShopAllBean.DataEntity.NewGoodEntity, BaseViewHolder> {
 
-        public NewProductAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public NewProductAdapter(@LayoutRes int layoutResId, @Nullable List<ShopAllBean.DataEntity.NewGoodEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
-            ImageView iv_insertcar=helper.getView(R.id.iv_insertcar);
+        protected void convert(BaseViewHolder helper, ShopAllBean.DataEntity.NewGoodEntity item) {
+            ImageView iv_insertcar = helper.getView(R.id.iv_insertcar);
             iv_insertcar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String userid = SpUtils.getString(mContext, "userid", "");
-                    if (TextUtils.isEmpty(userid)){
+                    if (TextUtils.isEmpty(userid)) {
                         startActivity(new Intent(mContext, LoginActivity.class));
-                        mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                        mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                         return;
                     }
                     Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
                 }
             });
-            ImageView iv_top=helper.getView(R.id.iv_top);
+            ImageView iv_top = helper.getView(R.id.iv_top);
             int width = MyUtils.getScreenWidth(mContext) - MyUtils.dip2px(mContext, 50);
             ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
-            layoutParams.height=width/2;
+            layoutParams.height = width / 2;
             iv_top.setLayoutParams(layoutParams);
+            Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_top);
+            helper.setText(R.id.tv_name,item.getName())
+                    .setText(R.id.tv_price,item.getPrice());
         }
     }
 
-    private class HotProductAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class HotProductAdapter extends BaseQuickAdapter<ShopAllBean.DataEntity.HotGoodEntity, BaseViewHolder> {
 
-        public HotProductAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public HotProductAdapter(@LayoutRes int layoutResId, @Nullable List<ShopAllBean.DataEntity.HotGoodEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
-            ImageView iv_insertcar=helper.getView(R.id.iv_insertcar);
+        protected void convert(BaseViewHolder helper, ShopAllBean.DataEntity.HotGoodEntity item) {
+            ImageView iv_insertcar = helper.getView(R.id.iv_insertcar);
             iv_insertcar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String userid = SpUtils.getString(mContext, "userid", "");
-                    if (TextUtils.isEmpty(userid)){
+                    if (TextUtils.isEmpty(userid)) {
                         startActivity(new Intent(mContext, LoginActivity.class));
-                        mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                        mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                         return;
                     }
                     Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
                 }
             });
-            ImageView iv_top=helper.getView(R.id.iv_top);
+            ImageView iv_top = helper.getView(R.id.iv_top);
             int width = MyUtils.getScreenWidth(mContext) - MyUtils.dip2px(mContext, 50);
             ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
-            layoutParams.height=width/2;
+            layoutParams.height = width / 2;
             iv_top.setLayoutParams(layoutParams);
+            Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_top);
+            helper.setText(R.id.tv_name,item.getName())
+                    .setText(R.id.tv_price,item.getPrice());
         }
     }
 
-    private class MiaoshaAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class MiaoshaAdapter extends BaseQuickAdapter<ShopAllBean.DataEntity.SeckillGoodEntity, BaseViewHolder> {
 
-        public MiaoshaAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public MiaoshaAdapter(@LayoutRes int layoutResId, @Nullable List<ShopAllBean.DataEntity.SeckillGoodEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, ShopAllBean.DataEntity.SeckillGoodEntity item) {
             TextView tv_yuanjia = helper.getView(R.id.tv_yuanjia);
+            tv_yuanjia.setText(item.getPrice());
             //添加删除线
             tv_yuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-            CountdownView cv_countdownView=helper.getView(R.id.cv_countdownView);
-            cv_countdownView.start(995550000); // Millisecond
+            CountdownView cv_countdownView = helper.getView(R.id.cv_countdownView);
+            int time = item.getSeckill_end_time() - item.getSeckill_start_time();
+            cv_countdownView.start(time); // Millisecond
+            ImageView iv_img = helper.getView(R.id.iv_image);
+            Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_img);
+            helper.setText(R.id.tv_title, item.getName())
+                    .setText(R.id.tv_curprice, item.getSeckill_price())
+                    .setText(R.id.tv_last_count, item.getSeckill_storage() + "");
         }
     }
 
-    private class QuanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class QuanAdapter extends BaseQuickAdapter<ShopAllBean.DataEntity.VoucherTemplateEntity, BaseViewHolder> {
 
-        public QuanAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public QuanAdapter(@LayoutRes int layoutResId, @Nullable List<ShopAllBean.DataEntity.VoucherTemplateEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, ShopAllBean.DataEntity.VoucherTemplateEntity item) {
             TextView tv_lingqu = helper.getView(R.id.tv_lingqu);
             tv_lingqu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String userid = SpUtils.getString(mContext, "userid", "");
-                    if (TextUtils.isEmpty(userid)){
+                    if (TextUtils.isEmpty(userid)) {
                         startActivity(new Intent(mContext, LoginActivity.class));
-                        mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                        mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                         return;
                     }
                     showLingquDialog();
                 }
             });
+            helper.setText(R.id.item_money_tv,item.getPrice()+"")
+                    .setText(R.id.item_man_jian_tv,"满￥"+item.getOrder_limit()+"使用")
+                    .setText(R.id.item_name_tv,item.getTitle())
+                    .setText(R.id.item_date_tv,"使用期限："+item.getStart_date()+"-"+item.getEnd_date());
         }
     }
 
@@ -320,7 +373,7 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(mContext,GoodListActivity.class));
+                startActivity(new Intent(mContext, GoodListActivity.class));
             }
         });
     }

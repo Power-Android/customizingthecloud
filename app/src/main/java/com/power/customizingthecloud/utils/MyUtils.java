@@ -21,7 +21,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,15 +30,6 @@ import java.util.regex.Pattern;
 
 public class MyUtils {
     private static int mScreenWidth, mScreenHeight;
-
-    public static String stampToDate(String s) {
-        String res;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        long lt = new Long(s);
-        Date date = new Date(lt);
-        res = simpleDateFormat.format(date);
-        return res;
-    }
 
     // base64图片转字符串
     public static String Bitmap2StrByBase64(Bitmap bit) {
@@ -84,11 +74,6 @@ public class MyUtils {
         }
     }
 
-    public static String getToken() {
-        return getMD5(getCurrentDate() + "xfkj");
-    }
-
-
     /*将日期转为时间戳*/
     public static long getStringToDate(String time) {
         //        String timestamp = String.format("%010d", stringToDate);
@@ -103,6 +88,15 @@ public class MyUtils {
         return date.getTime();
     }
 
+    public static String stampToDate(String s) {
+        String res;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        long lt = new Long(s);
+        Date date = new Date(lt);
+        res = simpleDateFormat.format(date);
+        return res;
+    }
+
     //  时间戳转为日期  /年/月/日
     public static String getDateToString(String time) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -113,15 +107,14 @@ public class MyUtils {
 
     public static String go(Long ttl){
         Date nowTime = new Date(System.currentTimeMillis()+ttl);
-        System.out.println(System.currentTimeMillis());
-        SimpleDateFormat sdFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:dd");
+        SimpleDateFormat sdFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String retStrFormatNowDate = sdFormatter.format(nowTime);
         return retStrFormatNowDate;
     }
 
-    //  时间戳转为日期  /年/月/日
+    // 获取当前时间
     public static String getCurrentDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         Date curDate = new Date(System.currentTimeMillis());//获取当前时间
         String date = sdf.format(curDate);
         return date;
@@ -129,7 +122,7 @@ public class MyUtils {
 
     //  时间戳转为日期  /年/月/日/时/分
     public static String getDateToStringTime(String time) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
         long lcc_time = Long.valueOf(time);
         String format = sdf.format(new Date(lcc_time * 1000L));
         return format;
@@ -243,24 +236,6 @@ public class MyUtils {
         return (int) (pxValue / scale + 0.5f);
     }
 
-    public static String dateToString(Date date, String type) {
-        String str = null;
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        if (type.equals("SHORT")) {
-            // 07-1-18
-            format = DateFormat.getDateInstance(DateFormat.SHORT);
-            str = format.format(date);
-        } else if (type.equals("MEDIUM")) {
-            // 2007-1-18
-            format = DateFormat.getDateInstance(DateFormat.MEDIUM);
-            str = format.format(date);
-        } else if (type.equals("FULL")) {
-            // 2007年1月18日 星期四
-            format = DateFormat.getDateInstance(DateFormat.FULL);
-            str = format.format(date);
-        }
-        return str;
-    }
 
     public static void setMargins (View v, int l, int t, int r, int b) {
         if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {

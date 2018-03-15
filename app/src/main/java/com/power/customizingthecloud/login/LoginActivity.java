@@ -149,13 +149,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
         HttpParams params = new HttpParams();
         params.put("user_mobile", username);
-        String url="";
+        String url = "";
         if (isPhoneLogin) {
             params.put("code", mEdtCode.getText().toString());
-            url=Urls.BASEURL + "api/v2/code-login";
+            url = Urls.BASEURL + "api/v2/code-login";
         } else {
             params.put("password", mEdtPsw.getText().toString());
-            url=Urls.BASEURL + "api/v2/mobile-login";
+            url = Urls.BASEURL + "api/v2/mobile-login";
         }
         params.put("device_token", "111");
         OkGo.<LoginBean>post(url)
@@ -176,8 +176,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             long timeMillis = System.currentTimeMillis();
                             long totalMs = ttlMs + timeMillis;
                             SpUtils.putString(LoginActivity.this, "totalMs", totalMs + "");
-                            finish();
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            if (getIntent().getType() != null && getIntent().getType().equals("mian")) {
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            }else {
+                                finish();
+                            }
                         }
                     }
                 });
