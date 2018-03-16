@@ -12,10 +12,16 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.MyVoucherBean;
+import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.GoodListActivity;
+import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +37,8 @@ public class MyVoucherActivity extends BaseActivity implements View.OnClickListe
     TextView titleContentTv;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
-    private List<MyVoucherBean> list;
     private String type;
+    private List<MyVoucherBean.DataBean> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,25 +58,33 @@ public class MyVoucherActivity extends BaseActivity implements View.OnClickListe
 
         type = getIntent().getStringExtra("type");
 
-        list = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            MyVoucherBean bean = new MyVoucherBean();
-            bean.setMoney("20");
-            bean.setManjian("满￥199使用");
-            bean.setName("驴奶粉代金券");
-            bean.setUse("仅限购物使用");
-            bean.setDate("使用期限：2018.01.25-2018.02.25");
-            bean.setIsguoqi(i+"");
-            list.add(bean);
-        }
-        MyVoucherAdapter adapter = new MyVoucherAdapter(R.layout.item_my_voucher, list);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(this);
+        initData();
+    }
+
+    private void initData() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+
+        OkGo.<MyVoucherBean>get(Urls.BASEURL + "api/v2/user/voucher")
+                .tag(this)
+                .headers(headers)
+                .execute(new DialogCallback<MyVoucherBean>(this,MyVoucherBean.class) {
+                    @Override
+                    public void onSuccess(Response<MyVoucherBean> response) {
+                        MyVoucherBean body = response.body();
+                        if (body.getCode() == 1){
+                            list = body.getData();
+                            MyVoucherAdapter adapter = new MyVoucherAdapter(R.layout.item_my_voucher, list);
+                            recyclerView.setAdapter(adapter);
+                            adapter.setOnItemClickListener(MyVoucherActivity.this);
+                        }
+                    }
+                });
     }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        if (!list.get(position).getIsguoqi().equals("1")){
+        if (list.get(position).getState() != 1){
             if (type != null && type.equals("query")){
                 finish();
             }else {
@@ -79,20 +93,20 @@ public class MyVoucherActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private class MyVoucherAdapter extends BaseQuickAdapter<MyVoucherBean,BaseViewHolder>{
+    private class MyVoucherAdapter extends BaseQuickAdapter<MyVoucherBean.DataBean,BaseViewHolder>{
 
-        public MyVoucherAdapter(@LayoutRes int layoutResId, @Nullable List<MyVoucherBean> data) {
+        public MyVoucherAdapter(@LayoutRes int layoutResId, @Nullable List<MyVoucherBean.DataBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, MyVoucherBean item) {
-            helper.setText(R.id.item_money_tv,item.getMoney())
-                    .setText(R.id.item_man_jian_tv,item.getManjian())
-                    .setText(R.id.item_name_tv,item.getName())
-                    .setText(R.id.item_use_tv,item.getUse())
-                    .setText(R.id.item_date_tv,item.getDate());
-            if (item.getIsguoqi().equals("1")){
+        protected void convert(BaseViewHolder helper, MyVoucherBean.DataBean item) {
+            helper.setText(R.id.item_money_tv,item.getPrice()+"")
+                    .setText(R.id.item_man_jian_tv,"满￥"+item.getOrder_limit()+"使用")
+                    .setText(R.id.item_name_tv,item.getTitle())
+//                    .setText(R.id.item_use_tv,item.getUse())
+                    .setText(R.id.item_date_tv,item.getStart_date()+"-"+item.getEnd_date());
+            if (item.getState() == 1){
                 helper.getView(R.id.yi_guo_qi_iv).setVisibility(View.VISIBLE);
             }
         }
