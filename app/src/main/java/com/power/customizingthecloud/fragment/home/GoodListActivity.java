@@ -15,14 +15,19 @@ import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.fragment.shop.bean.GoodListBean;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.MyUtils;
 import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -57,31 +62,50 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
         mTitleContentTv.setText("商品列表");
         mTitleShopcarIv.setVisibility(View.VISIBLE);
         mTitleShopcarIv.setOnClickListener(this);
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
         mRecyclerShop.setLayoutManager(new GridLayoutManager(this,2));
-        ShopAdapter shopAdapter=new ShopAdapter(R.layout.item_shengxian,list);
-        mRecyclerShop.setAdapter(shopAdapter);
-        shopAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(GoodListActivity.this,GoodDetailActivity.class));
-            }
-        });
+        String type = getIntent().getStringExtra("type");
+        String url="";
+        if (type!=null && type.equals("new")){
+            url=Urls.BASEURL + "api/v2/good/new-good-list";
+        }else if (type!=null && type.equals("hot")){
+            url=Urls.BASEURL + "api/v2/good/hot-good-list";
+        }
+        HttpParams params = new HttpParams();
+        params.put("page", "1");
+        params.put("limit", "10");
+        OkGo.<GoodListBean>get(url)
+                .tag(this)
+                .params(params)
+                .execute(new DialogCallback<GoodListBean>(GoodListActivity.this, GoodListBean.class) {
+                    @Override
+                    public void onSuccess(Response<GoodListBean> response) {
+                        GoodListBean goodListBean = response.body();
+                        int code = goodListBean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, goodListBean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            List<GoodListBean.DataEntity> data = goodListBean.getData();
+                            ShopAdapter shopAdapter=new ShopAdapter(R.layout.item_shengxian,data);
+                            mRecyclerShop.setAdapter(shopAdapter);
+                            shopAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                    startActivity(new Intent(GoodListActivity.this,GoodDetailActivity.class));
+                                }
+                            });
+                        }
+                    }
+                });
     }
 
-    private class ShopAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class ShopAdapter extends BaseQuickAdapter<GoodListBean.DataEntity, BaseViewHolder> {
 
-        public ShopAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public ShopAdapter(@LayoutRes int layoutResId, @Nullable List<GoodListBean.DataEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, GoodListBean.DataEntity item) {
             ImageView iv_insertcar=helper.getView(R.id.iv_insertcar);
             iv_insertcar.setOnClickListener(new View.OnClickListener() {
                 @Override

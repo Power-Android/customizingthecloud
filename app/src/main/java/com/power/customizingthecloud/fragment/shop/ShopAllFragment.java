@@ -37,6 +37,7 @@ import com.power.customizingthecloud.fragment.home.top.MiaoShaActivity;
 import com.power.customizingthecloud.fragment.shop.bean.ShopAllBean;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
+import com.power.customizingthecloud.utils.CommonUtils;
 import com.power.customizingthecloud.utils.MyUtils;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.Urls;
@@ -203,10 +204,14 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_newproduct_more:
-                startActivity(new Intent(mContext, GoodListActivity.class));
+                Intent intent = new Intent(mContext, GoodListActivity.class);
+                intent.putExtra("type","new");
+                startActivity(intent);
                 break;
             case R.id.iv_hotproduct_more:
-                startActivity(new Intent(mContext, GoodListActivity.class));
+                Intent intent1 = new Intent(mContext, GoodListActivity.class);
+                intent1.putExtra("type","hot");
+                startActivity(intent1);
                 break;
             case R.id.iv_miaosha_more:
                 startActivity(new Intent(mContext, MiaoShaActivity.class));
@@ -239,7 +244,7 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, ShopAllBean.DataEntity.NewGoodEntity item) {
+        protected void convert(BaseViewHolder helper, final ShopAllBean.DataEntity.NewGoodEntity item) {
             ImageView iv_insertcar = helper.getView(R.id.iv_insertcar);
             iv_insertcar.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -250,7 +255,7 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                         mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                         return;
                     }
-                    Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
+                    CommonUtils.insertCar(mActivity,item.getId()+"",item.getGood_type());
                 }
             });
             ImageView iv_top = helper.getView(R.id.iv_top);
@@ -271,7 +276,7 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, ShopAllBean.DataEntity.HotGoodEntity item) {
+        protected void convert(BaseViewHolder helper, final ShopAllBean.DataEntity.HotGoodEntity item) {
             ImageView iv_insertcar = helper.getView(R.id.iv_insertcar);
             iv_insertcar.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -282,7 +287,7 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                         mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                         return;
                     }
-                    Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
+                    CommonUtils.insertCar(mActivity,item.getId()+"",item.getGood_type());
                 }
             });
             ImageView iv_top = helper.getView(R.id.iv_top);

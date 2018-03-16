@@ -11,16 +11,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
-import com.power.customizingthecloud.bean.GoodTypeBean;
+import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
+import com.power.customizingthecloud.fragment.shop.bean.GoodTypeListBean;
+import com.power.customizingthecloud.fragment.shop.bean.ShopTypeBean;
 import com.power.customizingthecloud.utils.MyUtils;
+import com.power.customizingthecloud.utils.Urls;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -58,9 +66,9 @@ public class GoodTypeActivity extends BaseActivity implements View.OnClickListen
     TextView mTvContent;
     @BindView(R.id.recycler_content)
     RecyclerView mRecyclerContent;
-    private List<GoodTypeBean> mTypeBeanList=new ArrayList<>();
     private TitleAdapter mTitleAdapter;
     private int scrollPosition;
+    private ContentAdapter mContentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,61 +82,69 @@ public class GoodTypeActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initData() {
-        if (mTypeBeanList==null || mTypeBeanList.size()==0){
-            mTypeBeanList.add(new GoodTypeBean("生鲜系列"));
-            mTypeBeanList.add(new GoodTypeBean("养生系列"));
-            mTypeBeanList.add(new GoodTypeBean("农特产品"));
-            mTypeBeanList.add(new GoodTypeBean("休闲食品"));
-            mTypeBeanList.add(new GoodTypeBean("大单预定"));
-            mTypeBeanList.add(new GoodTypeBean("VIP私人定制专享"));
-            mTypeBeanList.add(new GoodTypeBean("成为会员"));
-        }
-        mTypeBeanList.get(0).setChecked(true);
+        final List<ShopTypeBean.DataEntity.SeriesClassEntity> data=
+                (List<ShopTypeBean.DataEntity.SeriesClassEntity>) getIntent().getSerializableExtra("data");
+        mRecyclerContent.setLayoutManager(new GridLayoutManager(this,3));
         mRecyclerTitle.setLayoutManager(new LinearLayoutManager(this));
-        mTitleAdapter = new TitleAdapter(R.layout.good_title_item,mTypeBeanList);
+        data.get(0).setChecked(true);
+        mTitleAdapter = new TitleAdapter(R.layout.good_title_item,data);
         mRecyclerTitle.setAdapter(mTitleAdapter);
+        changeRightData(data.get(0).getId()+"");
         mTitleAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                mTypeBeanList.get(scrollPosition).setChecked(false);
+                data.get(scrollPosition).setChecked(false);
                 scrollPosition = position;
-                mTypeBeanList.get(scrollPosition).setChecked(true);
+                data.get(scrollPosition).setChecked(true);
                 mTitleAdapter.notifyDataSetChanged();
-                switchData(mTypeBeanList.get(position).getName());
+                switchData(data.get(position).getName());
+                changeRightData(data.get(position).getId()+"");
             }
         });
-        List<String> list=new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        ContentAdapter contentAdapter=new ContentAdapter(R.layout.item_goodcontent,list);
-        mRecyclerContent.setLayoutManager(new GridLayoutManager(this,3));
-        mRecyclerContent.setAdapter(contentAdapter);
-        contentAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(GoodTypeActivity.this, GoodDetailActivity.class));
-            }
-        });
+    }
+
+    private void changeRightData(String id){
+        HttpParams params = new HttpParams();
+        params.put("id", id);
+        params.put("after", "");
+        params.put("limit", "10");
+        OkGo.<GoodTypeListBean>get(Urls.BASEURL + "api/v2/good/series-list")
+                .tag(this)
+                .params(params)
+                .execute(new DialogCallback<GoodTypeListBean>(GoodTypeActivity.this, GoodTypeListBean.class) {
+                    @Override
+                    public void onSuccess(Response<GoodTypeListBean> response) {
+                        GoodTypeListBean listBean = response.body();
+                        int code = listBean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, listBean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            List<GoodTypeListBean.DataEntity> rightData = listBean.getData();
+                            mContentAdapter = new ContentAdapter(R.layout.item_goodcontent,rightData);
+                            mRecyclerContent.setAdapter(mContentAdapter);
+                            mContentAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                    startActivity(new Intent(GoodTypeActivity.this, GoodDetailActivity.class));
+                                }
+                            });
+                        }
+                    }
+                });
     }
 
     private void switchData(String name) {
         mTvContent.setText(name);
     }
 
-    class TitleAdapter extends BaseQuickAdapter<GoodTypeBean, BaseViewHolder> {
+    class TitleAdapter extends BaseQuickAdapter<ShopTypeBean.DataEntity.SeriesClassEntity, BaseViewHolder> {
 
-        public TitleAdapter(@LayoutRes int layoutResId, @Nullable List<GoodTypeBean> data) {
+        public TitleAdapter(@LayoutRes int layoutResId, @Nullable List<ShopTypeBean.DataEntity.SeriesClassEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(final BaseViewHolder helper, final GoodTypeBean item) {
+        protected void convert(final BaseViewHolder helper, final ShopTypeBean.DataEntity.SeriesClassEntity item) {
             helper.setText(R.id.tv_title, item.getName());
             TextView tv = helper.getView(R.id.tv_title);
             if (item.isChecked()) {
@@ -141,20 +157,21 @@ public class GoodTypeActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    class ContentAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    class ContentAdapter extends BaseQuickAdapter<GoodTypeListBean.DataEntity, BaseViewHolder> {
 
-        public ContentAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public ContentAdapter(@LayoutRes int layoutResId, @Nullable List<GoodTypeListBean.DataEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
-            helper.setText(R.id.tv_jiankong,"精品驴奶粉");
+        protected void convert(BaseViewHolder helper, GoodTypeListBean.DataEntity item) {
             ImageView iv_top=helper.getView(R.id.iv_top);
             int width = MyUtils.getScreenWidth(mContext)*3/4 - MyUtils.dip2px(mContext, 25);
             ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
             layoutParams.height=width/3;
             iv_top.setLayoutParams(layoutParams);
+            Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_top);
+            helper.setText(R.id.tv_title, item.getName());
         }
     }
 

@@ -15,8 +15,6 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.math.BigInteger;
@@ -76,7 +74,6 @@ public class MyUtils {
 
     /*将日期转为时间戳*/
     public static long getStringToDate(String time) {
-        //        String timestamp = String.format("%010d", stringToDate);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
         Date date = new Date();
         try {
@@ -84,7 +81,6 @@ public class MyUtils {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
         return date.getTime();
     }
 
@@ -141,17 +137,12 @@ public class MyUtils {
     }
 
     //正则6-16位数字或字母
-    public static boolean isPassMobileNO(String mobiles) {
+    public static boolean isPswRuleNO(String mobiles) {
         Pattern p = Pattern
                 .compile("^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$");
         Matcher m = p.matcher(mobiles);
         System.out.println(m.matches() + "---");
         return m.matches();
-    }
-
-    //写这个方法主要是想当发布release版本的时候不会输出日志
-    public static void syso(String str) {
-        System.out.print(str);
     }
 
     public static int getScreenWidth(Context context) {
@@ -176,7 +167,6 @@ public class MyUtils {
 
     //得到此设备的设备信息，这里用到的是方便进行友盟的集成测试
     public static String getDeviceInfo(Context context) {
-        JSONObject jsonObject = new JSONObject();
         TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         String deviceId = manager.getDeviceId();
         return deviceId;

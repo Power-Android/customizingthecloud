@@ -12,17 +12,23 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.GoodListActivity;
+import com.power.customizingthecloud.fragment.shop.bean.QuanListBean;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -68,38 +74,54 @@ public class QuanListActivity extends BaseActivity implements View.OnClickListen
         mTitleBackIv.setVisibility(View.VISIBLE);
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("代金券");
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
         mRecyclerQuan.setLayoutManager(new LinearLayoutManager(this));
-        mQuanAdapter = new QuanAdapter(R.layout.item_daijinquan, list);
-        mRecyclerQuan.setAdapter(mQuanAdapter);
+        HttpParams params = new HttpParams();
+        params.put("after", "");
+        params.put("limit", "10");
+        OkGo.<QuanListBean>get(Urls.BASEURL + "api/v2/voucher-template-list")
+                .tag(this)
+                .params(params)
+                .execute(new DialogCallback<QuanListBean>(QuanListActivity.this, QuanListBean.class) {
+                    @Override
+                    public void onSuccess(Response<QuanListBean> response) {
+                        QuanListBean listBean = response.body();
+                        int code = listBean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, listBean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            List<QuanListBean.DataEntity> data = listBean.getData();
+                            mQuanAdapter = new QuanAdapter(R.layout.item_daijinquan, data);
+                            mRecyclerQuan.setAdapter(mQuanAdapter);
+                        }
+                    }
+                });
     }
 
-    private class QuanAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class QuanAdapter extends BaseQuickAdapter<QuanListBean.DataEntity, BaseViewHolder> {
 
-        public QuanAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public QuanAdapter(@LayoutRes int layoutResId, @Nullable List<QuanListBean.DataEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, QuanListBean.DataEntity item) {
             TextView tv_lingqu = helper.getView(R.id.tv_lingqu);
             tv_lingqu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String userid = SpUtils.getString(mContext, "userid", "");
-                    if (TextUtils.isEmpty(userid)){
+                    if (TextUtils.isEmpty(userid)) {
                         startActivity(new Intent(mContext, LoginActivity.class));
-                        overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                        overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                         return;
                     }
                     showLingquDialog();
                 }
             });
+            helper.setText(R.id.item_money_tv,item.getPrice()+"")
+                    .setText(R.id.item_man_jian_tv,"满￥"+item.getOrder_limit()+"使用")
+                    .setText(R.id.item_name_tv,item.getTitle())
+                    .setText(R.id.item_date_tv,"使用期限："+item.getStart_date()+"-"+item.getEnd_date());
         }
     }
 

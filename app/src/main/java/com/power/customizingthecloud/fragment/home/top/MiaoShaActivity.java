@@ -10,14 +10,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.MiaoShaDetailActivity;
+import com.power.customizingthecloud.fragment.shop.bean.MiaoListBean;
+import com.power.customizingthecloud.utils.Urls;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -50,36 +58,55 @@ public class MiaoShaActivity extends BaseActivity implements View.OnClickListene
         mTitleBackIv.setVisibility(View.VISIBLE);
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("限量秒杀");
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
         mRecyclerMiaosha.setLayoutManager(new LinearLayoutManager(mContext));
-        mMiaoshaAdapter = new MiaoshaAdapter(R.layout.item_home_miaosha,list);
-        mRecyclerMiaosha.setAdapter(mMiaoshaAdapter);
-        mMiaoshaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(MiaoShaActivity.this, MiaoShaDetailActivity.class));
-            }
-        });
+        HttpParams params = new HttpParams();
+        params.put("page", "1");
+        params.put("limit", "10");
+        OkGo.<MiaoListBean>get(Urls.BASEURL + "api/v2/good/seckill-good-list")
+                .tag(this)
+                .params(params)
+                .execute(new DialogCallback<MiaoListBean>(MiaoShaActivity.this, MiaoListBean.class) {
+                    @Override
+                    public void onSuccess(Response<MiaoListBean> response) {
+                        MiaoListBean miaoListBean = response.body();
+                        int code = miaoListBean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, miaoListBean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            List<MiaoListBean.DataEntity> data = miaoListBean.getData();
+                            mMiaoshaAdapter = new MiaoshaAdapter(R.layout.item_home_miaosha,data);
+                            mRecyclerMiaosha.setAdapter(mMiaoshaAdapter);
+                            mMiaoshaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                    startActivity(new Intent(MiaoShaActivity.this, MiaoShaDetailActivity.class));
+                                }
+                            });
+                        }
+                    }
+                });
     }
 
-    private class MiaoshaAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class MiaoshaAdapter extends BaseQuickAdapter<MiaoListBean.DataEntity, BaseViewHolder> {
 
-        public MiaoshaAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public MiaoshaAdapter(@LayoutRes int layoutResId, @Nullable List<MiaoListBean.DataEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, MiaoListBean.DataEntity item) {
             TextView tv_yuanjia = helper.getView(R.id.tv_yuanjia);
+            tv_yuanjia.setText(item.getPrice());
             //添加删除线
             tv_yuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-            CountdownView cv_countdownView=helper.getView(R.id.cv_countdownView);
-            cv_countdownView.start(10000000); // Millisecond
+            CountdownView cv_countdownView = helper.getView(R.id.cv_countdownView);
+            int time = item.getSeckill_end_time() - item.getSeckill_start_time();
+            cv_countdownView.start(time); // Millisecond
+            ImageView iv_img = helper.getView(R.id.iv_image);
+            Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_img);
+            helper.setText(R.id.tv_title, item.getName())
+                    .setText(R.id.tv_curprice, item.getSeckill_price())
+                    .setText(R.id.tv_last_count, item.getSeckill_storage() + "");
         }
     }
 
