@@ -13,10 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseFragment;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.fragment.shop.bean.ShopTypeBean;
+import com.power.customizingthecloud.utils.Urls;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +64,8 @@ public class ShopFragment extends BaseFragment implements View.OnClickListener {
     Unbinder unbinder;
     private List<Fragment> mFragmentList = new ArrayList<>();
     private MyTabAdapter mAdapter;
+    private List<String> nameList = new ArrayList<>();
+    private List<ShopTypeBean.DataEntity.SeriesClassEntity> mSeries_class;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,19 +87,47 @@ public class ShopFragment extends BaseFragment implements View.OnClickListener {
         mTitleListIv.setOnClickListener(this);
         mTitleSearchIv.setVisibility(View.VISIBLE);
         mTitleSearchIv.setOnClickListener(this);
-        if (mFragmentList.size() == 0) {
-            mFragmentList.add(new ShopAllFragment());
-            mFragmentList.add(new MeatFragment());
-            mFragmentList.add(new ShopMiaoFragment());
-            mFragmentList.add(new PinPaiFragment());
-            mFragmentList.add(new TeChanFragment());
-            mFragmentList.add(new BaoJianFragment());
-        }
-        mTablayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        mAdapter = new MyTabAdapter(getChildFragmentManager(), mFragmentList);
-        mViewpager.setAdapter(mAdapter);
-        mTablayout.setupWithViewPager(mViewpager);
-        //        mViewpager.setOffscreenPageLimit(3);//缓存3个界面
+        OkGo.<ShopTypeBean>get(Urls.BASEURL + "api/v2/good/class")
+                .tag(this)
+                .execute(new DialogCallback<ShopTypeBean>(mActivity, ShopTypeBean.class) {
+                    @Override
+                    public void onSuccess(Response<ShopTypeBean> response) {
+                        ShopTypeBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            ShopTypeBean.DataEntity data = bean.getData();
+                            List<ShopTypeBean.DataEntity.GoodClassEntity> good_class = data.getGood_class();
+                            if (mFragmentList.size() == 0) {
+                                mFragmentList.add(new ShopAllFragment());
+                                nameList.add("全部");
+                                MeatFragment meatFragment = new MeatFragment();
+                                Bundle bundle = new Bundle();
+                                bundle.putString("id", good_class.get(0).getId() + "");
+                                meatFragment.setArguments(bundle);
+                                mFragmentList.add(meatFragment);
+                                nameList.add(good_class.get(0).getName());
+                                mFragmentList.add(new ShopMiaoFragment());
+                                nameList.add("秒杀");
+                                for (int i = 1; i < 4; i++) {
+                                    PinPaiFragment pinPaiFragment = new PinPaiFragment();
+                                    Bundle bundle2 = new Bundle();
+                                    bundle2.putString("id", good_class.get(i).getId() + "");
+                                    pinPaiFragment.setArguments(bundle2);
+                                    mFragmentList.add(pinPaiFragment);
+                                    nameList.add(good_class.get(i).getName());
+                                }
+                            }
+                            mTablayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+                            mAdapter = new MyTabAdapter(getChildFragmentManager(), mFragmentList);
+                            mViewpager.setAdapter(mAdapter);
+                            mTablayout.setupWithViewPager(mViewpager);
+                            mViewpager.setOffscreenPageLimit(3);//缓存3个界面
+                            mSeries_class = data.getSeries_class();
+                        }
+                    }
+                });
     }
 
     public class MyTabAdapter extends FragmentPagerAdapter {
@@ -105,6 +142,9 @@ public class ShopFragment extends BaseFragment implements View.OnClickListener {
         //别忘了这个方法一定要有
         @Override
         public CharSequence getPageTitle(int position) {
+            if (nameList != null) {
+                return nameList.get(position);
+            }
             return title[position];
         }
 
@@ -130,10 +170,14 @@ public class ShopFragment extends BaseFragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.title_list_iv:
-                startActivity(new Intent(mContext,GoodTypeActivity.class));
+                if (mSeries_class != null && mSeries_class.size() > 0) {
+                    Intent intent = new Intent(mContext, GoodTypeActivity.class);
+                    intent.putExtra("data", (Serializable) mSeries_class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.title_search_iv:
-                startActivity(new Intent(mContext,SearchActivity.class));
+                startActivity(new Intent(mContext, SearchActivity.class));
                 break;
         }
     }
