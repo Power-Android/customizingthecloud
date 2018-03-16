@@ -28,6 +28,7 @@ import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
 import com.power.customizingthecloud.fragment.shop.bean.PinPaiBean;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
+import com.power.customizingthecloud.utils.CommonUtils;
 import com.power.customizingthecloud.utils.MyUtils;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.Urls;
@@ -142,7 +143,7 @@ public class PinPaiFragment extends BaseFragment implements View.OnClickListener
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, PinPaiBean.DataEntity.GoodsEntity item) {
+        protected void convert(BaseViewHolder helper, final PinPaiBean.DataEntity.GoodsEntity item) {
             ImageView iv_insertcar=helper.getView(R.id.iv_insertcar);
             iv_insertcar.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -153,7 +154,8 @@ public class PinPaiFragment extends BaseFragment implements View.OnClickListener
                         mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
                         return;
                     }
-                    Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
+                    CommonUtils.insertCar(mActivity,item.getId()+"",item.getGood_type());
                 }
             });
             ImageView iv_top=helper.getView(R.id.iv_top);

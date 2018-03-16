@@ -1,8 +1,17 @@
 package com.power.customizingthecloud.utils;
 
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
+import android.widget.Toast;
+
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.login.bean.RegisterBean;
 
 /**
  * date : ${Date}
@@ -28,5 +37,29 @@ public class CommonUtils {
         }
 
         return drawable;
+    }
+
+    public static void insertCar(final Activity mActivity, String good_id, String good_type) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mActivity, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("good_id", good_id);
+        params.put("good_type", good_type);
+        params.put("good_num", "1");
+        OkGo.<RegisterBean>post(Urls.BASEURL + "api/v2/cart/add")
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<RegisterBean>(mActivity, RegisterBean.class) {
+                    @Override
+                    public void onSuccess(Response<RegisterBean> response) {
+                        RegisterBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mActivity, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            Toast.makeText(mActivity, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }
