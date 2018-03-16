@@ -203,10 +203,14 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_newproduct_more:
-                startActivity(new Intent(mContext, GoodListActivity.class));
+                Intent intent = new Intent(mContext, GoodListActivity.class);
+                intent.putExtra("type","new");
+                startActivity(intent);
                 break;
             case R.id.iv_hotproduct_more:
-                startActivity(new Intent(mContext, GoodListActivity.class));
+                Intent intent1 = new Intent(mContext, GoodListActivity.class);
+                intent1.putExtra("type","hot");
+                startActivity(intent1);
                 break;
             case R.id.iv_miaosha_more:
                 startActivity(new Intent(mContext, MiaoShaActivity.class));
