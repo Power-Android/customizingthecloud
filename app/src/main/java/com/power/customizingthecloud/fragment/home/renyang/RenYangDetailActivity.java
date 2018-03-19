@@ -262,6 +262,14 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                 startActivity(intent);
             }
         });
+        mDialog.getView(R.id.view_lastline).setVisibility(View.VISIBLE);
+        mDialog.getView(R.id.ll_zhuanzhang).setVisibility(View.VISIBLE);
+        mDialog.getView(R.id.tv_zhuanzhang).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RenYangDetailActivity.this,ZhuanZhangActivity.class));
+            }
+        });
         final CheckBox cb_alipay = mDialog.getView(R.id.cb_alipay);
         final CheckBox cb_weixin = mDialog.getView(R.id.cb_weixin);
         final CheckBox cb_yinlian = mDialog.getView(R.id.cb_yinlian);
