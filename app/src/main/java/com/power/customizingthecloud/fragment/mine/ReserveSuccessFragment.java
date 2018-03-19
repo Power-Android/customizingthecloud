@@ -26,6 +26,7 @@ import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.TUtils;
 import com.power.customizingthecloud.utils.Urls;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +78,9 @@ public class ReserveSuccessFragment extends BaseFragment {
                                 public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                                     switch (view.getId()){
                                         case R.id.content_rl:
-                                            startActivity(new Intent(mContext, ShopDetailActivity.class));
+                                            Intent intent = new Intent(mContext, ReserveDetailActivity.class);
+                                            intent.putExtra("detail", (Serializable) list.get(position));
+                                            startActivity(intent);
                                             break;
                                         case R.id.shachu_tv:
                                             TUtils.showShort(mContext,"点击了---删除"+position);
