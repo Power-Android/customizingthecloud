@@ -38,4 +38,11 @@
         android:layout_below="@+id/item_money_tv"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/backgourd"
+        android:layout_below="@+id/item_face_iv"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
 </RelativeLayout>

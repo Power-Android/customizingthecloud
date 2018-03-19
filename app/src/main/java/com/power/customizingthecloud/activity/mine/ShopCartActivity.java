@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import com.orhanobut.logger.Logger;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.ShopcartBean;
+import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
 import com.power.customizingthecloud.listener.SnappingStepperValueChangeListener;
 import com.power.customizingthecloud.view.SnappingStepper;
 
@@ -28,7 +30,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ShopCartActivity extends BaseActivity implements View.OnClickListener, BaseQuickAdapter.OnItemChildClickListener {
+public class ShopCartActivity extends BaseActivity implements View.OnClickListener, BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener {
 
     @BindView(R.id.title_back_iv) ImageView titleBackIv;
     @BindView(R.id.title_content_tv) TextView titleContentTv;
@@ -74,6 +76,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
         adapter = new ShopCartAdapter(R.layout.item_shop_cart, list);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemChildClickListener(this);
+        adapter.setOnItemClickListener(this);
         allCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,6 +123,11 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
                 adapter.notifyDataSetChanged();
             }
         }
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        startActivity(new Intent(mContext, GoodDetailActivity.class));
     }
 
     private class ShopCartAdapter extends BaseQuickAdapter<ShopcartBean,BaseViewHolder>{

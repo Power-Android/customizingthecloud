@@ -10,8 +10,8 @@
         android:padding="15dp">
         <com.power.customizingthecloud.view.CircleImageView
             android:id="@+id/item_face_iv"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/face"/>
         <TextView
             android:id="@+id/item_name_tv"
@@ -20,13 +20,13 @@
             android:text="豆沙包"
             android:textColor="@color/text_black"
             android:layout_toRightOf="@+id/item_face_iv"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="12dp"
             android:layout_marginLeft="10dp"/>
         <TextView
             android:id="@+id/item_content_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:padding="5dp"
             android:background="@color/gray1"
             android:text="评论：小伙，拍照技术不错"
             android:layout_below="@+id/item_name_tv"
@@ -37,8 +37,8 @@
             android:layout_marginLeft="10dp"/>
         <ImageView
             android:id="@+id/item_pic_iv"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/face"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>

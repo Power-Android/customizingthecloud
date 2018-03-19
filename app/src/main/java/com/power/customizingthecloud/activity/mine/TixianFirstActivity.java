@@ -56,7 +56,7 @@ public class TixianFirstActivity extends BaseActivity implements View.OnClickLis
                 SendSmsTimerUtils.sendSms(getcodeTv, R.color.green, R.color.green);
                 break;
             case R.id.jump_tv:
-                startActivity(new Intent(mContext,TixianSecondActivity.class));
+                startActivity(new Intent(mContext,TixianThreeActivity.class));
                 break;
         }
     }
