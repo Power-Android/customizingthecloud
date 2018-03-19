@@ -8,11 +8,12 @@
               android:orientation="horizontal"
               android:padding="15dp">
     <com.power.customizingthecloud.view.CircleImageView
+        android:id="@+id/iv_head"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/face"/>
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:orientation="vertical">
@@ -92,10 +93,10 @@
             android:layout_height="wrap_content"
             android:background="@drawable/friend_chat_bg"
             android:orientation="vertical"
-            android:paddingBottom="5dp"
             android:paddingTop="15dp">
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_likeperson"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:drawableLeft="@drawable/ganji_like"

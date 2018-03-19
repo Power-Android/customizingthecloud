@@ -8,19 +8,31 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.compress.Luban;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.adapter.GridViewAddImgesAdpter;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.fragment.market.bean.UploadPhotoBean;
+import com.power.customizingthecloud.login.bean.RegisterBean;
+import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.MyGridView;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalSelectionDialog;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +75,7 @@ public class FaDongTaiActivity extends BaseActivity implements View.OnClickListe
     private List<LocalMedia> selectList = new ArrayList<>();
     private List<String> cameraList;
     private GridViewAddImgesAdpter addImgesAdpter;
+    private List<UploadPhotoBean.DataEntity> jsonList=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,11 +106,12 @@ public class FaDongTaiActivity extends BaseActivity implements View.OnClickListe
                 showCamera();
             }
         });
+        //用户在其他界面选择拍照进入此activity然后直接跳转进入相册界面
         String type = getIntent().getStringExtra("type");
-        if (!TextUtils.isEmpty(type)){
-            if (type.equals("photo")){
+        if (!TextUtils.isEmpty(type)) {
+            if (type.equals("photo")) {
                 requestPhoto();
-            }else if (type.equals("camera")){
+            } else if (type.equals("camera")) {
                 requestCamera();
             }
         }
@@ -212,8 +226,67 @@ public class FaDongTaiActivity extends BaseActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.title_content_right_tv:
-                finish();
+                commit();
                 break;
         }
+    }
+
+    private void commit() {
+        jsonList.clear();
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        if (listAll.size() > 0) {
+            for (int i = 0; i < listAll.size(); i++) {
+                String path = listAll.get(i).getPath();
+                File file = new File(path);
+                HttpParams params = new HttpParams();
+                params.put("file", file);
+                final int finalI = i;
+                OkGo.<UploadPhotoBean>post(Urls.BASEURL + "api/v2/file/store")
+                        .headers(headers)
+                        .params(params)
+                        .execute(new DialogCallback<UploadPhotoBean>(FaDongTaiActivity.this, UploadPhotoBean.class) {
+                            @Override
+                            public void onSuccess(Response<UploadPhotoBean> response) {
+                                UploadPhotoBean photoBean = response.body();
+                                int code = photoBean.getCode();
+                                if (code == 0) {
+                                    Toast.makeText(FaDongTaiActivity.this, photoBean.getMessage(), Toast.LENGTH_SHORT).show();
+                                } else if (code == 1) {
+                                    UploadPhotoBean.DataEntity data = photoBean.getData();
+                                    jsonList.add(data);
+                                    if (finalI ==listAll.size()-1){
+                                        //图片全部上传完毕，下面发布动态
+                                        goDongTai(mContentEt.getText().toString(),new Gson().toJson(jsonList));
+                                    }
+                                }
+                            }
+                        });
+            }
+        }
+    }
+
+    private void goDongTai(String s, String s1) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("content", s);
+        params.put("images", s1);
+        OkGo.<RegisterBean>post(Urls.BASEURL + "api/v2/feed/store")
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<RegisterBean>(FaDongTaiActivity.this, RegisterBean.class) {
+                    @Override
+                    public void onSuccess(Response<RegisterBean> response) {
+                        RegisterBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(FaDongTaiActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            Toast.makeText(FaDongTaiActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    }
+                });
     }
 }

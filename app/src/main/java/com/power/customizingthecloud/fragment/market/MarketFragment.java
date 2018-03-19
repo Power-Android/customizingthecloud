@@ -24,14 +24,25 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.MyMessageActivity;
 import com.power.customizingthecloud.base.BaseFragment;
-import com.power.customizingthecloud.bean.NineGridTestModel;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.fragment.market.bean.CircleHomeBean;
+import com.power.customizingthecloud.login.bean.RegisterBean;
 import com.power.customizingthecloud.utils.SoftKeyboardTool;
+import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.BaseSelectPopupWindow;
 import com.power.customizingthecloud.view.CircleImageView;
@@ -83,19 +94,9 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
     @BindView(R.id.iv_photo)
     ImageView iv_photo;
     Unbinder unbinder;
-    private List<NineGridTestModel> mList = new ArrayList<>();
-    private String[] mUrls = new String[]{"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=202447557,2967022603&fm=27&gp=0.jpg",
-            "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=104961686,3757525983&fm=27&gp=0.jpg",
-            "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=569334953,1638673400&fm=27&gp=0.jpg",
-            "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2043305675,3979419376&fm=200&gp=0.jpg",
-            "http://img5.imgtn.bdimg.com/it/u=266745161,658804068&fm=27&gp=0.jpg",
-            "http://img5.imgtn.bdimg.com/it/u=222615259,2947254622&fm=27&gp=0.jpg",
-            "http://img1.imgtn.bdimg.com/it/u=950771854,530317119&fm=27&gp=0.jpg",
-            "http://img2.imgtn.bdimg.com/it/u=2557022909,3736713361&fm=27&gp=0.jpg",
-            "http://img2.imgtn.bdimg.com/it/u=1830359176,654163576&fm=200&gp=0.jpg",
-            "http://img4.imgtn.bdimg.com/it/u=4193964417,1586871857&fm=27&gp=0.jpg",
-    };
     private BaseSelectPopupWindow popWiw;// 昵称 编辑框
+    private boolean mIsLike;
+    private MyAdapter mMyAdapter;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -118,106 +119,143 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void initData() {
-        NineGridTestModel model1 = new NineGridTestModel();
-        model1.urlList.add(mUrls[0]);
-        mList.add(model1);
-
-        NineGridTestModel model2 = new NineGridTestModel();
-        model2.urlList.add(mUrls[0]);
-        model2.urlList.add(mUrls[1]);
-        mList.add(model2);
-
-        //        NineGridTestModel model4 = new NineGridTestModel();
-        //        for (int i = 0; i < mUrls.length; i++) {
-        //            model4.urlList.add(mUrls[i]);
-        //        }
-        //        model4.isShowAll = false;
-        //        mList.add(model4);
-        //
-        //        NineGridTestModel model5 = new NineGridTestModel();
-        //        for (int i = 0; i < mUrls.length; i++) {
-        //            model5.urlList.add(mUrls[i]);
-        //        }
-        //        model5.isShowAll = true;//显示全部图片
-        //        mList.add(model5);
-
-        NineGridTestModel model6 = new NineGridTestModel();
-        for (int i = 0; i < 9; i++) {
-            model6.urlList.add(mUrls[i]);
-        }
-        mList.add(model6);
-
-        NineGridTestModel model7 = new NineGridTestModel();
-        for (int i = 3; i < 7; i++) {
-            model7.urlList.add(mUrls[i]);
-        }
-        mList.add(model7);
-
-        NineGridTestModel model8 = new NineGridTestModel();
-        for (int i = 3; i < 6; i++) {
-            model8.urlList.add(mUrls[i]);
-        }
-        mList.add(model8);
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mActivity, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("after", "");
+        OkGo.<CircleHomeBean>get(Urls.BASEURL + "api/v2/feed")
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<CircleHomeBean>(mActivity, CircleHomeBean.class) {
+                    @Override
+                    public void onSuccess(Response<CircleHomeBean> response) {
+                        CircleHomeBean circleHomeBean = response.body();
+                        int code = circleHomeBean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mActivity, circleHomeBean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            CircleHomeBean.DataEntity data = circleHomeBean.getData();
+                            CircleHomeBean.DataEntity.UserEntity user = data.getUser();
+                            mTvName.setText(user.getUser_name());
+                            Glide.with(MyApplication.getGloableContext()).load(user.getUser_avatar()).into(mIvHead);
+                            List<CircleHomeBean.DataEntity.FeedEntity> feed = data.getFeed();
+                            if (feed != null && feed.size() > 0) {
+                                mMyAdapter = new MyAdapter(R.layout.item_circle_friend, feed);
+                                mRecycler.setAdapter(mMyAdapter);
+                            }
+                        }
+                    }
+                });
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initData();
         mRecycler.setLayoutManager(new LinearLayoutManager(mContext));
         mRecycler.setNestedScrollingEnabled(false);
-        MyAdapter myAdapter = new MyAdapter(R.layout.item_circle_friend, mList);
-        mRecycler.setAdapter(myAdapter);
+        initData();
     }
 
-    private class MyAdapter extends BaseQuickAdapter<NineGridTestModel, BaseViewHolder> {
+    private class MyAdapter extends BaseQuickAdapter<CircleHomeBean.DataEntity.FeedEntity, BaseViewHolder> {
 
-        public MyAdapter(@LayoutRes int layoutResId, @Nullable List<NineGridTestModel> data) {
+        public MyAdapter(@LayoutRes int layoutResId, @Nullable List<CircleHomeBean.DataEntity.FeedEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(final BaseViewHolder helper, NineGridTestModel item) {
+        protected void convert(final BaseViewHolder helper, final CircleHomeBean.DataEntity.FeedEntity item) {
             NineGridTestLayout nineGridlayout = helper.getView(R.id.nine_gridlayout);
-            nineGridlayout.setIsShowAll(mList.get(helper.getAdapterPosition()).isShowAll);
-            nineGridlayout.setUrlList(mList.get(helper.getAdapterPosition()).urlList);
-            final RecyclerView recycler_chat = helper.getView(R.id.recycler_chat);
-            recycler_chat.setLayoutManager(new LinearLayoutManager(mContext));
-            recycler_chat.setNestedScrollingEnabled(false);
-            List<String> list = new ArrayList<>();
-            list.add("");
-            list.add("");
-            ChatAdapter chatAdapter = new ChatAdapter(R.layout.item_market_chat, list);
-            recycler_chat.setAdapter(chatAdapter);
-            chatAdapter.setOnItemClickListener(new OnItemClickListener() {
-                @Override
-                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    showCommentPopWindow(view);
-                }
-            });
+            nineGridlayout.setIsShowAll(true);
+            final List<CircleHomeBean.DataEntity.FeedEntity.ImagesEntity> images = item.getImages();
+            List<String> imgList = new ArrayList<>();
+            for (int i = 0; i < images.size(); i++) {
+                imgList.add(images.get(i).getFileurl());
+            }
+            nineGridlayout.setUrlList(imgList);
             final ImageView iv_like = helper.getView(R.id.iv_like);
-            if (item.isLike()) {
+            List<CircleHomeBean.DataEntity.FeedEntity.LikesEntity> likes = item.getLikes();
+            StringBuilder builder = new StringBuilder();
+            String userid = SpUtils.getString(mContext, "userid", "");
+            for (int i = 0; i < likes.size(); i++) {
+                if (i == likes.size() - 1) {
+                    builder.append(likes.get(i).getUser_name());
+                } else {
+                    builder.append(likes.get(i).getUser_name() + ",");
+                }
+                if (!TextUtils.isEmpty(userid) && userid.equals(likes.get(i).getId() + "")) {
+                    mIsLike = true;
+                }
+            }
+            if (mIsLike) {
                 iv_like.setImageResource(R.drawable.ganji_like3);
             } else {
                 iv_like.setImageResource(R.drawable.ganji_like2);
             }
+            ImageView iv_head = helper.getView(R.id.iv_head);
+            Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into(iv_head);
+            helper.setText(R.id.tv_name, item.getUser_name())
+                    .setText(R.id.tv_time, item.getUpdated_at())
+                    .setText(R.id.tv_content, item.getFeed_content())
+                    .setText(R.id.tv_likeperson, builder.toString());
+
+            final RecyclerView recycler_chat = helper.getView(R.id.recycler_chat);
+            recycler_chat.setLayoutManager(new LinearLayoutManager(mContext));
+            recycler_chat.setNestedScrollingEnabled(false);
+            final List<CircleHomeBean.DataEntity.FeedEntity.CommentsEntity> comments = item.getComments();
+            ChatAdapter chatAdapter = new ChatAdapter(R.layout.item_market_chat, comments);
+            recycler_chat.setAdapter(chatAdapter);
+            chatAdapter.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                    showCommentPopWindow(view, item.getId() + "", comments.get(position).getReply_user()+"");
+                }
+            });
             helper.getView(R.id.ll_like).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mList.get(helper.getAdapterPosition()).setLike(!mList.get(helper.getAdapterPosition()).isLike());
-                    notifyDataSetChanged();
+                    changeLike(item.getId() + "");
                 }
             });
             helper.getView(R.id.ll_pinglun).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showCommentPopWindow(v);
+                    showCommentPopWindow(v,item.getId()+"","");
                 }
             });
         }
     }
 
-    private void showCommentPopWindow(View view) {
+    private void changeLike(String s) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("feed_id", s);
+        String url="";
+        if (mIsLike){
+            url=Urls.BASEURL + "api/v2/feed/unlike";
+        }else {
+            url=Urls.BASEURL + "api/v2/feed/like";
+        }
+        OkGo.<RegisterBean>get(url)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<RegisterBean>(mActivity, RegisterBean.class) {
+                    @Override
+                    public void onSuccess(Response<RegisterBean> response) {
+                        RegisterBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mActivity, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            Toast.makeText(mActivity, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                            mIsLike = !mIsLike;//手动设置，不用再请求一次网络
+                            mMyAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+    }
+
+    private void showCommentPopWindow(View view, final String feed_id, final String reply_user) {
         if (popWiw == null) {
             popWiw = new BaseSelectPopupWindow(mContext, R.layout.edit_data);
             // popWiw.setOpenKeyboard(true);
@@ -226,9 +264,9 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             popWiw.setShowTitle(false);
         }
         popWiw.setFocusable(true);
-//        InputMethodManager im = (InputMethodManager)
-//                mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-//        im.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        //        InputMethodManager im = (InputMethodManager)
+        //                mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        //        im.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
         SoftKeyboardTool.showSoftKeyboard(view);
         final ImageView send = (ImageView) popWiw.getContentView().findViewById(R.id.query_iv);
         final EditText edt = (EditText) popWiw.getContentView().findViewById(R.id.edt_content);
@@ -262,6 +300,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(edt.getText().toString().trim())) {
                     String content = edt.getText().toString().trim();
+                    sendComment(feed_id,content,reply_user);
                     popWiw.dismiss();
                 }
             }
@@ -276,19 +315,58 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                 | Gravity.CENTER_HORIZONTAL, 0, 0);
     }
 
-    private class ChatAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private void sendComment(String feed_id, String content, String reply_user) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("feed_id", feed_id);
+        params.put("body", content);
+        if (!TextUtils.isEmpty(reply_user))
+        params.put("reply_user", reply_user);
+        OkGo.<RegisterBean>post(Urls.BASEURL + "api/v2/feed/comments")
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<RegisterBean>(mActivity, RegisterBean.class) {
+                    @Override
+                    public void onSuccess(Response<RegisterBean> response) {
+                        RegisterBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mActivity, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            Toast.makeText(mActivity, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                            initData();
+                        }
+                    }
+                });
+    }
 
-        public ChatAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+    private class ChatAdapter extends BaseQuickAdapter<CircleHomeBean.DataEntity.FeedEntity.CommentsEntity, BaseViewHolder> {
+
+        public ChatAdapter(@LayoutRes int layoutResId, @Nullable List<CircleHomeBean.DataEntity.FeedEntity.CommentsEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(final BaseViewHolder helper, String item) {
+        protected void convert(final BaseViewHolder helper, CircleHomeBean.DataEntity.FeedEntity.CommentsEntity item) {
             TextView tv_content = helper.getView(R.id.tv_content);
-            SpannableString spannableString = new SpannableString("小豆：的撒娇的卡萨京东设计费华科税费低卡拉萨街坊邻居");
-            StyleSpan styleSpan_B = new StyleSpan(Typeface.BOLD);
-            spannableString.setSpan(styleSpan_B, 0, 2, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            tv_content.setText(spannableString);
+            String user_name = item.getUser_name();
+            String reply_name = item.getReply_name();
+            String body = item.getBody();
+            if (TextUtils.isEmpty(reply_name)) {
+                SpannableString spannableString = new SpannableString(user_name + ":" + body);
+                StyleSpan styleSpan_B = new StyleSpan(Typeface.BOLD);
+                spannableString.setSpan(styleSpan_B, 0, user_name.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                tv_content.setText(spannableString);
+            } else {
+                SpannableString spannableString = new SpannableString(user_name + "回复" + reply_name + ":" + body);
+                StyleSpan styleSpan_B = new StyleSpan(Typeface.BOLD);
+                StyleSpan styleSpan_I = new StyleSpan(Typeface.BOLD);
+                spannableString.setSpan(styleSpan_I, 0, user_name.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                spannableString.setSpan(styleSpan_B, user_name.length() + 2, user_name.length() + 2 + reply_name.length()
+                        , Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                tv_content.setText(spannableString);
+            }
         }
     }
 
@@ -336,7 +414,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             public void onClick(View v) {
                 dialog.dismiss();
                 Intent intent = new Intent(mContext, FaDongTaiActivity.class);
-                intent.putExtra("type","photo");
+                intent.putExtra("type", "photo");
                 startActivity(intent);
             }
         });
@@ -345,7 +423,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             public void onClick(View v) {
                 dialog.dismiss();
                 Intent intent = new Intent(mContext, FaDongTaiActivity.class);
-                intent.putExtra("type","camera");
+                intent.putExtra("type", "camera");
                 startActivity(intent);
             }
         });
