@@ -12,7 +12,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.adapter.ProductListAdapter;
 import com.power.customizingthecloud.base.BaseFragment;
-import com.power.customizingthecloud.fragment.home.renyang.detail.RenYangDetailActivity;
+import com.power.customizingthecloud.fragment.home.renyang.RenYangDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;

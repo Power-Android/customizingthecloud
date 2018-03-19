@@ -1,11 +1,10 @@
-package com.power.customizingthecloud.fragment.home.renyang.detail;
+package com.power.customizingthecloud.fragment.home.renyang;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -114,8 +113,6 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
     ImageView mLvXiangqing;
     @BindView(R.id.tv_intro)
     TextView mTvIntro;
-    private List<Fragment> fragmentList = new ArrayList<>();
-    private List<String> tab_list = new ArrayList<>();
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     private boolean isChecked = true;

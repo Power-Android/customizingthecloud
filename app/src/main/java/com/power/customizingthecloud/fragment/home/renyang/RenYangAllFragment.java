@@ -19,7 +19,6 @@ import com.power.customizingthecloud.adapter.RenYangAdapter;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.bean.RenYangListBean;
-import com.power.customizingthecloud.fragment.home.renyang.detail.RenYangDetailActivity;
 import com.power.customizingthecloud.utils.Urls;
 
 import java.util.List;

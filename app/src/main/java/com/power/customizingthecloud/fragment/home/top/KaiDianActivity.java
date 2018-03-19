@@ -19,7 +19,6 @@ import com.power.customizingthecloud.activity.mine.TixianFirstActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.TeamBean;
 import com.power.customizingthecloud.fragment.home.MyCodeActivity;
-import com.power.customizingthecloud.fragment.home.renyang.detail.BuyRecordFragment;
 import com.power.customizingthecloud.view.CircleImageView;
 
 import java.util.ArrayList;
@@ -139,6 +138,7 @@ public class KaiDianActivity extends BaseActivity implements View.OnClickListene
             }
         }
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){

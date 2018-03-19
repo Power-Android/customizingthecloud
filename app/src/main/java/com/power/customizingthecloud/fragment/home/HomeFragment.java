@@ -36,7 +36,7 @@ import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.bean.HomeBean;
 import com.power.customizingthecloud.fragment.home.jiankong.JianKongActivity;
 import com.power.customizingthecloud.fragment.home.renyang.RenYangListActivity;
-import com.power.customizingthecloud.fragment.home.renyang.detail.RenYangDetailActivity;
+import com.power.customizingthecloud.fragment.home.renyang.RenYangDetailActivity;
 import com.power.customizingthecloud.fragment.home.top.CanWeiYuDingAcitivity;
 import com.power.customizingthecloud.fragment.home.top.KaiDianActivity;
 import com.power.customizingthecloud.fragment.home.top.MiaoShaActivity;
