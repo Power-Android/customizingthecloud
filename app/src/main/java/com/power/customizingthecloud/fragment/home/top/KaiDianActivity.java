@@ -11,14 +11,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.ProductListActivoty;
 import com.power.customizingthecloud.activity.mine.TixianFirstActivity;
 import com.power.customizingthecloud.base.BaseActivity;
-import com.power.customizingthecloud.bean.TeamBean;
+import com.power.customizingthecloud.bean.DainOrderBean;
+import com.power.customizingthecloud.bean.KaidianBean;
+import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.MyCodeActivity;
+import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.CircleImageView;
 
 import java.util.ArrayList;
@@ -48,6 +56,9 @@ public class KaiDianActivity extends BaseActivity implements View.OnClickListene
     @BindView(R.id.recyclerView) RecyclerView recyclerView;
     @BindView(R.id.activity_kai_dian) LinearLayout activityKaiDian;
     private final int TEAM = 1, ORDER = 2;
+    private List<KaidianBean.DataBean.TeamBean> teamList = new ArrayList<>();
+    private HttpHeaders headers;
+    private List<DainOrderBean.DataBean> orderList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,12 +81,39 @@ public class KaiDianActivity extends BaseActivity implements View.OnClickListene
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setNestedScrollingEnabled(false);
+
+        headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+
         initTeamColor();
+        initData(headers);
+    }
+
+    private void initData(HttpHeaders headers) {
+        OkGo.<KaidianBean>get(Urls.BASEURL + "api/v2/user/shop")
+                .tag(this)
+                .headers(headers)
+                .execute(new DialogCallback<KaidianBean>(this,KaidianBean.class) {
+                    @Override
+                    public void onSuccess(Response<KaidianBean> response) {
+                        KaidianBean body = response.body();
+                        if (body.getCode() == 1){
+                            Glide.with(mContext).load(body.getData().getUser_avatar()).into(dianpuFaceIv);
+                            dianpuNameTv.setText(body.getData().getUser_name());
+                            ljsyTv.setText(body.getData().getUser_distribution());
+
+                            teamList = body.getData().getTeam();
+                            KaidianAdapter adapter = new KaidianAdapter(R.layout.item_kai_dian,teamList);
+                            recyclerView.setAdapter(adapter);
+                        }
+                    }
+                });
     }
 
     @OnClick(R.id.team_ll)
     public void setTeamLl(){
         initTeamColor();
+        initData(headers);
     }
 
     private void initTeamColor() {
@@ -83,15 +121,6 @@ public class KaiDianActivity extends BaseActivity implements View.OnClickListene
         indicatorTeam.setBackgroundColor(getResources().getColor(R.color.green));
         orderTv.setTextColor(getResources().getColor(R.color.gray));
         indicatorOrder.setBackgroundColor(getResources().getColor(R.color.white));
-        List<TeamBean> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            TeamBean bean = new TeamBean();
-            bean.setName("无敌小豆豆");
-            bean.setGongxian("贡献：￥100.00"+i);
-            list.add(bean);
-        }
-        KaidianAdapter adapter = new KaidianAdapter(R.layout.item_kai_dian,list,TEAM);
-        recyclerView.setAdapter(adapter);
     }
 
     @OnClick(R.id.order_ll)
@@ -104,38 +133,51 @@ public class KaiDianActivity extends BaseActivity implements View.OnClickListene
         indicatorOrder.setBackgroundColor(getResources().getColor(R.color.green));
         teamTv.setTextColor(getResources().getColor(R.color.gray));
         indicatorTeam.setBackgroundColor(getResources().getColor(R.color.white));
-        List<TeamBean> list = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            TeamBean bean = new TeamBean();
-            bean.setName("销售商品名称");
-            bean.setDate("2018.02.06-2018.02.16");
-            bean.setYongjin("所获佣金：￥100.00"+i);
-            list.add(bean);
-        }
-        KaidianAdapter adapter = new KaidianAdapter(R.layout.item_order,list,ORDER);
-        recyclerView.setAdapter(adapter);
+
+        OkGo.<DainOrderBean>get(Urls.BASEURL + "api/v2/user/shop-order")
+                .tag(this)
+                .headers(headers)
+                .execute(new DialogCallback<DainOrderBean>(this,DainOrderBean.class) {
+                    @Override
+                    public void onSuccess(Response<DainOrderBean> response) {
+                        DainOrderBean body = response.body();
+                        if (body.getCode() == 1){
+                            orderList = body.getData();
+                            OrderAdapter adapter = new OrderAdapter(R.layout.item_order,orderList);
+                            recyclerView.setAdapter(adapter);
+                        }
+                    }
+                });
     }
 
-    private class KaidianAdapter extends BaseQuickAdapter<TeamBean,BaseViewHolder>{
-        private int mPosition;
-        public KaidianAdapter(@LayoutRes int layoutResId, @Nullable List<TeamBean> data, int position) {
+    private class KaidianAdapter extends BaseQuickAdapter<KaidianBean.DataBean.TeamBean,BaseViewHolder>{
+
+        public KaidianAdapter(@LayoutRes int layoutResId, @Nullable List<KaidianBean.DataBean.TeamBean> data) {
             super(layoutResId, data);
-            this.mPosition = position;
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, TeamBean item) {
-            switch (mPosition){
-                case TEAM:
-                    helper.setText(R.id.item_name_tv,item.getName())
-                            .setText(R.id.item_gongxian_tv,item.getGongxian());
-                    break;
-                case ORDER:
-                    helper.setText(R.id.item_name_tv,item.getName())
-                            .setText(R.id.item_date_tv,item.getDate())
-                            .setText(R.id.item_yongjin_tv,item.getYongjin());
-                    break;
-            }
+        protected void convert(BaseViewHolder helper, KaidianBean.DataBean.TeamBean item) {
+
+            Glide.with(mContext).load(item.getUser_avatar()).into((ImageView) helper.getView(R.id.item_face_iv));
+            helper.setText(R.id.item_name_tv,item.getUser_name())
+                    .setText(R.id.item_gongxian_tv,item.getTotal_price());
+        }
+    }
+
+    private class OrderAdapter extends BaseQuickAdapter<DainOrderBean.DataBean,BaseViewHolder>{
+
+        public OrderAdapter(@LayoutRes int layoutResId, @Nullable List<DainOrderBean.DataBean> data) {
+            super(layoutResId, data);
+        }
+
+        @Override
+        protected void convert(BaseViewHolder helper, DainOrderBean.DataBean item) {
+
+            Glide.with(mContext).load(item.getGoods_image()).into((ImageView) helper.getView(R.id.item_face_iv));
+            helper.setText(R.id.item_name_tv,item.getGoods_name())
+                    .setText(R.id.item_date_tv,item.getCreated_at())
+                    .setText(R.id.item_yongjin_tv,"所获佣金：￥"+item.getDistribution_price());
         }
     }
 
