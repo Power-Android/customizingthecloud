@@ -136,8 +136,12 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                         } else if (code == 1) {
                             CircleHomeBean.DataEntity data = circleHomeBean.getData();
                             CircleHomeBean.DataEntity.UserEntity user = data.getUser();
-                            mTvName.setText(user.getUser_name());
-                            Glide.with(MyApplication.getGloableContext()).load(user.getUser_avatar()).into(mIvHead);
+                            if (!TextUtils.isEmpty(user.getUser_name())) {
+                                mTvName.setText(user.getUser_name());
+                            }
+                            if (!TextUtils.isEmpty(user.getUser_avatar())) {
+                                Glide.with(MyApplication.getGloableContext()).load(user.getUser_avatar()).into(mIvHead);
+                            }
                             List<CircleHomeBean.DataEntity.FeedEntity> feed = data.getFeed();
                             if (feed != null && feed.size() > 0) {
                                 mMyAdapter = new MyAdapter(R.layout.item_circle_friend, feed);
@@ -192,7 +196,9 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                 iv_like.setImageResource(R.drawable.ganji_like2);
             }
             ImageView iv_head = helper.getView(R.id.iv_head);
-            Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into(iv_head);
+            if (!TextUtils.isEmpty(item.getUser_avatar())) {
+                Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into(iv_head);
+            }
             helper.setText(R.id.tv_name, item.getUser_name())
                     .setText(R.id.tv_time, item.getUpdated_at())
                     .setText(R.id.tv_content, item.getFeed_content())
@@ -207,7 +213,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             chatAdapter.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    showCommentPopWindow(view, item.getId() + "", comments.get(position).getReply_user()+"");
+                    showCommentPopWindow(view, item.getId() + "", comments.get(position).getReply_user() + "");
                 }
             });
             helper.getView(R.id.ll_like).setOnClickListener(new View.OnClickListener() {
@@ -219,7 +225,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             helper.getView(R.id.ll_pinglun).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showCommentPopWindow(v,item.getId()+"","");
+                    showCommentPopWindow(v, item.getId() + "", "");
                 }
             });
         }
@@ -230,11 +236,11 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
         params.put("feed_id", s);
-        String url="";
-        if (mIsLike){
-            url=Urls.BASEURL + "api/v2/feed/unlike";
-        }else {
-            url=Urls.BASEURL + "api/v2/feed/like";
+        String url = "";
+        if (mIsLike) {
+            url = Urls.BASEURL + "api/v2/feed/unlike";
+        } else {
+            url = Urls.BASEURL + "api/v2/feed/like";
         }
         OkGo.<RegisterBean>get(url)
                 .headers(headers)
@@ -300,7 +306,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(edt.getText().toString().trim())) {
                     String content = edt.getText().toString().trim();
-                    sendComment(feed_id,content,reply_user);
+                    sendComment(feed_id, content, reply_user);
                     popWiw.dismiss();
                 }
             }
@@ -322,7 +328,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
         params.put("feed_id", feed_id);
         params.put("body", content);
         if (!TextUtils.isEmpty(reply_user))
-        params.put("reply_user", reply_user);
+            params.put("reply_user", reply_user);
         OkGo.<RegisterBean>post(Urls.BASEURL + "api/v2/feed/comments")
                 .headers(headers)
                 .params(params)

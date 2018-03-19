@@ -193,6 +193,12 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                             List<ShopAllBean.DataEntity.VoucherTemplateEntity> voucher_template = data.getVoucher_template();
                             mQuanAdapter = new QuanAdapter(R.layout.item_daijinquan, voucher_template);
                             mRecyclerQuan.setAdapter(mQuanAdapter);
+                            mQuanAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                    startActivity(new Intent(mContext,QuanListActivity.class));
+                                }
+                            });
 
                             ShopAllBean.DataEntity.HotSeckillEntity hot_seckill = data.getHot_seckill();
                             Glide.with(MyApplication.getGloableContext()).load(hot_seckill.getImage()).into(iv_miaosha);
@@ -360,7 +366,7 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
         params.put("id", s);
-        OkGo.<RegisterBean>post(Urls.BASEURL + "api/v2/get-voucher")
+        OkGo.<RegisterBean>get(Urls.BASEURL + "api/v2/get-voucher")
                 .headers(headers)
                 .params(params)
                 .execute(new DialogCallback<RegisterBean>(mActivity, RegisterBean.class) {

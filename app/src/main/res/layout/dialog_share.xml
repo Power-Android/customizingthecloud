@@ -66,7 +66,7 @@
             android:drawablePadding="5dp"
             android:drawableTop="@drawable/qzone"
             android:gravity="center"
-            android:text="空间"/>
+            android:text="QQ空间"/>
         <TextView
             android:id="@+id/tv_sina"
             android:layout_width="0dp"

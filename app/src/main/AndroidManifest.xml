@@ -160,6 +160,7 @@
         <activity android:name=".fragment.home.KefuActivity"/>
         <activity android:name=".fragment.home.ZiXunDetailActivity"/>
         <activity android:name=".fragment.market.DongTaiDetailActivity"/>
+        <activity android:name=".fragment.home.renyang.ZhuanZhangActivity"/>
     </application>
 
 </manifest>
