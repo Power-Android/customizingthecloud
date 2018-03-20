@@ -190,6 +190,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                     int state = homeslid.get(position).getState();
                                     Intent intent = new Intent(mContext, RenYangDetailActivity.class);
                                     intent.putExtra("state",state);
+                                    intent.putExtra("id",homeslid.get(position).getId()+"");
                                     startActivity(intent);
                                 }
                             });
@@ -206,6 +207,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(mContext, RenYangDetailActivity.class);
                                     intent.putExtra("state",mDonkey.get(position).getState());
+                                    intent.putExtra("id",mDonkey.get(position).getId()+"");
                                     startActivity(intent);
                                 }
                             });
@@ -567,6 +569,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             TextView tv_state = helper.getView(R.id.tv_state);
             tv_shengyu.setText("剩余数量：" + item.getLast_amount());
             helper.setText(R.id.tv_totalcount, "总数量：" + item.getAmount())
+                    .setText(R.id.tv_title, item.getTitle())
                     .setText(R.id.tv_nianshouyi, item.getProfit())
                     .setText(R.id.tv_yangzhichengben, item.getPrice())
                     .setText(R.id.tv_touzizhouqi, item.getPeriod());

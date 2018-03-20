@@ -77,6 +77,7 @@ public class JiJiangFragment extends BaseFragment{
                                     RenYangListBean.DataEntity dataEntity = data.get(position);
                                     int state = dataEntity.getState();
                                     intent.putExtra("state",state);
+                                    intent.putExtra("id",dataEntity.getId()+"");
                                     startActivity(intent);
                                 }
                             });
