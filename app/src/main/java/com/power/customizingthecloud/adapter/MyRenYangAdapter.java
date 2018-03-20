@@ -9,6 +9,7 @@ import android.view.View;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.bean.MyRenyangBean;
 import com.power.customizingthecloud.fragment.home.jiankong.JianKongActivity;
 
 import java.util.List;
@@ -17,13 +18,13 @@ import java.util.List;
  * Created by Administrator on 2018/2/1.
  */
 
-public class MyRenYangAdapter extends BaseQuickAdapter<String,BaseViewHolder> {
+public class MyRenYangAdapter extends BaseQuickAdapter<MyRenyangBean.DataBean,BaseViewHolder> {
 
     private Context mContext;
     private int mPosition;
-    private List<String> mData;
+    private List<MyRenyangBean.DataBean> mData;
 
-    public MyRenYangAdapter(@LayoutRes int layoutResId, @Nullable List<String> data, Context context, int position) {
+    public MyRenYangAdapter(@LayoutRes int layoutResId, @Nullable List<MyRenyangBean.DataBean> data, Context context, int position) {
         super(layoutResId, data);
         mContext = context;
         mPosition = position;
@@ -31,7 +32,7 @@ public class MyRenYangAdapter extends BaseQuickAdapter<String,BaseViewHolder> {
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, String item) {
+    protected void convert(BaseViewHolder helper, MyRenyangBean.DataBean item) {
 
         if (mPosition == 1){//全部
 

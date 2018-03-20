@@ -91,5 +91,6 @@ public class DonkeyEarsDetailActivity extends BaseActivity {
 
     @OnClick(R.id.title_back_iv)
     public void onViewClicked() {
+        finish();
     }
 }

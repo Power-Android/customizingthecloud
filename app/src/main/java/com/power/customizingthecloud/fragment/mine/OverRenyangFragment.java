@@ -9,10 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.RengyangDetail1Activity;
 import com.power.customizingthecloud.adapter.MyRenYangAdapter;
 import com.power.customizingthecloud.base.BaseFragment;
+import com.power.customizingthecloud.bean.MyRenyangBean;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +38,8 @@ public class OverRenyangFragment extends BaseFragment implements BaseQuickAdapte
     @BindView(R.id.recycler)
     RecyclerView mRecyclerRenyang;
     Unbinder unbinder;
+    private List<MyRenyangBean.DataBean> list = new ArrayList<>();
+    private MyRenYangAdapter renYangAdapter;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,14 +50,29 @@ public class OverRenyangFragment extends BaseFragment implements BaseQuickAdapte
     }
 
     private void initData() {
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        mRecyclerRenyang.setLayoutManager(new LinearLayoutManager(mContext));
-        MyRenYangAdapter renYangAdapter=new MyRenYangAdapter(R.layout.item_my_renyang,list,mContext,3);
-        mRecyclerRenyang.setAdapter(renYangAdapter);
-        renYangAdapter.setOnItemClickListener(this);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("after","");
+        params.put("state","2");
+
+        OkGo.<MyRenyangBean>get(Urls.BASEURL + "api/v2/user/donkey")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<MyRenyangBean>(mActivity,MyRenyangBean.class) {
+                    @Override
+                    public void onSuccess(Response<MyRenyangBean> response) {
+                        MyRenyangBean body = response.body();
+                        if (body.getCode() == 1){
+                            list = body.getData();
+                            renYangAdapter = new MyRenYangAdapter(R.layout.item_my_renyang,list,mContext,3);
+                            mRecyclerRenyang.setAdapter(renYangAdapter);
+                            renYangAdapter.setOnItemClickListener(OverRenyangFragment.this);
+                        }
+                    }
+                });
     }
 
     @Override
