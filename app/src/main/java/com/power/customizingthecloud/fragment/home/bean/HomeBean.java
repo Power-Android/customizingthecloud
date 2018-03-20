@@ -341,6 +341,15 @@ public class HomeBean {
             private String title;
             private String profit;
             private String last_amount;
+            private int id;
+
+            public int getId() {
+                return id;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
 
             public void setImage(String image) {
                 this.image = image;

@@ -18,14 +18,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.MyOrderActivity;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.ServiceAgreementActivity;
+import com.power.customizingthecloud.fragment.home.bean.OrderBean;
+import com.power.customizingthecloud.fragment.home.bean.RenYangDetailBean;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.CustomViewPager;
 import com.power.customizingthecloud.view.SnappingStepper;
@@ -116,6 +126,8 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     private boolean isChecked = true;
+    private RenYangDetailBean.DataEntity datas;
+    private int payStyle = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,17 +138,10 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("认养详情");
         mTvCommit.setOnClickListener(this);
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
+        mTvXieyi.setOnClickListener(this);
+        iv_check.setOnClickListener(this);
         mRecyclerTop.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerTop.setNestedScrollingEnabled(false);
-        TopAdapter topAdapter = new TopAdapter(R.layout.item_renyang_detail_top, list);
-        mRecyclerTop.setAdapter(topAdapter);
         mRecycler.setLayoutManager(new LinearLayoutManager(mContext));
         mRecycler.setNestedScrollingEnabled(false);
         mItemStepper.setContentBackground(R.drawable.bg_stepper_green);
@@ -157,8 +162,41 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
             mTvCommit.setBackgroundResource(R.drawable.bg_yuanjiao_huise);
             mTvCommit.setClickable(false);
         }
-        mTvXieyi.setOnClickListener(this);
-        iv_check.setOnClickListener(this);
+        String id = getIntent().getStringExtra("id");
+        HttpParams params = new HttpParams();
+        params.put("id", id);
+        OkGo.<RenYangDetailBean>get(Urls.BASEURL + "api/v2/adopt/show")
+                .tag(this)
+                .params(params)
+                .execute(new DialogCallback<RenYangDetailBean>(RenYangDetailActivity.this, RenYangDetailBean.class) {
+                    @Override
+                    public void onSuccess(Response<RenYangDetailBean> response) {
+                        RenYangDetailBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            datas = bean.getData();
+                            List<String> list = new ArrayList<String>();
+                            list.add(datas.getTitle());
+                            list.add(datas.getPlace());
+                            list.add(datas.getProfit() + "%");
+                            list.add(datas.getPeriod() + "天");
+                            list.add(datas.getPrice() + "元");
+                            list.add(datas.getProfit_type());
+                            TopAdapter topAdapter = new TopAdapter(R.layout.item_renyang_detail_top, list);
+                            mRecyclerTop.setAdapter(topAdapter);
+                            mTvShengyu.setText(datas.getLast_amount() + "");
+                            mTvTotalCount.setText(datas.getAmount() + "");
+                            mTvPrice.setText(datas.getAmount() + "");
+                            Glide.with(MyApplication.getGloableContext()).load(datas.getImage()).into(mIvTop);
+                            mTvIntro.setText(datas.getIntroduce());
+                            mTvPrice.setText(Float.parseFloat(datas.getPrice()) * mItemStepper.getValue() + "元");
+                            mTvLirun.setText(Float.parseFloat(datas.getPrice())
+                                    * mItemStepper.getValue() * datas.getProfit() * datas.getPeriod() / 365 + "元");
+                        }
+                    }
+                });
     }
 
     private class TopAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
@@ -171,28 +209,28 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         protected void convert(BaseViewHolder helper, String item) {
             switch (helper.getAdapterPosition()) {
                 case 0:
-                    helper.setText(R.id.tv_title, "第  41 期：")
-                            .setText(R.id.tv_content, "【11.15日驴妈妈】");
+                    helper.setText(R.id.tv_title, "第  " + datas.getId() + " 期：")
+                            .setText(R.id.tv_content, "【" + item + "】");
                     break;
                 case 1:
                     helper.setText(R.id.tv_title, "产        地：")
-                            .setText(R.id.tv_content, "宁夏青铜峡");
+                            .setText(R.id.tv_content, item);
                     break;
                 case 2:
                     helper.setText(R.id.tv_title, "年利润率：")
-                            .setText(R.id.tv_content, "15%");
+                            .setText(R.id.tv_content, item);
                     break;
                 case 3:
                     helper.setText(R.id.tv_title, "养殖周期：")
-                            .setText(R.id.tv_content, "360天");
+                            .setText(R.id.tv_content, item);
                     break;
                 case 4:
                     helper.setText(R.id.tv_title, "养殖利润：")
-                            .setText(R.id.tv_content, "20000.00元");
+                            .setText(R.id.tv_content, item);
                     break;
                 case 5:
                     helper.setText(R.id.tv_title, "利润获取：")
-                            .setText(R.id.tv_content, "到期一次性返本分红");
+                            .setText(R.id.tv_content, item);
                     break;
             }
         }
@@ -231,6 +269,36 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         }
     }
 
+    private void commitOrder() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(RenYangDetailActivity.this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("id", datas.getId() + "");
+        params.put("pay_type", payStyle+"");
+        params.put("order_type", "1");
+        params.put("number", mItemStepper.getValue() + "");
+        OkGo.<OrderBean>post(Urls.BASEURL + "api/v2/adopt/order")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<OrderBean>(RenYangDetailActivity.this, OrderBean.class) {
+                    @Override
+                    public void onSuccess(Response<OrderBean> response) {
+                        OrderBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                            String pay_sn = bean.getData().getPay_sn();//订单号
+                            Intent intent = new Intent(RenYangDetailActivity.this, MyOrderActivity.class);
+                            intent.putExtra("type", "0");
+                            startActivity(intent);
+                        }
+                    }
+                });
+    }
+
     private void showPayStyleDialog() {
         mBuilder = new BaseDialog.Builder(this);
         mDialog = mBuilder.setViewId(R.layout.dialog_paystyle)
@@ -257,9 +325,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                Intent intent = new Intent(RenYangDetailActivity.this, MyOrderActivity.class);
-                intent.putExtra("type", "0");
-                startActivity(intent);
+                commitOrder();
             }
         });
         mDialog.getView(R.id.view_lastline).setVisibility(View.VISIBLE);
@@ -267,7 +333,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         mDialog.getView(R.id.tv_zhuanzhang).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(RenYangDetailActivity.this,ZhuanZhangActivity.class));
+                startActivity(new Intent(RenYangDetailActivity.this, ZhuanZhangActivity.class));
             }
         });
         final CheckBox cb_alipay = mDialog.getView(R.id.cb_alipay);
@@ -279,6 +345,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                 if (isChecked) {
                     cb_weixin.setChecked(false);
                     cb_yinlian.setChecked(false);
+                    payStyle=1;
                 }
             }
         });
@@ -288,6 +355,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                 if (isChecked) {
                     cb_alipay.setChecked(false);
                     cb_yinlian.setChecked(false);
+                    payStyle=2;
                 }
             }
         });
@@ -297,6 +365,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                 if (isChecked) {
                     cb_weixin.setChecked(false);
                     cb_alipay.setChecked(false);
+                    payStyle=3;
                 }
             }
         });
