@@ -274,7 +274,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         headers.put("Authorization", "Bearer " + SpUtils.getString(RenYangDetailActivity.this, "token", ""));
         HttpParams params = new HttpParams();
         params.put("id", datas.getId() + "");
-        params.put("pay_type", payStyle+"");
+        params.put("pay_type", payStyle + "");
         params.put("order_type", "1");
         params.put("number", mItemStepper.getValue() + "");
         OkGo.<OrderBean>post(Urls.BASEURL + "api/v2/adopt/order")
@@ -321,13 +321,6 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                 mDialog.dismiss();
             }
         });
-        mDialog.getView(R.id.tv_pay).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDialog.dismiss();
-                commitOrder();
-            }
-        });
         mDialog.getView(R.id.view_lastline).setVisibility(View.VISIBLE);
         mDialog.getView(R.id.ll_zhuanzhang).setVisibility(View.VISIBLE);
         mDialog.getView(R.id.tv_zhuanzhang).setOnClickListener(new View.OnClickListener() {
@@ -345,7 +338,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                 if (isChecked) {
                     cb_weixin.setChecked(false);
                     cb_yinlian.setChecked(false);
-                    payStyle=1;
+                    payStyle = 1;
                 }
             }
         });
@@ -355,7 +348,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                 if (isChecked) {
                     cb_alipay.setChecked(false);
                     cb_yinlian.setChecked(false);
-                    payStyle=2;
+                    payStyle = 2;
                 }
             }
         });
@@ -365,8 +358,19 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                 if (isChecked) {
                     cb_weixin.setChecked(false);
                     cb_alipay.setChecked(false);
-                    payStyle=3;
+                    payStyle = 3;
                 }
+            }
+        });
+        mDialog.getView(R.id.tv_pay).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!cb_alipay.isChecked() && !cb_weixin.isChecked() && !cb_yinlian.isChecked()) {
+                    Toast.makeText(RenYangDetailActivity.this, "至少选择一种支付方式~", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                mDialog.dismiss();
+                commitOrder();
             }
         });
     }

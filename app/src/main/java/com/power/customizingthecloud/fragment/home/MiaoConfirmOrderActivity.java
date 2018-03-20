@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -23,6 +24,7 @@ import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.AddressManagerActivity;
 import com.power.customizingthecloud.activity.mine.MyOrderActivity;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.fragment.home.renyang.RenYangDetailActivity;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.view.BaseDialog;
@@ -124,15 +126,6 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
                 mDialog.dismiss();
             }
         });
-        mDialog.getView(R.id.tv_pay).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDialog.dismiss();
-                Intent intent = new Intent(MiaoConfirmOrderActivity.this, MyOrderActivity.class);
-                intent.putExtra("type","0");
-                startActivity(intent);
-            }
-        });
         final CheckBox cb_alipay = mDialog.getView(R.id.cb_alipay);
         final CheckBox cb_weixin = mDialog.getView(R.id.cb_weixin);
         final CheckBox cb_yinlian = mDialog.getView(R.id.cb_yinlian);
@@ -161,6 +154,19 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
                     cb_weixin.setChecked(false);
                     cb_alipay.setChecked(false);
                 }
+            }
+        });
+        mDialog.getView(R.id.tv_pay).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!cb_alipay.isChecked() && !cb_weixin.isChecked() && !cb_yinlian.isChecked()) {
+                    Toast.makeText(MiaoConfirmOrderActivity.this, "至少选择一种支付方式~", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                mDialog.dismiss();
+                Intent intent = new Intent(MiaoConfirmOrderActivity.this, MyOrderActivity.class);
+                intent.putExtra("type","0");
+                startActivity(intent);
             }
         });
     }
