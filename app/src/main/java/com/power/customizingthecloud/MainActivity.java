@@ -130,6 +130,7 @@ public class MainActivity extends BaseActivity {
         baseFragment = f;
     }
 
+
     @OnClick(R.id.ll_home)
     public void home(){
         if (homeFragment == null) {
