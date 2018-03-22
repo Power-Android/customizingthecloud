@@ -24,6 +24,7 @@ import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.DonkeyEarsBean;
+import com.power.customizingthecloud.bean.SignBean;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
 import com.power.customizingthecloud.utils.SpUtils;
@@ -153,7 +154,7 @@ public class MyDonkeyEarsActivity extends BaseActivity implements View.OnClickLi
                 startActivity(new Intent(mContext,DonkeyEarsDetailActivity.class));
                 break;
             case R.id.item_qiandao_tv:
-                TUtils.showShort(mContext,"点击了---签到");
+                initSign();
                 break;
             case R.id.item_gonglue_rl:
                 showShareDialog();
@@ -162,6 +163,28 @@ public class MyDonkeyEarsActivity extends BaseActivity implements View.OnClickLi
                 startActivity(new Intent(mContext,ServiceRegulationsActivity.class));
                 break;
         }
+    }
+
+    private void initSign() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+
+        OkGo.<SignBean>get(Urls.BASEURL + "api/v2/sign/store")
+                .tag(this)
+                .headers(headers)
+                .execute(new DialogCallback<SignBean>(this,SignBean.class) {
+                    @Override
+                    public void onSuccess(Response<SignBean> response) {
+                        SignBean body = response.body();
+                        if (body.getCode() == 1){
+                            TUtils.showShort(mContext,body.getMessage());
+                            qiandaoTv.setText("已签到");
+                            qiandaoTv.setClickable(false);
+                        }else {
+                            TUtils.showShort(mContext,body.getMessage());
+                        }
+                    }
+                });
     }
 
     private void showShareDialog() {

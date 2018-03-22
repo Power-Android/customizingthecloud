@@ -312,16 +312,22 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                         TUtils.showShort(mContext, "点击了---提醒发货" + position);
                         break;
                     case "3":
-                        TUtils.showShort(mContext, "点击了---评价" + position);
+                        TUtils.showShort(mContext, "点击了---确认收货" + position);
                         break;
                     case "4":
-                        TUtils.showShort(mContext, "点击了---确认收货" + position);
+                        startActivity(new Intent(mContext,PingJiaActivity.class));
                         break;
                 }
                 break;
             case R.id.item_cancle_order_tv:
-                TUtils.showShort(mContext, "点击了---取消订单" + position);
-                showTip(position);
+                switch (list.get(position).getType()){
+                    case "1":
+                        showTip(position);
+                        break;
+                    case "3":
+                        startActivity(new Intent(mContext,RequestRefundActiviy.class));
+                        break;
+                }
                 break;
         }
     }
@@ -461,6 +467,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
             switch (item.getType()) {
                 case "1":
                     cancleTv.setVisibility(View.VISIBLE);
+                    cancleTv.setText("取消订单");
                     useTv.setText("付款");
                     break;
                 case "2":
@@ -468,7 +475,8 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                     useTv.setText("提醒发货");
                     break;
                 case "3":
-                    cancleTv.setVisibility(View.GONE);
+                    cancleTv.setVisibility(View.VISIBLE);
+                    cancleTv.setText("退款");
                     useTv.setText("确认收货");
                     break;
                 case "4":
