@@ -94,17 +94,21 @@ public class ShopMiaoFragment extends BaseFragment {
                                 @Override
                                 public void OnBannerClick(int position) {
                                     if (good_slid.get(position).getType() == 1) {
-                                        startActivity(new Intent(mContext, GoodDetailActivity.class));
+                                        Intent intent = new Intent(mContext, GoodDetailActivity.class);
+                                        intent.putExtra("id",good_slid.get(position).getId()+"");
+                                        startActivity(intent);
                                     }
                                 }
                             });
-                            List<ShopMiaoBean.DataEntity.GoodsEntity> goods = data.getGoods();
+                            final List<ShopMiaoBean.DataEntity.GoodsEntity> goods = data.getGoods();
                             MiaoShaAdapter miaoShaAdapter = new MiaoShaAdapter(R.layout.item_home_miaosha, goods);
                             mRecyclerMiao.setAdapter(miaoShaAdapter);
                             miaoShaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    startActivity(new Intent(mContext, MiaoShaDetailActivity.class));
+                                    Intent intent = new Intent(mContext, MiaoShaDetailActivity.class);
+                                    intent.putExtra("id",goods.get(position).getId()+"");
+                                    startActivity(intent);
                                 }
                             });
                         }

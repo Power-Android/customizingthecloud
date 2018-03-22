@@ -73,13 +73,15 @@ public class MiaoShaActivity extends BaseActivity implements View.OnClickListene
                         if (code == 0) {
                             Toast.makeText(mContext, miaoListBean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
-                            List<MiaoListBean.DataEntity> data = miaoListBean.getData();
+                            final List<MiaoListBean.DataEntity> data = miaoListBean.getData();
                             mMiaoshaAdapter = new MiaoshaAdapter(R.layout.item_home_miaosha,data);
                             mRecyclerMiaosha.setAdapter(mMiaoshaAdapter);
                             mMiaoshaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    startActivity(new Intent(MiaoShaActivity.this, MiaoShaDetailActivity.class));
+                                    Intent intent = new Intent(MiaoShaActivity.this, MiaoShaDetailActivity.class);
+                                    intent.putExtra("id",data.get(position).getId()+"");
+                                    startActivity(intent);
                                 }
                             });
                         }

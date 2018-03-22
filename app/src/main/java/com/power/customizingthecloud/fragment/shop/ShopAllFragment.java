@@ -105,6 +105,7 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     private List<String> imgList = new ArrayList<>();
+    private ShopAllBean.DataEntity.HotSeckillEntity mHot_seckill;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -159,26 +160,32 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                                 @Override
                                 public void OnBannerClick(int position) {
                                     if (good_slid.get(position).getType() == 1) {
-                                        startActivity(new Intent(mContext, GoodDetailActivity.class));
+                                        Intent intent = new Intent(mContext, GoodDetailActivity.class);
+                                        intent.putExtra("id",good_slid.get(position).getId()+"");
+                                        startActivity(intent);
                                     }
                                 }
                             });
-                            List<ShopAllBean.DataEntity.NewGoodEntity> new_good = data.getNew_good();
+                            final List<ShopAllBean.DataEntity.NewGoodEntity> new_good = data.getNew_good();
                             mNewProductAdapter = new NewProductAdapter(R.layout.item_product, new_good);
                             mRecyclerNew.setAdapter(mNewProductAdapter);
                             mNewProductAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    startActivity(new Intent(mContext, GoodDetailActivity.class));
+                                    Intent intent = new Intent(mContext, GoodDetailActivity.class);
+                                    intent.putExtra("id",new_good.get(position).getId()+"");
+                                    startActivity(intent);
                                 }
                             });
-                            List<ShopAllBean.DataEntity.HotGoodEntity> hot_good = data.getHot_good();
+                            final List<ShopAllBean.DataEntity.HotGoodEntity> hot_good = data.getHot_good();
                             mHotProductAdapter = new HotProductAdapter(R.layout.item_product, hot_good);
                             mRecyclerHot.setAdapter(mHotProductAdapter);
                             mHotProductAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    startActivity(new Intent(mContext, GoodDetailActivity.class));
+                                    Intent intent = new Intent(mContext, GoodDetailActivity.class);
+                                    intent.putExtra("id",hot_good.get(position).getId()+"");
+                                    startActivity(intent);
                                 }
                             });
                             List<ShopAllBean.DataEntity.SeckillGoodEntity> seckill_good = data.getSeckill_good();
@@ -200,10 +207,10 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                                 }
                             });
 
-                            ShopAllBean.DataEntity.HotSeckillEntity hot_seckill = data.getHot_seckill();
-                            Glide.with(MyApplication.getGloableContext()).load(hot_seckill.getImage()).into(iv_miaosha);
-                            mTvXianlianggou.setText(hot_seckill.getPrice()+"元");
-                            mCvCountdownView.start(hot_seckill.getSeckill_end_time()-hot_seckill.getSeckill_start_time());
+                            mHot_seckill = data.getHot_seckill();
+                            Glide.with(MyApplication.getGloableContext()).load(mHot_seckill.getImage()).into(iv_miaosha);
+                            mTvXianlianggou.setText(mHot_seckill.getPrice()+"元");
+                            mCvCountdownView.start(mHot_seckill.getSeckill_end_time()- mHot_seckill.getSeckill_start_time());
                         }
                     }
                 });
@@ -226,7 +233,9 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                 startActivity(new Intent(mContext, MiaoShaActivity.class));
                 break;
             case R.id.ll_miaosha:
-                startActivity(new Intent(mContext, MiaoShaDetailActivity.class));
+                Intent intent2 = new Intent(mContext, MiaoShaDetailActivity.class);
+                intent2.putExtra("id",mHot_seckill.getId()+"");
+                startActivity(intent2);
                 break;
             case R.id.iv_quan_more:
                 startActivity(new Intent(mContext, QuanListActivity.class));

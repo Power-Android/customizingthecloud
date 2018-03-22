@@ -130,17 +130,21 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
                                 @Override
                                 public void OnBannerClick(int position) {
                                     if (good_sild.get(position).getType() == 1) {
-                                        startActivity(new Intent(mContext, GoodDetailActivity.class));
+                                        Intent intent = new Intent(mContext, GoodDetailActivity.class);
+                                        intent.putExtra("id",good_sild.get(position).getId()+"");
+                                        startActivity(intent);
                                     }
                                 }
                             });
-                            List<MeatBean.DataEntity.GoodsEntity> goods = data.getGoods();
+                            final List<MeatBean.DataEntity.GoodsEntity> goods = data.getGoods();
                             XianAdapter xianAdapter = new XianAdapter(R.layout.item_shengxian, goods);
                             mRecyclerMeat.setAdapter(xianAdapter);
                             xianAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    startActivity(new Intent(mContext, GoodDetailActivity.class));
+                                    Intent intent = new Intent(mContext, GoodDetailActivity.class);
+                                    intent.putExtra("id",goods.get(position).getId()+"");
+                                    startActivity(intent);
                                 }
                             });
                         }
