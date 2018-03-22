@@ -14,14 +14,23 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.fragment.home.bean.MiaoDetailBean;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
 import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.youth.banner.Banner;
 
@@ -96,6 +105,9 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
     ImageView mLvXiangqing;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
+    private List<String> imgList = new ArrayList<>();
+    private List<String> mSpec_value=new ArrayList<>();
+    private List<MiaoDetailBean.DataEntity.CommentsEntity> mComments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,9 +123,50 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
         mTvBuy.setOnClickListener(this);
         //添加删除线
         mTvYuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        BannerUtils.startBanner(mBanner, new ArrayList<String>());
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
         mRecycler.setNestedScrollingEnabled(false);
+        initData();
+    }
+
+    private void initData() {
+        String id = getIntent().getStringExtra("id");
+        HttpParams params = new HttpParams();
+        params.put("good_id", id);
+        params.put("type", "2");
+        OkGo.<MiaoDetailBean>post(Urls.BASEURL + "api/v2/good/good-show")
+                .tag(this)
+                .params(params)
+                .execute(new DialogCallback<MiaoDetailBean>(MiaoShaDetailActivity.this, MiaoDetailBean.class) {
+                    @Override
+                    public void onSuccess(Response<MiaoDetailBean> response) {
+                        MiaoDetailBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            imgList.clear();
+                            MiaoDetailBean.DataEntity data = bean.getData();
+                            List<MiaoDetailBean.DataEntity.ImagesEntity> images = data.getImages();
+                            if (images != null && images.size() > 0) {
+                                for (int i = 0; i < images.size(); i++) {
+                                    imgList.add(images.get(i).getImag());
+                                }
+                            }
+                            BannerUtils.startBanner(mBanner, imgList);
+                            mTvName.setText(data.getName());
+                            mTvShengyu.setText(data.getSeckill_storage()+"");
+                            mTvPrice.setText(data.getPrice());
+                            int time = data.getSeckill_end_time() - data.getEckill_start_time();
+                            mTvTime.setText("距离秒杀结束还有0天12小时");
+                            String spec_value = data.getSpec_value();
+                            String[] split = spec_value.split("@");
+                            for (int i = 0; i < split.length; i++) {
+                                mSpec_value.add(split[i]);
+                            }
+                            mComments = data.getComments();
+                        }
+                    }
+                });
     }
 
     @Override
@@ -229,12 +282,9 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
         mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.GONE);
         mLlCanshu.setVisibility(View.VISIBLE);
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
         mRecyclerCanshu.setLayoutManager(new LinearLayoutManager(this));
-        CanShuAdapter recordAdapter = new CanShuAdapter(R.layout.item_canshu, list);
+        mRecyclerCanshu.setNestedScrollingEnabled(false);
+        CanShuAdapter recordAdapter = new CanShuAdapter(R.layout.item_canshu, mSpec_value);
         mRecyclerCanshu.setAdapter(recordAdapter);
         mLvXiangqing.setVisibility(View.GONE);
     }
@@ -247,6 +297,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
+            helper.setText(R.id.tv_content,item);
         }
     }
 
@@ -265,26 +316,23 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
         mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.VISIBLE);
         mLlCanshu.setVisibility(View.GONE);
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        PingJiaAdapter paiHangAdapter = new PingJiaAdapter(R.layout.item_pingjia2, list);
+        PingJiaAdapter paiHangAdapter = new PingJiaAdapter(R.layout.item_pingjia2, mComments);
         mRecycler.setAdapter(paiHangAdapter);
         mLvXiangqing.setVisibility(View.GONE);
     }
 
-    private class PingJiaAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class PingJiaAdapter extends BaseQuickAdapter<MiaoDetailBean.DataEntity.CommentsEntity, BaseViewHolder> {
 
-        public PingJiaAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public PingJiaAdapter(@LayoutRes int layoutResId, @Nullable List<MiaoDetailBean.DataEntity.CommentsEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
-
+        protected void convert(BaseViewHolder helper, MiaoDetailBean.DataEntity.CommentsEntity item) {
+            Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into((ImageView) helper.getView(R.id.iv_head));
+            helper.setText(R.id.tv_name,item.getUser_name())
+                    .setText(R.id.tv_time,item.getTime())
+                    .setText(R.id.tv_content,item.getContent());
         }
     }
 

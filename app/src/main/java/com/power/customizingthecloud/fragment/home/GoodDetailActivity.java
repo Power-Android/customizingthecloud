@@ -15,14 +15,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.fragment.home.bean.GoodDetailBean;
 import com.power.customizingthecloud.fragment.shop.GoodConfirmOrderActivity;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
 import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.SnappingStepper;
 import com.youth.banner.Banner;
@@ -100,6 +108,9 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
     ImageView mLvXiangqing;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
+    private List<String> imgList = new ArrayList<>();
+    private List<String> mSpec_value=new ArrayList<>();
+    private List<GoodDetailBean.DataEntity.CommentsEntity> mComments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +125,6 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
         mTvLianximaijia.setOnClickListener(this);
         mTvInsertcar.setOnClickListener(this);
         mTvBuy.setOnClickListener(this);
-        BannerUtils.startBanner(mBanner, new ArrayList<String>());
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
         mRecycler.setNestedScrollingEnabled(false);
         mItemStepper.setContentBackground(R.drawable.bg_stepper_green);
@@ -122,6 +132,47 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
         mItemStepper.setContentTextColor(R.color.green);
         mItemStepper.setLeftButtonResources(R.drawable.jianhao_white);
         mItemStepper.setRightButtonResources(R.drawable.jiahao_white);
+        initData();
+    }
+
+    private void initData() {
+        String id = getIntent().getStringExtra("id");
+        HttpParams params = new HttpParams();
+        params.put("good_id", id);
+        params.put("type", "1");
+        OkGo.<GoodDetailBean>post(Urls.BASEURL + "api/v2/good/good-show")
+                .tag(this)
+                .params(params)
+                .execute(new DialogCallback<GoodDetailBean>(GoodDetailActivity.this, GoodDetailBean.class) {
+                    @Override
+                    public void onSuccess(Response<GoodDetailBean> response) {
+                        GoodDetailBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            imgList.clear();
+                            GoodDetailBean.DataEntity data = bean.getData();
+                            List<GoodDetailBean.DataEntity.ImagesEntity> images = data.getImages();
+                            if (images != null && images.size() > 0) {
+                                for (int i = 0; i < images.size(); i++) {
+                                    imgList.add(images.get(i).getImag());
+                                }
+                            }
+                            BannerUtils.startBanner(mBanner, imgList);
+                            mTvName.setText(data.getName());
+                            mTvShengyu.setText(data.getGood_storage()+"");
+                            mTvDiyong.setText("可用"+data.getEselsohr_deduction()+"驴耳朵抵用"+data.getEselsohr_deduction()+"元");
+                            mTvGoodType.setText("商品分类："+data.getClass_name());
+                            String spec_value = data.getSpec_value();
+                            String[] split = spec_value.split("@");
+                            for (int i = 0; i < split.length; i++) {
+                                mSpec_value.add(split[i]);
+                            }
+                            mComments = data.getComments();
+                        }
+                    }
+                });
     }
 
     @Override
@@ -140,7 +191,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
                     overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
-                startActivity(new Intent(this,KefuActivity.class));
+                startActivity(new Intent(this, KefuActivity.class));
                 break;
             case R.id.tv_insertcar:
                 String userid2 = SpUtils.getString(mContext, "userid", "");
@@ -225,7 +276,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
     @OnClick(R.id.detail_ll)
     public void detail() {
         initDetailColor();
-//        mWebview.setVisibility(View.VISIBLE);
+        //        mWebview.setVisibility(View.VISIBLE);
         mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.GONE);
         mLlCanshu.setVisibility(View.GONE);
@@ -248,12 +299,9 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
         mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.GONE);
         mLlCanshu.setVisibility(View.VISIBLE);
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
         mRecyclerCanshu.setLayoutManager(new LinearLayoutManager(this));
-        CanShuAdapter recordAdapter = new CanShuAdapter(R.layout.item_canshu, list);
+        mRecyclerCanshu.setNestedScrollingEnabled(false);
+        CanShuAdapter recordAdapter = new CanShuAdapter(R.layout.item_canshu, mSpec_value);
         mRecyclerCanshu.setAdapter(recordAdapter);
         mLvXiangqing.setVisibility(View.GONE);
     }
@@ -266,6 +314,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
+            helper.setText(R.id.tv_content,item);
         }
     }
 
@@ -284,26 +333,23 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
         mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.VISIBLE);
         mLlCanshu.setVisibility(View.GONE);
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        PingJiaAdapter paiHangAdapter = new PingJiaAdapter(R.layout.item_pingjia2, list);
+        PingJiaAdapter paiHangAdapter = new PingJiaAdapter(R.layout.item_pingjia2, mComments);
         mRecycler.setAdapter(paiHangAdapter);
         mLvXiangqing.setVisibility(View.GONE);
     }
 
-    private class PingJiaAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class PingJiaAdapter extends BaseQuickAdapter<GoodDetailBean.DataEntity.CommentsEntity, BaseViewHolder> {
 
-        public PingJiaAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public PingJiaAdapter(@LayoutRes int layoutResId, @Nullable List<GoodDetailBean.DataEntity.CommentsEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
-
+        protected void convert(BaseViewHolder helper, GoodDetailBean.DataEntity.CommentsEntity item) {
+            Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into((ImageView) helper.getView(R.id.iv_head));
+            helper.setText(R.id.tv_name,item.getUser_name())
+                    .setText(R.id.tv_time,item.getTime())
+                    .setText(R.id.tv_content,item.getContent());
         }
     }
 

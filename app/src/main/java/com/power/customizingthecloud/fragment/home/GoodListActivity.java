@@ -84,13 +84,15 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
                         if (code == 0) {
                             Toast.makeText(mContext, goodListBean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
-                            List<GoodListBean.DataEntity> data = goodListBean.getData();
+                            final List<GoodListBean.DataEntity> data = goodListBean.getData();
                             ShopAdapter shopAdapter=new ShopAdapter(R.layout.item_shengxian,data);
                             mRecyclerShop.setAdapter(shopAdapter);
                             shopAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    startActivity(new Intent(GoodListActivity.this,GoodDetailActivity.class));
+                                    Intent intent = new Intent(GoodListActivity.this, GoodDetailActivity.class);
+                                    intent.putExtra("id",data.get(position).getId()+"");
+                                    startActivity(intent);
                                 }
                             });
                         }

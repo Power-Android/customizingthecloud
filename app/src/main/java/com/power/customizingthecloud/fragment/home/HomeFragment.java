@@ -228,7 +228,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             mGoodAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    startActivity(new Intent(mContext, GoodDetailActivity.class));
+                                    Intent intent = new Intent(mContext, GoodDetailActivity.class);
+                                    intent.putExtra("id",mHot_goods.get(position).getId()+"");
+                                    startActivity(intent);
                                 }
                             });
                             mSeckill_good = data.getSeckill_good();
@@ -237,7 +239,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             mMiaoshaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    startActivity(new Intent(mContext, MiaoShaDetailActivity.class));
+                                    Intent intent = new Intent(mContext, MiaoShaDetailActivity.class);
+                                    intent.putExtra("id",mSeckill_good.get(position).getId()+"");
+                                    startActivity(intent);
                                 }
                             });
                         }

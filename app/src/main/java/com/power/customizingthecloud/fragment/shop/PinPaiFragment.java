@@ -102,17 +102,21 @@ public class PinPaiFragment extends BaseFragment implements View.OnClickListener
                                 @Override
                                 public void OnBannerClick(int position) {
                                     if (good_slid.get(position).getType() == 1) {
-                                        startActivity(new Intent(mContext, GoodDetailActivity.class));
+                                        Intent intent = new Intent(mContext, GoodDetailActivity.class);
+                                        intent.putExtra("id",good_slid.get(position).getId()+"");
+                                        startActivity(intent);
                                     }
                                 }
                             });
-                            List<PinPaiBean.DataEntity.GoodsEntity> goods = data.getGoods();
+                            final List<PinPaiBean.DataEntity.GoodsEntity> goods = data.getGoods();
                             RecyclerAdapter recyclerAdapter = new RecyclerAdapter(R.layout.item_shengxian, goods);
                             mRecyclerView.setAdapter(recyclerAdapter);
                             recyclerAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    startActivity(new Intent(mContext, GoodDetailActivity.class));
+                                    Intent intent = new Intent(mContext, GoodDetailActivity.class);
+                                    intent.putExtra("id",goods.get(position).getId()+"");
+                                    startActivity(intent);
                                 }
                             });
 
