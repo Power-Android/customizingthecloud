@@ -2,6 +2,7 @@ package com.power.customizingthecloud.activity.mine;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -17,14 +18,25 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bigkoo.pickerview.OptionsPickerView;
 import com.bumptech.glide.Glide;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.compress.Luban;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.bean.ProviceBean;
+import com.power.customizingthecloud.bean.CityBean;
+import com.power.customizingthecloud.bean.QuBean;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.callback.JsonCallback;
+import com.power.customizingthecloud.utils.TUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseSelectPopupWindow;
 import com.power.customizingthecloud.view.CircleImageView;
 import com.wevey.selector.dialog.DialogInterface;
@@ -33,7 +45,6 @@ import com.wevey.selector.dialog.NormalSelectionDialog;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -58,6 +69,12 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
     private BaseSelectPopupWindow popWiw;// 昵称 编辑框
     private List<String> sexLiset;
 
+    private List<ProviceBean.DataBean> options1Items = new ArrayList<>();
+    private ArrayList<ArrayList<CityBean>> options2Items = new ArrayList<>();
+    private ArrayList<ArrayList<ArrayList<QuBean>>> options3Items = new ArrayList<>();
+    private boolean isLoaded = false;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +98,25 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
         sexLiset = new ArrayList<>();
         sexLiset.add("男");
         sexLiset.add("女");
+
+        initAreaData();
+    }
+
+    private void initAreaData() {
+        OkGo.<ProviceBean>get(Urls.BASEURL + "api/v2/area")
+                .tag(this)
+                .execute(new DialogCallback<ProviceBean>(EditInfoActivity.this,ProviceBean.class) {
+                    @Override
+                    public void onSuccess(Response<ProviceBean> response) {
+                        ProviceBean body = response.body();
+                        if (body.getCode() == 1){
+                            options1Items = body.getData();
+                            initJsonData();
+                        }else {
+                            TUtils.showShort(mContext,body.getMessage());
+                        }
+                    }
+                });
     }
 
     @Override
@@ -108,6 +144,11 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
                 showNickName("age");
                 break;
             case R.id.edit_location_rl:
+                if (isLoaded){
+                    ShowPickerView();
+                }else {
+                    TUtils.showShort(mContext,"地址解析失败，请检查网络情况。");
+                }
                 break;
         }
     }
@@ -328,6 +369,89 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
                 .build()
                 .setDatas(sexLiset)
                 .show();
+    }
+
+    private void ShowPickerView() {// 弹出选择器
+
+        OptionsPickerView pvOptions = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                //返回的分别是三个级别的选中位置
+                String tx = options1Items.get(options1).getPickerViewText()+
+                        options2Items.get(options1).get(options2).getCityname()+
+                        options3Items.get(options1).get(options2).get(options3).getQuname();
+                String id = options1Items.get(options1).getId()+
+                        options2Items.get(options1).get(options2).getId()+
+                        options3Items.get(options1).get(options2).get(options3).getId();
+                Logger.e(tx+"\n"+id);
+                editLocationTv.setText(tx);
+            }
+        })
+
+                .setTitleText("城市选择")
+                .setDividerColor(Color.BLACK)
+                .setTextColorCenter(Color.BLACK) //设置选中项文字颜色
+                .setContentTextSize(20)
+                .build();
+
+        /*pvOptions.setPicker(options1Items);//一级选择器
+        pvOptions.setPicker(options1Items, options2Items);//二级选择器*/
+        pvOptions.setPicker(options1Items, options2Items,options3Items);//三级选择器
+        pvOptions.show();
+    }
+
+    private void initJsonData() {//解析数据
+
+        /**
+         * 添加省份数据
+         *
+         * 注意：如果是添加的JavaBean实体，则实体类需要实现 IPickerViewData 接口，
+         * PickerView会通过getPickerViewText方法获取字符串显示出来。
+         */
+
+        for (int i=0;i<options1Items.size();i++){//遍历省份
+            ArrayList<CityBean> CityList = new ArrayList<>();//该省的城市列表（第二级）
+            ArrayList<ArrayList<QuBean>> Province_AreaList = new ArrayList<>();//该省的所有地区列表（第三极）
+
+            for (int c=0; c<options1Items.get(i).getItems().size(); c++){//遍历该省份的所有城市
+                CityBean cityBean = new CityBean();
+                String CityName = options1Items.get(i).getItems().get(c).getName();
+                int id = options1Items.get(i).getItems().get(c).getId();
+                cityBean.setCityname(CityName);
+                cityBean.setId(id+"");
+                CityList.add(cityBean);//添加城市
+                ArrayList<QuBean> City_AreaList = new ArrayList<>();//该城市的所有地区列表
+
+                //如果无地区数据，建议添加空字符串，防止数据为null 导致三个选项长度不匹配造成崩溃
+                if (options1Items.get(i).getItems().get(c).getItems() == null
+                        ||options1Items.get(i).getItems().get(c).getItems().size()==0) {
+                    City_AreaList.add(new QuBean());
+                }else {
+
+                    for (int d=0; d < options1Items.get(i).getItems().get(c).getItems().size(); d++) {//该城市对应地区所有数据
+                        QuBean quBean = new QuBean();
+                        String AreaName = options1Items.get(i).getItems().get(c).getItems().get(d).getName();
+                        int id1 = options1Items.get(i).getItems().get(c).getItems().get(d).getId();
+                        quBean.setQuname(AreaName);
+                        quBean.setId(id1+"");
+                        City_AreaList.add(quBean);//添加该城市所有地区数据
+                    }
+                }
+                Province_AreaList.add(City_AreaList);//添加该省所有地区数据
+            }
+
+            /**
+             * 添加城市数据
+             */
+            options2Items.add(CityList);
+
+            /**
+             * 添加地区数据
+             */
+            options3Items.add(Province_AreaList);
+        }
+
+        isLoaded = true;
     }
 
 
