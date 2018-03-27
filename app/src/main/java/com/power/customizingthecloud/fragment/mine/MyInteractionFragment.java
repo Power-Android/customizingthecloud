@@ -12,12 +12,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.InteractionBean;
+import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.market.MyDongTaiActivity;
+import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,61 +47,64 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     Unbinder unbinder;
+    private List<InteractionBean.DataBean> list = new ArrayList<>();
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = View.inflate(mContext, R.layout.fragment_interraction, null);
         unbinder = ButterKnife.bind(this, view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        recyclerView.setNestedScrollingEnabled(false);
         initData();
         return view;
     }
 
     private void initData() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        recyclerView.setNestedScrollingEnabled(false);
-        List<InteractionBean> list = new ArrayList<>();
-        InteractionBean bean1 = new InteractionBean();
-        bean1.setName("评论A");
-        bean1.setContent("评论：小伙子，快过年了哈！！！");
-        bean1.setIsPic("1");
-        list.add(bean1);
-        InteractionBean bean2 = new InteractionBean();
-        bean2.setName("评论B");
-        bean2.setContent("评论：小伙子，快过年了哈！！！");
-        bean2.setIsPic("0");
-        list.add(bean2);
-        InteractionBean bean3 = new InteractionBean();
-        bean3.setName("评论C");
-        bean3.setContent("评论：小伙子，快过年了哈！！！");
-        bean3.setIsPic("1");
-        list.add(bean3);
-        InteractionAdapter adapter = new InteractionAdapter(R.layout.item_interacation,list);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemChildClickListener(this);
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("after", "");
+        OkGo.<InteractionBean>get(Urls.BASEURL + "api/v2/user/my-comment")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<InteractionBean>(mActivity,InteractionBean.class) {
+                    @Override
+                    public void onSuccess(Response<InteractionBean> response) {
+                        InteractionBean body = response.body();
+                        if (body.getCode() == 1){
+                            list = body.getData();
+                            InteractionAdapter adapter = new InteractionAdapter(R.layout.item_interacation,list);
+                            recyclerView.setAdapter(adapter);
+                            adapter.setOnItemChildClickListener(MyInteractionFragment.this);
+                        }
+                    }
+                });
+
     }
 
     private void initData2() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        recyclerView.setNestedScrollingEnabled(false);
-        List<InteractionBean> list1 = new ArrayList<>();
-        InteractionBean bean1 = new InteractionBean();
-        bean1.setName("回复A");
-        bean1.setContent("回复A：小伙子，快过年了哈！！！");
-        bean1.setIsPic("1");
-        list1.add(bean1);
-        InteractionBean bean2 = new InteractionBean();
-        bean2.setName("回复B");
-        bean2.setContent("回复B：小伙子，快过年了哈！！！");
-        bean2.setIsPic("0");
-        list1.add(bean2);
-        InteractionBean bean3 = new InteractionBean();
-        bean3.setName("回复C");
-        bean3.setContent("回复C：小伙子，快过年了哈！！！");
-        bean3.setIsPic("1");
-        list1.add(bean3);
-        InteractionAdapter adapter = new InteractionAdapter(R.layout.item_interacation,list1);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemChildClickListener(this);
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("after", "");
+        OkGo.<InteractionBean>get(Urls.BASEURL + "api/v2/user/my-reply")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<InteractionBean>(mActivity,InteractionBean.class) {
+                    @Override
+                    public void onSuccess(Response<InteractionBean> response) {
+                        InteractionBean body = response.body();
+                        if (body.getCode() == 1){
+                            list = body.getData();
+                            InteractionAdapter adapter = new InteractionAdapter(R.layout.item_interacation,list);
+                            recyclerView.setAdapter(adapter);
+                            adapter.setOnItemChildClickListener(MyInteractionFragment.this);
+                        }
+                    }
+                });
+
     }
 
     @Override
@@ -120,20 +131,23 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
         startActivity(new Intent(mContext, MyDongTaiActivity.class));
     }
 
-    private class InteractionAdapter extends BaseQuickAdapter<InteractionBean,BaseViewHolder>{
+    private class InteractionAdapter extends BaseQuickAdapter<InteractionBean.DataBean,BaseViewHolder>{
 
-        public InteractionAdapter(@LayoutRes int layoutResId, @Nullable List<InteractionBean> data) {
+        public InteractionAdapter(@LayoutRes int layoutResId, @Nullable List<InteractionBean.DataBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, InteractionBean item) {
-            helper.setText(R.id.item_name_tv,item.getName())
-                    .setText(R.id.item_content_tv,item.getContent())
+        protected void convert(BaseViewHolder helper, InteractionBean.DataBean item) {
+            helper.setText(R.id.item_name_tv,item.getUser_name())
+                    .setText(R.id.item_content_tv,item.getBody())
                     .addOnClickListener(R.id.item_content_tv);
             ImageView imageView = helper.getView(R.id.item_pic_iv);
-            if (item.getIsPic().equals("1")){
+            ImageView faceiV = helper.getView(R.id.item_face_iv);
+            Glide.with(mActivity).load(item.getUser_avatar()).into(faceiV);
+            if (item.getImage() != null || item.getImage() != ""){
                 imageView.setVisibility(View.VISIBLE);
+                Glide.with(mActivity).load(item.getImage()).into(imageView);
             }else {
                 imageView.setVisibility(View.GONE);
             }
