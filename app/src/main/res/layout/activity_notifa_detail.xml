@@ -9,6 +9,7 @@
     tools:context="com.power.customizingthecloud.activity.mine.NotifaDetailActivity">
     <include layout="@layout/item_title_layout"/>
     <TextView
+        android:id="@+id/content_tv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="加几个字---加几个字-加几个字-加几个字加几个字加几个字加几个字加几个字加几个字加几个字加几个字加几个字加几个字加几个字加几个字"

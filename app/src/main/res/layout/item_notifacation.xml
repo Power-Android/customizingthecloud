@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:text="2018.01.25"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="15dp"/>
         <ImageView
             android:id="@+id/item_is_read_iv"
             android:layout_width="10dp"
@@ -31,7 +31,7 @@
             android:textColor="@color/text_black"
             android:layout_below="@+id/item_is_read_iv"
             android:layout_marginTop="2dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginRight="10dp"/>
         <View
             android:layout_width="match_parent"
