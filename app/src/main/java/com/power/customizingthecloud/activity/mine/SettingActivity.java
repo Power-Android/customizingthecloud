@@ -64,7 +64,7 @@ public class SettingActivity extends BaseActivity {
         startActivity(new Intent(mContext,AddressManagerActivity.class));
     }
 
-    @OnClick(R.id.acountsafe_rl)
+    @OnClick(R.id.acountsafe_rl)//账户安全
     public void setAcountsafeRl(){
         startActivity(new Intent(mContext,AccountSafeActivity.class));
     }

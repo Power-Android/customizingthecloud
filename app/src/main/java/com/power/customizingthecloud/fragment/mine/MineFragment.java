@@ -125,6 +125,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     RelativeLayout mineKefuRl;
     Unbinder unbinder;
     private Intent intent;
+    private String user_avatar;
+    private String user_name;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -148,7 +150,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
-
+        if (eventBean.getMsg().equals("userinfo")) {
+            initData();
+        }
     }
 
     private void initView() {
@@ -201,6 +205,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                             mineDaijinquanTv.setText(userBean.getData().getVoucher_count()+"张");
                             mineHongbaoTv.setText(userBean.getData().getPackage_count()+"个");
                             mineYuETv.setText(userBean.getData().getUser_balance()+"元");
+                            user_name = userBean.getData().getUser_name();
+                            user_avatar = userBean.getData().getUser_avatar();
                             if (!TextUtils.isEmpty(userBean.getData().getUser_avatar())){
                                 Glide.with(mContext).load(userBean.getData().getUser_avatar()).into(mineFaceIv);
                             }
@@ -237,7 +243,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, SettingActivity.class));
                 break;
             case R.id.mine_face_iv://头像
-                startActivity(new Intent(mContext, EditInfoActivity.class));
+                intent = new Intent(mContext, EditInfoActivity.class);
+                startActivity(intent);
                 break;
             case R.id.mine_sign_tv://签到有礼
                 startActivity(new Intent(mContext, MyDonkeyEarsActivity.class));

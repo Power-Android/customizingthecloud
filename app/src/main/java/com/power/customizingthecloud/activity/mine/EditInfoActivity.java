@@ -26,21 +26,29 @@ import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.orhanobut.logger.Logger;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.bean.BaseBean;
+import com.power.customizingthecloud.bean.EventBean;
+import com.power.customizingthecloud.bean.PicBean;
 import com.power.customizingthecloud.bean.ProviceBean;
 import com.power.customizingthecloud.bean.CityBean;
 import com.power.customizingthecloud.bean.QuBean;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.callback.JsonCallback;
+import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.TUtils;
 import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseSelectPopupWindow;
 import com.power.customizingthecloud.view.CircleImageView;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalSelectionDialog;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -68,11 +76,16 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
     private String cutPath;
     private BaseSelectPopupWindow popWiw;// 昵称 编辑框
     private List<String> sexLiset;
+    private int SEX = 1;
 
     private List<ProviceBean.DataBean> options1Items = new ArrayList<>();
     private ArrayList<ArrayList<CityBean>> options2Items = new ArrayList<>();
     private ArrayList<ArrayList<ArrayList<QuBean>>> options3Items = new ArrayList<>();
     private boolean isLoaded = false;
+    private String user_areaid;
+    private String user_cityid;
+    private String user_provinceid;
+    private String fileurl;
 
 
     @Override
@@ -100,6 +113,13 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
         sexLiset.add("女");
 
         initAreaData();
+        initData();
+    }
+
+    private void initData() {//获取个人信息
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+
     }
 
     private void initAreaData() {
@@ -126,7 +146,7 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
             case R.id.title_content_right_tv:
-                finish();
+                initEditData();
                 break;
             case R.id.edit_face_rl:
                 cameraList = new ArrayList<>();
@@ -151,6 +171,52 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
                 }
                 break;
         }
+    }
+
+    private void initEditData() {
+        if (TextUtils.isEmpty(editNameTv.getText().toString())){
+            TUtils.showShort(mContext,"请填写昵称");
+            return;
+        }
+        if (TextUtils.isEmpty(editAgeTv.getText().toString())){
+            TUtils.showShort(mContext,"请填写年龄");
+            return;
+        }
+        if (TextUtils.isEmpty(editLocationTv.getText().toString())){
+            TUtils.showShort(mContext,"请选择地区");
+            return;
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("user_name",editNameTv.getText().toString());
+        if (fileurl != null){
+            params.put("user_avatar",fileurl);
+        }
+        params.put("user_sex",SEX + "");
+        params.put("user_age",editAgeTv.getText().toString());
+        params.put("user_areaid",user_areaid);
+        params.put("user_cityid",user_cityid);
+        params.put("user_provinceid",user_provinceid);
+
+        OkGo.<BaseBean>post(Urls.BASEURL + "api/v2/user/edit")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<BaseBean>(this,BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        BaseBean body = response.body();
+                        if (body.getCode() == 1){
+                            TUtils.showShort(mContext,body.getMessage());
+                            EventBean eventBean = new EventBean("userinfo");
+                            EventBus.getDefault().postSticky(eventBean);
+                            finish();
+                        }else {
+                            TUtils.showShort(mContext,body.getMessage());
+                        }
+                    }
+                });
     }
 
     private void showCamera() {
@@ -256,9 +322,34 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
                     cutPath = selectList.get(0).getCutPath();
                     Glide.with(this).load(cutPath).into(editFaceIv);
                     File file = new File(cutPath);
+                    initPicData(file);
                     break;
             }
         }
+    }
+
+    private void initPicData(File file) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("file",file);
+        params.put("path","users");
+        OkGo.<PicBean>post(Urls.BASEURL + "api/v2/file/store")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<PicBean>(PicBean.class) {
+                    @Override
+                    public void onSuccess(Response<PicBean> response) {
+                        PicBean body = response.body();
+                        if (body.getCode() == 1){
+                            fileurl = body.getData().getFileurl();
+                        }else {
+                            TUtils.showShort(mContext,body.getMessage());
+                        }
+                    }
+                });
+
     }
 
     private void showNickName(final String type) {
@@ -357,9 +448,11 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
                         switch (position){
                             case 0://男
                                 editSexTv.setText("男");
+                                SEX = 1;
                                 break;
                             case 1://女
                                 editSexTv.setText("女");
+                                SEX = 2;
                                 break;
                         }
                         dialog.dismiss();
@@ -385,6 +478,9 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
                         options3Items.get(options1).get(options2).get(options3).getId();
                 Logger.e(tx+"\n"+id);
                 editLocationTv.setText(tx);
+                user_areaid = options3Items.get(options1).get(options2).get(options3).getId();
+                user_cityid = options2Items.get(options1).get(options2).getId();
+                user_provinceid = options1Items.get(options1).getId()+"";
             }
         })
 

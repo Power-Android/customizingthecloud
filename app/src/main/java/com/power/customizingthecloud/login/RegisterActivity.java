@@ -153,7 +153,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private void getCode(String phone) {
         if (TextUtils.isEmpty(phone)) {
-            Toast.makeText(this, "请输入手机号~", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "请输入手机号", Toast.LENGTH_SHORT).show();
             return;
         }
         HttpHeaders headers = new HttpHeaders();
