@@ -18,17 +18,35 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.AddressManagerActivity;
 import com.power.customizingthecloud.activity.mine.MyOrderActivity;
 import com.power.customizingthecloud.base.BaseActivity;
-import com.power.customizingthecloud.fragment.home.renyang.RenYangDetailActivity;
+import com.power.customizingthecloud.bean.AddressManageBean;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.fragment.home.bean.PushOrderBean;
+import com.power.customizingthecloud.fragment.home.bean.QuickBuyBean;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.CommonPopupWindow;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +100,8 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
     EditText mEdtLiuyan;
     @BindView(R.id.tv_totalprice)
     TextView mTvTotalprice;
+    @BindView(R.id.iv_good)
+    ImageView mIvGood;
     @BindView(R.id.tv_commit)
     TextView mTvCommit;
     @BindView(R.id.iv_address)
@@ -89,6 +109,8 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     private CommonPopupWindow popupWindow;
+    private int mAdressId;
+    private boolean hasAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +124,58 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
         mTvTime.setOnClickListener(this);
         mIvTime.setOnClickListener(this);
         mIvAddress.setOnClickListener(this);
+        initData();
+    }
+
+    private void initData() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("is_cart", "0");
+        params.put("buy_type", "3");
+        params.put("good_quantity", getIntent().getStringExtra("good_quantity"));
+        OkGo.<String>post(Urls.BASEURL + "api/v2/buy/buy-step1")
+                .headers(headers)
+                .params(params)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        Logger.e(body);
+                        try {
+                            JSONObject jsonObject = new JSONObject(body);
+                            JSONObject dataObj = jsonObject.optJSONObject("data");
+                            JSONObject addressObj = dataObj.optJSONObject("address");
+                            if (addressObj != null) {
+                                String true_name = addressObj.optString("true_name");
+                                String area_info = addressObj.optString("area_info");
+                                String address = addressObj.optString("address");
+                                String mobile = addressObj.optString("mobile");
+                                mAdressId = addressObj.optInt("id");
+                                hasAddress=true;
+                                mTvPersonname.setText("姓名：" + true_name);
+                                mTvPhone.setText("电话：" + mobile);
+                                mTvAddress.setText("地址：" + address);
+                            }
+                            Gson gson = new Gson();
+                            JSONArray good_list = dataObj.optJSONArray("good_list");
+                            List<QuickBuyBean.DataEntity.GoodListEntity> goodListEntities = gson.fromJson(good_list.toString(),
+                                    new TypeToken<List<QuickBuyBean.DataEntity.GoodListEntity>>() {
+                                    }.getType());
+                            if (goodListEntities != null && goodListEntities.size() > 0) {
+                                QuickBuyBean.DataEntity.GoodListEntity entity = goodListEntities.get(0);
+                                mTvShopname.setText(entity.getGood_name());
+                                Glide.with(MyApplication.getGloableContext()).load(entity.getGood_image()).into(mIvGood);
+                                mTvOneprice.setText("¥" + entity.getGood_price());
+                                mTvCount.setText("x" + entity.getGood_num());
+                                String order_good_total = dataObj.optString("order_good_total");
+                                mTvTotalprice.setText("¥" + order_good_total);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
     private void showPayStyleDialog() {
@@ -165,7 +239,7 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
                 }
                 mDialog.dismiss();
                 Intent intent = new Intent(MiaoConfirmOrderActivity.this, MyOrderActivity.class);
-                intent.putExtra("type","0");
+                intent.putExtra("type", "0");
                 startActivity(intent);
             }
         });
@@ -231,7 +305,7 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
                     overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
-                showPayStyleDialog();
+                pushOrder();
                 break;
             case R.id.tv_time:
             case R.id.iv_time:
@@ -241,8 +315,63 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
                 showDownPop(mTvTime, list);
                 break;
             case R.id.iv_address:
-                startActivity(new Intent(this, AddressManagerActivity.class));
+                Intent intent1 = new Intent(this, AddressManagerActivity.class);
+                intent1.putExtra("type", "order");
+                startActivityForResult(intent1,0);
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode==2){
+            AddressManageBean.DataBean result= (AddressManageBean.DataBean) data.getSerializableExtra("result");
+            String true_name = result.getTrue_name();
+            String area_info = result.getArea_info();
+            String address = result.getAddress();
+            String mobile = result.getMobile();
+            mAdressId = result.getId();
+            hasAddress = true;
+            mTvPersonname.setText("姓名：" + true_name);
+            mTvPhone.setText("电话：" + mobile);
+            mTvAddress.setText("地址：" + address);
+        }
+    }
+
+    private void pushOrder() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("is_cart", "0");
+        params.put("buy_type", "3");
+        params.put("good_quantity", getIntent().getStringExtra("good_quantity"));
+        if (hasAddress) {
+            params.put("address_id", mAdressId + "");
+        }
+//        params.put("voucher_id", "");
+//        params.put("is_eselsohr", "");
+        params.put("shipping_time", mTvTime.getText().toString());
+        String liuyan = mEdtLiuyan.getText().toString();
+        if (!TextUtils.isEmpty(liuyan)) {
+            params.put("order_message", "");
+        }
+        OkGo.<PushOrderBean>post(Urls.BASEURL + "api/v2/buy/buy-step2")
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<PushOrderBean>(MiaoConfirmOrderActivity.this, PushOrderBean.class) {
+                    @Override
+                    public void onSuccess(Response<PushOrderBean> response) {
+                        PushOrderBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                            String pay_sn = bean.getData().getPay_sn();
+                            showPayStyleDialog();
+                        }
+                    }
+                });
     }
 }

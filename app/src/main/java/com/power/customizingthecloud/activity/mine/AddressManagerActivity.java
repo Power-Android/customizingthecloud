@@ -127,6 +127,9 @@ public class AddressManagerActivity extends BaseActivity implements View.OnClick
             case R.id.ll_root:
                 String type = getIntent().getStringExtra("type");
                 if (!TextUtils.isEmpty(type) && type.equals("order")){
+                    Intent intent1=new Intent();
+                    intent1.putExtra("result",list.get(position));
+                    setResult(2,intent1);
                     AddressManagerActivity.this.finish();
                 }
                 break;

@@ -173,8 +173,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
                         android:paddingLeft="10dp"
-                        android:paddingTop="10dp"
                         android:paddingRight="10dp"
+                        android:paddingTop="10dp"
                     >
                         <TextView
                             android:layout_width="wrap_content"
@@ -229,7 +229,6 @@
                         android:layout_height="1dp"
                         android:background="@color/backgourd"/>
                     <RelativeLayout
-                        android:id="@+id/tv_quan_price"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="10dp"
@@ -240,15 +239,16 @@
                             android:layout_centerVertical="true"
                             android:gravity="center"
                             android:text="代金券"
-                            android:textColor="@color/text_black" />
+                            android:textColor="@color/text_black"/>
                         <TextView
+                            android:id="@+id/tv_quan_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:drawablePadding="5dp"
                             android:drawableRight="@drawable/mine_go_iv"
-                            android:text="¥-10.00"
+                            android:text="¥0.00"
                             android:textColor="@color/text_black"/>
                     </RelativeLayout>
                     <View

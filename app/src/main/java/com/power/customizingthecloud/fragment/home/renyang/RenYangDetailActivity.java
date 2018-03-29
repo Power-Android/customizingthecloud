@@ -33,6 +33,7 @@ import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.ServiceAgreementActivity;
 import com.power.customizingthecloud.fragment.home.bean.OrderBean;
 import com.power.customizingthecloud.fragment.home.bean.RenYangDetailBean;
+import com.power.customizingthecloud.listener.SnappingStepperValueChangeListener;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.Urls;
@@ -162,6 +163,14 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
             mTvCommit.setBackgroundResource(R.drawable.bg_yuanjiao_huise);
             mTvCommit.setClickable(false);
         }
+        mItemStepper.setOnValueChangeListener(new SnappingStepperValueChangeListener() {
+            @Override
+            public void onValueChange(View view, int value) {
+                mTvPrice.setText(Float.parseFloat(datas.getPrice()) * mItemStepper.getValue() + "元");
+                mTvLirun.setText(Float.parseFloat(datas.getPrice())
+                        * mItemStepper.getValue() * datas.getProfit() * datas.getPeriod() / 365 + "元");
+            }
+        });
         String id = getIntent().getStringExtra("id");
         HttpParams params = new HttpParams();
         params.put("id", id);

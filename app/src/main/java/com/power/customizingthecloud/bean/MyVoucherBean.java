@@ -43,7 +43,7 @@ public class MyVoucherBean implements Serializable {
         this.data = data;
     }
 
-    public static class DataBean {
+    public static class DataBean implements Serializable{
         /**
          * id : 1
          * title : 奶粉代金券

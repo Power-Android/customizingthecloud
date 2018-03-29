@@ -86,6 +86,11 @@ public class MyVoucherActivity extends BaseActivity implements View.OnClickListe
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         if (list.get(position).getState() != 1){
             if (type != null && type.equals("query")){
+                //数据是使用Intent返回
+                Intent intent = new Intent();
+                //把返回数据存入Intent
+                intent.putExtra("result", list.get(position));
+                setResult(1,intent);
                 finish();
             }else {
                 startActivity(new Intent(mContext, GoodListActivity.class));
