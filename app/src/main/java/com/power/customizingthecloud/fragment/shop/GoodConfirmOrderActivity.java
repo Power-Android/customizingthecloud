@@ -145,6 +145,20 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
         mIvTime.setOnClickListener(this);
         mIvAddress.setOnClickListener(this);
         initData();
+        initListener();
+    }
+
+    private void initListener() {
+        mCbEar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mTvTotalprice.setText("¥" + (Float.parseFloat(mOrder_good_total) - mDaijinquanprice - mEselsohr_total));
+                } else {
+                    mTvTotalprice.setText("¥" + (Float.parseFloat(mOrder_good_total) - mDaijinquanprice));
+                }
+            }
+        });
     }
 
     private void initData() {

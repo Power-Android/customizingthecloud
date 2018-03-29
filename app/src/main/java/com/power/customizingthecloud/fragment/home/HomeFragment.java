@@ -354,7 +354,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, MiaoShaActivity.class));
                 break;
             case R.id.iv_good_more:
-                startActivity(new Intent(mContext, GoodListActivity.class));
+                Intent intent1 = new Intent(mContext, GoodListActivity.class);
+                intent1.putExtra("type","hot");
+                startActivity(intent1);
                 break;
         }
     }
