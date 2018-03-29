@@ -62,4 +62,28 @@ public class CommonUtils {
                     }
                 });
     }
+
+    public static void insertCar2(final Activity mActivity, String good_id, String good_type,int num) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mActivity, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("good_id", good_id);
+        params.put("good_type", good_type);
+        params.put("good_num", num+"");
+        OkGo.<RegisterBean>post(Urls.BASEURL + "api/v2/cart/add")
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<RegisterBean>(mActivity, RegisterBean.class) {
+                    @Override
+                    public void onSuccess(Response<RegisterBean> response) {
+                        RegisterBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mActivity, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            Toast.makeText(mActivity, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
 }

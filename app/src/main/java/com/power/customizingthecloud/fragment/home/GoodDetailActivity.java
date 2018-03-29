@@ -29,6 +29,7 @@ import com.power.customizingthecloud.fragment.home.bean.GoodDetailBean;
 import com.power.customizingthecloud.fragment.shop.GoodConfirmOrderActivity;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
+import com.power.customizingthecloud.utils.CommonUtils;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
@@ -109,8 +110,9 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     private List<String> imgList = new ArrayList<>();
-    private List<String> mSpec_value=new ArrayList<>();
+    private List<String> mSpec_value = new ArrayList<>();
     private List<GoodDetailBean.DataEntity.CommentsEntity> mComments;
+    private GoodDetailBean.DataEntity mData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,24 +154,24 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
                             Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
                             imgList.clear();
-                            GoodDetailBean.DataEntity data = bean.getData();
-                            List<GoodDetailBean.DataEntity.ImagesEntity> images = data.getImages();
+                            mData = bean.getData();
+                            List<GoodDetailBean.DataEntity.ImagesEntity> images = mData.getImages();
                             if (images != null && images.size() > 0) {
                                 for (int i = 0; i < images.size(); i++) {
                                     imgList.add(images.get(i).getImag());
                                 }
                             }
                             BannerUtils.startBanner(mBanner, imgList);
-                            mTvName.setText(data.getName());
-                            mTvShengyu.setText(data.getGood_storage()+"");
-                            mTvDiyong.setText("可用"+data.getEselsohr_deduction()+"驴耳朵抵用"+data.getEselsohr_deduction()+"元");
-                            mTvGoodType.setText("商品分类："+data.getClass_name());
-                            String spec_value = data.getSpec_value();
+                            mTvName.setText(mData.getName());
+                            mTvShengyu.setText(mData.getGood_storage() + "");
+                            mTvDiyong.setText("可用" + mData.getEselsohr_deduction() + "驴耳朵抵用" + mData.getEselsohr_deduction() + "元");
+                            mTvGoodType.setText("商品分类：" + mData.getClass_name());
+                            String spec_value = mData.getSpec_value();
                             String[] split = spec_value.split("@");
                             for (int i = 0; i < split.length; i++) {
                                 mSpec_value.add(split[i]);
                             }
-                            mComments = data.getComments();
+                            mComments = mData.getComments();
                         }
                     }
                 });
@@ -200,7 +202,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
                     overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
-                Toast.makeText(this, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
+                CommonUtils.insertCar2(this, mData.getId() + "", "good", mItemStepper.getValue());
                 break;
             case R.id.tv_buy:
                 String userid3 = SpUtils.getString(mContext, "userid", "");
@@ -209,7 +211,9 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
                     overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
-                startActivity(new Intent(this, GoodConfirmOrderActivity.class));
+                Intent intent = new Intent(GoodDetailActivity.this, GoodConfirmOrderActivity.class);
+                intent.putExtra("good_quantity",mData.getId() + "=" + mItemStepper.getValue());
+                startActivity(intent);
                 break;
         }
     }
@@ -314,7 +318,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-            helper.setText(R.id.tv_content,item);
+            helper.setText(R.id.tv_content, item);
         }
     }
 
@@ -347,9 +351,9 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
         @Override
         protected void convert(BaseViewHolder helper, GoodDetailBean.DataEntity.CommentsEntity item) {
             Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into((ImageView) helper.getView(R.id.iv_head));
-            helper.setText(R.id.tv_name,item.getUser_name())
-                    .setText(R.id.tv_time,item.getTime())
-                    .setText(R.id.tv_content,item.getContent());
+            helper.setText(R.id.tv_name, item.getUser_name())
+                    .setText(R.id.tv_time, item.getTime())
+                    .setText(R.id.tv_content, item.getContent());
         }
     }
 

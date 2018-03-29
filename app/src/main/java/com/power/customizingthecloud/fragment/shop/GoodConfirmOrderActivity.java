@@ -19,17 +19,33 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.orhanobut.logger.Logger;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.AddressManagerActivity;
 import com.power.customizingthecloud.activity.mine.MyOrderActivity;
 import com.power.customizingthecloud.activity.mine.MyVoucherActivity;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.fragment.home.bean.QuickBuyBean;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.CommonPopupWindow;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,6 +134,67 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
         mTvTime.setOnClickListener(this);
         mIvTime.setOnClickListener(this);
         mIvAddress.setOnClickListener(this);
+        initData();
+    }
+
+    private void initData() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("is_cart", "0");
+        params.put("buy_type", "2");
+        params.put("good_quantity", getIntent().getStringExtra("good_quantity"));
+        OkGo.<String>post(Urls.BASEURL + "api/v2/buy/buy-step1")
+                .headers(headers)
+                .params(params)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String body = response.body();
+                        Logger.e(body);
+                        try {
+                            JSONObject jsonObject = new JSONObject(body);
+                            JSONObject dataObj = jsonObject.optJSONObject("data");
+                            JSONObject addressObj = dataObj.optJSONObject("address");
+                            if (addressObj != null) {
+                                String true_name = addressObj.optString("true_name");
+                                String area_info = addressObj.optString("area_info");
+                                String address = addressObj.optString("address");
+                                String mobile = addressObj.optString("mobile");
+                                mTvPersonname.setText("姓名：" + true_name);
+                                mTvPhone.setText("电话：" + mobile);
+                                mTvAddress.setText("地址：" + address);
+                            }
+                            JSONArray good_list = dataObj.optJSONArray("good_list");
+                            //用泛型就会出异常java.lang.ClassCastException: com.google.gson.internal.LinkedTreeMap cannot be cast to xxx
+//                            List<QuickBuyBean.DataEntity.GoodListEntity> goodListEntities
+//                                    = parseJsonArrayWithGson(good_list.toString(), QuickBuyBean.DataEntity.GoodListEntity.class);
+                            Gson gson = new Gson();
+                            List<QuickBuyBean.DataEntity.GoodListEntity> goodListEntities = gson.fromJson(good_list.toString(),
+                                    new TypeToken<List<QuickBuyBean.DataEntity.GoodListEntity>>() {}.getType());
+                            if (goodListEntities!=null && goodListEntities.size()>0){
+                                QuickBuyBean.DataEntity.GoodListEntity entity = goodListEntities.get(0);
+                                mTvShopname.setText(entity.getGood_name());
+                                Glide.with(MyApplication.getGloableContext()).load(entity.getGood_image()).into(mIvGood);
+                                mTvOneprice.setText(entity.getGood_price());
+                                mTvXiaoji.setText(entity.getGood_price());
+                                mTvCount.setText("x"+entity.getGood_num());
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            //                            Logger.e(e.toString());
+                            //                            Logger.e(e.getMessage());
+                        }
+                    }
+                });
+    }
+
+    // 将Json数组解析成相应的映射对象列表
+    public <T> List<T> parseJsonArrayWithGson(String jsonData, Class<T> type) {
+        Gson gson = new Gson();
+        List<T> result = gson.fromJson(jsonData, new TypeToken<List<T>>() {
+        }.getType());
+        return result;
     }
 
     private void showPayStyleDialog() {
@@ -181,7 +258,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                 }
                 mDialog.dismiss();
                 Intent intent = new Intent(GoodConfirmOrderActivity.this, MyOrderActivity.class);
-                intent.putExtra("type","0");
+                intent.putExtra("type", "0");
                 startActivity(intent);
             }
         });

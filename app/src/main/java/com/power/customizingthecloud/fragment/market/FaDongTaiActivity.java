@@ -241,6 +241,7 @@ public class FaDongTaiActivity extends BaseActivity implements View.OnClickListe
                 File file = new File(path);
                 HttpParams params = new HttpParams();
                 params.put("file", file);
+                params.put("path", "feed");
                 final int finalI = i;
                 OkGo.<UploadPhotoBean>post(Urls.BASEURL + "api/v2/file/store")
                         .headers(headers)
