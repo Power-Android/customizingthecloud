@@ -138,7 +138,7 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
                             }else {
                                 editSexTv.setText("女");
                             }
-                            editAgeTv.setText(body.getData().getUser_age());
+                            editAgeTv.setText(body.getData().getUser_age()+"");
                             editLocationTv.setText(body.getData().getUser_areainfo());
                         }else {
                             TUtils.showShort(mContext,body.getMessage());
@@ -535,31 +535,49 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
             ArrayList<CityBean> CityList = new ArrayList<>();//该省的城市列表（第二级）
             ArrayList<ArrayList<QuBean>> Province_AreaList = new ArrayList<>();//该省的所有地区列表（第三极）
 
-            for (int c=0; c<options1Items.get(i).getItems().size(); c++){//遍历该省份的所有城市
+            //如果无城市数据，建议添加空字符串，防止数据为null 导致三个选项长度不匹配造成崩溃
+            if (options1Items.get(i).getItems() == null
+                    || options1Items.get(i).getItems().size() == 0){
                 CityBean cityBean = new CityBean();
-                String CityName = options1Items.get(i).getItems().get(c).getName();
-                int id = options1Items.get(i).getItems().get(c).getId();
-                cityBean.setCityname(CityName);
-                cityBean.setId(id+"");
-                CityList.add(cityBean);//添加城市
+                cityBean.setId("");
+                cityBean.setCityname("");
+                CityList.add(cityBean);
                 ArrayList<QuBean> City_AreaList = new ArrayList<>();//该城市的所有地区列表
-
-                //如果无地区数据，建议添加空字符串，防止数据为null 导致三个选项长度不匹配造成崩溃
-                if (options1Items.get(i).getItems().get(c).getItems() == null
-                        ||options1Items.get(i).getItems().get(c).getItems().size()==0) {
-                    City_AreaList.add(new QuBean());
-                }else {
-
-                    for (int d=0; d < options1Items.get(i).getItems().get(c).getItems().size(); d++) {//该城市对应地区所有数据
-                        QuBean quBean = new QuBean();
-                        String AreaName = options1Items.get(i).getItems().get(c).getItems().get(d).getName();
-                        int id1 = options1Items.get(i).getItems().get(c).getItems().get(d).getId();
-                        quBean.setQuname(AreaName);
-                        quBean.setId(id1+"");
-                        City_AreaList.add(quBean);//添加该城市所有地区数据
-                    }
-                }
+                QuBean quBean = new QuBean();
+                quBean.setId("");
+                quBean.setQuname("");
+                City_AreaList.add(quBean);
                 Province_AreaList.add(City_AreaList);//添加该省所有地区数据
+            }else {
+                for (int c=0; c<options1Items.get(i).getItems().size(); c++){//遍历该省份的所有城市
+                    CityBean cityBean = new CityBean();
+                    String CityName = options1Items.get(i).getItems().get(c).getName();
+                    int id = options1Items.get(i).getItems().get(c).getId();
+                    cityBean.setCityname(CityName);
+                    cityBean.setId(id+"");
+                    CityList.add(cityBean);//添加城市
+                    ArrayList<QuBean> City_AreaList = new ArrayList<>();//该城市的所有地区列表
+
+                    //如果无地区数据，建议添加空字符串，防止数据为null 导致三个选项长度不匹配造成崩溃
+                    if (options1Items.get(i).getItems().get(c).getItems() == null
+                            ||options1Items.get(i).getItems().get(c).getItems().size()==0) {
+                        QuBean quBean = new QuBean();
+                        quBean.setId("");
+                        quBean.setQuname("");
+                        City_AreaList.add(quBean);
+                    }else {
+
+                        for (int d=0; d < options1Items.get(i).getItems().get(c).getItems().size(); d++) {//该城市对应地区所有数据
+                            QuBean quBean = new QuBean();
+                            String AreaName = options1Items.get(i).getItems().get(c).getItems().get(d).getName();
+                            int id1 = options1Items.get(i).getItems().get(c).getItems().get(d).getId();
+                            quBean.setQuname(AreaName);
+                            quBean.setId(id1+"");
+                            City_AreaList.add(quBean);//添加该城市所有地区数据
+                        }
+                    }
+                    Province_AreaList.add(City_AreaList);//添加该省所有地区数据
+                }
             }
 
             /**

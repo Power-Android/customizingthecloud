@@ -16,6 +16,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
@@ -67,7 +68,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
     LinearLayout fenixiaoLl;
     @BindView(R.id.shangcheng_ll)
     LinearLayout shangchengLl;
-    private List<ShopcartBean> list;
+    private List<ShopcartBean.DataBean> list = new ArrayList<>();
     private double totalMoney;
     private int num;
     private ShopCartAdapter adapter;
@@ -89,23 +90,10 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
         titleBackIv.setOnClickListener(this);
         titleContentRightTv.setOnClickListener(this);
 
-        initFenxiao();
-
-        list = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            ShopcartBean bean = new ShopcartBean();
-            bean.setName("驴奶粉");
-            bean.setFenlei("商品分类：驴奶粉");
-            bean.setMoney(99.00);
-            bean.setNum(i + 1);
-            list.add(bean);
-        }
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
-        adapter = new ShopCartAdapter(R.layout.item_shop_cart, list);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemChildClickListener(this);
-        adapter.setOnItemClickListener(this);
+        initFenxiao();
+
         allCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,16 +116,22 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
     private void initFxData() {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
-
-        OkGo.<DonkeyEarsBean>get(Urls.BASEURL + "api/v2/user/eselsohr")
+        HttpParams params = new HttpParams();
+        params.put("good_cart_type","2");
+        OkGo.<ShopcartBean>get(Urls.BASEURL + "api/v2/cart/list")
                 .tag(this)
                 .headers(headers)
-                .execute(new DialogCallback<DonkeyEarsBean>(this,DonkeyEarsBean.class) {
+                .params(params)
+                .execute(new DialogCallback<ShopcartBean>(this,ShopcartBean.class) {
                     @Override
-                    public void onSuccess(Response<DonkeyEarsBean> response) {
-                        DonkeyEarsBean body = response.body();
+                    public void onSuccess(Response<ShopcartBean> response) {
+                        ShopcartBean body = response.body();
                         if (body.getCode() == 1){
-
+                            list = body.getData();
+                            adapter = new ShopCartAdapter(R.layout.item_shop_cart, list);
+                            recyclerView.setAdapter(adapter);
+                            adapter.setOnItemChildClickListener(ShopCartActivity.this);
+                            adapter.setOnItemClickListener(ShopCartActivity.this);
                         }
                     }
                 });
@@ -145,6 +139,31 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
 
     private void initShangcheng() {
         initShangchengColor();
+        initShangchengData();
+    }
+
+    private void initShangchengData() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("good_cart_type","1");
+        OkGo.<ShopcartBean>get(Urls.BASEURL + "api/v2/cart/list")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<ShopcartBean>(this,ShopcartBean.class) {
+                    @Override
+                    public void onSuccess(Response<ShopcartBean> response) {
+                        ShopcartBean body = response.body();
+                        if (body.getCode() == 1){
+                            list = body.getData();
+                            adapter = new ShopCartAdapter(R.layout.item_shop_cart, list);
+                            recyclerView.setAdapter(adapter);
+                            adapter.setOnItemChildClickListener(ShopCartActivity.this);
+                            adapter.setOnItemClickListener(ShopCartActivity.this);
+                        }
+                    }
+                });
     }
 
     private void initFenxiaooColor() {
@@ -163,7 +182,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        ShopcartBean item = list.get(position);
+        ShopcartBean.DataBean item = list.get(position);
         if (!isEdit) {//结算状态
             if (!((CheckBox) view).isChecked()) {//未选中状态
                 allCheckBox.setChecked(false);
@@ -212,29 +231,29 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    private class ShopCartAdapter extends BaseQuickAdapter<ShopcartBean, BaseViewHolder> {
+    private class ShopCartAdapter extends BaseQuickAdapter<ShopcartBean.DataBean, BaseViewHolder> {
 
-        public ShopCartAdapter(@LayoutRes int layoutResId, @Nullable List<ShopcartBean> data) {
+        public ShopCartAdapter(@LayoutRes int layoutResId, @Nullable List<ShopcartBean.DataBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(final BaseViewHolder helper, final ShopcartBean item) {
+        protected void convert(final BaseViewHolder helper, final ShopcartBean.DataBean item) {
             SnappingStepper stepper = helper.getView(R.id.item_stepper);
             CheckBox checkBox = helper.getView(R.id.item_checkBox);
             final TextView moneyTv = helper.getView(R.id.item_money_tv);
-            stepper.setValue(item.getNum());
+            stepper.setValue(item.getGood_num());
             checkBox.setChecked(item.isChecked());
-            moneyTv.setText("￥" + item.getMoney() * stepper.getValue());
-            helper.setText(R.id.item_name_tv, item.getName())
-                    .setText(R.id.item_fenlei_tv, item.getFenlei())
+            moneyTv.setText("￥" + item.getGood_price() * stepper.getValue());
+            helper.setText(R.id.item_name_tv, item.getGood_name())
+                    .setText(R.id.item_fenlei_tv, "商品分类："+item.getClass_name())
                     .addOnClickListener(R.id.item_checkBox);
 
             stepper.setOnValueChangeListener(new SnappingStepperValueChangeListener() {
                 @Override
                 public void onValueChange(View view, int value) {
-                    item.setNum(value);
-                    moneyTv.setText("￥" + item.getMoney() * value);
+                    item.setGood_num(value);
+                    moneyTv.setText("￥" + item.getGood_price() * value);
                     jiesuan();
                     notifyDataSetChanged();
                 }
@@ -276,7 +295,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
         num = 0;
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).isChecked()) {
-                double money = list.get(i).getMoney() * list.get(i).getNum();
+                double money = list.get(i).getGood_price() * list.get(i).getGood_num();
                 totalMoney += money;
                 num += 1;
             }
@@ -290,7 +309,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
         num = 0;
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).isChecked()) {
-                double money = list.get(i).getMoney() * list.get(i).getNum();
+                double money = list.get(i).getGood_price() * list.get(i).getGood_num();
                 totalMoney += money;
                 num += 1;
             }
@@ -301,9 +320,9 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
     private void quanxuan() {
         totalMoney = 0.00;
         for (int i = 0; i < list.size(); i++) {
-            ShopcartBean item = list.get(i);
+            ShopcartBean.DataBean item = list.get(i);
             item.setChecked(true);
-            double money = item.getMoney() * item.getNum();
+            double money = item.getGood_price() * item.getGood_num();
             totalMoney += money;
         }
         if (isEdit) {
