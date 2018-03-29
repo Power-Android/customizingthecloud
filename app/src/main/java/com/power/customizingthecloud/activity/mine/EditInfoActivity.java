@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.renderscript.BaseObj;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -29,10 +30,10 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
-import com.orhanobut.logger.Logger;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.BaseBean;
+import com.power.customizingthecloud.bean.EditInfoBean;
 import com.power.customizingthecloud.bean.EventBean;
 import com.power.customizingthecloud.bean.PicBean;
 import com.power.customizingthecloud.bean.ProviceBean;
@@ -86,6 +87,9 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
     private String user_cityid;
     private String user_provinceid;
     private String fileurl;
+    private String provice;
+    private String city;
+    private String area;
 
 
     @Override
@@ -119,7 +123,28 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
     private void initData() {//获取个人信息
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
-
+        OkGo.<EditInfoBean>get(Urls.BASEURL + "api/v2/user/show")
+                .tag(this)
+                .headers(headers)
+                .execute(new DialogCallback<EditInfoBean>(this,EditInfoBean.class) {
+                    @Override
+                    public void onSuccess(Response<EditInfoBean> response) {
+                        EditInfoBean body = response.body();
+                        if (body.getCode() == 1){
+                            Glide.with(mContext).load(body.getData().getUser_avatar()).into(editFaceIv);
+                            editNameTv.setText(body.getData().getUser_name());
+                            if (body.getData().getUser_sex() == 1){
+                                editSexTv.setText("男");
+                            }else {
+                                editSexTv.setText("女");
+                            }
+                            editAgeTv.setText(body.getData().getUser_age());
+                            editLocationTv.setText(body.getData().getUser_areainfo());
+                        }else {
+                            TUtils.showShort(mContext,body.getMessage());
+                        }
+                    }
+                });
     }
 
     private void initAreaData() {
@@ -198,6 +223,7 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
         params.put("user_areaid",user_areaid);
         params.put("user_cityid",user_cityid);
         params.put("user_provinceid",user_provinceid);
+        params.put("user_areainfo",provice + " " + city + " " + area);
 
         OkGo.<BaseBean>post(Urls.BASEURL + "api/v2/user/edit")
                 .tag(this)
@@ -473,14 +499,14 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
                 String tx = options1Items.get(options1).getPickerViewText()+
                         options2Items.get(options1).get(options2).getCityname()+
                         options3Items.get(options1).get(options2).get(options3).getQuname();
-                String id = options1Items.get(options1).getId()+
-                        options2Items.get(options1).get(options2).getId()+
-                        options3Items.get(options1).get(options2).get(options3).getId();
-                Logger.e(tx+"\n"+id);
-                editLocationTv.setText(tx);
                 user_areaid = options3Items.get(options1).get(options2).get(options3).getId();
                 user_cityid = options2Items.get(options1).get(options2).getId();
                 user_provinceid = options1Items.get(options1).getId()+"";
+                provice = options1Items.get(options1).getPickerViewText();
+                city = options2Items.get(options1).get(options2).getCityname();
+                area = options3Items.get(options1).get(options2).get(options3).getQuname();
+                editLocationTv.setText(provice + " " + city + " " + area);
+
             }
         })
 

@@ -17,10 +17,18 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.MyOderBean;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.fragment.home.bean.OrderBean;
+import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.TUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
@@ -32,7 +40,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MyOrderActivity extends BaseActivity implements View.OnClickListener, BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener {
+public class MyOrderActivity extends BaseActivity implements View.OnClickListener, BaseQuickAdapter.OnItemChildClickListener{
 
     @BindView(R.id.title_back_iv)
     ImageView titleBackIv;
@@ -72,16 +80,12 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     TextView daishouhuoTv;
     @BindView(R.id.daipingjia_tv)
     TextView daipingjiaTv;
-    private List<MyOderBean> list;
-    private MyOderBean bean1;
-    private MyOderBean bean2;
-    private MyOderBean bean3;
-    private MyOderBean bean4;
     private MyOrderAdapter adapter;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     private String type;
     private Intent intent;
+    private List<MyOderBean.DataBean> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,91 +106,66 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
 
-        list = new ArrayList<>();
-        initData();
         type = getIntent().getStringExtra("type");
-        if (!TextUtils.isEmpty(type)) {
-            switchType(type);
-        }
+        initData(type);
     }
 
-    private void initData() {
-        bean1 = new MyOderBean();
-        bean1.setType("1");
-        bean1.setName("驴奶粉");
-        bean1.setFeilei("商品分类：驴奶粉");
-        bean1.setMoney("￥99.00");
-        bean1.setNum("x1");
-        bean1.setYunfei("共1件商品 合计：￥99.00（含运费￥0.00）");
+    private void initData(final String type) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("type",type);
+        params.put("after","");
 
-        bean2 = new MyOderBean();
-        bean2.setType("2");
-        bean2.setName("驴奶粉");
-        bean2.setFeilei("商品分类：驴奶粉");
-        bean2.setMoney("￥99.00");
-        bean2.setNum("x1");
-        bean2.setYunfei("共1件商品 合计：￥99.00（含运费￥0.00）");
+        OkGo.<MyOderBean>get(Urls.BASEURL + "api/v2/user/order-list")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<MyOderBean>(this,MyOderBean.class) {
+                    @Override
+                    public void onSuccess(Response<MyOderBean> response) {
+                        MyOderBean body = response.body();
+                        if (body.getCode() == 1){
+                            list = body.getData();
+                            if (!TextUtils.isEmpty(type)) {
+                                switchType(type);
+                            }
+                        }
+                    }
+                });
 
-        bean3 = new MyOderBean();
-        bean3.setType("3");
-        bean3.setName("驴奶粉");
-        bean3.setFeilei("商品分类：驴奶粉");
-        bean3.setMoney("￥99.00");
-        bean3.setNum("x1");
-        bean3.setYunfei("共1件商品 合计：￥99.00（含运费￥0.00）");
-
-        bean4 = new MyOderBean();
-        bean4.setType("4");
-        bean4.setName("驴奶粉");
-        bean4.setFeilei("商品分类：驴奶粉");
-        bean4.setMoney("￥99.00");
-        bean4.setNum("x1");
-        bean4.setYunfei("共1件商品 合计：￥99.00（含运费￥0.00）");
     }
 
     private void switchType(String type) {
         switch (type) {
             case "0":
                 initQuanbuColor();
-                list.add(bean1);
-                list.add(bean2);
-                list.add(bean3);
-                list.add(bean4);
                 adapter = new MyOrderAdapter(R.layout.item_my_order, list);
                 recyclerView.setAdapter(adapter);
-                adapter.setOnItemClickListener(this);
                 adapter.setOnItemChildClickListener(this);
                 break;
             case "1":
                 initDaifukuanColor();
-                list.add(bean1);
                 adapter = new MyOrderAdapter(R.layout.item_my_order, list);
                 recyclerView.setAdapter(adapter);
-                adapter.setOnItemClickListener(this);
                 adapter.setOnItemChildClickListener(this);
                 break;
             case "2":
                 initDaifahuoColor();
-                list.add(bean2);
                 adapter = new MyOrderAdapter(R.layout.item_my_order, list);
                 recyclerView.setAdapter(adapter);
-                adapter.setOnItemClickListener(this);
                 adapter.setOnItemChildClickListener(this);
                 break;
             case "3":
                 initDaishouhuoColor();
-                list.add(bean3);
                 adapter = new MyOrderAdapter(R.layout.item_my_order, list);
                 recyclerView.setAdapter(adapter);
-                adapter.setOnItemClickListener(this);
                 adapter.setOnItemChildClickListener(this);
                 break;
             case "4":
                 initDaipingjiaColor();
-                list.add(bean4);
                 adapter = new MyOrderAdapter(R.layout.item_my_order, list);
                 recyclerView.setAdapter(adapter);
-                adapter.setOnItemClickListener(this);
                 adapter.setOnItemChildClickListener(this);
                 break;
         }
@@ -196,10 +175,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     public void quanbu() {
         list.clear();
         initQuanbuColor();
-        list.add(bean1);
-        list.add(bean2);
-        list.add(bean3);
-        list.add(bean4);
+        initData("0");
         adapter.notifyDataSetChanged();
     }
 
@@ -218,9 +194,9 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
 
     @OnClick(R.id.daifukuan_ll)
     public void daifukuan() {
-        initDaifukuanColor();
         list.clear();
-        list.add(bean1);
+        initDaifukuanColor();
+        initData("1");
         adapter.notifyDataSetChanged();
     }
 
@@ -241,7 +217,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     public void daifahuo() {
         initDaifahuoColor();
         list.clear();
-        list.add(bean2);
+        initData("2");
         adapter.notifyDataSetChanged();
     }
 
@@ -262,7 +238,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     public void daishouhuo() {
         initDaishouhuoColor();
         list.clear();
-        list.add(bean3);
+        initData("3");
         adapter.notifyDataSetChanged();
     }
 
@@ -283,7 +259,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     public void daipingjia() {
         initDaipingjiaColor();
         list.clear();
-        list.add(bean4);
+        initData("4");
         adapter.notifyDataSetChanged();
     }
 
@@ -304,7 +280,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         switch (view.getId()) {
             case R.id.item_use_tv:
-                switch (list.get(position).getType()) {
+                switch (type) {
                     case "1":
                         showPayStyleDialog();
                         break;
@@ -320,7 +296,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                 }
                 break;
             case R.id.item_cancle_order_tv:
-                switch (list.get(position).getType()){
+                switch (type){
                     case "1":
                         showTip(position);
                         break;
@@ -420,51 +396,19 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
-    @Override
-    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        switch (list.get(position).getType()) {
-            case "1":
-                intent = new Intent(mContext, OrderDetailActivity.class);
-                intent.putExtra("type", list.get(position).getType());
-                startActivity(intent);
-                break;
-            case "2":
-                intent = new Intent(mContext, OrderDetailActivity.class);
-                intent.putExtra("type", list.get(position).getType());
-                startActivity(intent);
-                break;
-            case "3":
-                intent = new Intent(mContext, OrderDetailActivity.class);
-                intent.putExtra("type", list.get(position).getType());
-                startActivity(intent);
-                break;
-            case "4":
-                intent = new Intent(mContext, OrderDetailActivity.class);
-                intent.putExtra("type", list.get(position).getType());
-                startActivity(intent);
-                break;
-        }
-    }
+    private class MyOrderAdapter extends BaseQuickAdapter<MyOderBean.DataBean, BaseViewHolder> implements BaseQuickAdapter.OnItemClickListener {
 
-
-    private class MyOrderAdapter extends BaseQuickAdapter<MyOderBean, BaseViewHolder> {
-
-        public MyOrderAdapter(@LayoutRes int layoutResId, @Nullable List<MyOderBean> data) {
+        public MyOrderAdapter(@LayoutRes int layoutResId, @Nullable List<MyOderBean.DataBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, MyOderBean item) {
-            helper.setText(R.id.item_name_tv, item.getName())
-                    .setText(R.id.item_fenlei_tv, item.getFeilei())
-                    .setText(R.id.item_money_tv, item.getMoney())
-                    .setText(R.id.item_num_tv, item.getNum())
-                    .setText(R.id.item_des_tv, item.getYunfei())
-                    .addOnClickListener(R.id.item_use_tv)
+        protected void convert(BaseViewHolder helper, MyOderBean.DataBean item) {
+            helper.addOnClickListener(R.id.item_use_tv)
                     .addOnClickListener(R.id.item_cancle_order_tv);
             TextView useTv = helper.getView(R.id.item_use_tv);
             TextView cancleTv = helper.getView(R.id.item_cancle_order_tv);
-            switch (item.getType()) {
+            switch (type) {
                 case "1":
                     cancleTv.setVisibility(View.VISIBLE);
                     cancleTv.setText("取消订单");
@@ -484,6 +428,57 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                     useTv.setText("评价");
                     break;
             }
+            RecyclerView itemRecycler = helper.getView(R.id.item_recycler);
+            itemRecycler.setLayoutManager(new LinearLayoutManager(mContext));
+            itemRecycler.setNestedScrollingEnabled(false);
+            String order_state = item.getOrder_state();
+            List<MyOderBean.DataBean.GoodsBean> itemList = item.getGoods();
+            ItmeOrderAdapter adapter = new ItmeOrderAdapter(R.layout.item_itemorder_layout, itemList, order_state);
+            itemRecycler.setAdapter(adapter);
+            adapter.setOnItemClickListener(this);
+        }
+
+        @Override
+        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+            switch (type) {
+                case "1":
+                    intent = new Intent(mContext, OrderDetailActivity.class);
+                    intent.putExtra("type", type);
+                    startActivity(intent);
+                    break;
+                case "2":
+                    intent = new Intent(mContext, OrderDetailActivity.class);
+                    intent.putExtra("type", type);
+                    startActivity(intent);
+                    break;
+                case "3":
+                    intent = new Intent(mContext, OrderDetailActivity.class);
+                    intent.putExtra("type", type);
+                    startActivity(intent);
+                    break;
+                case "4":
+                    intent = new Intent(mContext, OrderDetailActivity.class);
+                    intent.putExtra("type", type);
+                    startActivity(intent);
+                    break;
+            }
+        }
+    }
+
+    private class ItmeOrderAdapter extends BaseQuickAdapter<MyOderBean.DataBean.GoodsBean,BaseViewHolder>{
+        private String type;
+        public ItmeOrderAdapter(int layoutResId, @Nullable List<MyOderBean.DataBean.GoodsBean> data,String type) {
+            super(layoutResId, data);
+            this.type = type;
+        }
+
+        @Override
+        protected void convert(BaseViewHolder helper, MyOderBean.DataBean.GoodsBean item) {
+            helper.setText(R.id.item_name_tv, item.getGoods_name())
+                    .setText(R.id.item_fenlei_tv, item.getGoods_name())
+                    .setText(R.id.item_money_tv, item.getGoods_price())
+                    .setText(R.id.item_num_tv, item.getGoods_num())
+                    .setText(R.id.item_des_tv, item.getGoods_price());
         }
     }
 
