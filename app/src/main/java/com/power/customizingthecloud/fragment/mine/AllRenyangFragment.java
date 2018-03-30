@@ -46,7 +46,6 @@ public class AllRenyangFragment extends BaseFragment implements BaseQuickAdapter
         View view = inflater.inflate(R.layout.fragment_renyang, null);
         unbinder = ButterKnife.bind(this, view);
         mRecyclerRenyang.setLayoutManager(new LinearLayoutManager(mContext));
-
         initData();
         return view;
     }
@@ -83,6 +82,8 @@ public class AllRenyangFragment extends BaseFragment implements BaseQuickAdapter
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        startActivity(new Intent(mContext,RengyangDetail1Activity.class));
+        Intent intent = new Intent(mContext,RengyangDetail1Activity.class);
+        intent.putExtra("id",list.get(position).getId()+"");
+        startActivity(intent);
     }
 }

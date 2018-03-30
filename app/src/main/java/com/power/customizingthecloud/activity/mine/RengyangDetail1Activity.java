@@ -13,10 +13,18 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.bean.ImgBean;
 import com.power.customizingthecloud.bean.RengyangDetailBean;
+import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.jiankong.JianKongActivity;
+import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,31 +61,60 @@ public class RengyangDetail1Activity extends BaseActivity {
         titleBackIv.setVisibility(View.VISIBLE);
         titleContentTv.setText("认养详情");
 
+        String id = getIntent().getStringExtra("id");
+
         recyclerView.setLayoutManager(new GridLayoutManager(mContext,3));
         recyclerView.setNestedScrollingEnabled(false);
 
-        List<RengyangDetailBean> list = new ArrayList<>();
-        RengyangDetailBean bean = new RengyangDetailBean();
-        bean.setPath("http://img1.imgtn.bdimg.com/it/u=950771854,530317119&fm=27&gp=0.jpg");
-        list.add(bean);
-        RengyangDetailBean bean1 = new RengyangDetailBean();
-        bean1.setPath("http://img2.imgtn.bdimg.com/it/u=2557022909,3736713361&fm=27&gp=0.jpg");
-        list.add(bean1);
-        RengyangDetailBean bean2 = new RengyangDetailBean();
-        bean2.setPath("http://img2.imgtn.bdimg.com/it/u=1830359176,654163576&fm=200&gp=0.jpg");
-        list.add(bean2);
-        RengyangDetailAdapter adapter = new RengyangDetailAdapter(R.layout.item_renyang_detail,list);
-        recyclerView.setAdapter(adapter);
+        initData(id);
+
+
     }
 
-    private class RengyangDetailAdapter extends BaseQuickAdapter<RengyangDetailBean,BaseViewHolder>{
+    private void initData(String id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("id",id);
+        OkGo.<RengyangDetailBean>get(Urls.BASEURL + "api/v2/user/donkey_show")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<RengyangDetailBean>(this,RengyangDetailBean.class) {
+                    @Override
+                    public void onSuccess(Response<RengyangDetailBean> response) {
+                        RengyangDetailBean body = response.body();
+                        if (body.getCode() == 1){
+                            RengyangDetailBean.DataBean data = body.getData();
+                            Glide.with(mContext).load(data.getImage()).into(picIv);
+                            chengbenTv.setText("养殖成本：￥" + data.getPrice());
+                            nameTv.setText("名称：" + data.getTitle());
+                            chandiTv.setText("产地：" + data.getPlace());
+                            chushengDateTv.setText("出生日期：" + data.getBirth_date());
+                            renyangDateTv.setText("认养时间：" + data.getPayment_time());
 
-        public RengyangDetailAdapter(@LayoutRes int layoutResId, @Nullable List<RengyangDetailBean> data) {
+                            List<String> list = data.getDonkey_images();
+                            List<ImgBean> imgBeanList = new ArrayList<>();
+                            for (int i = 0; i < list.size(); i++) {
+                                ImgBean bean = new ImgBean();
+                                bean.setPath(list.get(i));
+                                imgBeanList.add(bean);
+                            }
+                            RengyangDetailAdapter adapter = new RengyangDetailAdapter(R.layout.item_renyang_detail,imgBeanList);
+                            recyclerView.setAdapter(adapter);
+                        }
+                    }
+                });
+    }
+
+    private class RengyangDetailAdapter extends BaseQuickAdapter<ImgBean,BaseViewHolder>{
+
+        public RengyangDetailAdapter(@LayoutRes int layoutResId, @Nullable List<ImgBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, RengyangDetailBean item) {
+        protected void convert(BaseViewHolder helper, ImgBean item) {
             ImageView faceIv = helper.getView(R.id.item_face_iv);
             Glide.with(mContext).load(item.getPath()).into(faceIv);
         }

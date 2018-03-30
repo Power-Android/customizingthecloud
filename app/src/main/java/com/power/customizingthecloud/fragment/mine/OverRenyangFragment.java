@@ -45,7 +45,7 @@ public class OverRenyangFragment extends BaseFragment implements BaseQuickAdapte
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_renyang, null);
         unbinder = ButterKnife.bind(this, view);
-        initData();
+        mRecyclerRenyang.setLayoutManager(new LinearLayoutManager(mContext));
         return view;
     }
 
@@ -77,11 +77,13 @@ public class OverRenyangFragment extends BaseFragment implements BaseQuickAdapte
 
     @Override
     protected void initLazyData() {
-
+        initData();
     }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        startActivity(new Intent(mContext,RengyangDetail1Activity.class));
+        Intent intent = new Intent(mContext,RengyangDetail1Activity.class);
+        intent.putExtra("id",list.get(position).getId()+"");
+        startActivity(intent);
     }
 }

@@ -49,6 +49,7 @@ public class RefundAfterActivity extends BaseActivity implements View.OnClickLis
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
 
+
         List<RefundAfterBean> list = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             RefundAfterBean bean = new RefundAfterBean();
@@ -77,11 +78,26 @@ public class RefundAfterActivity extends BaseActivity implements View.OnClickLis
 
         @Override
         protected void convert(BaseViewHolder helper, RefundAfterBean item) {
-            helper.setText(R.id.item_name_tv,item.getName())
-                    .setText(R.id.item_fenlei_tv,item.getFeilei())
-                    .setText(R.id.item_money_tv,item.getMoney())
-                    .setText(R.id.item_num_tv,item.getNum())
-                    .addOnClickListener(R.id.item_use_tv);
+            RecyclerView itemRecycler = helper.getView(R.id.item_recycler);
+            itemRecycler.setNestedScrollingEnabled(false);
+            itemRecycler.setLayoutManager(new LinearLayoutManager(mContext));
+//            ItemAdapter adapter = new ItemAdapter(R.layout.item_recycler_refund,list);
+            helper.addOnClickListener(R.id.item_use_tv);
+        }
+    }
+
+    private class ItemAdapter extends BaseQuickAdapter<String,BaseViewHolder>{
+
+        public ItemAdapter(int layoutResId, @Nullable List<String> data) {
+            super(layoutResId, data);
+        }
+
+        @Override
+        protected void convert(BaseViewHolder helper, String item) {
+//            helper.setText(R.id.item_name_tv,item.getName())
+//                    .setText(R.id.item_fenlei_tv,item.getFeilei())
+//                    .setText(R.id.item_money_tv,item.getMoney())
+//                    .setText(R.id.item_num_tv,item.getNum())
         }
     }
 

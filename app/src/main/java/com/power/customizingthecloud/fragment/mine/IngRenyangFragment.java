@@ -2,6 +2,7 @@ package com.power.customizingthecloud.fragment.mine;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -45,7 +46,7 @@ public class IngRenyangFragment extends BaseFragment implements BaseQuickAdapter
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_renyang, null);
         unbinder = ButterKnife.bind(this, view);
-        initData();
+        mRecyclerRenyang.setLayoutManager(new LinearLayoutManager(mContext));
         return view;
     }
 
@@ -76,11 +77,13 @@ public class IngRenyangFragment extends BaseFragment implements BaseQuickAdapter
 
     @Override
     protected void initLazyData() {
-
+        initData();
     }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        startActivity(new Intent(mContext,RengyangDetail1Activity.class));
+        Intent intent = new Intent(mContext,RengyangDetail1Activity.class);
+        intent.putExtra("id",list.get(position).getId()+"");
+        startActivity(intent);
     }
 }

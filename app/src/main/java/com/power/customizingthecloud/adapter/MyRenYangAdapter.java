@@ -42,6 +42,14 @@ public class MyRenYangAdapter extends BaseQuickAdapter<MyRenyangBean.DataBean,Ba
 
         }
 
+        helper.setText(R.id.tv_state, item.getTitle())
+                .setText(R.id.start_tv, "开始养殖："+item.getPayment_time())
+                .setText(R.id.end_tv, "结束养殖："+item.getEnd_time())
+                .setText(R.id.nianshouyi_tv,item.getProfit())
+                .setText(R.id.yangzhichengben_tv,item.getPrice())
+                .setText(R.id.yangzhizhouqi_tv,item.getPeriod())
+                .setText(R.id.yangzhishouyi_tv,item.getIncome());
+
         helper.getView(R.id.tv_jiankong).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
