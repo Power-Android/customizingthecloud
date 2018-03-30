@@ -106,8 +106,9 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     private List<String> imgList = new ArrayList<>();
-    private List<String> mSpec_value=new ArrayList<>();
+    private List<String> mSpec_value = new ArrayList<>();
     private List<MiaoDetailBean.DataEntity.CommentsEntity> mComments;
+    private MiaoDetailBean.DataEntity mData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,25 +146,32 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
                             Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
                             imgList.clear();
-                            MiaoDetailBean.DataEntity data = bean.getData();
-                            List<MiaoDetailBean.DataEntity.ImagesEntity> images = data.getImages();
+                            mData = bean.getData();
+                            List<MiaoDetailBean.DataEntity.ImagesEntity> images = mData.getImages();
                             if (images != null && images.size() > 0) {
                                 for (int i = 0; i < images.size(); i++) {
                                     imgList.add(images.get(i).getImag());
                                 }
                             }
                             BannerUtils.startBanner(mBanner, imgList);
-                            mTvName.setText(data.getName());
-                            mTvShengyu.setText(data.getSeckill_storage()+"");
-                            mTvPrice.setText(data.getPrice());
-                            int time = data.getSeckill_end_time() - data.getEckill_start_time();
-                            mTvTime.setText("距离秒杀结束还有0天12小时");
-                            String spec_value = data.getSpec_value();
+                            mTvName.setText(mData.getName());
+                            mTvShengyu.setText(mData.getSeckill_storage() + "");
+                            mTvPrice.setText(mData.getPrice());
+                            int time1 = mData.getSeckill_end_time() - mData.getEckill_start_time();
+                            int time = time1 / 60 / 60;
+                            if (time >= 24) {
+                                int day = time / 24;
+                                int hour = time % 24;
+                                mTvTime.setText("距离秒杀结束还有"+day+"天"+hour+"小时");
+                            } else {
+                                mTvTime.setText("距离秒杀结束还有0天"+time+"小时");
+                            }
+                            String spec_value = mData.getSpec_value();
                             String[] split = spec_value.split("@");
                             for (int i = 0; i < split.length; i++) {
                                 mSpec_value.add(split[i]);
                             }
-                            mComments = data.getComments();
+                            mComments = mData.getComments();
                         }
                     }
                 });
@@ -180,20 +188,23 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
                 break;
             case R.id.tv_lianximaijia:
                 String userid = SpUtils.getString(this, "userid", "");
-                if (TextUtils.isEmpty(userid)){
+                if (TextUtils.isEmpty(userid)) {
                     startActivity(new Intent(this, LoginActivity.class));
-                    overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
                 break;
             case R.id.tv_buy:
                 String userid2 = SpUtils.getString(this, "userid", "");
-                if (TextUtils.isEmpty(userid2)){
+                if (TextUtils.isEmpty(userid2)) {
                     startActivity(new Intent(this, LoginActivity.class));
-                    overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
-                startActivity(new Intent(this,MiaoConfirmOrderActivity.class));
+                Intent intent = new Intent(this, MiaoConfirmOrderActivity.class);
+                if (mData != null)
+                    intent.putExtra("good_quantity", mData.getId() + "=1");
+                startActivity(intent);
                 break;
         }
     }
@@ -224,35 +235,35 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(MiaoShaDetailActivity.this,ShareSuccessActivity.class));
+                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(MiaoShaDetailActivity.this,ShareSuccessActivity.class));
+                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(MiaoShaDetailActivity.this,ShareSuccessActivity.class));
+                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(MiaoShaDetailActivity.this,ShareSuccessActivity.class));
+                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(MiaoShaDetailActivity.this,ShareSuccessActivity.class));
+                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
     }
@@ -260,7 +271,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
     @OnClick(R.id.detail_ll)
     public void detail() {
         initDetailColor();
-//        mWebview.setVisibility(View.VISIBLE);
+        //        mWebview.setVisibility(View.VISIBLE);
         mWebview.setVisibility(View.GONE);
         mLvXiangqing.setVisibility(View.VISIBLE);
         mRecycler.setVisibility(View.GONE);
@@ -297,7 +308,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
-            helper.setText(R.id.tv_content,item);
+            helper.setText(R.id.tv_content, item);
         }
     }
 
@@ -330,9 +341,9 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
         @Override
         protected void convert(BaseViewHolder helper, MiaoDetailBean.DataEntity.CommentsEntity item) {
             Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into((ImageView) helper.getView(R.id.iv_head));
-            helper.setText(R.id.tv_name,item.getUser_name())
-                    .setText(R.id.tv_time,item.getTime())
-                    .setText(R.id.tv_content,item.getContent());
+            helper.setText(R.id.tv_name, item.getUser_name())
+                    .setText(R.id.tv_time, item.getTime())
+                    .setText(R.id.tv_content, item.getContent());
         }
     }
 

@@ -31,6 +31,7 @@ import com.power.customizingthecloud.activity.mine.LatestActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.EventBean;
 import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.callback.JsonCallback;
 import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
 import com.power.customizingthecloud.fragment.home.GoodListActivity;
 import com.power.customizingthecloud.fragment.home.MiaoShaDetailActivity;
@@ -141,7 +142,7 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
         mRecyclerQuan.setLayoutManager(new LinearLayoutManager(mContext));
         OkGo.<ShopAllBean>get(Urls.BASEURL + "api/v2/good")
                 .tag(this)
-                .execute(new DialogCallback<ShopAllBean>(mActivity, ShopAllBean.class) {
+                .execute(new JsonCallback<ShopAllBean>(ShopAllBean.class) {
                     @Override
                     public void onSuccess(Response<ShopAllBean> response) {
                         ShopAllBean bean = response.body();
@@ -188,13 +189,15 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                                     startActivity(intent);
                                 }
                             });
-                            List<ShopAllBean.DataEntity.SeckillGoodEntity> seckill_good = data.getSeckill_good();
+                            final List<ShopAllBean.DataEntity.SeckillGoodEntity> seckill_good = data.getSeckill_good();
                             mMiaoshaAdapter = new MiaoshaAdapter(R.layout.item_home_miaosha, seckill_good);
                             mRecyclerMiaosha.setAdapter(mMiaoshaAdapter);
                             mMiaoshaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    startActivity(new Intent(mContext, MiaoShaDetailActivity.class));
+                                    Intent intent = new Intent(mContext, MiaoShaDetailActivity.class);
+                                    intent.putExtra("id",seckill_good.get(position).getId()+"");
+                                    startActivity(intent);
                                 }
                             });
                             List<ShopAllBean.DataEntity.VoucherTemplateEntity> voucher_template = data.getVoucher_template();
@@ -210,7 +213,8 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                             mHot_seckill = data.getHot_seckill();
                             Glide.with(MyApplication.getGloableContext()).load(mHot_seckill.getImage()).into(iv_miaosha);
                             mTvXianlianggou.setText(mHot_seckill.getPrice()+"元");
-                            mCvCountdownView.start(mHot_seckill.getSeckill_end_time()- mHot_seckill.getSeckill_start_time());
+                            int time = mHot_seckill.getSeckill_end_time() - mHot_seckill.getSeckill_start_time();
+                            mCvCountdownView.start(time*1000);
                         }
                     }
                 });
@@ -333,7 +337,7 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
             tv_yuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             CountdownView cv_countdownView = helper.getView(R.id.cv_countdownView);
             int time = item.getSeckill_end_time() - item.getSeckill_start_time();
-            cv_countdownView.start(time); // Millisecond
+            cv_countdownView.start(time*1000); // Millisecond
             ImageView iv_img = helper.getView(R.id.iv_image);
             Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_img);
             helper.setText(R.id.tv_title, item.getName())
