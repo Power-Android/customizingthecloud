@@ -161,6 +161,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
                                     imgList.add(images.get(i).getImag());
                                 }
                             }
+                            mItemStepper.setMaxValue(mData.getGood_storage());
                             BannerUtils.startBanner(mBanner, imgList);
                             mTvName.setText(mData.getName());
                             mTvShengyu.setText(mData.getGood_storage() + "");

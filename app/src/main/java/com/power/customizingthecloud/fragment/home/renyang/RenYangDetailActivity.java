@@ -129,6 +129,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
     private boolean isChecked = true;
     private RenYangDetailBean.DataEntity datas;
     private int payStyle = 1;
+    private float mLirun;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,9 +167,9 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         mItemStepper.setOnValueChangeListener(new SnappingStepperValueChangeListener() {
             @Override
             public void onValueChange(View view, int value) {
-                mTvPrice.setText(Float.parseFloat(datas.getPrice()) * mItemStepper.getValue() + "元");
-                mTvLirun.setText(Float.parseFloat(datas.getPrice())
-                        * mItemStepper.getValue() * datas.getProfit() * datas.getPeriod() / 365 + "元");
+                mTvPrice.setText(Float.parseFloat(datas.getPrice()) * value + "元");
+                mTvLirun.setText(mLirun * value + "元");
+                mTvShengyu.setText(datas.getLast_amount()-value + "");
             }
         });
         String id = getIntent().getStringExtra("id");
@@ -191,18 +192,21 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                             list.add(datas.getPlace());
                             list.add(datas.getProfit() + "%");
                             list.add(datas.getPeriod() + "天");
-                            list.add(datas.getPrice() + "元");
+                            String price = datas.getPrice();
+                            list.add(price + "元");
+                            mLirun = Float.parseFloat(price) * datas.getProfit() * datas.getPeriod() / 36500;
+                            list.add(mLirun + "元");
                             list.add(datas.getProfit_type());
                             TopAdapter topAdapter = new TopAdapter(R.layout.item_renyang_detail_top, list);
                             mRecyclerTop.setAdapter(topAdapter);
                             mTvShengyu.setText(datas.getLast_amount() + "");
                             mTvTotalCount.setText(datas.getAmount() + "");
+                            mItemStepper.setMaxValue(datas.getAmount());
                             mTvPrice.setText(datas.getAmount() + "");
                             Glide.with(MyApplication.getGloableContext()).load(datas.getImage()).into(mIvTop);
                             mTvIntro.setText(datas.getIntroduce());
                             mTvPrice.setText(Float.parseFloat(datas.getPrice()) * mItemStepper.getValue() + "元");
-                            mTvLirun.setText(Float.parseFloat(datas.getPrice())
-                                    * mItemStepper.getValue() * datas.getProfit() * datas.getPeriod() / 365 + "元");
+                            mTvLirun.setText(mLirun * mItemStepper.getValue() + "元");
                         }
                     }
                 });
@@ -234,10 +238,14 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                             .setText(R.id.tv_content, item);
                     break;
                 case 4:
-                    helper.setText(R.id.tv_title, "养殖利润：")
+                    helper.setText(R.id.tv_title, "养殖成本：")
                             .setText(R.id.tv_content, item);
                     break;
                 case 5:
+                    helper.setText(R.id.tv_title, "养殖利润：")
+                            .setText(R.id.tv_content, item);
+                    break;
+                case 6:
                     helper.setText(R.id.tv_title, "利润获取：")
                             .setText(R.id.tv_content, item);
                     break;

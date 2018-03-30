@@ -32,11 +32,13 @@
                         android:id="@+id/iv_top"
                         android:layout_width="120dp"
                         android:layout_height="160dp"
+                        android:layout_gravity="center_vertical"
                         android:scaleType="fitXY"
                         android:src="@drawable/face"/>
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical">
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/recycler_top"
                             android:layout_width="match_parent"
@@ -46,10 +48,10 @@
                         <ImageView
                             android:id="@+id/iv_shouqing"
                             android:layout_width="wrap_content"
-                            android:layout_gravity="center"
-                            android:visibility="gone"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/shouqing"/>
+                            android:layout_gravity="center"
+                            android:src="@drawable/shouqing"
+                            android:visibility="gone"/>
                     </FrameLayout>
                 </LinearLayout>
                 <View
@@ -219,14 +221,14 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    >
+                >
                     <ImageView
                         android:id="@+id/iv_check"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="10dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="13dp"
+                        android:padding="10dp"
                         android:src="@drawable/xuanzhong"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -448,13 +450,13 @@
                     android:src="@drawable/lv_xiangqing"/>
                 <TextView
                     android:id="@+id/tv_intro"
-                    android:text=""
                     android:layout_width="match_parent"
-                    android:padding="10dp"
-                    android:lineSpacingExtra="2dp"
+                    android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:visibility="gone"
-                    android:layout_height="wrap_content"/>
+                    android:lineSpacingExtra="2dp"
+                    android:padding="10dp"
+                    android:text=""
+                    android:visibility="gone"/>
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
