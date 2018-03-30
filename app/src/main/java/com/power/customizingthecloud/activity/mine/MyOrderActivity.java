@@ -477,7 +477,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
             helper.setText(R.id.item_name_tv, item.getGoods_name())
                     .setText(R.id.item_fenlei_tv, item.getGoods_name())
                     .setText(R.id.item_money_tv, item.getGoods_price())
-                    .setText(R.id.item_num_tv, item.getGoods_num())
+                    .setText(R.id.item_num_tv, item.getGoods_num()+"")
                     .setText(R.id.item_des_tv, item.getGoods_price());
         }
     }
