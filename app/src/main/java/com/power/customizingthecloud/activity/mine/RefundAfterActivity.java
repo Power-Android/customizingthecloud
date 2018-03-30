@@ -32,6 +32,7 @@ public class RefundAfterActivity extends BaseActivity implements View.OnClickLis
     TextView titleContentTv;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    private List<RefundAfterBean> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,7 @@ public class RefundAfterActivity extends BaseActivity implements View.OnClickLis
         recyclerView.setNestedScrollingEnabled(false);
 
 
-        List<RefundAfterBean> list = new ArrayList<>();
+        list = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             RefundAfterBean bean = new RefundAfterBean();
             bean.setName("驴奶粉");
@@ -59,18 +60,17 @@ public class RefundAfterActivity extends BaseActivity implements View.OnClickLis
             bean.setFeilei("商品分类：驴奶粉");
             list.add(bean);
         }
-        RefundAfterAdapter adapter = new RefundAfterAdapter(R.layout.item_refund_after,list);
+        RefundAfterAdapter adapter = new RefundAfterAdapter(R.layout.item_refund_after, list);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemChildClickListener(this);
     }
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        TUtils.showShort(mContext,"点击了---查看详情");
         startActivity(new Intent(mContext,RefundGoodActivity.class));
     }
 
-    private class RefundAfterAdapter extends BaseQuickAdapter<RefundAfterBean,BaseViewHolder>{
+    private class RefundAfterAdapter extends BaseQuickAdapter<RefundAfterBean,BaseViewHolder> implements BaseQuickAdapter.OnItemClickListener {
 
         public RefundAfterAdapter(@LayoutRes int layoutResId, @Nullable List<RefundAfterBean> data) {
             super(layoutResId, data);
@@ -81,23 +81,30 @@ public class RefundAfterActivity extends BaseActivity implements View.OnClickLis
             RecyclerView itemRecycler = helper.getView(R.id.item_recycler);
             itemRecycler.setNestedScrollingEnabled(false);
             itemRecycler.setLayoutManager(new LinearLayoutManager(mContext));
-//            ItemAdapter adapter = new ItemAdapter(R.layout.item_recycler_refund,list);
+            ItemAdapter adapter = new ItemAdapter(R.layout.item_recycler_refund,list);
             helper.addOnClickListener(R.id.item_use_tv);
+            itemRecycler.setAdapter(adapter);
+            adapter.setOnItemClickListener(this);
+        }
+
+        @Override
+        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+            startActivity(new Intent(mContext,RefundGoodActivity.class));
         }
     }
 
-    private class ItemAdapter extends BaseQuickAdapter<String,BaseViewHolder>{
+    private class ItemAdapter extends BaseQuickAdapter<RefundAfterBean,BaseViewHolder>{
 
-        public ItemAdapter(int layoutResId, @Nullable List<String> data) {
+        public ItemAdapter(int layoutResId, @Nullable List<RefundAfterBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
-//            helper.setText(R.id.item_name_tv,item.getName())
-//                    .setText(R.id.item_fenlei_tv,item.getFeilei())
-//                    .setText(R.id.item_money_tv,item.getMoney())
-//                    .setText(R.id.item_num_tv,item.getNum())
+        protected void convert(BaseViewHolder helper, RefundAfterBean item) {
+            helper.setText(R.id.item_name_tv,item.getName())
+                    .setText(R.id.item_fenlei_tv,item.getFeilei())
+                    .setText(R.id.item_money_tv,item.getMoney())
+                    .setText(R.id.item_num_tv,item.getNum());
         }
     }
 
