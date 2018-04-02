@@ -8,9 +8,10 @@ import java.util.List;
 
 public class MeatBean {
 
+
     /**
      * code : 1
-     * data : {"good_sild":[{"image_url":"http://ssyd.oss-cn-beijing.aliyuncs.com/goods/201801/201801224654646.png","targe_url":"1","id":2,"state":1,"title":"测试轮播图","type":0},{"image_url":"http://ssyd.oss-cn-beijing.aliyuncs.com/goods/201801/201801224654646.png","targe_url":"1","id":1,"state":1,"title":"测试轮播图","type":0}],"goods":[{"image":"http://ssyd.oss-cn-beijing.aliyuncs.com/goods/201801/2601513049970.png","unit":"斤","price":"150.00","name":"驴肉后腿部","id":4}]}
+     * data : {"good_sild":[{"image_url":"http://ssyd.oss-cn-beijing.aliyuncs.com/goods/201801/201801224654646.png","targe_url":"1","id":2,"state":1,"title":"测试轮播图","type":0},{"image_url":"http://ssyd.oss-cn-beijing.aliyuncs.com/goods/201801/201801224654646.png","targe_url":"1","id":1,"state":1,"title":"测试轮播图","type":0}],"goods":[{"image":"http://ssyd.oss-cn-beijing.aliyuncs.com/goods/201801/2601513049970.png","unit":"斤","price":"150.00","name":"驴肉后腿部","id":4}],"position_class":[{"name":"肩胛部","id":1,"sort":0},{"name":"背脊部","id":2,"sort":0},{"name":"肋部","id":3,"sort":0},{"name":"腹部","id":4,"sort":0},{"name":"前腿部","id":5,"sort":0},{"name":"后腿部","id":6,"sort":0}]}
      * message : 请求成功
      */
     private int code;
@@ -45,9 +46,11 @@ public class MeatBean {
         /**
          * good_sild : [{"image_url":"http://ssyd.oss-cn-beijing.aliyuncs.com/goods/201801/201801224654646.png","targe_url":"1","id":2,"state":1,"title":"测试轮播图","type":0},{"image_url":"http://ssyd.oss-cn-beijing.aliyuncs.com/goods/201801/201801224654646.png","targe_url":"1","id":1,"state":1,"title":"测试轮播图","type":0}]
          * goods : [{"image":"http://ssyd.oss-cn-beijing.aliyuncs.com/goods/201801/2601513049970.png","unit":"斤","price":"150.00","name":"驴肉后腿部","id":4}]
+         * position_class : [{"name":"肩胛部","id":1,"sort":0},{"name":"背脊部","id":2,"sort":0},{"name":"肋部","id":3,"sort":0},{"name":"腹部","id":4,"sort":0},{"name":"前腿部","id":5,"sort":0},{"name":"后腿部","id":6,"sort":0}]
          */
         private List<GoodSildEntity> good_sild;
         private List<GoodsEntity> goods;
+        private List<PositionClassEntity> position_class;
 
         public void setGood_sild(List<GoodSildEntity> good_sild) {
             this.good_sild = good_sild;
@@ -57,12 +60,20 @@ public class MeatBean {
             this.goods = goods;
         }
 
+        public void setPosition_class(List<PositionClassEntity> position_class) {
+            this.position_class = position_class;
+        }
+
         public List<GoodSildEntity> getGood_sild() {
             return good_sild;
         }
 
         public List<GoodsEntity> getGoods() {
             return goods;
+        }
+
+        public List<PositionClassEntity> getPosition_class() {
+            return position_class;
         }
 
         public static class GoodSildEntity {
@@ -182,6 +193,41 @@ public class MeatBean {
 
             public int getId() {
                 return id;
+            }
+        }
+
+        public static class PositionClassEntity {
+            /**
+             * name : 肩胛部
+             * id : 1
+             * sort : 0
+             */
+            private String name;
+            private int id;
+            private int sort;
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public void setSort(int sort) {
+                this.sort = sort;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public int getId() {
+                return id;
+            }
+
+            public int getSort() {
+                return sort;
             }
         }
     }

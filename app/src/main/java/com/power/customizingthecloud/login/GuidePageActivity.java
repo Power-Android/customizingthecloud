@@ -40,7 +40,7 @@ public class GuidePageActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guidepage);
         vp = (ViewPager) findViewById(R.id.vp);
-        OkGo.<GuidePageBean>post(Urls.BASEURL + "api/v2/bootstrapper")
+        OkGo.<GuidePageBean>get(Urls.BASEURL + "api/v2/bootstrapper")
                 .tag(this)
                 .execute(new JsonCallback<GuidePageBean>(GuidePageBean.class) {
                     @Override

@@ -8,13 +8,18 @@
     android:orientation="vertical"
     tools:context="com.power.customizingthecloud.fragment.home.top.MiaoShaActivity">
     <include layout="@layout/item_title_layout"/>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_miaosha"
+    <com.liaoinstan.springview.widget.SpringView
+        android:id="@+id/springview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:background="@color/white"></android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_miaosha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"/>
+    </com.liaoinstan.springview.widget.SpringView>
 </LinearLayout>

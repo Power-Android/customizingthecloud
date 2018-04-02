@@ -17,6 +17,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.liaoinstan.springview.container.DefaultFooter;
+import com.liaoinstan.springview.container.DefaultHeader;
+import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
@@ -51,6 +54,12 @@ public class ShopMiaoFragment extends BaseFragment {
     RecyclerView mRecyclerMiao;
     Unbinder unbinder;
     private List<String> imgList = new ArrayList<>();
+    private int page = 1;
+    private boolean isLoadMore;
+    @BindView(R.id.springview)
+    SpringView mSpringview;
+    private List<ShopMiaoBean.DataEntity.GoodsEntity> mGoods;
+    private MiaoShaAdapter mMiaoShaAdapter;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,8 +78,35 @@ public class ShopMiaoFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         mRecyclerMiao.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerMiao.setNestedScrollingEnabled(false);
+        initData();
+        initListener();
+    }
+
+    private void initListener() {
+        mSpringview.setHeader(new DefaultHeader(mContext));
+        mSpringview.setFooter(new DefaultFooter(mContext));
+        mSpringview.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                isLoadMore = false;
+                page = 1;
+                initData();
+                mSpringview.onFinishFreshAndLoad();
+            }
+
+            @Override
+            public void onLoadmore() {
+                isLoadMore = true;
+                page++;
+                initData();
+                mSpringview.onFinishFreshAndLoad();
+            }
+        });
+    }
+
+    private void initData() {
         HttpParams params = new HttpParams();
-        params.put("page", "1");
+        params.put("page", page);
         params.put("limit", "10");
         OkGo.<ShopMiaoBean>get(Urls.BASEURL + "api/v2/good/seckill-good")
                 .tag(this)
@@ -85,29 +121,41 @@ public class ShopMiaoFragment extends BaseFragment {
                         } else if (code == 1) {
                             ShopMiaoBean.DataEntity data = miaoBean.getData();
                             final List<ShopMiaoBean.DataEntity.GoodSlidEntity> good_slid = data.getGood_slid();
-                            imgList.clear();
-                            for (int i = 0; i < good_slid.size(); i++) {
-                                imgList.add(good_slid.get(i).getImage_url());
-                            }
-                            BannerUtils.startBanner(mBanner, imgList);
-                            mBanner.setOnBannerListener(new OnBannerListener() {
-                                @Override
-                                public void OnBannerClick(int position) {
-                                    if (good_slid.get(position).getType() == 1) {
-                                        Intent intent = new Intent(mContext, GoodDetailActivity.class);
-                                        intent.putExtra("id",good_slid.get(position).getId()+"");
-                                        startActivity(intent);
-                                    }
+                            if (good_slid != null && good_slid.size() > 0) {
+                                imgList.clear();
+                                for (int i = 0; i < good_slid.size(); i++) {
+                                    imgList.add(good_slid.get(i).getImage_url());
                                 }
-                            });
-                            final List<ShopMiaoBean.DataEntity.GoodsEntity> goods = data.getGoods();
-                            MiaoShaAdapter miaoShaAdapter = new MiaoShaAdapter(R.layout.item_home_miaosha, goods);
-                            mRecyclerMiao.setAdapter(miaoShaAdapter);
-                            miaoShaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                BannerUtils.startBanner(mBanner, imgList);
+                                mBanner.setOnBannerListener(new OnBannerListener() {
+                                    @Override
+                                    public void OnBannerClick(int position) {
+                                        if (good_slid.get(position).getType() == 1) {
+                                            Intent intent = new Intent(mContext, GoodDetailActivity.class);
+                                            intent.putExtra("id", good_slid.get(position).getId() + "");
+                                            startActivity(intent);
+                                        }
+                                    }
+                                });
+                            }
+                            if (!isLoadMore) {
+                                mGoods = data.getGoods();
+                                mMiaoShaAdapter = new MiaoShaAdapter(R.layout.item_home_miaosha, mGoods);
+                                mRecyclerMiao.setAdapter(mMiaoShaAdapter);
+                            } else {
+                                if (data.getGoods() != null && data.getGoods().size() > 0) {
+                                    mGoods.addAll(data.getGoods());
+                                    mMiaoShaAdapter.notifyDataSetChanged();
+                                } else {
+                                    Toast.makeText(mContext, "没有更多了~", Toast.LENGTH_SHORT).show();
+                                    page--;
+                                }
+                            }
+                            mMiaoShaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(mContext, MiaoShaDetailActivity.class);
-                                    intent.putExtra("id",goods.get(position).getId()+"");
+                                    intent.putExtra("id", mGoods.get(position).getId() + "");
                                     startActivity(intent);
                                 }
                             });
@@ -130,7 +178,7 @@ public class ShopMiaoFragment extends BaseFragment {
             tv_yuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             CountdownView cv_countdownView = helper.getView(R.id.cv_countdownView);
             int time = item.getSeckill_end_time() - item.getSeckill_start_time();
-            cv_countdownView.start(time*1000); // Millisecond
+            cv_countdownView.start(time * 1000); // Millisecond
             ImageView iv_img = helper.getView(R.id.iv_image);
             Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_img);
             helper.setText(R.id.tv_title, item.getName())

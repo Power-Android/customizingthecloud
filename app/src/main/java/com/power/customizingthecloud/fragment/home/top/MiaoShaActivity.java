@@ -15,6 +15,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.liaoinstan.springview.container.DefaultFooter;
+import com.liaoinstan.springview.container.DefaultHeader;
+import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
@@ -48,7 +51,12 @@ public class MiaoShaActivity extends BaseActivity implements View.OnClickListene
     TextView mTitleContentRightTv;
     @BindView(R.id.recycler_miaosha)
     RecyclerView mRecyclerMiaosha;
+    @BindView(R.id.springview)
+    SpringView mSpringview;
     private MiaoshaAdapter mMiaoshaAdapter;
+    private int page = 1;
+    private boolean isLoadMore;
+    private List<MiaoListBean.DataEntity> mData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +67,13 @@ public class MiaoShaActivity extends BaseActivity implements View.OnClickListene
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("限量秒杀");
         mRecyclerMiaosha.setLayoutManager(new LinearLayoutManager(mContext));
+        initData();
+        initListener();
+    }
+
+    private void initData() {
         HttpParams params = new HttpParams();
-        params.put("page", "1");
+        params.put("page", page);
         params.put("limit", "10");
         OkGo.<MiaoListBean>get(Urls.BASEURL + "api/v2/good/seckill-good-list")
                 .tag(this)
@@ -73,20 +86,53 @@ public class MiaoShaActivity extends BaseActivity implements View.OnClickListene
                         if (code == 0) {
                             Toast.makeText(mContext, miaoListBean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
-                            final List<MiaoListBean.DataEntity> data = miaoListBean.getData();
-                            mMiaoshaAdapter = new MiaoshaAdapter(R.layout.item_home_miaosha,data);
-                            mRecyclerMiaosha.setAdapter(mMiaoshaAdapter);
+                            if (!isLoadMore) {
+                                mData = miaoListBean.getData();
+                                mMiaoshaAdapter = new MiaoshaAdapter(R.layout.item_home_miaosha, mData);
+                                mRecyclerMiaosha.setAdapter(mMiaoshaAdapter);
+                            } else {
+                                if (miaoListBean.getData() != null && miaoListBean.getData().size() > 0) {
+                                    mData.addAll(miaoListBean.getData());
+                                    mMiaoshaAdapter.notifyDataSetChanged();
+                                } else {
+                                    Toast.makeText(MiaoShaActivity.this, "没有更多了~", Toast.LENGTH_SHORT).show();
+                                    page--;
+                                }
+                            }
                             mMiaoshaAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(MiaoShaActivity.this, MiaoShaDetailActivity.class);
-                                    intent.putExtra("id",data.get(position).getId()+"");
+                                    intent.putExtra("id", mData.get(position).getId() + "");
                                     startActivity(intent);
                                 }
                             });
                         }
                     }
                 });
+    }
+
+    private void initListener() {
+        //        mSpringview.setType(SpringView.Type.FOLLOW);
+        mSpringview.setHeader(new DefaultHeader(this));
+        mSpringview.setFooter(new DefaultFooter(this));
+        mSpringview.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                isLoadMore = false;
+                page = 1;
+                initData();
+                mSpringview.onFinishFreshAndLoad();
+            }
+
+            @Override
+            public void onLoadmore() {
+                isLoadMore = true;
+                page++;
+                initData();
+                mSpringview.onFinishFreshAndLoad();
+            }
+        });
     }
 
     private class MiaoshaAdapter extends BaseQuickAdapter<MiaoListBean.DataEntity, BaseViewHolder> {
@@ -103,7 +149,7 @@ public class MiaoShaActivity extends BaseActivity implements View.OnClickListene
             tv_yuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             CountdownView cv_countdownView = helper.getView(R.id.cv_countdownView);
             int time = item.getSeckill_end_time() - item.getSeckill_start_time();
-            cv_countdownView.start(time*1000); // Millisecond
+            cv_countdownView.start(time * 1000); // Millisecond
             ImageView iv_img = helper.getView(R.id.iv_image);
             Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_img);
             helper.setText(R.id.tv_title, item.getName())
@@ -114,7 +160,7 @@ public class MiaoShaActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.title_back_iv:
                 finish();
                 break;

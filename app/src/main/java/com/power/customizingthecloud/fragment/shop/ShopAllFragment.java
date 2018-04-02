@@ -21,6 +21,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.liaoinstan.springview.container.DefaultHeader;
+import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
@@ -107,6 +109,8 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
     private BaseDialog.Builder mBuilder;
     private List<String> imgList = new ArrayList<>();
     private ShopAllBean.DataEntity.HotSeckillEntity mHot_seckill;
+    @BindView(R.id.springview)
+    SpringView mSpringview;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -140,6 +144,11 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
         mRecyclerMiaosha.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerQuan.setNestedScrollingEnabled(false);
         mRecyclerQuan.setLayoutManager(new LinearLayoutManager(mContext));
+        initData();
+        initListener();
+    }
+
+    private void initData() {
         OkGo.<ShopAllBean>get(Urls.BASEURL + "api/v2/good")
                 .tag(this)
                 .execute(new JsonCallback<ShopAllBean>(ShopAllBean.class) {
@@ -219,6 +228,22 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                     }
                 });
     }
+
+    private void initListener() {
+        mSpringview.setHeader(new DefaultHeader(mContext));
+        mSpringview.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                initData();
+                mSpringview.onFinishFreshAndLoad();
+            }
+
+            @Override
+            public void onLoadmore() {
+            }
+        });
+    }
+
 
     @Override
     public void onClick(View v) {

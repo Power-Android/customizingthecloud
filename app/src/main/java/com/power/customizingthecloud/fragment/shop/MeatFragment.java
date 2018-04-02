@@ -17,6 +17,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.liaoinstan.springview.container.DefaultFooter;
+import com.liaoinstan.springview.container.DefaultHeader;
+import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
@@ -26,7 +29,7 @@ import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
-import com.power.customizingthecloud.fragment.home.GoodListActivity;
+import com.power.customizingthecloud.fragment.home.LvBuWeiActivity;
 import com.power.customizingthecloud.fragment.shop.bean.MeatBean;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
@@ -74,6 +77,15 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
     View mViewHoutuibu;
     private AnimationDrawable mAnimationDrawable;
     private List<String> imgList = new ArrayList<>();
+    private List<MeatBean.DataEntity.PositionClassEntity> mPosition_class;
+    private int mlvbuweiId;
+    private Intent mIntent;
+    @BindView(R.id.springview)
+    SpringView mSpringview;
+    private String after = "";
+    private boolean isLoadMore;
+    private List<MeatBean.DataEntity.GoodsEntity> mGoods;
+    private XianAdapter mXianAdapter;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -102,11 +114,38 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
         mAnimationDrawable.start();
         mRecyclerMeat.setLayoutManager(new GridLayoutManager(mContext, 2));
         mRecyclerMeat.setNestedScrollingEnabled(false);
+        initData();
+        initListener();
+    }
+
+    private void initListener() {
+        mSpringview.setHeader(new DefaultHeader(mContext));
+        mSpringview.setFooter(new DefaultFooter(mContext));
+        mSpringview.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                isLoadMore = false;
+                initData();
+                mSpringview.onFinishFreshAndLoad();
+            }
+
+            @Override
+            public void onLoadmore() {
+                isLoadMore = true;
+                initData();
+                mSpringview.onFinishFreshAndLoad();
+            }
+        });
+    }
+
+    private void initData() {
         Bundle bundle = getArguments();
         String id = bundle.getString("id");
         HttpParams params = new HttpParams();
         params.put("id", id);
-        params.put("after", "");
+        if (isLoadMore) {
+            params.put("after", after);
+        }
         params.put("limit", "10");
         OkGo.<MeatBean>get(Urls.BASEURL + "api/v2/good/fresh-good")
                 .tag(this)
@@ -121,32 +160,44 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
                         } else if (code == 1) {
                             MeatBean.DataEntity data = meatBean.getData();
                             final List<MeatBean.DataEntity.GoodSildEntity> good_sild = data.getGood_sild();
-                            imgList.clear();
-                            for (int i = 0; i < good_sild.size(); i++) {
-                                imgList.add(good_sild.get(i).getImage_url());
-                            }
-                            BannerUtils.startBanner(mBanner, imgList);
-                            mBanner.setOnBannerListener(new OnBannerListener() {
-                                @Override
-                                public void OnBannerClick(int position) {
-                                    if (good_sild.get(position).getType() == 1) {
-                                        Intent intent = new Intent(mContext, GoodDetailActivity.class);
-                                        intent.putExtra("id",good_sild.get(position).getId()+"");
-                                        startActivity(intent);
-                                    }
+                            if (good_sild != null && good_sild.size() > 0) {
+                                imgList.clear();
+                                for (int i = 0; i < good_sild.size(); i++) {
+                                    imgList.add(good_sild.get(i).getImage_url());
                                 }
-                            });
-                            final List<MeatBean.DataEntity.GoodsEntity> goods = data.getGoods();
-                            XianAdapter xianAdapter = new XianAdapter(R.layout.item_shengxian, goods);
-                            mRecyclerMeat.setAdapter(xianAdapter);
-                            xianAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                BannerUtils.startBanner(mBanner, imgList);
+                                mBanner.setOnBannerListener(new OnBannerListener() {
+                                    @Override
+                                    public void OnBannerClick(int position) {
+                                        if (good_sild.get(position).getType() == 1) {
+                                            Intent intent = new Intent(mContext, GoodDetailActivity.class);
+                                            intent.putExtra("id", good_sild.get(position).getId() + "");
+                                            startActivity(intent);
+                                        }
+                                    }
+                                });
+                            }
+                            if (!isLoadMore) {
+                                mGoods = data.getGoods();
+                                mXianAdapter = new XianAdapter(R.layout.item_shengxian, mGoods);
+                                mRecyclerMeat.setAdapter(mXianAdapter);
+                            } else {
+                                if (data.getGoods() != null && data.getGoods().size() > 0) {
+                                    mGoods.addAll(data.getGoods());
+                                    mXianAdapter.notifyDataSetChanged();
+                                } else {
+                                    Toast.makeText(mContext, "没有更多了~", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            mXianAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(mContext, GoodDetailActivity.class);
-                                    intent.putExtra("id",goods.get(position).getId()+"");
+                                    intent.putExtra("id", mGoods.get(position).getId() + "");
                                     startActivity(intent);
                                 }
                             });
+                            mPosition_class = data.getPosition_class();
                         }
                     }
                 });
@@ -171,22 +222,40 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, ShopCartActivity.class));
                 break;
             case R.id.view_beibu:
-                startActivity(new Intent(mContext, GoodListActivity.class));
+                mlvbuweiId = mPosition_class.get(1).getId();
+                mIntent = new Intent(mContext, LvBuWeiActivity.class);
+                mIntent.putExtra("id", mlvbuweiId + "");
+                startActivity(mIntent);
                 break;
             case R.id.view_leibu:
-                startActivity(new Intent(mContext, GoodListActivity.class));
+                mlvbuweiId = mPosition_class.get(2).getId();
+                mIntent = new Intent(mContext, LvBuWeiActivity.class);
+                mIntent.putExtra("id", mlvbuweiId + "");
+                startActivity(mIntent);
                 break;
             case R.id.view_jianbu:
-                startActivity(new Intent(mContext, GoodListActivity.class));
+                mlvbuweiId = mPosition_class.get(0).getId();
+                mIntent = new Intent(mContext, LvBuWeiActivity.class);
+                mIntent.putExtra("id", mlvbuweiId + "");
+                startActivity(mIntent);
                 break;
             case R.id.view_fubu:
-                startActivity(new Intent(mContext, GoodListActivity.class));
+                mlvbuweiId = mPosition_class.get(3).getId();
+                mIntent = new Intent(mContext, LvBuWeiActivity.class);
+                mIntent.putExtra("id", mlvbuweiId + "");
+                startActivity(mIntent);
                 break;
             case R.id.view_qiantuibu:
-                startActivity(new Intent(mContext, GoodListActivity.class));
+                mlvbuweiId = mPosition_class.get(4).getId();
+                mIntent = new Intent(mContext, LvBuWeiActivity.class);
+                mIntent.putExtra("id", mlvbuweiId + "");
+                startActivity(mIntent);
                 break;
             case R.id.view_houtuibu:
-                startActivity(new Intent(mContext, GoodListActivity.class));
+                mlvbuweiId = mPosition_class.get(5).getId();
+                mIntent = new Intent(mContext, LvBuWeiActivity.class);
+                mIntent.putExtra("id", mlvbuweiId + "");
+                startActivity(mIntent);
                 break;
         }
     }
@@ -199,6 +268,7 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
 
         @Override
         protected void convert(BaseViewHolder helper, final MeatBean.DataEntity.GoodsEntity item) {
+            after = item.getId() + "";
             ImageView iv_insertcar = helper.getView(R.id.iv_insertcar);
             iv_insertcar.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -209,8 +279,8 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
                         mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                         return;
                     }
-//                    Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
-                    CommonUtils.insertCar(mActivity,item.getId()+"","good");
+                    //                    Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
+                    CommonUtils.insertCar(mActivity, item.getId() + "", "good");
                 }
             });
             ImageView iv_top = helper.getView(R.id.iv_top);
@@ -219,8 +289,8 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
             layoutParams.height = width / 2;
             iv_top.setLayoutParams(layoutParams);
             Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_top);
-            helper.setText(R.id.tv_name,item.getName())
-                    .setText(R.id.tv_price,item.getPrice());
+            helper.setText(R.id.tv_name, item.getName())
+                    .setText(R.id.tv_price, item.getPrice());
         }
     }
 

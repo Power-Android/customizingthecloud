@@ -16,6 +16,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.liaoinstan.springview.container.DefaultFooter;
+import com.liaoinstan.springview.container.DefaultHeader;
+import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
@@ -55,6 +58,12 @@ public class PinPaiFragment extends BaseFragment implements View.OnClickListener
     RecyclerView mRecyclerView;
     Unbinder unbinder;
     private List<String> imgList = new ArrayList<>();
+    @BindView(R.id.springview)
+    SpringView mSpringview;
+    private String after = "";
+    private boolean isLoadMore;
+    private List<PinPaiBean.DataEntity.GoodsEntity> mGoods;
+    private RecyclerAdapter mRecyclerAdapter;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,11 +83,38 @@ public class PinPaiFragment extends BaseFragment implements View.OnClickListener
         super.onActivityCreated(savedInstanceState);
         mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
         mRecyclerView.setNestedScrollingEnabled(false);
+        initData();
+        initListener();
+    }
+
+    private void initListener() {
+        mSpringview.setHeader(new DefaultHeader(mContext));
+        mSpringview.setFooter(new DefaultFooter(mContext));
+        mSpringview.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                isLoadMore = false;
+                initData();
+                mSpringview.onFinishFreshAndLoad();
+            }
+
+            @Override
+            public void onLoadmore() {
+                isLoadMore = true;
+                initData();
+                mSpringview.onFinishFreshAndLoad();
+            }
+        });
+    }
+
+    private void initData() {
         Bundle bundle = getArguments();
         String id = bundle.getString("id");
         HttpParams params = new HttpParams();
         params.put("id", id);
-        params.put("after", "");
+        if (isLoadMore) {
+            params.put("after", after);
+        }
         params.put("limit", "10");
         OkGo.<PinPaiBean>get(Urls.BASEURL + "api/v2/good/outher-good")
                 .tag(this)
@@ -93,29 +129,40 @@ public class PinPaiFragment extends BaseFragment implements View.OnClickListener
                         } else if (code == 1) {
                             PinPaiBean.DataEntity data = pinPaiBean.getData();
                             final List<PinPaiBean.DataEntity.GoodSlidEntity> good_slid = data.getGood_slid();
-                            imgList.clear();
-                            for (int i = 0; i < good_slid.size(); i++) {
-                                imgList.add(good_slid.get(i).getImage_url());
-                            }
-                            BannerUtils.startBanner(mBanner, imgList);
-                            mBanner.setOnBannerListener(new OnBannerListener() {
-                                @Override
-                                public void OnBannerClick(int position) {
-                                    if (good_slid.get(position).getType() == 1) {
-                                        Intent intent = new Intent(mContext, GoodDetailActivity.class);
-                                        intent.putExtra("id",good_slid.get(position).getId()+"");
-                                        startActivity(intent);
-                                    }
+                            if (good_slid != null && good_slid.size() > 0) {
+                                imgList.clear();
+                                for (int i = 0; i < good_slid.size(); i++) {
+                                    imgList.add(good_slid.get(i).getImage_url());
                                 }
-                            });
-                            final List<PinPaiBean.DataEntity.GoodsEntity> goods = data.getGoods();
-                            RecyclerAdapter recyclerAdapter = new RecyclerAdapter(R.layout.item_shengxian, goods);
-                            mRecyclerView.setAdapter(recyclerAdapter);
-                            recyclerAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                BannerUtils.startBanner(mBanner, imgList);
+                                mBanner.setOnBannerListener(new OnBannerListener() {
+                                    @Override
+                                    public void OnBannerClick(int position) {
+                                        if (good_slid.get(position).getType() == 1) {
+                                            Intent intent = new Intent(mContext, GoodDetailActivity.class);
+                                            intent.putExtra("id", good_slid.get(position).getId() + "");
+                                            startActivity(intent);
+                                        }
+                                    }
+                                });
+                            }
+                            if (!isLoadMore) {
+                                mGoods = data.getGoods();
+                                mRecyclerAdapter = new RecyclerAdapter(R.layout.item_shengxian, mGoods);
+                                mRecyclerView.setAdapter(mRecyclerAdapter);
+                            } else {
+                                if (data.getGoods() != null && data.getGoods().size() > 0) {
+                                    mGoods.addAll(data.getGoods());
+                                    mRecyclerAdapter.notifyDataSetChanged();
+                                } else {
+                                    Toast.makeText(mContext, "没有更多了~", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            mRecyclerAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(mContext, GoodDetailActivity.class);
-                                    intent.putExtra("id",goods.get(position).getId()+"");
+                                    intent.putExtra("id", mGoods.get(position).getId() + "");
                                     startActivity(intent);
                                 }
                             });
@@ -127,12 +174,12 @@ public class PinPaiFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.iv_car:
                 String userid = SpUtils.getString(mContext, "userid", "");
-                if (TextUtils.isEmpty(userid)){
+                if (TextUtils.isEmpty(userid)) {
                     startActivity(new Intent(mContext, LoginActivity.class));
-                    mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
                 startActivity(new Intent(mContext, ShopCartActivity.class));
@@ -148,28 +195,29 @@ public class PinPaiFragment extends BaseFragment implements View.OnClickListener
 
         @Override
         protected void convert(BaseViewHolder helper, final PinPaiBean.DataEntity.GoodsEntity item) {
-            ImageView iv_insertcar=helper.getView(R.id.iv_insertcar);
+            after = item.getId() + "";
+            ImageView iv_insertcar = helper.getView(R.id.iv_insertcar);
             iv_insertcar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String userid = SpUtils.getString(mContext, "userid", "");
-                    if (TextUtils.isEmpty(userid)){
+                    if (TextUtils.isEmpty(userid)) {
                         startActivity(new Intent(mContext, LoginActivity.class));
-                        mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                        mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                         return;
                     }
-//                    Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
-                    CommonUtils.insertCar(mActivity,item.getId()+"",item.getGood_type());
+                    //                    Toast.makeText(mContext, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
+                    CommonUtils.insertCar(mActivity, item.getId() + "", item.getGood_type());
                 }
             });
-            ImageView iv_top=helper.getView(R.id.iv_top);
+            ImageView iv_top = helper.getView(R.id.iv_top);
             int width = MyUtils.getScreenWidth(mContext) - MyUtils.dip2px(mContext, 50);
             ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
-            layoutParams.height=width/2;
+            layoutParams.height = width / 2;
             iv_top.setLayoutParams(layoutParams);
             Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_top);
-            helper.setText(R.id.tv_name,item.getName())
-                    .setText(R.id.tv_price,item.getPrice());
+            helper.setText(R.id.tv_name, item.getName())
+                    .setText(R.id.tv_price, item.getPrice());
         }
     }
 
