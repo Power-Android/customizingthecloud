@@ -208,14 +208,19 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             recycler_chat.setLayoutManager(new LinearLayoutManager(mContext));
             recycler_chat.setNestedScrollingEnabled(false);
             final List<CircleHomeBean.DataEntity.FeedEntity.CommentsEntity> comments = item.getComments();
-            ChatAdapter chatAdapter = new ChatAdapter(R.layout.item_market_chat, comments);
-            recycler_chat.setAdapter(chatAdapter);
-            chatAdapter.setOnItemClickListener(new OnItemClickListener() {
-                @Override
-                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    showCommentPopWindow(view, item.getId() + "", comments.get(position).getReply_user() + "");
-                }
-            });
+            if (comments == null || comments.size() == 0) {
+                recycler_chat.setVisibility(View.GONE);
+            } else {
+                recycler_chat.setVisibility(View.VISIBLE);
+                ChatAdapter chatAdapter = new ChatAdapter(R.layout.item_market_chat, comments);
+                recycler_chat.setAdapter(chatAdapter);
+                chatAdapter.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                        showCommentPopWindow(view, item.getId() + "", comments.get(position).getReply_user() + "");
+                    }
+                });
+            }
             helper.getView(R.id.ll_like).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

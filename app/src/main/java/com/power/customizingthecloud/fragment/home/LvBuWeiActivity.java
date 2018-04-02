@@ -25,7 +25,7 @@ import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.callback.DialogCallback;
-import com.power.customizingthecloud.fragment.shop.bean.GoodListBean;
+import com.power.customizingthecloud.fragment.home.bean.LvBuWeiBean;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.CommonUtils;
 import com.power.customizingthecloud.utils.MyUtils;
@@ -37,8 +37,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GoodListActivity extends BaseActivity implements View.OnClickListener {
-
+public class LvBuWeiActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.title_message_iv)
     ImageView mTitleMessageIv;
     @BindView(R.id.title_back_iv)
@@ -55,11 +54,11 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
     TextView mTitleContentRightTv;
     @BindView(R.id.recycler_shop)
     RecyclerView mRecyclerShop;
-    private int page = 1;
     private boolean isLoadMore;
     @BindView(R.id.springview)
     SpringView mSpringview;
-    private List<GoodListBean.DataEntity> mData;
+    private String after = "";
+    private List<LvBuWeiBean.DataEntity> mData;
     private ShopAdapter mShopAdapter;
 
     @Override
@@ -84,7 +83,6 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onRefresh() {
                 isLoadMore = false;
-                page = 1;
                 initData();
                 mSpringview.onFinishFreshAndLoad();
             }
@@ -92,7 +90,6 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onLoadmore() {
                 isLoadMore = true;
-                page++;
                 initData();
                 mSpringview.onFinishFreshAndLoad();
             }
@@ -100,46 +97,51 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initData() {
-        String type = getIntent().getStringExtra("type");
         String url = "";
         HttpParams params = new HttpParams();
-        if (type != null && type.equals("new")) {
-            url = Urls.BASEURL + "api/v2/good/new-good-list";
-            params.put("page", page);
-            params.put("limit", "10");
-        } else if (type != null && type.equals("hot")) {
-            url = Urls.BASEURL + "api/v2/good/hot-good-list";
-            params.put("page", page);
-            params.put("limit", "10");
+        String id = getIntent().getStringExtra("id");
+        if (!TextUtils.isEmpty(id)) {
+            url = Urls.BASEURL + "api/v2/good/position-good";
+            params.put("id", id);
+            if (isLoadMore) {
+                params.put("after", after);
+            }
         }
-        OkGo.<GoodListBean>get(url)
+        OkGo.<LvBuWeiBean>get(url)
                 .tag(this)
                 .params(params)
-                .execute(new DialogCallback<GoodListBean>(GoodListActivity.this, GoodListBean.class) {
+                .execute(new DialogCallback<LvBuWeiBean>(LvBuWeiActivity.this, LvBuWeiBean.class) {
                     @Override
-                    public void onSuccess(Response<GoodListBean> response) {
-                        GoodListBean goodListBean = response.body();
+                    public void onSuccess(Response<LvBuWeiBean> response) {
+                        LvBuWeiBean goodListBean = response.body();
                         int code = goodListBean.getCode();
                         if (code == 0) {
                             Toast.makeText(mContext, goodListBean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
                             if (!isLoadMore) {
                                 mData = goodListBean.getData();
-                                mShopAdapter = new ShopAdapter(R.layout.item_shengxian, mData);
-                                mRecyclerShop.setAdapter(mShopAdapter);
+                                if (mData == null || mData.size() == 0) {
+                                    mRecyclerShop.setVisibility(View.GONE);
+                                } else {
+                                    mRecyclerShop.setVisibility(View.VISIBLE);
+                                    mShopAdapter = new ShopAdapter(R.layout.item_shengxian, mData);
+                                    mRecyclerShop.setAdapter(mShopAdapter);
+                                }
                             } else {
                                 if (goodListBean.getData() != null && goodListBean.getData().size() > 0) {
                                     mData.addAll(goodListBean.getData());
                                     mShopAdapter.notifyDataSetChanged();
                                 } else {
                                     Toast.makeText(mContext, "没有更多了~", Toast.LENGTH_SHORT).show();
-                                    page--;
                                 }
+                            }
+                            if (mShopAdapter==null){
+                                return;
                             }
                             mShopAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    Intent intent = new Intent(GoodListActivity.this, GoodDetailActivity.class);
+                                    Intent intent = new Intent(LvBuWeiActivity.this, GoodDetailActivity.class);
                                     intent.putExtra("id", mData.get(position).getId() + "");
                                     startActivity(intent);
                                 }
@@ -149,14 +151,15 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
                 });
     }
 
-    private class ShopAdapter extends BaseQuickAdapter<GoodListBean.DataEntity, BaseViewHolder> {
+    private class ShopAdapter extends BaseQuickAdapter<LvBuWeiBean.DataEntity, BaseViewHolder> {
 
-        public ShopAdapter(@LayoutRes int layoutResId, @Nullable List<GoodListBean.DataEntity> data) {
+        public ShopAdapter(@LayoutRes int layoutResId, @Nullable List<LvBuWeiBean.DataEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, final GoodListBean.DataEntity item) {
+        protected void convert(BaseViewHolder helper, final LvBuWeiBean.DataEntity item) {
+            after = item.getId() + "";
             ImageView iv_insertcar = helper.getView(R.id.iv_insertcar);
             iv_insertcar.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -167,7 +170,7 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
                         overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                         return;
                     }
-                    CommonUtils.insertCar(GoodListActivity.this,item.getId()+"",item.getGood_type());
+                    CommonUtils.insertCar(LvBuWeiActivity.this, item.getId() + "", item.getGood_type());
                 }
             });
             ImageView iv_top = helper.getView(R.id.iv_top);
@@ -175,8 +178,8 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
             ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
             layoutParams.height = width / 2;
             iv_top.setLayoutParams(layoutParams);
-            helper.setText(R.id.tv_name,item.getClass_name())
-            .setText(R.id.tv_price,item.getPrice());
+            helper.setText(R.id.tv_name, item.getName())
+                    .setText(R.id.tv_price, item.getPrice());
         }
     }
 
@@ -197,4 +200,5 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
                 break;
         }
     }
+
 }
