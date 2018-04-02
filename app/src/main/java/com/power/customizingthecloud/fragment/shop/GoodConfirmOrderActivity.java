@@ -88,20 +88,14 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
     TextView mTvPhone;
     @BindView(R.id.tv_address)
     TextView mTvAddress;
-    @BindView(R.id.iv_good)
-    ImageView mIvGood;
-    @BindView(R.id.tv_shopname)
-    TextView mTvShopname;
-    @BindView(R.id.tv_oneprice)
-    TextView mTvOneprice;
-    @BindView(R.id.tv_count)
-    TextView mTvCount;
     @BindView(R.id.tv_time)
     TextView mTvTime;
     @BindView(R.id.iv_time)
     ImageView mIvTime;
     @BindView(R.id.tv_xiaoji)
     TextView mTvXiaoji;
+    @BindView(R.id.shop_recycler)
+    RecyclerView shopRecycler;
     @BindView(R.id.tv_zongprice1)
     TextView mTvZongprice1;
     @BindView(R.id.tv_quan_price)
@@ -162,12 +156,24 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
     }
 
     private void initData() {
+        String good_quantity = getIntent().getStringExtra("good_quantity");
+        String cart_id = getIntent().getStringExtra("cart_id");
+
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+
         HttpParams params = new HttpParams();
-        params.put("is_cart", "0");
         params.put("buy_type", "2");
-        params.put("good_quantity", getIntent().getStringExtra("good_quantity"));
+
+        if (!TextUtils.isEmpty(good_quantity)){
+            params.put("is_cart", "0");
+            params.put("good_quantity", good_quantity);
+        }
+        if (!TextUtils.isEmpty(cart_id)){
+            params.put("is_cart", "1");
+            params.put("cart_id",cart_id);
+        }
+
         OkGo.<String>post(Urls.BASEURL + "api/v2/buy/buy-step1")
                 .headers(headers)
                 .params(params)
@@ -175,62 +181,65 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                     @Override
                     public void onSuccess(Response<String> response) {
                         String body = response.body();
-                        Logger.e(body);
                         try {
                             JSONObject jsonObject = new JSONObject(body);
-                            JSONObject dataObj = jsonObject.optJSONObject("data");
-                            JSONObject addressObj = dataObj.optJSONObject("address");
-                            if (addressObj != null) {
-                                String true_name = addressObj.optString("true_name");
-                                String area_info = addressObj.optString("area_info");
-                                String address = addressObj.optString("address");
-                                String mobile = addressObj.optString("mobile");
-                                mAdressId = addressObj.optInt("id");
-                                hasAddress = true;
-                                mTvPersonname.setText("姓名：" + true_name);
-                                mTvPhone.setText("电话：" + mobile);
-                                mTvAddress.setText("地址：" + address);
-                            }
-                            Gson gson = new Gson();
-                            JSONArray voucher = dataObj.optJSONArray("voucher");
-                            if (voucher != null) {
-                                List<QuickBuyBean.DataEntity.VoucherEntity> voucherEntityList = gson.fromJson(voucher.toString(),
-                                        new TypeToken<List<QuickBuyBean.DataEntity.VoucherEntity>>() {
-                                        }.getType());
-                                if (voucherEntityList != null && voucherEntityList.size() > 0) {
-                                    mDaijinquanprice = voucherEntityList.get(0).getPrice();
-                                    mVoucher_id = voucherEntityList.get(0).getId();
-                                    hasVoucher = true;
+                            int code = jsonObject.optInt("code");
+                            if (code == 1){
+                                JSONObject dataObj = jsonObject.optJSONObject("data");
+                                JSONObject addressObj = dataObj.optJSONObject("address");
+                                if (addressObj != null) {
+                                    String true_name = addressObj.optString("true_name");
+                                    String area_info = addressObj.optString("area_info");
+                                    String address = addressObj.optString("address");
+                                    String mobile = addressObj.optString("mobile");
+                                    mAdressId = addressObj.optInt("id");
+                                    hasAddress = true;
+                                    mTvPersonname.setText("姓名：" + true_name);
+                                    mTvPhone.setText("电话：" + mobile);
+                                    mTvAddress.setText("地址：" + address);
+                                }
+                                Gson gson = new Gson();
+                                JSONArray voucher = dataObj.optJSONArray("voucher");
+                                if (voucher != null) {
+                                    List<QuickBuyBean.DataEntity.VoucherEntity> voucherEntityList = gson.fromJson(voucher.toString(),
+                                            new TypeToken<List<QuickBuyBean.DataEntity.VoucherEntity>>() {
+                                            }.getType());
+                                    if (voucherEntityList != null && voucherEntityList.size() > 0) {
+                                        mDaijinquanprice = voucherEntityList.get(0).getPrice();
+                                        mVoucher_id = voucherEntityList.get(0).getId();
+                                        hasVoucher = true;
+                                    }
+                                }
+                                JSONArray good_list = dataObj.optJSONArray("good_list");
+                                //用泛型就会出异常java.lang.ClassCastException: com.google.gson.internal.LinkedTreeMap cannot be cast to xxx
+                                //                            List<QuickBuyBean.DataEntity.GoodListEntity> goodListEntities
+                                //                                    = parseJsonArrayWithGson(good_list.toString(), QuickBuyBean.DataEntity.GoodListEntity.class);
+                                List<QuickBuyBean.DataEntity.GoodListEntity> goodListEntities = gson.fromJson(good_list.toString(),
+                                        new TypeToken<List<QuickBuyBean.DataEntity.GoodListEntity>>() {}.getType());
+                                if (goodListEntities != null && goodListEntities.size() > 0) {
+
+                                    shopRecycler.setLayoutManager(new LinearLayoutManager(mContext));
+                                    shopRecycler.setNestedScrollingEnabled(false);
+                                    ShopAdapter adapter = new ShopAdapter(R.layout.item_confirm_order_shop,goodListEntities);
+                                    shopRecycler.setAdapter(adapter);
+
+                                    mOrder_good_total = dataObj.optString("order_good_total");
+                                    mTvXiaoji.setText("¥" + mOrder_good_total);
+                                    mTvZongprice1.setText("¥" + mOrder_good_total);
+                                    if (mDaijinquanprice != 0) {
+                                        mTvQuanPrice.setText("¥" + mDaijinquanprice + "");
+                                    }
+                                    mTvZongprice2.setText("¥" + (Float.parseFloat(mOrder_good_total) - mDaijinquanprice));
+                                    mEselsohr_total = dataObj.optInt("eselsohr_total");
+                                    mTvEar.setText("可用" + mEselsohr_total + "驴耳朵抵用" + mEselsohr_total + "元");
+                                    if (mCbEar.isChecked()) {
+                                        mTvTotalprice.setText("¥" + (Float.parseFloat(mOrder_good_total) - mDaijinquanprice - mEselsohr_total));
+                                    } else {
+                                        mTvTotalprice.setText("¥" + (Float.parseFloat(mOrder_good_total) - mDaijinquanprice));
+                                    }
                                 }
                             }
-                            JSONArray good_list = dataObj.optJSONArray("good_list");
-                            //用泛型就会出异常java.lang.ClassCastException: com.google.gson.internal.LinkedTreeMap cannot be cast to xxx
-                            //                            List<QuickBuyBean.DataEntity.GoodListEntity> goodListEntities
-                            //                                    = parseJsonArrayWithGson(good_list.toString(), QuickBuyBean.DataEntity.GoodListEntity.class);
-                            List<QuickBuyBean.DataEntity.GoodListEntity> goodListEntities = gson.fromJson(good_list.toString(),
-                                    new TypeToken<List<QuickBuyBean.DataEntity.GoodListEntity>>() {
-                                    }.getType());
-                            if (goodListEntities != null && goodListEntities.size() > 0) {
-                                QuickBuyBean.DataEntity.GoodListEntity entity = goodListEntities.get(0);
-                                mTvShopname.setText(entity.getGood_name());
-                                Glide.with(MyApplication.getGloableContext()).load(entity.getGood_image()).into(mIvGood);
-                                mTvOneprice.setText("¥" + entity.getGood_price());
-                                mTvCount.setText("x" + entity.getGood_num());
-                                mOrder_good_total = dataObj.optString("order_good_total");
-                                mTvXiaoji.setText("¥" + mOrder_good_total);
-                                mTvZongprice1.setText("¥" + mOrder_good_total);
-                                if (mDaijinquanprice != 0) {
-                                    mTvQuanPrice.setText("¥" + mDaijinquanprice + "");
-                                }
-                                mTvZongprice2.setText("¥" + (Float.parseFloat(mOrder_good_total) - mDaijinquanprice));
-                                mEselsohr_total = dataObj.optInt("eselsohr_total");
-                                mTvEar.setText("可用" + mEselsohr_total + "驴耳朵抵用" + mEselsohr_total + "元");
-                                if (mCbEar.isChecked()) {
-                                    mTvTotalprice.setText("¥" + (Float.parseFloat(mOrder_good_total) - mDaijinquanprice - mEselsohr_total));
-                                } else {
-                                    mTvTotalprice.setText("¥" + (Float.parseFloat(mOrder_good_total) - mDaijinquanprice));
-                                }
-                            }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                             //                            Logger.e(e.toString());
@@ -246,6 +255,21 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
         List<T> result = gson.fromJson(jsonData, new TypeToken<List<T>>() {
         }.getType());
         return result;
+    }
+
+    private class ShopAdapter extends BaseQuickAdapter<QuickBuyBean.DataEntity.GoodListEntity,BaseViewHolder>{
+
+        public ShopAdapter(int layoutResId, @Nullable List<QuickBuyBean.DataEntity.GoodListEntity> data) {
+            super(layoutResId, data);
+        }
+
+        @Override
+        protected void convert(BaseViewHolder helper, QuickBuyBean.DataEntity.GoodListEntity item) {
+            Glide.with(mContext).load(item.getGood_image()).into((ImageView) helper.getView(R.id.iv_good));
+            helper.setText(R.id.tv_shopname,item.getGood_name())
+                    .setText(R.id.tv_oneprice,"¥" + item.getGood_price())
+                    .setText(R.id.tv_count,"x" + item.getGood_num());
+        }
     }
 
     private void showPayStyleDialog() {

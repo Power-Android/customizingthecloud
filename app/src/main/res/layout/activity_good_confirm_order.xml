@@ -79,55 +79,10 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="10dp"
                         android:background="@color/backgourd"></View>
-
-                    <LinearLayout
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/shop_recycler"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="10dp"
-                        android:paddingRight="10dp"
-                        android:paddingTop="10dp"
-                    >
-                        <ImageView
-                            android:id="@+id/iv_good"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/face"/>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="10dp"
-                            android:orientation="vertical">
-                            <TextView
-                                android:id="@+id/tv_shopname"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="驴奶粉驴奶粉驴奶粉驴奶粉驴奶粉驴奶粉驴奶粉驴奶粉驴奶粉驴奶粉驴奶粉驴奶粉"
-                                android:textColor="@color/text_black"/>
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp">
-                                <TextView
-                                    android:id="@+id/tv_oneprice"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerVertical="true"
-                                    android:gravity="center"
-                                    android:text="¥99.00"
-                                    android:textColor="@color/red3"
-                                />
-                                <TextView
-                                    android:id="@+id/tv_count"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:text="x1"
-                                    android:textColor="@color/text_black"/>
-                            </RelativeLayout>
-                        </LinearLayout>
-                    </LinearLayout>
+                        android:layout_height="wrap_content"/>
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"

@@ -65,25 +65,25 @@ public class OrderDetailActivity extends BaseActivity {
     private void initIntentData() {
         type = getIntent().getStringExtra("type");
         switch (type){
-            case "1"://待付款
+            case "10"://待付款
                 mTypeContentTv.setText("等待买家付款");
                 mItemCancleOrderTv.setVisibility(View.VISIBLE);
                 mItemCancleOrderTv.setText("取消订单");
                 mItemUseTv.setText("付款");
                 break;
-            case "2"://待发货
+            case "20"://待发货
                 mTypeContentTv.setText("等待卖家发货");
                 topBg.setBackground(getResources().getDrawable(R.drawable.daifahuo_top_iv));
                 mItemUseTv.setText("提醒发货");
                 break;
-            case "3"://待收货
+            case "30"://待收货
                 mTypeContentTv.setText("交易成功");
                 topBg.setBackground(getResources().getDrawable(R.drawable.yifahuo_top_iv));
                 mItemCancleOrderTv.setVisibility(View.VISIBLE);
                 mItemCancleOrderTv.setText("退款");
                 mItemUseTv.setText("确认收货");
                 break;
-            case "4"://待评价
+            case "40"://待评价
                 mTypeContentTv.setText("等待买家评价");
                 mItemUseTv.setText("评价");
                 break;
@@ -98,31 +98,31 @@ public class OrderDetailActivity extends BaseActivity {
                 break;
             case R.id.item_use_tv:
                 switch (type){
-                    case "1"://待付款
+                    case "10"://待付款
                         showPayStyleDialog();
                         break;
-                    case "2"://待发货
+                    case "20"://待发货
                         TUtils.showShort(mContext,"点击了---提醒发货");
                         break;
-                    case "3"://待收货
+                    case "30"://待收货
                         showPayStyleDialog();
                         break;
-                    case "4"://待评价
+                    case "40"://待评价
                         TUtils.showShort(mContext,"点击了---评价");
                         break;
                 }
                 break;
             case R.id.item_cancle_order_tv:
                 switch (type){
-                    case "1"://待付款
+                    case "10"://待付款
                         showTip();
                         break;
-                    case "2"://待发货
+                    case "20"://待发货
                         break;
-                    case "3"://待收货
+                    case "30"://待收货
                         TUtils.showShort(mContext,"点击了---退款");
                         break;
-                    case "4"://待评价
+                    case "40"://待评价
                         break;
                 }
                 break;

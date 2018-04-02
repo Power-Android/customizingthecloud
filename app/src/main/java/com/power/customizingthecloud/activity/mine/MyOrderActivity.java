@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
@@ -175,8 +176,9 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     public void quanbu() {
         list.clear();
         initQuanbuColor();
-        initData("0");
-        adapter.notifyDataSetChanged();
+        type = "0";
+        initData(type);
+//        adapter.notifyDataSetChanged();
     }
 
     private void initQuanbuColor() {
@@ -196,8 +198,9 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     public void daifukuan() {
         list.clear();
         initDaifukuanColor();
-        initData("1");
-        adapter.notifyDataSetChanged();
+        type = "1";
+        initData(type);
+//        adapter.notifyDataSetChanged();
     }
 
     private void initDaifukuanColor() {
@@ -217,8 +220,9 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     public void daifahuo() {
         initDaifahuoColor();
         list.clear();
-        initData("2");
-        adapter.notifyDataSetChanged();
+        type = "2";
+        initData(type);
+//        adapter.notifyDataSetChanged();
     }
 
     private void initDaifahuoColor() {
@@ -238,8 +242,9 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     public void daishouhuo() {
         initDaishouhuoColor();
         list.clear();
-        initData("3");
-        adapter.notifyDataSetChanged();
+        type = "3";
+        initData(type);
+//        adapter.notifyDataSetChanged();
     }
 
     private void initDaishouhuoColor() {
@@ -259,8 +264,9 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     public void daipingjia() {
         initDaipingjiaColor();
         list.clear();
-        initData("4");
-        adapter.notifyDataSetChanged();
+        type = "4";
+        initData(type);
+//        adapter.notifyDataSetChanged();
     }
 
     private void initDaipingjiaColor() {
@@ -280,27 +286,27 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         switch (view.getId()) {
             case R.id.item_use_tv:
-                switch (type) {
-                    case "1":
+                switch (list.get(position).getOrder_state()) {
+                    case "10":
                         showPayStyleDialog();
                         break;
-                    case "2":
+                    case "20":
                         TUtils.showShort(mContext, "点击了---提醒发货" + position);
                         break;
-                    case "3":
+                    case "30":
                         TUtils.showShort(mContext, "点击了---确认收货" + position);
                         break;
-                    case "4":
+                    case "40":
                         startActivity(new Intent(mContext,PingJiaActivity.class));
                         break;
                 }
                 break;
             case R.id.item_cancle_order_tv:
-                switch (type){
-                    case "1":
+                switch (list.get(position).getOrder_state()){
+                    case "10":
                         showTip(position);
                         break;
-                    case "3":
+                    case "30":
                         startActivity(new Intent(mContext,RequestRefundActiviy.class));
                         break;
                 }
@@ -398,6 +404,8 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
 
     private class MyOrderAdapter extends BaseQuickAdapter<MyOderBean.DataBean, BaseViewHolder> implements BaseQuickAdapter.OnItemClickListener {
 
+        private String order_state;
+
         public MyOrderAdapter(@LayoutRes int layoutResId, @Nullable List<MyOderBean.DataBean> data) {
             super(layoutResId, data);
         }
@@ -408,22 +416,22 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                     .addOnClickListener(R.id.item_cancle_order_tv);
             TextView useTv = helper.getView(R.id.item_use_tv);
             TextView cancleTv = helper.getView(R.id.item_cancle_order_tv);
-            switch (type) {
-                case "1":
+            switch (item.getOrder_state()) {
+                case "10":
                     cancleTv.setVisibility(View.VISIBLE);
                     cancleTv.setText("取消订单");
                     useTv.setText("付款");
                     break;
-                case "2":
+                case "20":
                     cancleTv.setVisibility(View.GONE);
                     useTv.setText("提醒发货");
                     break;
-                case "3":
+                case "30":
                     cancleTv.setVisibility(View.VISIBLE);
                     cancleTv.setText("退款");
                     useTv.setText("确认收货");
                     break;
-                case "4":
+                case "40":
                     cancleTv.setVisibility(View.GONE);
                     useTv.setText("评价");
                     break;
@@ -431,7 +439,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
             RecyclerView itemRecycler = helper.getView(R.id.item_recycler);
             itemRecycler.setLayoutManager(new LinearLayoutManager(mContext));
             itemRecycler.setNestedScrollingEnabled(false);
-            String order_state = item.getOrder_state();
+            order_state = item.getOrder_state();
             List<MyOderBean.DataBean.GoodsBean> itemList = item.getGoods();
             ItmeOrderAdapter adapter = new ItmeOrderAdapter(R.layout.item_itemorder_layout, itemList, order_state);
             itemRecycler.setAdapter(adapter);
@@ -440,23 +448,27 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
 
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-            switch (type) {
-                case "1":
+            switch (order_state) {
+                case "0":
+                    intent = new Intent(mContext, OrderDetailActivity.class);
+                    intent.putExtra("type", type);
+                    startActivity(intent);
+                case "10":
                     intent = new Intent(mContext, OrderDetailActivity.class);
                     intent.putExtra("type", type);
                     startActivity(intent);
                     break;
-                case "2":
+                case "20":
                     intent = new Intent(mContext, OrderDetailActivity.class);
                     intent.putExtra("type", type);
                     startActivity(intent);
                     break;
-                case "3":
+                case "30":
                     intent = new Intent(mContext, OrderDetailActivity.class);
                     intent.putExtra("type", type);
                     startActivity(intent);
                     break;
-                case "4":
+                case "40":
                     intent = new Intent(mContext, OrderDetailActivity.class);
                     intent.putExtra("type", type);
                     startActivity(intent);
@@ -474,11 +486,12 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
 
         @Override
         protected void convert(BaseViewHolder helper, MyOderBean.DataBean.GoodsBean item) {
+            Glide.with(mContext).load(item.getGoods_image()).into((ImageView) helper.getView(R.id.item_img_iv));
             helper.setText(R.id.item_name_tv, item.getGoods_name())
-                    .setText(R.id.item_fenlei_tv, item.getGoods_name())
-                    .setText(R.id.item_money_tv, item.getGoods_price())
-                    .setText(R.id.item_num_tv, item.getGoods_num()+"")
-                    .setText(R.id.item_des_tv, item.getGoods_price());
+                    .setText(R.id.item_fenlei_tv, "商品分类："+item.getGoods_name())
+                    .setText(R.id.item_money_tv, "￥"+item.getGoods_price())
+                    .setText(R.id.item_num_tv, "x "+item.getGoods_num()+"")
+                    .setText(R.id.item_des_tv, "共"+item.getGoods_num()+"件商品  合计：￥"+item.getGoods_price()+"（含运费￥0.00）");
         }
     }
 

@@ -20,12 +20,16 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.bean.BaseBean;
 import com.power.customizingthecloud.bean.DonkeyEarsBean;
 import com.power.customizingthecloud.bean.ShopcartBean;
 import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.callback.JsonCallback;
 import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
+import com.power.customizingthecloud.fragment.shop.GoodConfirmOrderActivity;
 import com.power.customizingthecloud.listener.SnappingStepperValueChangeListener;
 import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.TUtils;
 import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.SnappingStepper;
 
@@ -73,6 +77,9 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
     private int num;
     private ShopCartAdapter adapter;
     private boolean isEdit;
+    private int TYPE = -1;
+    StringBuilder sb = new StringBuilder();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +96,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
         titleContentRightTv.setText("管理");
         titleBackIv.setOnClickListener(this);
         titleContentRightTv.setOnClickListener(this);
+        jiesuanTv.setOnClickListener(this);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
@@ -109,6 +117,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initFenxiao() {
+        TYPE = 2;
         initFenxiaooColor();
         initFxData();
     }
@@ -138,6 +147,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initShangcheng() {
+        TYPE = 1;
         initShangchengColor();
         initShangchengData();
     }
@@ -286,8 +296,52 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
             case R.id.all_check_ll:
                 break;
             case R.id.jiesuan_tv:
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).isChecked()){
+                        sb.append(list.get(i).getId()+",");
+                    }
+                }
+                //当循环结束后截取最后一个逗号
+                String cart_id = sb.substring(0, sb.length() - 1);
+
+                if (isEdit){
+                    initDel(cart_id);
+                }else {
+                    Intent intent = new Intent(mContext, GoodConfirmOrderActivity.class);
+                    intent.putExtra("cart_id",cart_id);
+                    startActivity(intent);
+                }
                 break;
         }
+    }
+
+    private void initDel(String cart_id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("cart_id",cart_id);
+
+        OkGo.<BaseBean>post(Urls.BASEURL + "api/v2/cart/delete")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        BaseBean body = response.body();
+                        if (body.getCode() == 1){
+                            TUtils.showShort(mContext,body.getMessage());
+                            if (TYPE == 1){
+                                initShangcheng();
+                            }else {
+                                initFenxiao();
+                            }
+                        }else {
+                            TUtils.showShort(mContext,body.getMessage());
+                        }
+                    }
+                });
+
     }
 
     private void jiesuan() {
