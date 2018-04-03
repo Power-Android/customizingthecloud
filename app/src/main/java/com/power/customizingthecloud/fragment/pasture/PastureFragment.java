@@ -9,11 +9,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseFragment;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.fragment.home.bean.MuChangTypeBean;
 import com.power.customizingthecloud.fragment.home.jiankong.JianKongActivity;
 import com.power.customizingthecloud.fragment.home.renyang.RenYangListActivity;
+import com.power.customizingthecloud.utils.Urls;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,6 +82,8 @@ public class PastureFragment extends BaseFragment implements View.OnClickListene
     LinearLayout mLlTuzaichejian;
     @BindView(R.id.ll_lvmeat)
     LinearLayout mLlLvmeat;
+    private List<MuChangTypeBean.DataEntity> mData;
+    private Intent mIntent1;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -102,6 +112,21 @@ public class PastureFragment extends BaseFragment implements View.OnClickListene
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mTitleContentTv.setText("云端牧场");
+        mIntent1 = new Intent(mContext, JianKongActivity.class);
+        OkGo.<MuChangTypeBean>get(Urls.BASEURL + "api/v2/muchang")
+                .tag(this)
+                .execute(new DialogCallback<MuChangTypeBean>(mActivity, MuChangTypeBean.class) {
+                    @Override
+                    public void onSuccess(Response<MuChangTypeBean> response) {
+                        MuChangTypeBean typeBean = response.body();
+                        int code = typeBean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, typeBean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            mData = typeBean.getData();
+                        }
+                    }
+                });
     }
 
     @Override
@@ -112,23 +137,49 @@ public class PastureFragment extends BaseFragment implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(mContext, JianKongActivity.class);
         switch (v.getId()) {
             case R.id.iv_lv:
                 startActivity(new Intent(mContext, RenYangListActivity.class));
                 break;
             case R.id.ll_sportA:
+                mIntent1.putExtra("class_id", mData.get(0).getId());
+                startActivity(mIntent1);
+                break;
             case R.id.ll_sportB:
+                mIntent1.putExtra("class_id", mData.get(1).getId());
+                startActivity(mIntent1);
+                break;
             case R.id.ll_cusiliao:
+                mIntent1.putExtra("class_id", mData.get(2).getId());
+                startActivity(mIntent1);
+                break;
             case R.id.ll_lvmumsiyang:
-            case R.id.ll_lvmumfanzhi:
-            case R.id.ll_lvbaby:
+                mIntent1.putExtra("class_id", mData.get(3).getId());
+                startActivity(mIntent1);
+                break;
             case R.id.ll_jingliao:
+                mIntent1.putExtra("class_id", mData.get(4).getId());
+                startActivity(mIntent1);
+                break;
+            case R.id.ll_lvmumfanzhi:
+                mIntent1.putExtra("class_id", mData.get(5).getId());
+                startActivity(mIntent1);
+                break;
+            case R.id.ll_lvbaby:
+                mIntent1.putExtra("class_id", mData.get(6).getId());
+                startActivity(mIntent1);
+                break;
             case R.id.ll_gelijianyi:
+                mIntent1.putExtra("class_id", mData.get(7).getId());
+                startActivity(mIntent1);
+                break;
             case R.id.ll_tuzaichejian:
+                mIntent1.putExtra("class_id", mData.get(8).getId());
+                startActivity(mIntent1);
+                break;
             case R.id.ll_lvmeat:
-                intent.putExtra("class_id", 0);
-                startActivity(intent);
+                mIntent1.putExtra("class_id", mData.get(9).getId());
+                startActivity(mIntent1);
                 break;
         }
     }

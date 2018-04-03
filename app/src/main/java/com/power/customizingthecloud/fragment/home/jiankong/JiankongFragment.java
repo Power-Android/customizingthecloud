@@ -32,7 +32,7 @@ import butterknife.Unbinder;
  */
 
 public class JiankongFragment extends BaseFragment {
-    @BindView(R.id.recycler)
+//    @BindView(R.id.recycler)
     RecyclerView mRecycler;
     Unbinder unbinder;
     private int page = 1;
@@ -47,12 +47,12 @@ public class JiankongFragment extends BaseFragment {
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_jiankong, null);
         unbinder = ButterKnife.bind(this, view);
+        mRecycler = (RecyclerView) view.findViewById(R.id.recycler);
         return view;
     }
 
     @Override
     protected void initLazyData() {
-
     }
 
     @Override
