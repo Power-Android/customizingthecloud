@@ -95,8 +95,8 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
     ImageView iv_photo;
     Unbinder unbinder;
     private BaseSelectPopupWindow popWiw;// 昵称 编辑框
-    private boolean mIsLike;
     private MyAdapter mMyAdapter;
+    private List<CircleHomeBean.DataEntity.FeedEntity> mFeed;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -142,9 +142,9 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                             if (!TextUtils.isEmpty(user.getUser_avatar())) {
                                 Glide.with(MyApplication.getGloableContext()).load(user.getUser_avatar()).into(mIvHead);
                             }
-                            List<CircleHomeBean.DataEntity.FeedEntity> feed = data.getFeed();
-                            if (feed != null && feed.size() > 0) {
-                                mMyAdapter = new MyAdapter(R.layout.item_circle_friend, feed);
+                            mFeed = data.getFeed();
+                            if (mFeed != null && mFeed.size() > 0) {
+                                mMyAdapter = new MyAdapter(R.layout.item_circle_friend, mFeed);
                                 mRecycler.setAdapter(mMyAdapter);
                             }
                         }
@@ -180,13 +180,14 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             List<CircleHomeBean.DataEntity.FeedEntity.LikesEntity> likes = item.getLikes();
             StringBuilder builder = new StringBuilder();
             String userid = SpUtils.getString(mContext, "userid", "");
+            boolean mIsLike = false;
             for (int i = 0; i < likes.size(); i++) {
                 if (i == likes.size() - 1) {
                     builder.append(likes.get(i).getUser_name());
                 } else {
                     builder.append(likes.get(i).getUser_name() + ",");
                 }
-                if (!TextUtils.isEmpty(userid) && userid.equals(likes.get(i).getId() + "")) {
+                if (!TextUtils.isEmpty(userid) && userid.equals(likes.get(i).getUser_id() + "")) {
                     mIsLike = true;
                 }
             }
@@ -199,10 +200,16 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             if (!TextUtils.isEmpty(item.getUser_avatar())) {
                 Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into(iv_head);
             }
+            if (TextUtils.isEmpty(builder.toString())) {
+                helper.setVisible(R.id.tv_likeperson, false)
+                        .setVisible(R.id.view_line, false);
+            } else {
+                helper.setVisible(R.id.tv_likeperson, true);
+                helper.setText(R.id.tv_likeperson, builder.toString());
+            }
             helper.setText(R.id.tv_name, item.getUser_name())
                     .setText(R.id.tv_time, item.getUpdated_at())
-                    .setText(R.id.tv_content, item.getFeed_content())
-                    .setText(R.id.tv_likeperson, builder.toString());
+                    .setText(R.id.tv_content, item.getFeed_content());
 
             final RecyclerView recycler_chat = helper.getView(R.id.recycler_chat);
             recycler_chat.setLayoutManager(new LinearLayoutManager(mContext));
@@ -210,6 +217,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             final List<CircleHomeBean.DataEntity.FeedEntity.CommentsEntity> comments = item.getComments();
             if (comments == null || comments.size() == 0) {
                 recycler_chat.setVisibility(View.GONE);
+                helper.setVisible(R.id.view_line, false);
             } else {
                 recycler_chat.setVisibility(View.VISIBLE);
                 ChatAdapter chatAdapter = new ChatAdapter(R.layout.item_market_chat, comments);
@@ -224,7 +232,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             helper.getView(R.id.ll_like).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    changeLike(item.getId() + "");
+                    changeLike(helper.getAdapterPosition(), iv_like);
                 }
             });
             helper.getView(R.id.ll_pinglun).setOnClickListener(new View.OnClickListener() {
@@ -233,20 +241,37 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                     showCommentPopWindow(v, item.getId() + "", "");
                 }
             });
+            if ((comments == null || comments.size() == 0) && TextUtils.isEmpty(builder.toString())) {
+                helper.setVisible(R.id.fl_chat, false);
+            }
         }
     }
 
-    private void changeLike(String s) {
+    private void changeLike(final int position, final ImageView iv_like) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        CircleHomeBean.DataEntity.FeedEntity feedEntity = mFeed.get(position);
+        final List<CircleHomeBean.DataEntity.FeedEntity.LikesEntity> likes = feedEntity.getLikes();
+        final String userid = SpUtils.getString(mContext, "userid", "");
+        boolean isLike = false;
+        CircleHomeBean.DataEntity.FeedEntity.LikesEntity likesEntity = null;
+        for (int i = 0; i < likes.size(); i++) {
+            likesEntity = likes.get(i);
+            if (!TextUtils.isEmpty(userid) && userid.equals(likesEntity.getUser_id() + "")) {
+                isLike = true;
+                break;
+            }
+        }
         HttpParams params = new HttpParams();
-        params.put("feed_id", s);
+        params.put("feed_id", feedEntity.getId() + "");
         String url = "";
-        if (mIsLike) {
+        if (isLike) {
             url = Urls.BASEURL + "api/v2/feed/unlike";
         } else {
             url = Urls.BASEURL + "api/v2/feed/like";
         }
+        final boolean finalIsLike = isLike;
+        final CircleHomeBean.DataEntity.FeedEntity.LikesEntity finalLikesEntity = likesEntity;
         OkGo.<RegisterBean>get(url)
                 .headers(headers)
                 .params(params)
@@ -259,7 +284,14 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                             Toast.makeText(mActivity, bean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
                             Toast.makeText(mActivity, bean.getMessage(), Toast.LENGTH_SHORT).show();
-                            mIsLike = !mIsLike;//手动设置，不用再请求一次网络
+                            //手动设置，不用再请求一次网络
+                            if (finalIsLike) {
+                                iv_like.setImageResource(R.drawable.ganji_like2);
+                                likes.remove(finalLikesEntity);
+                            } else {
+                                iv_like.setImageResource(R.drawable.ganji_like3);
+                                likes.add(new CircleHomeBean.DataEntity.FeedEntity.LikesEntity(Integer.parseInt(userid), "名字"));
+                            }
                             mMyAdapter.notifyDataSetChanged();
                         }
                     }

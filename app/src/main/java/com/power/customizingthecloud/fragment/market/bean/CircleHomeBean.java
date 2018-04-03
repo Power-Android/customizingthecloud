@@ -372,6 +372,11 @@ public class CircleHomeBean {
                 public int getFeed_id() {
                     return feed_id;
                 }
+
+                public LikesEntity(int user_id, String user_name) {
+                    this.user_id = user_id;
+                    this.user_name = user_name;
+                }
             }
         }
 
