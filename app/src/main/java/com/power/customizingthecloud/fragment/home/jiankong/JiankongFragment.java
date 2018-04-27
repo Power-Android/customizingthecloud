@@ -53,6 +53,7 @@ public class JiankongFragment extends BaseFragment {
 
     @Override
     protected void initLazyData() {
+
     }
 
     @Override
