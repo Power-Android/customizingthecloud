@@ -19,6 +19,9 @@ import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
+import com.umeng.socialize.Config;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareAPI;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 import java.util.concurrent.TimeUnit;
@@ -37,6 +40,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         application = this;
+        initUMShare();
         setLogger();
         setOkGo();//OkGo----第三方网络框架
         //初始化二维码工具类
@@ -58,6 +62,14 @@ public class MyApplication extends Application {
 
     public static Context getGloableContext() {
         return application.getApplicationContext();
+    }
+
+    private void initUMShare() {
+        Config.DEBUG = true;
+        UMShareAPI.get(this);
+        PlatformConfig.setWeixin("wx5c1cdc0f4545b7b5", "a43502ccaa267413527ee1ad72d98e43");
+        PlatformConfig.setQQZone("1106497230", "txpECff86YCRCifW");
+        PlatformConfig.setSinaWeibo("2271879831", "bc0da1422956e3c76a68e16fc4d17db4", "http://www.baidu.com");//回调地址要跟微博开放平台的一样
     }
 
     /**
