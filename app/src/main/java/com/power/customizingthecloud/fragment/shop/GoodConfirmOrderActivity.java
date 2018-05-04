@@ -2,6 +2,8 @@ package com.power.customizingthecloud.fragment.shop;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alipay.sdk.app.PayTask;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -36,7 +39,11 @@ import com.power.customizingthecloud.activity.mine.MyOrderActivity;
 import com.power.customizingthecloud.activity.mine.MyVoucherActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.AddressManageBean;
+import com.power.customizingthecloud.bean.AliPayBean;
+import com.power.customizingthecloud.bean.BaseBean;
 import com.power.customizingthecloud.bean.MyVoucherBean;
+import com.power.customizingthecloud.bean.PayResult;
+import com.power.customizingthecloud.bean.WXPayBean;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.bean.PushOrderBean;
 import com.power.customizingthecloud.fragment.home.bean.QuickBuyBean;
@@ -45,6 +52,9 @@ import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.CommonPopupWindow;
+import com.tencent.mm.sdk.modelpay.PayReq;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -124,6 +134,51 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
     private int mDaijinquanprice;
     private String mOrder_good_total;
     private int mEselsohr_total;
+    private String payType = "1";
+    // IWXAPI 是第三方app和微信通信的openapi接口
+    private IWXAPI api;
+    private String WX_APPID = "wx5c1cdc0f4545b7b5";// 微信appid
+    private static final int SDK_PAY_FLAG = 1;//支付宝
+    //-------------------------------------支付宝支付---------------------------------------------
+    private Handler mHandler = new Handler() {
+        @SuppressWarnings("unused")
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SDK_PAY_FLAG: {
+                    PayResult payResult = new PayResult((String) msg.obj);
+                    //                    Toast.makeText(ZhuanLanActivity.this, " " + payResult.getResultStatus(), Toast.LENGTH_SHORT).show();
+                    /**
+                     * 同步返回的结果必须放置到服务端进行验证（验证的规则请看https://doc.open.alipay.com/doc2/
+                     * detail.htm?spm=0.0.0.0.xdvAU6&treeId=59&articleId=103665&
+                     * docType=1) 建议商户依赖异步通知
+                     */
+                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                    String resultStatus = payResult.getResultStatus();
+                    // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        Toast.makeText(GoodConfirmOrderActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
+                        //                        finish();
+//                        showPaySuccessDialog();
+                    } else {
+                        // 判断resultStatus 为非"9000"则代表可能支付失败
+                        /*
+                        "8000"代表支付结果因为支付渠道原因或者系统原因还在等待支付结果确认，
+                        最终交易是否成功以服务端异步通知为准（小概率状态）
+                         */
+                        if (TextUtils.equals(resultStatus, "8000")) {
+                            Toast.makeText(GoodConfirmOrderActivity.this, "支付结果确认中", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
+                            Toast.makeText(GoodConfirmOrderActivity.this, "支付宝支付取消", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +195,10 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
         mIvAddress.setOnClickListener(this);
         initData();
         initListener();
+        // 通过WXAPIFactory工厂，获取IWXAPI的实例
+        api = WXAPIFactory.createWXAPI(this, WX_APPID, false);
+        // 将该app注册到微信
+        api.registerApp(WX_APPID);
     }
 
     private void initListener() {
@@ -303,6 +362,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                 if (isChecked) {
                     cb_weixin.setChecked(false);
                     cb_yinlian.setChecked(false);
+                    payType = "1";
                 }
             }
         });
@@ -312,6 +372,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                 if (isChecked) {
                     cb_alipay.setChecked(false);
                     cb_yinlian.setChecked(false);
+                    payType = "2";
                 }
             }
         });
@@ -321,6 +382,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                 if (isChecked) {
                     cb_weixin.setChecked(false);
                     cb_alipay.setChecked(false);
+                    payType = "3";
                 }
             }
         });
@@ -332,9 +394,10 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                     return;
                 }
                 mDialog.dismiss();
-                Intent intent = new Intent(GoodConfirmOrderActivity.this, MyOrderActivity.class);
-                intent.putExtra("type", "0");
-                startActivity(intent);
+                pushOrder(payType);
+//                Intent intent = new Intent(GoodConfirmOrderActivity.this, MyOrderActivity.class);
+//                intent.putExtra("type", "0");
+//                startActivity(intent);
             }
         });
     }
@@ -399,7 +462,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                     overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
-                pushOrder();
+                showPayStyleDialog();
                 break;
             case R.id.tv_quan_price:
                 String userid2 = SpUtils.getString(mContext, "userid", "");
@@ -458,7 +521,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
         }
     }
 
-    private void pushOrder() {
+    private void pushOrder(final String payType) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
@@ -490,9 +553,97 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                         } else if (code == 1) {
                             Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
                             String pay_sn = bean.getData().getPay_sn();
-                            showPayStyleDialog();
+                            goPay(payType,pay_sn);
                         }
                     }
                 });
+    }
+
+    private void goPay(String payType, String pay_sn) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("pay_sn", pay_sn);
+        params.put("pay_type", payType);
+        switch (payType) {
+            case "1": //支付宝
+                OkGo.<AliPayBean>post(Urls.BASEURL + "api/v2/buy/pay")
+                        .tag(this)
+                        .headers(headers)
+                        .params(params)
+                        .execute(new DialogCallback<AliPayBean>(GoodConfirmOrderActivity.this, AliPayBean.class) {
+                                     @Override
+                                     public void onSuccess(Response<AliPayBean> response) {
+                                         int code = response.code();
+                                         final AliPayBean aliPayBean = response.body();
+                                         Runnable payRunnable = new Runnable() {
+
+                                             @Override
+                                             public void run() {
+                                                 PayTask alipay = new PayTask(GoodConfirmOrderActivity.this);
+                                                 String result = alipay.pay(aliPayBean.getAlipay(), true);//调用支付接口，获取支付结果
+                                                 Message msg = new Message();
+                                                 msg.what = SDK_PAY_FLAG;
+                                                 msg.obj = result;
+                                                 mHandler.sendMessage(msg);
+                                             }
+                                         };
+
+                                         // 必须异步调用，支付或者授权的行为需要在独立的非ui线程中执行
+                                         Thread payThread = new Thread(payRunnable);
+                                         payThread.start();
+                                     }
+
+                                     @Override
+                                     public void onError(Response<AliPayBean> response) {
+                                         super.onError(response);
+                                     }
+                                 }
+                        );
+                break;
+            case "2": //微信支付
+                OkGo.<WXPayBean>post(Urls.BASEURL + "api/v2/buy/pay")
+                        .tag(this)
+                        .headers(headers)
+                        .params(params)
+                        .execute(new DialogCallback<WXPayBean>(GoodConfirmOrderActivity.this, WXPayBean.class) {
+                                     @Override
+                                     public void onSuccess(Response<WXPayBean> response) {
+                                         int code = response.code();
+                                         WXPayBean wxPayBean = response.body();
+                                         PayReq req = new PayReq();
+                                         req.appId = wxPayBean.getAppid();// 微信开放平台审核通过的应用APPID
+                                         req.partnerId = wxPayBean.getPartnerid();// 微信支付分配的商户号
+                                         req.prepayId = wxPayBean.getPrepayid();// 预支付订单号，app服务器调用“统一下单”接口获取
+                                         req.nonceStr = wxPayBean.getNoncestr();// 随机字符串，不长于32位，服务器小哥会给咱生成
+                                         req.timeStamp = wxPayBean.getTimestamp() + "";// 时间戳，app服务器小哥给出
+                                         req.packageValue = wxPayBean.getPackage1();// 固定值Sign=WXPay，可以直接写死，服务器返回的也是这个固定值
+                                         req.sign = wxPayBean.getSign();// 签名，服务器小哥给出
+                                         //                        req.extData = "app data"; // optional
+                                         // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
+                                         api.sendReq(req);//调起支付
+                                     }
+
+                                     @Override
+                                     public void onError(Response<WXPayBean> response) {
+                                         super.onError(response);
+                                     }
+                                 }
+                        );
+                break;
+            case "3": //银联支付
+                OkGo.<BaseBean>post(Urls.BASEURL + "api/v2/buy/pay")
+                        .tag(this)
+                        .headers(headers)
+                        .params(params)
+                        .execute(new DialogCallback<BaseBean>(GoodConfirmOrderActivity.this, BaseBean.class) {
+                                     @Override
+                                     public void onSuccess(Response<BaseBean> response) {
+
+                                     }
+                                 }
+                        );
+                break;
+        }
     }
 }
