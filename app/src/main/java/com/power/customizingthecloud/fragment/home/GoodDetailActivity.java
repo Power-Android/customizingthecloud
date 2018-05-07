@@ -23,6 +23,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.ChatActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.base.UMShareActivity;
 import com.power.customizingthecloud.callback.DialogCallback;
@@ -196,7 +197,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
                     overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
-                startActivity(new Intent(this, KefuActivity.class));
+                startActivity(new Intent(this, ChatActivity.class));
                 break;
             case R.id.tv_insertcar:
                 String userid2 = SpUtils.getString(mContext, "userid", "");

@@ -24,6 +24,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.ChatActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.bean.MiaoDetailBean;
@@ -193,6 +194,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
                     overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
+                startActivity(new Intent(this, ChatActivity.class));
                 break;
             case R.id.tv_buy:
                 String userid2 = SpUtils.getString(this, "userid", "");

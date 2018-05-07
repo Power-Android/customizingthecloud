@@ -51,7 +51,7 @@ public class MyRedPacketActivity extends BaseActivity implements View.OnClickLis
 
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
-        titleContentTv.setText("我的红包");
+        titleContentTv.setText("我的礼包");
         titleBackIv.setOnClickListener(this);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));

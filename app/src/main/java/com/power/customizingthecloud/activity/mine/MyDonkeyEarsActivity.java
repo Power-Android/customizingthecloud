@@ -125,7 +125,9 @@ public class MyDonkeyEarsActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        startActivity(new Intent(mContext, GoodDetailActivity.class));
+        Intent intent = new Intent(mContext,GoodDetailActivity.class);
+        intent.putExtra("id",list.get(position).getId()+"");
+        startActivity(intent);
     }
 
     private class DonkeyEarsAdapter extends BaseQuickAdapter<DonkeyEarsBean.DataBean.GoodBean, BaseViewHolder> {

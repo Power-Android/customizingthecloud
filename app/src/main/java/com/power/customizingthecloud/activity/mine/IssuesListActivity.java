@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -84,7 +85,8 @@ public class IssuesListActivity extends BaseActivity implements BaseQuickAdapter
                 finish();
                 break;
             case R.id.title_kefu_iv:
-                TUtils.showShort(mContext,"点击了---客服");
+//                TUtils.showShort(mContext,"点击了---客服");
+                startActivity(new Intent(mContext,ChatActivity.class));
                 break;
         }
     }

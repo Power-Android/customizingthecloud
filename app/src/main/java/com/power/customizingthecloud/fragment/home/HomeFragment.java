@@ -280,6 +280,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             mTopAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                    String userid = SpUtils.getString(mContext, "userid", "");
                     switch (position) {
                         case 0:
                             startActivity(new Intent(mContext, MiaoShaActivity.class));
@@ -298,6 +299,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             break;
                         case 5:
                             //                            showRenYangDialog();
+                            if (TextUtils.isEmpty(userid)){
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                                return;
+                            }
                             startActivity(new Intent(mContext, KaiDianActivity.class));
                             break;
                         case 6:
@@ -310,6 +316,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             startActivity(new Intent(mContext, LatestActivity.class));
                             break;
                         case 9:
+                            if (TextUtils.isEmpty(userid)){
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                                return;
+                            }
                             startActivity(new Intent(mContext, MyDonkeyEarsActivity.class));
                             break;
                     }

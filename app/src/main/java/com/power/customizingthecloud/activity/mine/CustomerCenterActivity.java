@@ -176,6 +176,7 @@ public class CustomerCenterActivity extends BaseActivity implements View.OnClick
                 startActivity(new Intent(mContext,IssuesListActivity.class));
                 break;
             case R.id.zxkf_ll://咨询客服
+                startActivity(new Intent(mContext,ChatActivity.class));
                 break;
             case R.id.pjfk_ll://评价反馈
                 startActivity(new Intent(mContext,FeedbackActivity.class));

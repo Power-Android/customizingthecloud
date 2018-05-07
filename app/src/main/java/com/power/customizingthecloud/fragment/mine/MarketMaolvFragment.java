@@ -9,10 +9,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.GoodDetail1Activity;
 import com.power.customizingthecloud.adapter.ProductListAdapter;
 import com.power.customizingthecloud.base.BaseFragment;
+import com.power.customizingthecloud.bean.MarketShopBean;
+import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.renyang.RenYangDetailActivity;
+import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +34,7 @@ import butterknife.Unbinder;
  * Created by Administrator on 2018/2/23.
  */
 
-public class MarketMaolvFragment extends BaseFragment implements BaseQuickAdapter.OnItemClickListener {
+public class MarketMaolvFragment extends BaseFragment {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     Unbinder unbinder;
@@ -39,14 +48,33 @@ public class MarketMaolvFragment extends BaseFragment implements BaseQuickAdapte
     }
 
     private void initData() {
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        ProductListAdapter adapter=new ProductListAdapter(R.layout.item_market_maolv,list,mContext,2);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(this);
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("after","");
+
+        OkGo.<MarketShopBean>get(Urls.BASEURL + "api/v2/user/fx-donkey")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<MarketShopBean>(mActivity,MarketShopBean.class) {
+                    @Override
+                    public void onSuccess(Response<MarketShopBean> response) {
+                        MarketShopBean marketShopBean = response.body();
+                        if (marketShopBean.getCode() == 1){
+                            List<MarketShopBean.DataBean> list = marketShopBean.getData();
+                            recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+                            ProductListAdapter adapter=new ProductListAdapter(R.layout.item_market_maolv,list,mContext,2);
+                            recyclerView.setAdapter(adapter);
+                            adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                    startActivity(new Intent(mContext,RenYangDetailActivity.class));
+                                }
+                            });
+                        }
+                    }
+                });
     }
 
     @Override
@@ -58,10 +86,5 @@ public class MarketMaolvFragment extends BaseFragment implements BaseQuickAdapte
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @Override
-    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        startActivity(new Intent(mContext,RenYangDetailActivity.class));
     }
 }
