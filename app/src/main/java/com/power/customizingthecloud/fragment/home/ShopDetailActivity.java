@@ -37,6 +37,8 @@ import com.power.customizingthecloud.login.bean.RegisterBean;
 import com.power.customizingthecloud.utils.BannerUtils;
 import com.power.customizingthecloud.utils.MyUtils;
 import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.TUtils;
+import com.power.customizingthecloud.utils.TimeUtils;
 import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.CommonPopupWindow;
@@ -51,6 +53,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.power.customizingthecloud.R.id.thumb;
 import static com.power.customizingthecloud.R.id.tv_shengyu;
 
 public class ShopDetailActivity extends BaseActivity implements View.OnClickListener {
@@ -267,11 +270,16 @@ public class ShopDetailActivity extends BaseActivity implements View.OnClickList
 
     private void showSelectTimeDialog(final TextView tv_select_time) {
         //时间选择器
-        TimePickerView pvTime = new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
+        final TimePickerView pvTime = new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
             @Override
             public void onTimeSelect(Date date, View v) {//选中事件回调
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String format = simpleDateFormat.format(date);
+                Date nowDate = TimeUtils.getNowDate();
+                if (date.getTime() < nowDate.getTime()){
+                    TUtils.showShort(mContext,"请选择之后的时间");
+                    return;
+                }
                 tv_select_time.setText(format);
             }
         })

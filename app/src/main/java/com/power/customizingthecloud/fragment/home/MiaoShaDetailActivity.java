@@ -26,6 +26,7 @@ import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.ChatActivity;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.base.UMShareActivity;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.bean.MiaoDetailBean;
 import com.power.customizingthecloud.login.LoginActivity;
@@ -33,6 +34,7 @@ import com.power.customizingthecloud.utils.BannerUtils;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.youth.banner.Banner;
 
 import java.util.ArrayList;
@@ -237,35 +239,40 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl("http://www.baidu.com","qq分享","http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg","1",MiaoShaDetailActivity.this, SHARE_MEDIA.WEIXIN);
+//                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl("http://www.baidu.com","qq分享","http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg","2",MiaoShaDetailActivity.this,SHARE_MEDIA.WEIXIN_CIRCLE);
+//                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl("http://www.baidu.com","qq分享","http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg","3",MiaoShaDetailActivity.this,SHARE_MEDIA.QZONE);
+//                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl("http://www.baidu.com","qq分享","http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg","4",MiaoShaDetailActivity.this,SHARE_MEDIA.QQ);
+//                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl("http://www.baidu.com","微博分享","http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg","5",MiaoShaDetailActivity.this,SHARE_MEDIA.SINA);
+//                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
     }

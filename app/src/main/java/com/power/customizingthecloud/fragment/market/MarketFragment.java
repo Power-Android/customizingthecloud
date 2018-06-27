@@ -149,7 +149,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                                 mTvName.setText(user.getUser_name());
                             }
                             if (!TextUtils.isEmpty(user.getUser_avatar())) {
-                                Glide.with(MyApplication.getGloableContext()).load(user.getUser_avatar()).into(mIvHead);
+                                Glide.with(mContext).load(user.getUser_avatar()).into(mIvHead);
                             }
                             if (!isLoadMore) {
                                 mFeed = data.getFeed();

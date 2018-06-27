@@ -63,7 +63,8 @@ public class IssuesListActivity extends BaseActivity implements BaseQuickAdapter
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        TUtils.showShort(mContext,"点击了---问题列表"+position);
+//        TUtils.showShort(mContext,"点击了---问题列表"+position);
+        startActivity(new Intent(mContext,WentiDetailActivity.class));
     }
 
     private class IssuesListAdapter extends BaseQuickAdapter<IssuesListBean,BaseViewHolder>{

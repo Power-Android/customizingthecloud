@@ -531,7 +531,7 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
          * PickerView会通过getPickerViewText方法获取字符串显示出来。
          */
 
-        for (int i=0;i<options1Items.size();i++){//遍历省份
+        for (int i = 0;i < options1Items.size();i++){//遍历省份
             ArrayList<CityBean> CityList = new ArrayList<>();//该省的城市列表（第二级）
             ArrayList<ArrayList<QuBean>> Province_AreaList = new ArrayList<>();//该省的所有地区列表（第三极）
 
@@ -549,7 +549,7 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
                 City_AreaList.add(quBean);
                 Province_AreaList.add(City_AreaList);//添加该省所有地区数据
             }else {
-                for (int c=0; c<options1Items.get(i).getItems().size(); c++){//遍历该省份的所有城市
+                for (int c = 0; c < options1Items.get(i).getItems().size(); c++){//遍历该省份的所有城市
                     CityBean cityBean = new CityBean();
                     String CityName = options1Items.get(i).getItems().get(c).getName();
                     int id = options1Items.get(i).getItems().get(c).getId();
@@ -567,7 +567,7 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
                         City_AreaList.add(quBean);
                     }else {
 
-                        for (int d=0; d < options1Items.get(i).getItems().get(c).getItems().size(); d++) {//该城市对应地区所有数据
+                        for (int d = 0; d < options1Items.get(i).getItems().get(c).getItems().size(); d++) {//该城市对应地区所有数据
                             QuBean quBean = new QuBean();
                             String AreaName = options1Items.get(i).getItems().get(c).getItems().get(d).getName();
                             int id1 = options1Items.get(i).getItems().get(c).getItems().get(d).getId();

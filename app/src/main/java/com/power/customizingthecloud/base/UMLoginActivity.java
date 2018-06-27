@@ -9,9 +9,17 @@ import android.widget.Toast;
 
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.orhanobut.logger.Logger;
+import com.power.customizingthecloud.MainActivity;
 import com.power.customizingthecloud.MyApplication;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.login.LoginActivity;
+import com.power.customizingthecloud.login.bean.LoginBean;
+import com.power.customizingthecloud.utils.MyUtils;
+import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.TUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -76,6 +84,7 @@ public class UMLoginActivity extends BaseActivity {
             Logger.e(data.toString());
             Logger.e("openid:"+ uid +"\n"+"userFace:"+ userhead +"\n"+"name:"+ username);
             TUtils.showShort(mContext,"微信登录成功");
+            requestLoginWeChat();
             String type = "";
             if (platform.equals(SHARE_MEDIA.QQ)) {
                 type = "qq";
@@ -112,6 +121,39 @@ public class UMLoginActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         UMShareAPI.get(this).release();
+    }
+
+    private static void requestLoginWeChat() {
+        HttpParams params = new HttpParams();
+
+        params.put("wx_name",username);
+        params.put("wx_openid",uid);
+        params.put("wx_img",userhead);
+//        String device_token = SpUtils.getString(mContext, "device_token", "");
+        params.put("device_token","111");
+
+        OkGo.<LoginBean>post(Urls.BASEURL + "api/v2/wx-login")
+                .tag(mContext)
+                .params(params)
+                .execute(new DialogCallback<LoginBean>(mContext,LoginBean.class) {
+                    @Override
+                    public void onSuccess(Response<LoginBean> response) {
+                        LoginBean loginBean = response.body();
+                        int code = loginBean.getCode();
+                        if (code == 0) {
+                        } else if (code == 1) {
+                            LoginBean.DataEntity dataEntity = loginBean.getData().get(0);
+                            SpUtils.putString(mContext, "userid", dataEntity.getUser_id() + "");
+                            SpUtils.putString(mContext, "token", dataEntity.getToken());
+                            long ttlMs = dataEntity.getTtl() * 60 * 1000L;
+                            long timeMillis = System.currentTimeMillis();
+                            long totalMs = ttlMs + timeMillis;
+                            SpUtils.putString(mContext, "totalMs", totalMs + "");
+                            mContext.startActivity(new Intent(mContext, MainActivity.class));
+                            mContext.finish();
+                        }
+                    }
+                });
     }
 
 }

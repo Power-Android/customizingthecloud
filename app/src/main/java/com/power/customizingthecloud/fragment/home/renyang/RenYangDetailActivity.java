@@ -41,6 +41,7 @@ import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.CustomViewPager;
 import com.power.customizingthecloud.view.SnappingStepper;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,7 +169,9 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onValueChange(View view, int value) {
                 mTvPrice.setText(Float.parseFloat(datas.getPrice()) * value + "元");
-                mTvLirun.setText(mLirun * value + "元");
+                DecimalFormat decimalFormat=new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+                String p = decimalFormat.format(mLirun * value);//format 返回的是字符串
+                mTvLirun.setText( p + "元");
                 mTvShengyu.setText(datas.getLast_amount()-value + "");
             }
         });
@@ -206,7 +209,10 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                             Glide.with(MyApplication.getGloableContext()).load(datas.getImage()).into(mIvTop);
                             mTvIntro.setText(datas.getIntroduce());
                             mTvPrice.setText(Float.parseFloat(datas.getPrice()) * mItemStepper.getValue() + "元");
-                            mTvLirun.setText(mLirun * mItemStepper.getValue() + "元");
+                            float lirun = mLirun * mItemStepper.getValue();
+                            DecimalFormat decimalFormat=new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+                            String p = decimalFormat.format(lirun);//format 返回的是字符串
+                            mTvLirun.setText(p + "元");
                         }
                     }
                 });

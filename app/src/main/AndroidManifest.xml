@@ -218,7 +218,8 @@
         <activity android:name=".activity.mine.PingJiaActivity" />
         <activity android:name=".activity.mine.RequestRefundActiviy" />
         <activity android:name=".fragment.home.LvBuWeiActivity" />
-        <activity android:name=".activity.mine.ChatActivity"></activity>
+        <activity android:name=".activity.mine.ChatActivity" />
+        <activity android:name=".activity.mine.WentiDetailActivity"></activity>
     </application>
 
 </manifest>

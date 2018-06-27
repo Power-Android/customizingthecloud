@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.liaoinstan.springview.container.DefaultHeader;
+import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.Response;
@@ -55,6 +57,7 @@ public class KaiDianActivity extends BaseActivity implements View.OnClickListene
     @BindView(R.id.order_ll) LinearLayout orderLl;
     @BindView(R.id.recyclerView) RecyclerView recyclerView;
     @BindView(R.id.activity_kai_dian) LinearLayout activityKaiDian;
+    @BindView(R.id.springview) SpringView mSpringview;
     private final int TEAM = 1, ORDER = 2;
     private List<KaidianBean.DataBean.TeamBean> teamList = new ArrayList<>();
     private HttpHeaders headers;
@@ -87,6 +90,23 @@ public class KaiDianActivity extends BaseActivity implements View.OnClickListene
 
         initTeamColor();
         initData(headers);
+        initListener();
+    }
+
+    private void initListener() {
+        mSpringview.setHeader(new DefaultHeader(mContext));
+        mSpringview.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                initData(headers);
+                mSpringview.onFinishFreshAndLoad();
+            }
+
+            @Override
+            public void onLoadmore() {
+
+            }
+        });
     }
 
     private void initData(HttpHeaders headers) {

@@ -19,6 +19,7 @@ import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.MainActivity;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.base.UMLoginActivity;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.login.bean.LoginBean;
 import com.power.customizingthecloud.login.bean.RegisterBean;
@@ -26,11 +27,12 @@ import com.power.customizingthecloud.utils.MyUtils;
 import com.power.customizingthecloud.utils.SendSmsTimerUtils;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.Urls;
+import com.umeng.socialize.UMShareAPI;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener {
+public class LoginActivity extends UMLoginActivity implements View.OnClickListener {
 
     @BindView(R.id.iv_finish)
     ImageView mIvFinish;
@@ -79,6 +81,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mTvLoginbyPhone.setOnClickListener(this);
         mTvGetcode.setOnClickListener(this);
         mIvFinish.setOnClickListener(this);
+        mTvLoginbyWeixin.setOnClickListener(this);
     }
 
     @Override
@@ -111,6 +114,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 mLlMima.setVisibility(View.GONE);
                 mViewLineMima.setVisibility(View.GONE);
                 break;
+            case R.id.tv_loginby_weixin:
+                loginByWeiXin(this);
+                break;
             case R.id.tv_getcode:
                 getCode(mEdtZhanghao.getText().toString());
                 break;
@@ -118,6 +124,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 finish();
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
     private void login() {

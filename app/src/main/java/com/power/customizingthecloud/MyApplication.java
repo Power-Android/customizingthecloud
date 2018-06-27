@@ -67,7 +67,8 @@ public class MyApplication extends Application {
     private void initUMShare() {
         Config.DEBUG = true;
         UMShareAPI.get(this);
-        PlatformConfig.setWeixin("wx5c1cdc0f4545b7b5", "a43502ccaa267413527ee1ad72d98e43");
+        //   a43502ccaa267413527ee1ad72d98e43
+        PlatformConfig.setWeixin("wx5c1cdc0f4545b7b5", "c3774875fa658dc7a93a0064ab4902f8");
         PlatformConfig.setQQZone("1106497230", "txpECff86YCRCifW");
         PlatformConfig.setSinaWeibo("2271879831", "bc0da1422956e3c76a68e16fc4d17db4", "http://www.baidu.com");//回调地址要跟微博开放平台的一样
     }

@@ -186,7 +186,8 @@ public class CustomerCenterActivity extends BaseActivity implements View.OnClick
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        TUtils.showShort(mContext,"点击了---item" + position);
+//        TUtils.showShort(mContext,"点击了---item" + position);
+        startActivity(new Intent(mContext,WentiDetailActivity.class));
     }
 
     private class CustomerCenterAdapter extends BaseQuickAdapter<String,BaseViewHolder>{

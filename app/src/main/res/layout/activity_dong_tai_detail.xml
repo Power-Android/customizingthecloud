@@ -100,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/friend_chat_bg"
                     android:orientation="vertical"
-                    android:paddingBottom="5dp"
+                    android:paddingBottom="10dp"
                     android:paddingTop="15dp">
                     <TextView
                         android:layout_width="wrap_content"
@@ -110,20 +110,19 @@
                         android:drawablePadding="10dp"
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
+                        android:paddingBottom="10dp"
                         android:text="小豆子，大头，兔子"/>
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginBottom="5dp"
-                        android:layout_marginTop="10dp"
-                        android:background="#E5E5E5"></View>
+                        android:background="#E5E5E5"/>
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_chat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="15dp"
-                        android:paddingRight="15dp"
-                    />
+                        android:paddingRight="15dp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
