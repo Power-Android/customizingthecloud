@@ -2,6 +2,8 @@ package com.power.customizingthecloud.fragment.home;
 
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,6 +52,8 @@ public class ZiXunDetailActivity extends BaseActivity implements View.OnClickLis
     TextView mTitleContentRightTv;
     @BindView(R.id.tv_intro)
     TextView mTvIntro;
+    @BindView(R.id.webview)
+    WebView mWebview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +68,11 @@ public class ZiXunDetailActivity extends BaseActivity implements View.OnClickLis
 
     private void initView() {
         String id = getIntent().getStringExtra("id");
-
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
         params.put("type","1");
         params.put("id",id);
-
         OkGo.<LatestDetialBean>get(Urls.BASEURL + "api/v2/article/show")
                 .tag(this)
                 .headers(headers)
@@ -80,7 +82,9 @@ public class ZiXunDetailActivity extends BaseActivity implements View.OnClickLis
                     public void onSuccess(Response<LatestDetialBean> response) {
                         LatestDetialBean latestBean = response.body();
                         if (latestBean.getCode() == 1){
-                            mTvIntro.setText(latestBean.getData().getBody());
+                            mWebview.setWebChromeClient(new WebChromeClient());
+                            mWebview.loadData(latestBean.getData().getBody(), "text/html;charset=UTF-8", null);
+//                            mTvIntro.setText(latestBean.getData().getBody());
                         }else {
                             TUtils.showShort(mContext,latestBean.getMessage());
                         }

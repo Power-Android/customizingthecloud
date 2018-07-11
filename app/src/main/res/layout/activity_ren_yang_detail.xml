@@ -132,7 +132,7 @@
                                 android:id="@+id/tv_shengyu"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="36"
+                                android:text=""
                                 android:textColor="@color/red1"
                                 android:textSize="15sp"/>
                             <TextView
@@ -144,7 +144,7 @@
                                 android:id="@+id/tv_total_count"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="50"
+                                android:text=""
                                 android:textSize="15sp"/>
                             <TextView
                                 android:layout_width="wrap_content"
@@ -187,7 +187,7 @@
                             android:id="@+id/tv_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1025元"
+                            android:text=""
                             android:textColor="@color/text_black"
                             android:textSize="15sp"/>
                     </LinearLayout>
@@ -207,7 +207,7 @@
                             android:id="@+id/tv_lirun"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1020元"
+                            android:text=""
                             android:textColor="@color/red1"
                             android:textSize="15sp"/>
                     </LinearLayout>

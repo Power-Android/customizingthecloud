@@ -1,28 +1,27 @@
 package com.power.customizingthecloud.bean;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by Administrator on 2018/1/25.
+ * Created by Administrator on 2018/7/9.
  */
 
-public class MyOderBean implements Serializable {
+public class OrderDetailBean {
 
     /**
      * code : 1
-     * data : [{"good_count":1,"price_count":"150.00","evaluation_state":1,"goods":[{"goods_name":"特色有机奶粉","goods_class":"休闲食品","goods_image":"http://ssyd.oss-cn-beijing.aliyuncs.com/goods/201801/2601513049970.png","goods_price":"150.00","goods_id":3,"goods_num":1,"order_id":92}],"id":92,"order_state":40,"order_sn":1000000000009301},{"good_count":1,"price_count":"150.00","evaluation_state":0,"goods":[{"goods_name":"驴肉后腿部","goods_class":"生鲜系列","goods_image":"http://ssyd.oss-cn-beijing.aliyuncs.com/goods/201801/2601513049970.png","goods_price":"150.00","goods_id":4,"goods_num":1,"order_id":91}],"id":91,"order_state":0,"order_sn":1000000000009201}]
-     * message : ok
+     * data : {"address":"北京市 海淀区 西二旗 中关村软件园","shipping_code":"","reciver_name":"POWER","goods_amount":"150.00","mobile":"15366666666","created_at":"2018-07-06 10:44:09","goods":[{"goods_name":"特色有机奶粉","goods_class":"休闲食品","goods_image":"http://ssyd.oss-cn-beijing.aliyuncs.com/goods/201801/2601513049970.png","goods_price":"150.00","goods_id":3,"goods_num":1,"order_id":92}],"order_amount":"150.00","order_message":"","id":92,"order_state":40,"shipping_time":"工作日","order_sn":1000000000009301}
+     * message : 请求成功
      */
     private int code;
-    private List<DataEntity> data;
+    private DataEntity data;
     private String message;
 
     public void setCode(int code) {
         this.code = code;
     }
 
-    public void setData(List<DataEntity> data) {
+    public void setData(DataEntity data) {
         this.data = data;
     }
 
@@ -34,7 +33,7 @@ public class MyOderBean implements Serializable {
         return code;
     }
 
-    public List<DataEntity> getData() {
+    public DataEntity getData() {
         return data;
     }
 
@@ -44,36 +43,68 @@ public class MyOderBean implements Serializable {
 
     public static class DataEntity {
         /**
-         * good_count : 1
-         * price_count : 150.00
-         * evaluation_state : 1
+         * address : 北京市 海淀区 西二旗 中关村软件园
+         * shipping_code :
+         * reciver_name : POWER
+         * goods_amount : 150.00
+         * mobile : 15366666666
+         * created_at : 2018-07-06 10:44:09
          * goods : [{"goods_name":"特色有机奶粉","goods_class":"休闲食品","goods_image":"http://ssyd.oss-cn-beijing.aliyuncs.com/goods/201801/2601513049970.png","goods_price":"150.00","goods_id":3,"goods_num":1,"order_id":92}]
+         * order_amount : 150.00
+         * order_message :
          * id : 92
          * order_state : 40
+         * shipping_time : 工作日
          * order_sn : 1000000000009301
          */
-        private int good_count;
-        private String price_count;
-        private int evaluation_state;
+        private String address;
+        private String shipping_code;
+        private String reciver_name;
+        private String goods_amount;
+        private String mobile;
+        private String created_at;
         private List<GoodsEntity> goods;
+        private String order_amount;
+        private String order_message;
         private int id;
         private int order_state;
+        private String shipping_time;
         private long order_sn;
 
-        public void setGood_count(int good_count) {
-            this.good_count = good_count;
+        public void setAddress(String address) {
+            this.address = address;
         }
 
-        public void setPrice_count(String price_count) {
-            this.price_count = price_count;
+        public void setShipping_code(String shipping_code) {
+            this.shipping_code = shipping_code;
         }
 
-        public void setEvaluation_state(int evaluation_state) {
-            this.evaluation_state = evaluation_state;
+        public void setReciver_name(String reciver_name) {
+            this.reciver_name = reciver_name;
+        }
+
+        public void setGoods_amount(String goods_amount) {
+            this.goods_amount = goods_amount;
+        }
+
+        public void setMobile(String mobile) {
+            this.mobile = mobile;
+        }
+
+        public void setCreated_at(String created_at) {
+            this.created_at = created_at;
         }
 
         public void setGoods(List<GoodsEntity> goods) {
             this.goods = goods;
+        }
+
+        public void setOrder_amount(String order_amount) {
+            this.order_amount = order_amount;
+        }
+
+        public void setOrder_message(String order_message) {
+            this.order_message = order_message;
         }
 
         public void setId(int id) {
@@ -84,24 +115,48 @@ public class MyOderBean implements Serializable {
             this.order_state = order_state;
         }
 
+        public void setShipping_time(String shipping_time) {
+            this.shipping_time = shipping_time;
+        }
+
         public void setOrder_sn(long order_sn) {
             this.order_sn = order_sn;
         }
 
-        public int getGood_count() {
-            return good_count;
+        public String getAddress() {
+            return address;
         }
 
-        public String getPrice_count() {
-            return price_count;
+        public String getShipping_code() {
+            return shipping_code;
         }
 
-        public int getEvaluation_state() {
-            return evaluation_state;
+        public String getReciver_name() {
+            return reciver_name;
+        }
+
+        public String getGoods_amount() {
+            return goods_amount;
+        }
+
+        public String getMobile() {
+            return mobile;
+        }
+
+        public String getCreated_at() {
+            return created_at;
         }
 
         public List<GoodsEntity> getGoods() {
             return goods;
+        }
+
+        public String getOrder_amount() {
+            return order_amount;
+        }
+
+        public String getOrder_message() {
+            return order_message;
         }
 
         public int getId() {
@@ -110,6 +165,10 @@ public class MyOderBean implements Serializable {
 
         public int getOrder_state() {
             return order_state;
+        }
+
+        public String getShipping_time() {
+            return shipping_time;
         }
 
         public long getOrder_sn() {

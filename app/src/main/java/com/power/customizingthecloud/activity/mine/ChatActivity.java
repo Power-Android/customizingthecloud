@@ -1,7 +1,6 @@
 package com.power.customizingthecloud.activity.mine;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -45,7 +43,7 @@ public class ChatActivity extends BaseActivity {
         setContentView(R.layout.activity_chat);
         ButterKnife.bind(this);
         titleBackIv.setVisibility(View.VISIBLE);
-        titleContentTv.setText("xxx");
+        titleContentTv.setText("客服牧小童");
         recyclerView = (RecyclerView) findViewById(R.id.recylerView);
         et = (EditText) findViewById(R.id.et);
         tvSend = (TextView) findViewById(R.id.tvSend);
@@ -85,19 +83,10 @@ public class ChatActivity extends BaseActivity {
                 data.add(new ItemModel(ItemModel.CHAT_B, model));
                 adapter.addAll(data);
                 et.setText("");
-                hideKeyBorad(et);
                 recyclerView.smoothScrollToPosition(adapter.getItemCount()-1);
                 adapter.notifyDataSetChanged();
             }
         });
-
-    }
-
-    private void hideKeyBorad(View v) {
-        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm.isActive()) {
-            imm.hideSoftInputFromWindow(v.getApplicationWindowToken(), 0);
-        }
     }
 
     @OnClick(R.id.title_back_iv)

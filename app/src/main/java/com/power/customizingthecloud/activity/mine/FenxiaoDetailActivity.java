@@ -1,10 +1,9 @@
 package com.power.customizingthecloud.activity.mine;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -16,15 +15,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.ShareSuccessActivity;
+import com.power.customizingthecloud.fragment.home.bean.GoodDetailBean;
 import com.power.customizingthecloud.fragment.shop.GoodConfirmOrderActivity;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
+import com.power.customizingthecloud.utils.CommonUtils;
 import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.SnappingStepper;
 import com.youth.banner.Banner;
@@ -36,7 +44,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class GoodDetail1Activity extends BaseActivity implements View.OnClickListener {
+public class FenxiaoDetailActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.title_message_iv)
     ImageView mTitleMessageIv;
@@ -96,11 +104,15 @@ public class GoodDetail1Activity extends BaseActivity implements View.OnClickLis
     TextView mTvBuy;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
+    private List<String> imgList = new ArrayList<>();
+    private GoodDetailBean.DataEntity mData;
+    private List<GoodDetailBean.DataEntity.CommentsEntity> mComments;
+    private List<String> mSpec_value = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_good_detail1);
+        setContentView(R.layout.activity_fenxiao_detail);
         ButterKnife.bind(this);
         mTitleBackIv.setVisibility(View.VISIBLE);
         mTitleBackIv.setOnClickListener(this);
@@ -110,7 +122,6 @@ public class GoodDetail1Activity extends BaseActivity implements View.OnClickLis
         mTvLianximaijia.setOnClickListener(this);
         mTvInsertcar.setOnClickListener(this);
         mTvBuy.setOnClickListener(this);
-        BannerUtils.startBanner(mBanner, new ArrayList<String>());
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
         mRecycler.setNestedScrollingEnabled(false);
         mItemStepper.setContentBackground(R.drawable.bg_stepper_green);
@@ -118,6 +129,46 @@ public class GoodDetail1Activity extends BaseActivity implements View.OnClickLis
         mItemStepper.setContentTextColor(R.color.green);
         mItemStepper.setLeftButtonResources(R.drawable.jianhao_white);
         mItemStepper.setRightButtonResources(R.drawable.jiahao_white);
+        initData();
+    }
+
+    private void initData() {
+        String id = getIntent().getStringExtra("id");
+        HttpParams params = new HttpParams();
+        params.put("good_id", id);
+        params.put("type", "3");
+        OkGo.<GoodDetailBean>post(Urls.BASEURL + "api/v2/good/good-show")
+                .tag(this)
+                .params(params)
+                .execute(new DialogCallback<GoodDetailBean>(FenxiaoDetailActivity.this, GoodDetailBean.class) {
+                    @Override
+                    public void onSuccess(Response<GoodDetailBean> response) {
+                        GoodDetailBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            imgList.clear();
+                            mData = bean.getData();
+                            List<GoodDetailBean.DataEntity.ImagesEntity> images = mData.getImages();
+                            if (images != null && images.size() > 0) {
+                                for (int i = 0; i < images.size(); i++) {
+                                    imgList.add(images.get(i).getImag());
+                                }
+                            }
+                            mItemStepper.setMaxValue(mData.getGood_storage());
+                            BannerUtils.startBanner(mBanner, imgList);
+                            mTvName.setText(mData.getName());
+                            mTvShengyu.setText(mData.getGood_storage() + "");
+                            String spec_value = mData.getSpec_value();
+                            String[] split = spec_value.split("@");
+                            for (int i = 0; i < split.length; i++) {
+                                mSpec_value.add(split[i]);
+                            }
+                            mComments = mData.getComments();
+                        }
+                    }
+                });
     }
 
     @Override
@@ -136,24 +187,28 @@ public class GoodDetail1Activity extends BaseActivity implements View.OnClickLis
                     overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
                     return;
                 }
+                startActivity(new Intent(this, ChatActivity.class));
                 break;
             case R.id.tv_insertcar:
                 String userid2 = SpUtils.getString(mContext, "userid", "");
-                if (TextUtils.isEmpty(userid2)){
+                if (TextUtils.isEmpty(userid2)) {
                     startActivity(new Intent(mContext, LoginActivity.class));
-                    overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
-                Toast.makeText(this, "加入购物车成功，请去购物车结算~", Toast.LENGTH_SHORT).show();
+                CommonUtils.insertCar2(this, mData.getId() + "", "fenxiao", mItemStepper.getValue());
                 break;
             case R.id.tv_buy:
                 String userid3 = SpUtils.getString(mContext, "userid", "");
-                if (TextUtils.isEmpty(userid3)){
+                if (TextUtils.isEmpty(userid3)) {
                     startActivity(new Intent(mContext, LoginActivity.class));
-                    overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                    overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
-                startActivity(new Intent(this, GoodConfirmOrderActivity.class));
+                Intent intent = new Intent(FenxiaoDetailActivity.this, GoodConfirmOrderActivity.class);
+                intent.putExtra("good_quantity",mData.getId() + "=" + mItemStepper.getValue());
+                intent.putExtra("buy_type","1");
+                startActivity(intent);
                 break;
         }
     }
@@ -184,35 +239,35 @@ public class GoodDetail1Activity extends BaseActivity implements View.OnClickLis
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(GoodDetail1Activity.this,ShareSuccessActivity.class));
+                startActivity(new Intent(FenxiaoDetailActivity.this,ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(GoodDetail1Activity.this,ShareSuccessActivity.class));
+                startActivity(new Intent(FenxiaoDetailActivity.this,ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(GoodDetail1Activity.this,ShareSuccessActivity.class));
+                startActivity(new Intent(FenxiaoDetailActivity.this,ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(GoodDetail1Activity.this,ShareSuccessActivity.class));
+                startActivity(new Intent(FenxiaoDetailActivity.this,ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(GoodDetail1Activity.this,ShareSuccessActivity.class));
+                startActivity(new Intent(FenxiaoDetailActivity.this,ShareSuccessActivity.class));
             }
         });
     }
@@ -240,12 +295,8 @@ public class GoodDetail1Activity extends BaseActivity implements View.OnClickLis
         mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.GONE);
         mLlCanshu.setVisibility(View.VISIBLE);
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
         mRecyclerCanshu.setLayoutManager(new LinearLayoutManager(this));
-        CanShuAdapter recordAdapter = new CanShuAdapter(R.layout.item_canshu, list);
+        CanShuAdapter recordAdapter = new CanShuAdapter(R.layout.item_canshu, mSpec_value);
         mRecyclerCanshu.setAdapter(recordAdapter);
     }
 
@@ -257,6 +308,7 @@ public class GoodDetail1Activity extends BaseActivity implements View.OnClickLis
 
         @Override
         protected void convert(BaseViewHolder helper, String item) {
+            helper.setText(R.id.tv_content, item);
         }
     }
 
@@ -275,25 +327,22 @@ public class GoodDetail1Activity extends BaseActivity implements View.OnClickLis
         mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.VISIBLE);
         mLlCanshu.setVisibility(View.GONE);
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        PingJiaAdapter paiHangAdapter = new PingJiaAdapter(R.layout.item_pingjia2, list);
+        PingJiaAdapter paiHangAdapter = new PingJiaAdapter(R.layout.item_pingjia2, mComments);
         mRecycler.setAdapter(paiHangAdapter);
     }
 
-    private class PingJiaAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class PingJiaAdapter extends BaseQuickAdapter<GoodDetailBean.DataEntity.CommentsEntity, BaseViewHolder> {
 
-        public PingJiaAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public PingJiaAdapter(@LayoutRes int layoutResId, @Nullable List<GoodDetailBean.DataEntity.CommentsEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
-
+        protected void convert(BaseViewHolder helper, GoodDetailBean.DataEntity.CommentsEntity item) {
+            Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into((ImageView) helper.getView(R.id.iv_head));
+            helper.setText(R.id.tv_name, item.getUser_name())
+                    .setText(R.id.tv_time, item.getTime())
+                    .setText(R.id.tv_content, item.getContent());
         }
     }
 

@@ -14,7 +14,6 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import org.greenrobot.eventbus.EventBus;
 
-
 import static com.tencent.mm.sdk.constants.ConstantsAPI.COMMAND_PAY_BY_WX;
 
 
@@ -24,8 +23,7 @@ import static com.tencent.mm.sdk.constants.ConstantsAPI.COMMAND_PAY_BY_WX;
 public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandler {
     private static final String TAG = "WXPayEntryActivity";
     private IWXAPI api;// IWXAPI 是第三方app和微信通信的openapi接口
-    private static final String APP_ID = "wx76c60c8c929e5061";
-    private String mPayprice;
+    private static final String APP_ID = "wx5c1cdc0f4545b7b5";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

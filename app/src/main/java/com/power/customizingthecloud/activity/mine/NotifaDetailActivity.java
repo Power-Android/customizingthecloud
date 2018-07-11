@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,15 +12,11 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
-import com.power.customizingthecloud.bean.NotifacationBean;
 import com.power.customizingthecloud.bean.NotificationDetailBean;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.TUtils;
 import com.power.customizingthecloud.utils.Urls;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +30,6 @@ public class NotifaDetailActivity extends BaseActivity {
     TextView mTitleContentTv;
     @BindView(R.id.content_tv)
     TextView contentTv;
-    private List<NotifacationBean.DataBean> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +68,12 @@ public class NotifaDetailActivity extends BaseActivity {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(1,new Intent());
+        super.onBackPressed();
     }
 
     @OnClick(R.id.title_back_iv)

@@ -448,7 +448,9 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(mContext, GoodListActivity.class));
+                Intent intent1 = new Intent(mContext, GoodListActivity.class);
+                intent1.putExtra("type","hot");
+                startActivity(intent1);
             }
         });
     }

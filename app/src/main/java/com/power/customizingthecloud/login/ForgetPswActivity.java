@@ -18,6 +18,7 @@ import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.login.bean.RegisterBean;
+import com.power.customizingthecloud.utils.MyUtils;
 import com.power.customizingthecloud.utils.SendSmsTimerUtils;
 import com.power.customizingthecloud.utils.Urls;
 
@@ -107,6 +108,10 @@ public class ForgetPswActivity extends BaseActivity implements View.OnClickListe
         }
         if (TextUtils.isEmpty(psw1)){
             Toast.makeText(this, "请输入新密码~", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!MyUtils.ispsd(psw1)){
+            Toast.makeText(this, "请输入6-20位字母+数字组合！", Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(psw2)){

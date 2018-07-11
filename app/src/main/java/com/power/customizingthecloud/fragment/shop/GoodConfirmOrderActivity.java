@@ -31,8 +31,6 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
-import com.orhanobut.logger.Logger;
-import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.AddressManagerActivity;
 import com.power.customizingthecloud.activity.mine.MyOrderActivity;
@@ -41,6 +39,7 @@ import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.AddressManageBean;
 import com.power.customizingthecloud.bean.AliPayBean;
 import com.power.customizingthecloud.bean.BaseBean;
+import com.power.customizingthecloud.bean.EventBean;
 import com.power.customizingthecloud.bean.MyVoucherBean;
 import com.power.customizingthecloud.bean.PayResult;
 import com.power.customizingthecloud.bean.WXPayBean;
@@ -56,6 +55,9 @@ import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -157,8 +159,11 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                     // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
                     if (TextUtils.equals(resultStatus, "9000")) {
                         Toast.makeText(GoodConfirmOrderActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
-                        //                        finish();
-//                        showPaySuccessDialog();
+                        setResult(1, new Intent());
+                        finish();
+                        Intent intent = new Intent(GoodConfirmOrderActivity.this, MyOrderActivity.class);
+                        intent.putExtra("type", "0");
+                        startActivity(intent);
                     } else {
                         // 判断resultStatus 为非"9000"则代表可能支付失败
                         /*
@@ -179,11 +184,15 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
             }
         }
     };
+    private String is_cart;
+    private String buy_type;
+    private String good_quantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_good_confirm_order);
+        EventBus.getDefault().register(this);
         ButterKnife.bind(this);
         mTitleBackIv.setVisibility(View.VISIBLE);
         mTitleBackIv.setOnClickListener(this);
@@ -201,6 +210,24 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
         api.registerApp(WX_APPID);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("weixinpaysuccess")) {
+            setResult(1, new Intent());
+            finish();
+            Intent intent = new Intent(GoodConfirmOrderActivity.this, MyOrderActivity.class);
+            intent.putExtra("type", "0");
+            startActivity(intent);
+        }
+    }
+
     private void initListener() {
         mCbEar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -215,22 +242,23 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
     }
 
     private void initData() {
-        String good_quantity = getIntent().getStringExtra("good_quantity");
+        good_quantity = getIntent().getStringExtra("good_quantity");
         String cart_id = getIntent().getStringExtra("cart_id");
+        is_cart = getIntent().getStringExtra("is_cart");
+        buy_type = getIntent().getStringExtra("buy_type");
 
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
 
         HttpParams params = new HttpParams();
-        params.put("buy_type", "2");
-
-        if (!TextUtils.isEmpty(good_quantity)){
+        params.put("buy_type", buy_type);
+        if (!TextUtils.isEmpty(is_cart) && is_cart.equals("1")) {//购物车
+            params.put("is_cart", "1");
+            params.put("cart_id", cart_id);
+        } else {
+            is_cart = "0";
             params.put("is_cart", "0");
             params.put("good_quantity", good_quantity);
-        }
-        if (!TextUtils.isEmpty(cart_id)){
-            params.put("is_cart", "1");
-            params.put("cart_id",cart_id);
         }
 
         OkGo.<String>post(Urls.BASEURL + "api/v2/buy/buy-step1")
@@ -243,19 +271,31 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                         try {
                             JSONObject jsonObject = new JSONObject(body);
                             int code = jsonObject.optInt("code");
-                            if (code == 1){
+                            if (code == 1) {
                                 JSONObject dataObj = jsonObject.optJSONObject("data");
                                 JSONObject addressObj = dataObj.optJSONObject("address");
-                                if (addressObj != null) {
+                                if (addressObj != null) {//为空的时候也会走进来，不知道为啥
                                     String true_name = addressObj.optString("true_name");
                                     String area_info = addressObj.optString("area_info");
                                     String address = addressObj.optString("address");
                                     String mobile = addressObj.optString("mobile");
                                     mAdressId = addressObj.optInt("id");
                                     hasAddress = true;
-                                    mTvPersonname.setText("姓名：" + true_name);
-                                    mTvPhone.setText("电话：" + mobile);
-                                    mTvAddress.setText("地址：" + address);
+                                    if (!TextUtils.isEmpty(true_name)) {
+                                        mTvPersonname.setText("姓名：" + true_name);
+                                    } else {
+                                        hasAddress = false;
+                                    }
+                                    if (!TextUtils.isEmpty(mobile)) {
+                                        mTvPhone.setText("电话：" + mobile);
+                                    } else {
+                                        hasAddress = false;
+                                    }
+                                    if (!TextUtils.isEmpty(address)) {
+                                        mTvAddress.setText("地址：" + address);
+                                    } else {
+                                        hasAddress = false;
+                                    }
                                 }
                                 Gson gson = new Gson();
                                 JSONArray voucher = dataObj.optJSONArray("voucher");
@@ -274,12 +314,13 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                                 //                            List<QuickBuyBean.DataEntity.GoodListEntity> goodListEntities
                                 //                                    = parseJsonArrayWithGson(good_list.toString(), QuickBuyBean.DataEntity.GoodListEntity.class);
                                 List<QuickBuyBean.DataEntity.GoodListEntity> goodListEntities = gson.fromJson(good_list.toString(),
-                                        new TypeToken<List<QuickBuyBean.DataEntity.GoodListEntity>>() {}.getType());
+                                        new TypeToken<List<QuickBuyBean.DataEntity.GoodListEntity>>() {
+                                        }.getType());
                                 if (goodListEntities != null && goodListEntities.size() > 0) {
 
                                     shopRecycler.setLayoutManager(new LinearLayoutManager(mContext));
                                     shopRecycler.setNestedScrollingEnabled(false);
-                                    ShopAdapter adapter = new ShopAdapter(R.layout.item_confirm_order_shop,goodListEntities);
+                                    ShopAdapter adapter = new ShopAdapter(R.layout.item_confirm_order_shop, goodListEntities);
                                     shopRecycler.setAdapter(adapter);
 
                                     mOrder_good_total = dataObj.optString("order_good_total");
@@ -316,7 +357,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
         return result;
     }
 
-    private class ShopAdapter extends BaseQuickAdapter<QuickBuyBean.DataEntity.GoodListEntity,BaseViewHolder>{
+    private class ShopAdapter extends BaseQuickAdapter<QuickBuyBean.DataEntity.GoodListEntity, BaseViewHolder> {
 
         public ShopAdapter(int layoutResId, @Nullable List<QuickBuyBean.DataEntity.GoodListEntity> data) {
             super(layoutResId, data);
@@ -325,13 +366,14 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
         @Override
         protected void convert(BaseViewHolder helper, QuickBuyBean.DataEntity.GoodListEntity item) {
             Glide.with(mContext).load(item.getGood_image()).into((ImageView) helper.getView(R.id.iv_good));
-            helper.setText(R.id.tv_shopname,item.getGood_name())
-                    .setText(R.id.tv_oneprice,"¥" + item.getGood_price())
-                    .setText(R.id.tv_count,"x" + item.getGood_num());
+            helper.setText(R.id.tv_shopname, item.getGood_name())
+                    .setText(R.id.tv_oneprice, "¥" + item.getGood_price())
+                    .setText(R.id.tv_count, "x" + item.getGood_num());
         }
     }
 
     private void showPayStyleDialog() {
+        payType = "1";
         mBuilder = new BaseDialog.Builder(this);
         mDialog = mBuilder.setViewId(R.layout.dialog_paystyle)
                 //设置dialogpadding
@@ -394,10 +436,10 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                     return;
                 }
                 mDialog.dismiss();
-                pushOrder(payType);
-//                Intent intent = new Intent(GoodConfirmOrderActivity.this, MyOrderActivity.class);
-//                intent.putExtra("type", "0");
-//                startActivity(intent);
+                pushOrder();
+                //                Intent intent = new Intent(GoodConfirmOrderActivity.this, MyOrderActivity.class);
+                //                intent.putExtra("type", "0");
+                //                startActivity(intent);
             }
         });
     }
@@ -462,6 +504,10 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                     overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
+                if (!hasAddress) {
+                    Toast.makeText(this, "请确保姓名、电话、地址都填写完整", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 showPayStyleDialog();
                 break;
             case R.id.tv_quan_price:
@@ -473,7 +519,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                 }
                 Intent intent = new Intent(this, MyVoucherActivity.class);
                 intent.putExtra("type", "query");
-                startActivityForResult(intent,0);
+                startActivityForResult(intent, 0);
                 break;
             case R.id.tv_time:
             case R.id.iv_time:
@@ -485,7 +531,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
             case R.id.iv_address:
                 Intent intent1 = new Intent(this, AddressManagerActivity.class);
                 intent1.putExtra("type", "order");
-                startActivityForResult(intent1,0);
+                startActivityForResult(intent1, 0);
                 break;
         }
     }
@@ -493,10 +539,10 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode==1){
-            MyVoucherBean.DataBean result= (MyVoucherBean.DataBean) data.getSerializableExtra("result");
+        if (resultCode == 1) {//领券返回
+            MyVoucherBean.DataBean result = (MyVoucherBean.DataBean) data.getSerializableExtra("result");
             mDaijinquanprice = result.getPrice();
-            mVoucher_id=result.getId();
+            mVoucher_id = result.getId();
             hasVoucher = true;
             if (mDaijinquanprice != 0) {
                 mTvQuanPrice.setText("¥" + mDaijinquanprice + "");
@@ -507,27 +553,35 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
             } else {
                 mTvTotalprice.setText("¥" + (Float.parseFloat(mOrder_good_total) - mDaijinquanprice));
             }
-        }else if (resultCode==2){
-            AddressManageBean.DataBean result= (AddressManageBean.DataBean) data.getSerializableExtra("result");
-            String true_name = result.getTrue_name();
-            String area_info = result.getArea_info();
-            String address = result.getAddress();
-            String mobile = result.getMobile();
-            mAdressId = result.getId();
-            hasAddress = true;
-            mTvPersonname.setText("姓名：" + true_name);
-            mTvPhone.setText("电话：" + mobile);
-            mTvAddress.setText("地址：" + address);
+        } else if (resultCode == 2) {//修改地址返回
+            AddressManageBean.DataBean result = (AddressManageBean.DataBean) data.getSerializableExtra("result");
+            if (result != null) {
+                hasAddress = true;
+                String true_name = result.getTrue_name();
+                String area_info = result.getArea_info();
+                String address = result.getArea_info() + result.getAddress();
+                String mobile = result.getMobile();
+                mAdressId = result.getId();
+                hasAddress = true;
+                mTvPersonname.setText("姓名：" + true_name);
+                mTvPhone.setText("电话：" + mobile);
+                mTvAddress.setText("地址：" + address);
+            }else {
+                mTvPersonname.setText("姓名：暂无" );
+                mTvPhone.setText("电话：暂无");
+                mTvAddress.setText("地址：暂无");
+                hasAddress = false;
+            }
         }
     }
 
-    private void pushOrder(final String payType) {
+    private void pushOrder() {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("is_cart", "0");
-        params.put("buy_type", "2");
-        params.put("good_quantity", getIntent().getStringExtra("good_quantity"));
+        params.put("is_cart", is_cart);
+        params.put("buy_type", buy_type);
+        params.put("good_quantity", good_quantity);
         if (hasAddress) {
             params.put("address_id", mAdressId + "");
         }
@@ -552,18 +606,18 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                             Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
                             Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
-                            String pay_sn = bean.getData().getPay_sn();
-                            goPay(payType,pay_sn);
+                            String order_sn = bean.getData().getOrder_sn();
+                            goPay(payType, order_sn);
                         }
                     }
                 });
     }
 
-    private void goPay(String payType, String pay_sn) {
+    private void goPay(String payType, String order_sn) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("pay_sn", pay_sn);
+        params.put("order_sn", order_sn);
         params.put("pay_type", payType);
         switch (payType) {
             case "1": //支付宝
@@ -581,7 +635,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                                              @Override
                                              public void run() {
                                                  PayTask alipay = new PayTask(GoodConfirmOrderActivity.this);
-                                                 String result = alipay.pay(aliPayBean.getAlipay(), true);//调用支付接口，获取支付结果
+                                                 String result = alipay.pay(aliPayBean.getData().getAlipay(), true);//调用支付接口，获取支付结果
                                                  Message msg = new Message();
                                                  msg.what = SDK_PAY_FLAG;
                                                  msg.obj = result;
@@ -611,14 +665,15 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                                      public void onSuccess(Response<WXPayBean> response) {
                                          int code = response.code();
                                          WXPayBean wxPayBean = response.body();
+                                         WXPayBean.DataEntity data = wxPayBean.getData();
                                          PayReq req = new PayReq();
-                                         req.appId = wxPayBean.getAppid();// 微信开放平台审核通过的应用APPID
-                                         req.partnerId = wxPayBean.getPartnerid();// 微信支付分配的商户号
-                                         req.prepayId = wxPayBean.getPrepayid();// 预支付订单号，app服务器调用“统一下单”接口获取
-                                         req.nonceStr = wxPayBean.getNoncestr();// 随机字符串，不长于32位，服务器小哥会给咱生成
-                                         req.timeStamp = wxPayBean.getTimestamp() + "";// 时间戳，app服务器小哥给出
-                                         req.packageValue = wxPayBean.getPackage1();// 固定值Sign=WXPay，可以直接写死，服务器返回的也是这个固定值
-                                         req.sign = wxPayBean.getSign();// 签名，服务器小哥给出
+                                         req.appId = data.getAppid();// 微信开放平台审核通过的应用APPID
+                                         req.partnerId = data.getPartnerid();// 微信支付分配的商户号
+                                         req.prepayId = data.getPrepayid();// 预支付订单号，app服务器调用“统一下单”接口获取
+                                         req.nonceStr = data.getNoncestr();// 随机字符串，不长于32位，服务器小哥会给咱生成
+                                         req.timeStamp = data.getTimestamp() + "";// 时间戳，app服务器小哥给出
+                                         req.packageValue = data.getPackage1();// 固定值Sign=WXPay，可以直接写死，服务器返回的也是这个固定值
+                                         req.sign = data.getSign();// 签名，服务器小哥给出
                                          //                        req.extData = "app data"; // optional
                                          // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
                                          api.sendReq(req);//调起支付

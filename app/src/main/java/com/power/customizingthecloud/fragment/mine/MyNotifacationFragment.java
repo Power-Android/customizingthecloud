@@ -24,7 +24,6 @@ import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.Urls;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -79,7 +78,7 @@ public class MyNotifacationFragment extends BaseFragment {
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(mContext,NotifaDetailActivity.class);
                                     intent.putExtra("id",list.get(position).getId()+"");
-                                    startActivity(intent);
+                                    startActivityForResult(intent,0);
                                 }
                             });
                         }
@@ -101,6 +100,14 @@ public class MyNotifacationFragment extends BaseFragment {
             if (item.isIs_read()){
                 helper.getView(R.id.item_is_read_iv).setVisibility(View.GONE);
             }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode==1){
+            initData();
         }
     }
 

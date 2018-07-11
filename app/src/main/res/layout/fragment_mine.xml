@@ -39,7 +39,6 @@
                     android:layout_centerHorizontal="true"
                     android:layout_below="@+id/mine_face_iv"
                     android:layout_marginTop="15dp"
-                    android:text="POWER"
                     android:textColor="@color/white"/>
                 <TextView
                     android:id="@+id/mine_sign_tv"
@@ -171,7 +170,6 @@
                             android:id="@+id/mine_lverduo_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="10只"
                             android:textColor="@color/white"
                             android:textSize="17sp"/>
                         <TextView
@@ -193,7 +191,6 @@
                             android:id="@+id/mine_daijinquan_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="10张"
                             android:textColor="@color/white"
                             android:textSize="17sp"/>
                         <TextView
@@ -215,7 +212,6 @@
                             android:id="@+id/mine_hongbao_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="10个"
                             android:textColor="@color/white"
                             android:textSize="17sp" />
 
@@ -239,7 +235,6 @@
                             android:id="@+id/mine_yu_e_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="10元"
                             android:textColor="@color/white"
                             android:textSize="17sp" />
 
@@ -300,6 +295,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:layout_gravity="center_vertical"
                         android:orientation="vertical"
                         android:layout_weight="1">
                         <ImageView
@@ -317,6 +313,7 @@
                     <LinearLayout
                         android:id="@+id/mine_daifahuo_ll"
                         android:layout_width="0dp"
+                        android:layout_gravity="center_vertical"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical"
@@ -337,6 +334,7 @@
                         android:id="@+id/mine_daishouhuo_ll"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:layout_weight="1">
@@ -356,6 +354,7 @@
                     <LinearLayout
                         android:id="@+id/mine_daipingjia_ll"
                         android:layout_width="0dp"
+                        android:layout_gravity="center_vertical"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical"
@@ -378,6 +377,7 @@
                         android:id="@+id/mine_tuikuan_ll"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:layout_weight="1">

@@ -23,14 +23,15 @@
             android:layout_toRightOf="@+id/item_checkBox">
             <ImageView
                 android:id="@+id/item_img_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/face"/>
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:scaleType="fitXY"
+                />
             <TextView
                 android:id="@+id/item_name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="驴奶粉"
+                android:text=""
                 android:textColor="@color/text_black"
                 android:layout_toRightOf="@+id/item_img_iv"
                 android:layout_marginLeft="10dp"
@@ -39,7 +40,7 @@
                 android:id="@+id/item_fenlei_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="商品分类：驴奶粉"
+                android:text=""
                 android:layout_below="@id/item_name_tv"
                 android:layout_toRightOf="@id/item_img_iv"
                 android:layout_marginLeft="10dp"
@@ -48,7 +49,7 @@
                 android:id="@+id/item_money_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="￥99.00"
+                android:text=""
                 android:textColor="@color/red1"
                 android:layout_below="@+id/item_fenlei_tv"
                 android:layout_toRightOf="@+id/item_img_iv"

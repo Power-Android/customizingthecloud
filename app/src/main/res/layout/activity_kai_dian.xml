@@ -43,7 +43,7 @@
                         android:layout_toRightOf="@+id/dianpu_face_iv"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:text="POWER的小店"
+                        android:text=""
                         android:textColor="@color/white"/>
                     <TextView
                         android:id="@+id/money_tv"

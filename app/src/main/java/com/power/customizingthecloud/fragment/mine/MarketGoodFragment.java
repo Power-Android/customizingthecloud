@@ -14,17 +14,14 @@ import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
-import com.power.customizingthecloud.activity.mine.GoodDetail1Activity;
-import com.power.customizingthecloud.adapter.MyRenYangAdapter;
+import com.power.customizingthecloud.activity.mine.FenxiaoDetailActivity;
 import com.power.customizingthecloud.adapter.ProductListAdapter;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.MarketShopBean;
 import com.power.customizingthecloud.callback.DialogCallback;
-import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.Urls;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,7 +32,7 @@ import butterknife.Unbinder;
  * Created by Administrator on 2018/2/23.
  */
 
-public class MaeketShopFragment extends BaseFragment {
+public class MarketGoodFragment extends BaseFragment {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     Unbinder unbinder;
@@ -63,14 +60,16 @@ public class MaeketShopFragment extends BaseFragment {
                     public void onSuccess(Response<MarketShopBean> response) {
                         MarketShopBean marketShopBean = response.body();
                         if (marketShopBean.getCode() == 1){
-                            List<MarketShopBean.DataBean> list = marketShopBean.getData();
+                            final List<MarketShopBean.DataBean> list = marketShopBean.getData();
                             recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
                             ProductListAdapter adapter=new ProductListAdapter(R.layout.item_market_shop,list,mContext,1);
                             recyclerView.setAdapter(adapter);
                             adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    startActivity(new Intent(mContext, GoodDetail1Activity.class));
+                                    Intent intent = new Intent(mContext, FenxiaoDetailActivity.class);
+                                    intent.putExtra("id",list.get(position).getId()+"");
+                                    startActivity(intent);
                                 }
                             });
                         }

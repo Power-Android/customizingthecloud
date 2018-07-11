@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,8 +18,6 @@ import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
-import com.power.customizingthecloud.activity.mine.LatestActivity;
-import com.power.customizingthecloud.activity.mine.LatestDetailActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.LatestBean;
 import com.power.customizingthecloud.callback.DialogCallback;
@@ -29,7 +26,6 @@ import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.TUtils;
 import com.power.customizingthecloud.utils.Urls;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -85,7 +81,7 @@ public class ZiXunActivity extends BaseActivity implements View.OnClickListener 
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(mContext,ZiXunDetailActivity.class);
-                                    intent.putExtra("id",list.get(position).getId());
+                                    intent.putExtra("id",list.get(position).getId()+"");
                                     startActivity(intent);
                                 }
                             });

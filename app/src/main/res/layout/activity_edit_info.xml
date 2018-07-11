@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/backgourd"
+    android:orientation="vertical"
     tools:context="com.power.customizingthecloud.activity.mine.EditInfoActivity">
 
     <include layout="@layout/item_title_layout"/>
@@ -15,8 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:orientation="vertical"
-        android:background="@drawable/bg_yuanjiao_white">
+        android:background="@drawable/bg_yuanjiao_white"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/edit_face_rl"
@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="头像"
-                android:textColor="@color/text_black" />
+                android:textColor="@color/text_black"/>
 
             <com.power.customizingthecloud.view.CircleImageView
                 android:id="@+id/edit_face_iv"
@@ -37,7 +37,7 @@
                 android:layout_height="35dp"
                 android:layout_marginRight="15dp"
                 android:layout_toLeftOf="@+id/view_01"
-                android:src="@drawable/face" />
+                android:src="@drawable/face"/>
 
             <ImageView
                 android:id="@+id/view_01"
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/mine_go_iv" />
+                android:src="@drawable/mine_go_iv"/>
 
         </RelativeLayout>
 
@@ -63,14 +63,15 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="昵称"
-                android:textColor="@color/text_black" />
+                android:textColor="@color/text_black"/>
 
             <TextView
                 android:id="@+id/edit_name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLength="20"
                 android:layout_marginRight="15dp"
-                android:layout_toLeftOf="@+id/view_02" />
+                android:layout_toLeftOf="@+id/view_02"/>
 
             <ImageView
                 android:id="@+id/view_02"
@@ -78,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/mine_go_iv" />
+                android:src="@drawable/mine_go_iv"/>
 
         </RelativeLayout>
 
@@ -86,33 +87,32 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/backgourd"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginRight="10dp"
+            android:background="@color/backgourd"/>
 
         <RelativeLayout
             android:id="@+id/edit_sex_rl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="15dp"
             android:paddingBottom="15dp"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:paddingRight="10dp"
+            android:paddingTop="15dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="性别"
-                android:textColor="@color/text_black" />
+                android:textColor="@color/text_black"/>
 
             <TextView
                 android:id="@+id/edit_sex_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="男"
                 android:layout_marginRight="15dp"
-                android:layout_toLeftOf="@+id/view_03" />
+                android:layout_toLeftOf="@+id/view_03"/>
 
             <ImageView
                 android:id="@+id/view_03"
@@ -120,38 +120,38 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/mine_go_iv" />
+                android:src="@drawable/mine_go_iv"/>
 
         </RelativeLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/backgourd"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginRight="10dp"
+            android:background="@color/backgourd"/>
 
         <RelativeLayout
             android:id="@+id/edit_age_rl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="15dp"
             android:paddingBottom="15dp"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:paddingRight="10dp"
+            android:paddingTop="15dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="年龄"
-                android:textColor="@color/text_black" />
+                android:textColor="@color/text_black"/>
 
             <TextView
                 android:id="@+id/edit_age_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="15dp"
-                android:layout_toLeftOf="@+id/view_04" />
+                android:layout_toLeftOf="@+id/view_04"/>
 
             <ImageView
                 android:id="@+id/view_04"
@@ -159,7 +159,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/mine_go_iv" />
+                android:src="@drawable/mine_go_iv"/>
 
         </RelativeLayout>
 
@@ -168,13 +168,13 @@
         android:id="@+id/edit_location_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_yuanjiao_white"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:paddingTop="15dp"
+        android:background="@drawable/bg_yuanjiao_white"
         android:paddingBottom="15dp"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:paddingRight="10dp"
+        android:paddingTop="15dp">
 
         <TextView
             android:id="@+id/view15"
@@ -182,18 +182,18 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="地区"
-            android:textColor="@color/text_black" />
+            android:textColor="@color/text_black"/>
 
         <TextView
             android:id="@+id/edit_location_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_toLeftOf="@+id/view_05"
             android:layout_toRightOf="@+id/view15"
-            android:layout_marginLeft="15dp"
-            android:singleLine="true"
-            android:ellipsize="middle"/>
+            android:ellipsize="middle"
+            android:singleLine="true"/>
 
         <ImageView
             android:id="@+id/view_05"
@@ -201,7 +201,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/mine_go_iv" />
+            android:src="@drawable/mine_go_iv"/>
 
     </RelativeLayout>
 </LinearLayout>

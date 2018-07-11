@@ -2,6 +2,8 @@ package com.power.customizingthecloud.activity.mine;
 
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,7 +13,6 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
-import com.power.customizingthecloud.bean.LatestBean;
 import com.power.customizingthecloud.bean.LatestDetialBean;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.utils.SpUtils;
@@ -30,6 +31,8 @@ public class LatestDetailActivity extends BaseActivity {
     TextView titleContentTv;
     @BindView(R.id.content_tv)
     TextView contentTv;
+    @BindView(R.id.webview)
+    WebView mWebview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +62,9 @@ public class LatestDetailActivity extends BaseActivity {
                     public void onSuccess(Response<LatestDetialBean> response) {
                         LatestDetialBean latestBean = response.body();
                         if (latestBean.getCode() == 1){
-                            contentTv.setText(latestBean.getData().getBody());
+                            mWebview.setWebChromeClient(new WebChromeClient());
+                            mWebview.loadData(latestBean.getData().getBody(), "text/html;charset=UTF-8", null);
+//                            contentTv.setText(latestBean.getData().getBody());
                         }else {
                             TUtils.showShort(mContext,latestBean.getMessage());
                         }

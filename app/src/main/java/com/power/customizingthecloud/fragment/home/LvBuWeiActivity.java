@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.liaoinstan.springview.container.DefaultFooter;
@@ -21,6 +22,7 @@ import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseActivity;
@@ -178,6 +180,7 @@ public class LvBuWeiActivity extends BaseActivity implements View.OnClickListene
             ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
             layoutParams.height = width / 2;
             iv_top.setLayoutParams(layoutParams);
+            Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_top);
             helper.setText(R.id.tv_name, item.getName())
                     .setText(R.id.tv_price, item.getPrice());
         }

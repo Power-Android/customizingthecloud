@@ -217,6 +217,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
                 }
                 Intent intent = new Intent(GoodDetailActivity.this, GoodConfirmOrderActivity.class);
                 intent.putExtra("good_quantity",mData.getId() + "=" + mItemStepper.getValue());
+                intent.putExtra("buy_type","2");
                 startActivity(intent);
                 break;
         }

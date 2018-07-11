@@ -59,7 +59,7 @@ public class ReserveDetailActivity extends BaseActivity {
         nameTv.setText(detail.getUser_name());
         phoneTv.setText(detail.getMobile());
         date1Tv.setText(detail.getRestaurant_time());
-        numTv.setText(detail.getNumber());
+        numTv.setText(detail.getNumber()+"");
         seatTv.setText(detail.getSeat());
         date2Tv.setText(detail.getAdd_time());
         beizhuTv.setText(detail.getRemarks());

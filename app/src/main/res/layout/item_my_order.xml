@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/backgourd"
-    android:layout_marginTop="10dp"
+    android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
-    android:layout_marginLeft="5dp">
+    android:layout_marginTop="10dp"
+    android:background="@color/backgourd"
+    android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+    >
         <android.support.v7.widget.RecyclerView
             android:id="@+id/item_recycler"
             android:layout_width="match_parent"
@@ -28,20 +31,20 @@
                 android:id="@+id/item_use_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="付款"
-                android:textColor="@color/text_black"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/bg_text" />
+                android:background="@drawable/bg_text"
+                android:text="付款"
+                android:textColor="@color/text_black"/>
             <TextView
-                android:visibility="gone"
                 android:id="@+id/item_cancle_order_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/item_use_tv"
+                android:background="@drawable/bg_text"
                 android:text="取消订单"
                 android:textColor="@color/text_black"
-                android:background="@drawable/bg_text"
-                android:layout_toLeftOf="@+id/item_use_tv"
-                android:layout_marginRight="10dp"/>
+                android:visibility="gone"/>
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

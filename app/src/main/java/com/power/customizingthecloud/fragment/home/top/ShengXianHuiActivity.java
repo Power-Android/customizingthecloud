@@ -174,7 +174,9 @@ public class ShengXianHuiActivity extends BaseActivity implements View.OnClickLi
                             mShopAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    startActivity(new Intent(ShengXianHuiActivity.this, GoodDetailActivity.class));
+                                    Intent intent = new Intent(ShengXianHuiActivity.this, GoodDetailActivity.class);
+                                    intent.putExtra("id",mGoods.get(position).getId()+"");
+                                    startActivity(intent);
                                 }
                             });
                             mPosition_class = data.getPosition_class();

@@ -38,6 +38,20 @@ public class MyUtils {
     }
 
     /**
+     * 是否是纯数字或者纯英文
+     *
+     * @param psd
+     * @return
+     */
+    public static boolean ispsd(String psd) {
+        Pattern p = Pattern
+                .compile("^[a-zA-Z].*[0-9]|.*[0-9].*[a-zA-Z]");
+        Matcher m = p.matcher(psd);
+
+        return m.matches();
+    }
+
+    /**
      * * 清除本应用SharedPreference(/data/data/com.xxx.xxx/shared_prefs)
      * context
      */
@@ -101,8 +115,8 @@ public class MyUtils {
         return format;
     }
 
-    public static String go(Long ttl){
-        Date nowTime = new Date(System.currentTimeMillis()+ttl);
+    public static String go(Long ttl) {
+        Date nowTime = new Date(System.currentTimeMillis() + ttl);
         SimpleDateFormat sdFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String retStrFormatNowDate = sdFormatter.format(nowTime);
         return retStrFormatNowDate;
@@ -126,11 +140,11 @@ public class MyUtils {
 
     //手机号判断逻辑
     public static boolean isMobileNO(String mobiles) {
-//        Pattern p = Pattern.compile("^(13[0-9]|14[57]|15[0-35-9]|17[6-8]|18[0-9])[0-9]{8}$");
-//        Matcher m = p.matcher(mobiles);
-//        return m.matches();
+        //        Pattern p = Pattern.compile("^(13[0-9]|14[57]|15[0-35-9]|17[6-8]|18[0-9])[0-9]{8}$");
+        //        Matcher m = p.matcher(mobiles);
+        //        return m.matches();
         //上面的验证会有些问题，手机号码格式不是固定的，所以就弄简单点
-        if (mobiles.length()==11){
+        if (mobiles.length() == 11) {
             return true;
         }
         return false;
@@ -227,7 +241,7 @@ public class MyUtils {
     }
 
 
-    public static void setMargins (View v, int l, int t, int r, int b) {
+    public static void setMargins(View v, int l, int t, int r, int b) {
         if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
             p.setMargins(l, t, r, b);

@@ -43,14 +43,14 @@ public class PushOrderBean {
         /**
          * pay_sn : 640572785859181001
          */
-        private String pay_sn;
+        private String order_sn;
 
-        public void setPay_sn(String pay_sn) {
-            this.pay_sn = pay_sn;
+        public String getOrder_sn() {
+            return order_sn;
         }
 
-        public String getPay_sn() {
-            return pay_sn;
+        public void setOrder_sn(String order_sn) {
+            this.order_sn = order_sn;
         }
     }
 }

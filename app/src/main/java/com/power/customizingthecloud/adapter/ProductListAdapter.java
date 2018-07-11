@@ -17,7 +17,7 @@ import java.util.List;
  * Created by Administrator on 2018/2/23.
  */
 
-public class ProductListAdapter extends BaseQuickAdapter<MarketShopBean.DataBean,BaseViewHolder> {
+public class ProductListAdapter extends BaseQuickAdapter<MarketShopBean.DataBean, BaseViewHolder> {
 
     private Context mContext;
     private int mPosition;
@@ -32,16 +32,15 @@ public class ProductListAdapter extends BaseQuickAdapter<MarketShopBean.DataBean
 
     @Override
     protected void convert(BaseViewHolder helper, MarketShopBean.DataBean item) {
-        if (mPosition == 1){//商品
-            Glide.with(mContext).load(item.getImage()).into((ImageView) helper.getView(R.id.item_face_iv));
-            helper.setText(R.id.item_name_tv,item.getName())
-                    .setText(R.id.item_money_tv,"零售价：￥" + item.getPrice())
-                    .setText(R.id.item_shouyi_tv,"销售收益：￥" + item.getDistribution_price());
-        }else if (mPosition == 2){//毛驴
-            Glide.with(mContext).load(item.getImage()).into((ImageView) helper.getView(R.id.item_face_iv));
-            helper.setText(R.id.item_name_tv,"养殖成本"+item.getName())
-                    .setText(R.id.item_money_tv,"认养收益率：" + item.getProfit())
-                    .setText(R.id.item_shouyi_tv,"销售收益：￥" + item.getDistribution_price());
+        Glide.with(mContext).load(item.getImage()).into((ImageView) helper.getView(R.id.item_face_iv));
+        if (mPosition == 1) {//商品
+            helper.setText(R.id.item_name_tv, item.getName())
+                    .setText(R.id.item_money_tv, "零售价：￥" + item.getPrice())
+                    .setText(R.id.item_shouyi_tv, "销售收益：￥" + item.getDistribution_price());
+        } else if (mPosition == 2) {//毛驴
+            helper.setText(R.id.item_name_tv, "养殖成本" + item.getPrice())
+                    .setText(R.id.item_money_tv, "认养收益率：" + item.getProfit())
+                    .setText(R.id.item_shouyi_tv, "销售收益：￥" + item.getDistribution_eselsohr());
         }
     }
 }

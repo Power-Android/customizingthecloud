@@ -68,13 +68,13 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<InteractionBean>(mActivity,InteractionBean.class) {
+                .execute(new DialogCallback<InteractionBean>(mActivity, InteractionBean.class) {
                     @Override
                     public void onSuccess(Response<InteractionBean> response) {
                         InteractionBean body = response.body();
-                        if (body.getCode() == 1){
+                        if (body.getCode() == 1) {
                             list = body.getData();
-                            InteractionAdapter adapter = new InteractionAdapter(R.layout.item_interacation,list);
+                            InteractionAdapter adapter = new InteractionAdapter(R.layout.item_interacation, list);
                             recyclerView.setAdapter(adapter);
                             adapter.setOnItemChildClickListener(MyInteractionFragment.this);
                         }
@@ -92,13 +92,13 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<InteractionBean>(mActivity,InteractionBean.class) {
+                .execute(new DialogCallback<InteractionBean>(mActivity, InteractionBean.class) {
                     @Override
                     public void onSuccess(Response<InteractionBean> response) {
                         InteractionBean body = response.body();
-                        if (body.getCode() == 1){
+                        if (body.getCode() == 1) {
                             list = body.getData();
-                            InteractionAdapter adapter = new InteractionAdapter(R.layout.item_interacation,list);
+                            InteractionAdapter adapter = new InteractionAdapter(R.layout.item_interacation, list);
                             recyclerView.setAdapter(adapter);
                             adapter.setOnItemChildClickListener(MyInteractionFragment.this);
                         }
@@ -113,14 +113,14 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
     }
 
     @OnClick(R.id.pinglun_tv)
-    public void pinglun(){
+    public void pinglun() {
         pinglunTv.setTextColor(mContext.getResources().getColor(R.color.green));
         huifuTv.setTextColor(mContext.getResources().getColor(R.color.text_black));
         initData();
     }
 
     @OnClick(R.id.huifu_tv)
-    public void huifu(){
+    public void huifu() {
         huifuTv.setTextColor(mContext.getResources().getColor(R.color.green));
         pinglunTv.setTextColor(mContext.getResources().getColor(R.color.text_black));
         initData2();
@@ -131,7 +131,7 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
         startActivity(new Intent(mContext, MyDongTaiActivity.class));
     }
 
-    private class InteractionAdapter extends BaseQuickAdapter<InteractionBean.DataBean,BaseViewHolder>{
+    private class InteractionAdapter extends BaseQuickAdapter<InteractionBean.DataBean, BaseViewHolder> {
 
         public InteractionAdapter(@LayoutRes int layoutResId, @Nullable List<InteractionBean.DataBean> data) {
             super(layoutResId, data);
@@ -139,16 +139,16 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
 
         @Override
         protected void convert(BaseViewHolder helper, InteractionBean.DataBean item) {
-            helper.setText(R.id.item_name_tv,item.getUser_name())
-                    .setText(R.id.item_content_tv,item.getBody())
+            helper.setText(R.id.item_name_tv, item.getUser_name())
+                    .setText(R.id.item_content_tv, item.getBody())
                     .addOnClickListener(R.id.item_content_tv);
             ImageView imageView = helper.getView(R.id.item_pic_iv);
             ImageView faceiV = helper.getView(R.id.item_face_iv);
             Glide.with(mActivity).load(item.getUser_avatar()).into(faceiV);
-            if (item.getImage() != null || item.getImage() != ""){
+            if (item.getImage() != null || item.getImage() != "") {
                 imageView.setVisibility(View.VISIBLE);
                 Glide.with(mActivity).load(item.getImage()).into(imageView);
-            }else {
+            } else {
                 imageView.setVisibility(View.GONE);
             }
         }

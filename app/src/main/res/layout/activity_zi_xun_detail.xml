@@ -8,16 +8,21 @@
     android:orientation="vertical"
     tools:context="com.power.customizingthecloud.fragment.home.top.MiaoShaActivity">
     <include layout="@layout/item_title_layout"/>
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></WebView>
     <TextView
         android:id="@+id/tv_intro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:text="撒旦教时空裂缝刷卡机放得开了房价多少路口附近的上课了附近的书房里看电视就废了看电视了反垄断速率法流失率反倒是浪费V领撒旦教时空裂缝刷卡机放得开了房价多少路口附近的上课了附近的书房里看电视就废了看电视了反垄断速率法流失率反倒是浪费V领撒旦教时空裂缝刷卡机放得开了房价多少路口附近的上课了附近的书房里看电视就废了看电视了反垄断速率法流失率反倒是浪费V领撒旦教时空裂缝刷卡机放得开了房价多少路口附近的上课了附近的书房里看电视就废了看电视了反垄断速率法流失率反倒是浪费V领"
-        android:layout_width="match_parent"
-        android:padding="10dp"
-        android:lineSpacingExtra="2dp"
         android:background="@color/white"
-        android:layout_height="wrap_content"/>
+        android:lineSpacingExtra="2dp"
+        android:padding="10dp"
+        android:text=""
+        android:visibility="gone"/>
 </LinearLayout>

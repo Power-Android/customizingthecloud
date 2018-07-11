@@ -88,7 +88,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseAdapter> {
             super.setData(object);
             ChatModel model = (ChatModel) object;
             Glide.with(itemView.getContext()).load(model.getIcon()).into(ic_user);
-//            Picasso.with().load().placeholder(R.mipmap.ic_launcher).into(ic_user);
             tv.setText(model.getContent());
         }
     }
@@ -109,7 +108,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseAdapter> {
             super.setData(object);
             ChatModel model = (ChatModel) object;
             Glide.with(itemView.getContext()).load(model.getIcon()).into(ic_user);
-//            Picasso.with(itemView.getContext()).load(model.getIcon()).placeholder(R.mipmap.ic_launcher).into(ic_user);
             tv.setText(model.getContent());
         }
     }

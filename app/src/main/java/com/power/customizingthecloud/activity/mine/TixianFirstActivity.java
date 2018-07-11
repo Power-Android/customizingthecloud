@@ -2,10 +2,12 @@ package com.power.customizingthecloud.activity.mine;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
@@ -56,6 +58,14 @@ public class TixianFirstActivity extends BaseActivity implements View.OnClickLis
                 SendSmsTimerUtils.sendSms(getcodeTv, R.color.green, R.color.green);
                 break;
             case R.id.jump_tv:
+                if (TextUtils.isEmpty(phoneEt.getText().toString())){
+                    Toast.makeText(this, "请输入手机号~", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(codeEt.getText().toString())){
+                    Toast.makeText(this, "请输入验证码~", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 startActivity(new Intent(mContext,TixianThreeActivity.class));
                 break;
         }

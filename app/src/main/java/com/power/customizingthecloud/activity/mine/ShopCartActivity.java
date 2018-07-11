@@ -6,22 +6,25 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.BaseBean;
-import com.power.customizingthecloud.bean.DonkeyEarsBean;
 import com.power.customizingthecloud.bean.ShopcartBean;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.callback.JsonCallback;
@@ -72,14 +75,15 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
     LinearLayout fenixiaoLl;
     @BindView(R.id.shangcheng_ll)
     LinearLayout shangchengLl;
+    @BindView(R.id.rl_bottom)
+    RelativeLayout rlBottom;
     private List<ShopcartBean.DataBean> list = new ArrayList<>();
     private double totalMoney;
     private int num;
     private ShopCartAdapter adapter;
     private boolean isEdit;
     private int TYPE = -1;
-    StringBuilder sb = new StringBuilder();
-
+    private boolean good_quantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,11 +101,9 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
         titleBackIv.setOnClickListener(this);
         titleContentRightTv.setOnClickListener(this);
         jiesuanTv.setOnClickListener(this);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
         initFenxiao();
-
         allCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,17 +128,22 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("good_cart_type","2");
+        params.put("good_cart_type", "2");
         OkGo.<ShopcartBean>get(Urls.BASEURL + "api/v2/cart/list")
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<ShopcartBean>(this,ShopcartBean.class) {
+                .execute(new DialogCallback<ShopcartBean>(this, ShopcartBean.class) {
                     @Override
                     public void onSuccess(Response<ShopcartBean> response) {
                         ShopcartBean body = response.body();
-                        if (body.getCode() == 1){
+                        if (body.getCode() == 1) {
                             list = body.getData();
+                            if (list == null || list.size() == 0) {
+                                rlBottom.setVisibility(View.GONE);
+                            } else {
+                                rlBottom.setVisibility(View.VISIBLE);
+                            }
                             adapter = new ShopCartAdapter(R.layout.item_shop_cart, list);
                             recyclerView.setAdapter(adapter);
                             adapter.setOnItemChildClickListener(ShopCartActivity.this);
@@ -156,17 +163,22 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("good_cart_type","1");
+        params.put("good_cart_type", "1");
         OkGo.<ShopcartBean>get(Urls.BASEURL + "api/v2/cart/list")
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<ShopcartBean>(this,ShopcartBean.class) {
+                .execute(new DialogCallback<ShopcartBean>(this, ShopcartBean.class) {
                     @Override
                     public void onSuccess(Response<ShopcartBean> response) {
                         ShopcartBean body = response.body();
-                        if (body.getCode() == 1){
+                        if (body.getCode() == 1) {
                             list = body.getData();
+                            if (list == null || list.size() == 0) {
+                                rlBottom.setVisibility(View.GONE);
+                            } else {
+                                rlBottom.setVisibility(View.VISIBLE);
+                            }
                             adapter = new ShopCartAdapter(R.layout.item_shop_cart, list);
                             recyclerView.setAdapter(adapter);
                             adapter.setOnItemChildClickListener(ShopCartActivity.this);
@@ -226,7 +238,9 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        startActivity(new Intent(mContext, GoodDetailActivity.class));
+        Intent intent = new Intent(mContext, GoodDetailActivity.class);
+        intent.putExtra("id",list.get(position).getId()+"");
+        startActivity(intent);
     }
 
     @OnClick({R.id.fenixiao_ll, R.id.shangcheng_ll})
@@ -239,6 +253,25 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
                 initShangcheng();
                 break;
         }
+    }
+
+    public String getGood_quantity() {
+        String aa = "";
+        StringBuilder sb = new StringBuilder();
+        if (list == null || list.size() == 0) {
+            return aa;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).isChecked()) {
+                sb.append(list.get(i).getId() + "=" + list.get(i).getGood_num() + ",");
+            }
+        }
+        if (TextUtils.isEmpty(sb.toString())) {
+            return aa;
+        }
+        //当循环结束后截取最后一个逗号
+        aa = sb.substring(0, sb.length() - 1);
+        return aa;
     }
 
     private class ShopCartAdapter extends BaseQuickAdapter<ShopcartBean.DataBean, BaseViewHolder> {
@@ -256,9 +289,9 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
             checkBox.setChecked(item.isChecked());
             moneyTv.setText("￥" + item.getGood_price() * stepper.getValue());
             helper.setText(R.id.item_name_tv, item.getGood_name())
-                    .setText(R.id.item_fenlei_tv, "商品分类："+item.getClass_name())
+                    .setText(R.id.item_fenlei_tv, "商品分类：" + item.getClass_name())
                     .addOnClickListener(R.id.item_checkBox);
-
+            Glide.with(MyApplication.getGloableContext()).load(item.getGood_image()).into((ImageView) helper.getView(R.id.item_img_iv));
             stepper.setOnValueChangeListener(new SnappingStepperValueChangeListener() {
                 @Override
                 public void onValueChange(View view, int value) {
@@ -296,22 +329,43 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
             case R.id.all_check_ll:
                 break;
             case R.id.jiesuan_tv:
+                StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < list.size(); i++) {
-                    if (list.get(i).isChecked()){
-                        sb.append(list.get(i).getId()+",");
+                    if (list.get(i).isChecked()) {
+                        sb.append(list.get(i).getId() + ",");
                     }
+                }
+                if (TextUtils.isEmpty(sb.toString())) {
+                    return;
                 }
                 //当循环结束后截取最后一个逗号
                 String cart_id = sb.substring(0, sb.length() - 1);
 
-                if (isEdit){
+                if (isEdit) {
                     initDel(cart_id);
-                }else {
+                } else {
                     Intent intent = new Intent(mContext, GoodConfirmOrderActivity.class);
-                    intent.putExtra("cart_id",cart_id);
-                    startActivity(intent);
+                    intent.putExtra("cart_id", cart_id);
+                    if (TYPE == 2) {//分销购物车
+                        intent.putExtra("buy_type", "4");
+                    } else if (TYPE == 1)//商城购物车
+                    {
+                        intent.putExtra("buy_type", "5");
+                    }
+                    intent.putExtra("good_quantity", getGood_quantity());
+                    intent.putExtra("is_cart", "1");
+                    startActivityForResult(intent,0);
                 }
                 break;
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode==1){
+            finish();
         }
     }
 
@@ -319,7 +373,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("cart_id",cart_id);
+        params.put("cart_id", cart_id);
 
         OkGo.<BaseBean>post(Urls.BASEURL + "api/v2/cart/delete")
                 .tag(this)
@@ -329,15 +383,15 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
                     @Override
                     public void onSuccess(Response<BaseBean> response) {
                         BaseBean body = response.body();
-                        if (body.getCode() == 1){
-                            TUtils.showShort(mContext,body.getMessage());
-                            if (TYPE == 1){
+                        if (body.getCode() == 1) {
+                            TUtils.showShort(mContext, body.getMessage());
+                            if (TYPE == 1) {
                                 initShangcheng();
-                            }else {
+                            } else {
                                 initFenxiao();
                             }
-                        }else {
-                            TUtils.showShort(mContext,body.getMessage());
+                        } else {
+                            TUtils.showShort(mContext, body.getMessage());
                         }
                     }
                 });

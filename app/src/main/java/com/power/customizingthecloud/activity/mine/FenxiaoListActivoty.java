@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.fragment.home.renyang.BaseTabAdapter;
-import com.power.customizingthecloud.fragment.mine.MaeketShopFragment;
+import com.power.customizingthecloud.fragment.mine.MarketGoodFragment;
 import com.power.customizingthecloud.fragment.mine.MarketMaolvFragment;
 import com.power.customizingthecloud.view.NoScrollViewPager;
 
@@ -23,7 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ProductListActivoty extends BaseActivity {
+public class FenxiaoListActivoty extends BaseActivity {
 
     @BindView(R.id.title_back_iv)
     ImageView titleBackIv;
@@ -48,7 +48,7 @@ public class ProductListActivoty extends BaseActivity {
             tab_list.add("销售毛驴");
         }
         if (fragmentList.size() == 0) {
-            fragmentList.add(new MaeketShopFragment());
+            fragmentList.add(new MarketGoodFragment());
             fragmentList.add(new MarketMaolvFragment());
         }
         tablayout.setTabMode(TabLayout.MODE_FIXED);

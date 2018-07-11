@@ -68,7 +68,7 @@ public class ReserveBean implements Serializable {
             this.data = data;
         }
 
-        public static class DataBean {
+        public static class DataBean implements Serializable{
             /**
              * id : 1
              * res_id : 1

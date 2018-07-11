@@ -55,16 +55,24 @@ public class MarketShopBean implements Serializable {
          */
 
         private int id;
+        private int state;
         private String name;
         private String price;
         private String image;
         private int is_distribution;
         private int distribution_price;
         private String good_type;
-
         private String title;
         private String profit;
         private int distribution_eselsohr;
+
+        public int getState() {
+            return state;
+        }
+
+        public void setState(int state) {
+            this.state = state;
+        }
 
         public String getTitle() {
             return title;

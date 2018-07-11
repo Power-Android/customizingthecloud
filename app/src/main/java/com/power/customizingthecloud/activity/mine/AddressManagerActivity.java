@@ -68,95 +68,96 @@ public class AddressManagerActivity extends BaseActivity implements View.OnClick
         titleContentRightTv.setOnClickListener(this);
         titleContentRightTv.setText("管理");
         xinzengTv.setOnClickListener(this);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
-
         initData();
-
     }
 
     private void initData() {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
-
         OkGo.<AddressManageBean>get(Urls.BASEURL + "api/v2/address")
                 .tag(this)
                 .headers(headers)
-                .execute(new DialogCallback<AddressManageBean>(this,AddressManageBean.class) {
+                .execute(new DialogCallback<AddressManageBean>(this, AddressManageBean.class) {
                     @Override
                     public void onSuccess(Response<AddressManageBean> response) {
                         AddressManageBean body = response.body();
-                        if (body.getCode() == 1){
+                        if (body.getCode() == 1) {
                             list = body.getData();
-                            if (list.size() > 0){
-                                if (manager){
-                                    xinzengTv.setVisibility(View.VISIBLE);
-                                    for (int i = 0; i < list.size() ; i++) {
-                                        AddressManageBean.DataBean item = list.get(i);
-                                        item.setEdit(true);
-                                    }
-                                }
+                            if (list.size() > 0) {
                                 adapter = new AddressManageAdapter(R.layout.item_address_manage, list);
                                 recyclerView.setAdapter(adapter);
                                 adapter.setOnItemChildClickListener(AddressManagerActivity.this);
-                            }else {
-                                xinzengTv.setVisibility(View.VISIBLE);
+                            } else {
+                                if (adapter != null) {
+                                    adapter = new AddressManageAdapter(R.layout.item_address_manage, list);
+                                    recyclerView.setAdapter(adapter);
+//                                    adapter.notifyDataSetChanged();只这一样竟然不好使，不知道为什么
+                                }
                             }
                         }
                     }
                 });
-
     }
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.item_del_tv:
                 showTip(position);
                 break;
             case R.id.item_edit_tv:
-                Intent intent = new Intent(mContext,EditAddressActivity.class);
-                intent.putExtra("type","edit");
-                intent.putExtra("dataBean",list.get(position));
-                startActivity(intent);
+                Intent intent = new Intent(mContext, EditAddressActivity.class);
+                intent.putExtra("type", "edit");
+                intent.putExtra("dataBean", list.get(position));
+                startActivityForResult(intent,0);
                 break;
             case R.id.item_checkBox:
                 initDefault(position);
                 break;
             case R.id.ll_root:
                 String type = getIntent().getStringExtra("type");
-                if (!TextUtils.isEmpty(type) && type.equals("order")){
-                    Intent intent1=new Intent();
-                    intent1.putExtra("result",list.get(position));
-                    setResult(2,intent1);
+                if (!TextUtils.isEmpty(type) && type.equals("order")) {
+                    Intent intent1 = new Intent();
+                    intent1.putExtra("result", list.get(position));
+                    setResult(2, intent1);
                     AddressManagerActivity.this.finish();
                 }
                 break;
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent1 = new Intent();
+        if (list!=null && list.size() > 0)
+            intent1.putExtra("result", list.get(0));
+        setResult(2, intent1);
+        super.onBackPressed();
+    }
+
     private void initDefault(int position) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("address_id",list.get(position).getId());
-        if (list.get(position).getIs_default() == 0){
-            params.put("default","1");
-        }else {
-            params.put("default","0");
+        params.put("address_id", list.get(position).getId());
+        if (list.get(position).getIs_default() == 0) {
+            params.put("default", "1");
+        } else {
+            params.put("default", "0");
         }
 
         OkGo.<BaseBean>get(Urls.BASEURL + "api/v2/address/set-default")
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<BaseBean>(this,BaseBean.class) {
+                .execute(new DialogCallback<BaseBean>(this, BaseBean.class) {
                     @Override
                     public void onSuccess(Response<BaseBean> response) {
                         BaseBean body = response.body();
-                        if (body.getCode() == 1){
-                            TUtils.showShort(mContext,body.getMessage());
+                        if (body.getCode() == 1) {
+                            TUtils.showShort(mContext, body.getMessage());
                             initData();
                         }
                     }
@@ -194,27 +195,27 @@ public class AddressManagerActivity extends BaseActivity implements View.OnClick
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("address_id",list.get(position).getId());
+        params.put("address_id", list.get(position).getId());
 
         OkGo.<BaseBean>get(Urls.BASEURL + "api/v2/address/delete")
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<BaseBean>(this,BaseBean.class) {
+                .execute(new DialogCallback<BaseBean>(this, BaseBean.class) {
                     @Override
                     public void onSuccess(Response<BaseBean> response) {
                         BaseBean body = response.body();
-                        if (body.getCode() == 1){
+                        if (body.getCode() == 1) {
                             initData();
-                            TUtils.showShort(mContext,body.getMessage());
-                        }else {
-                            TUtils.showShort(mContext,body.getMessage());
+                            TUtils.showShort(mContext, body.getMessage());
+                        } else {
+                            TUtils.showShort(mContext, body.getMessage());
                         }
                     }
                 });
     }
 
-    private class AddressManageAdapter extends BaseQuickAdapter<AddressManageBean.DataBean,BaseViewHolder>{
+    private class AddressManageAdapter extends BaseQuickAdapter<AddressManageBean.DataBean, BaseViewHolder> {
 
         public AddressManageAdapter(@LayoutRes int layoutResId, @Nullable List<AddressManageBean.DataBean> data) {
             super(layoutResId, data);
@@ -222,9 +223,9 @@ public class AddressManagerActivity extends BaseActivity implements View.OnClick
 
         @Override
         protected void convert(BaseViewHolder helper, AddressManageBean.DataBean item) {
-            helper.setText(R.id.item_name_tv,item.getTrue_name())
-                    .setText(R.id.item_phone_tv,item.getMobile())
-                    .setText(R.id.item_address_tv,item.getArea_info()+" "+item.getAddress())
+            helper.setText(R.id.item_name_tv, item.getTrue_name())
+                    .setText(R.id.item_phone_tv, item.getMobile())
+                    .setText(R.id.item_address_tv, item.getArea_info() + " " + item.getAddress())
                     .addOnClickListener(R.id.item_del_tv)
                     .addOnClickListener(R.id.item_edit_tv)
                     .addOnClickListener(R.id.ll_root)
@@ -235,12 +236,14 @@ public class AddressManagerActivity extends BaseActivity implements View.OnClick
             TextView delTv = helper.getView(R.id.item_del_tv);
             TextView editTv = helper.getView(R.id.item_edit_tv);
 
-            if (item.getIs_default() == 1) morenIv.setVisibility(View.VISIBLE);
+            if (item.getIs_default() == 1)
+                morenIv.setVisibility(View.VISIBLE);
 
-            if (item.isEdit()){
+            if (item.isEdit()) {
                 editRl.setVisibility(View.VISIBLE);
-                if (item.getIs_default() == 1) checkBox.setChecked(true);
-            }else {
+                if (item.getIs_default() == 1)
+                    checkBox.setChecked(true);
+            } else {
                 editRl.setVisibility(View.GONE);
             }
 
@@ -249,37 +252,47 @@ public class AddressManagerActivity extends BaseActivity implements View.OnClick
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.title_back_iv:
                 finish();
                 break;
             case R.id.title_content_right_tv:
-                if (!manager){//编辑
-                    manager = !manager;
+                if (!manager) {//编辑
                     titleContentRightTv.setText("完成");
                     xinzengTv.setVisibility(View.VISIBLE);
-                    for (int i = 0; i < list.size() ; i++) {
+                    for (int i = 0; i < list.size(); i++) {
                         AddressManageBean.DataBean item = list.get(i);
                         item.setEdit(true);
                     }
-                    adapter.notifyDataSetChanged();
-                }else {
-                    manager = !manager;
+                    if (adapter != null)
+                        adapter.notifyDataSetChanged();
+                } else {
                     titleContentRightTv.setText("管理");
                     xinzengTv.setVisibility(View.GONE);
-                    for (int i = 0; i < list.size() ; i++) {
+                    for (int i = 0; i < list.size(); i++) {
                         AddressManageBean.DataBean item = list.get(i);
                         item.setEdit(false);
                     }
-                    adapter.notifyDataSetChanged();
+                    if (adapter != null)
+                        adapter.notifyDataSetChanged();
                 }
+                manager = !manager;
                 break;
             case R.id.xinzeng_tv:
-                Intent intent = new Intent(mContext,EditAddressActivity.class);
-                intent.putExtra("type","new");
-                startActivity(intent);
+                Intent intent = new Intent(mContext, EditAddressActivity.class);
+                intent.putExtra("type", "new");
+                startActivityForResult(intent, 0);
                 break;
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 1) {
+            manager=false;
+            xinzengTv.setVisibility(View.GONE);
+            initData();
+        }
+    }
 }
