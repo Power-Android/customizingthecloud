@@ -38,7 +38,7 @@
                         android:layout_gravity="bottom|right"
                         android:layout_marginBottom="30dp"
                         android:layout_marginRight="90dp"
-                        android:text="无敌小豆子"
+                        android:text=""
                         android:textColor="@color/white"
                         android:textSize="16sp"
                         android:textStyle="bold"/>
@@ -48,7 +48,6 @@
                         android:layout_height="70dp"
                         android:layout_gravity="bottom|right"
                         android:layout_marginRight="10dp"
-                        android:src="@drawable/face"
                         app:border_color="@color/white"
                         app:border_width="3dp"/>
                 </FrameLayout>

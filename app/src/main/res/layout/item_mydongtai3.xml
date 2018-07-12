@@ -15,6 +15,7 @@
             android:orientation="vertical"
             android:padding="10dp">
             <TextView
+                android:id="@+id/tv_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="10"
@@ -22,10 +23,11 @@
                 android:textSize="20sp"
                 android:textStyle="bold"/>
             <TextView
+                android:id="@+id/tv_month"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="11月"
+                android:text=""
                 android:textColor="@color/text_black"
                 android:textSize="14sp"
             />
@@ -46,7 +48,7 @@
                     android:layout_width="48dp"
                     android:layout_height="100dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/face"/>
+                    />
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -57,14 +59,14 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:scaleType="fitXY"
-                        android:src="@drawable/face"/>
+                        />
                     <ImageView
                         android:id="@+id/iv_img3"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_marginTop="4dp"
                         android:scaleType="fitXY"
-                        android:src="@drawable/face"/>
+                        />
                 </LinearLayout>
 
             </LinearLayout>
@@ -78,7 +80,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="10dp"
-                android:text="卡卡夫卡范德萨范德萨发的范德萨发的说法是的范德萨范德萨高铁滚辉煌国际"
+                android:text=""
                 android:textColor="@color/text_black"/>
         </LinearLayout>
     </LinearLayout>

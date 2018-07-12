@@ -187,6 +187,12 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.ll_market)
     public void market(){
+        String userid = SpUtils.getString(this, "userid", "");
+        if (TextUtils.isEmpty(userid)){
+            startActivity(new Intent(this, LoginActivity.class));
+            overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+            return;
+        }
         if (marketFragment == null) {
             marketFragment = new MarketFragment();
         }

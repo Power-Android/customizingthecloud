@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
@@ -25,6 +26,7 @@ import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.GoodListActivity;
 import com.power.customizingthecloud.fragment.shop.bean.QuanListBean;
 import com.power.customizingthecloud.login.LoginActivity;
+import com.power.customizingthecloud.login.bean.RegisterBean;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
@@ -104,7 +106,7 @@ public class QuanListActivity extends BaseActivity implements View.OnClickListen
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, QuanListBean.DataEntity item) {
+        protected void convert(BaseViewHolder helper, final QuanListBean.DataEntity item) {
             TextView tv_lingqu = helper.getView(R.id.tv_lingqu);
             tv_lingqu.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -115,14 +117,37 @@ public class QuanListActivity extends BaseActivity implements View.OnClickListen
                         overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                         return;
                     }
-                    showLingquDialog();
+                    getQuan(item.getId() + "");
                 }
             });
-            helper.setText(R.id.item_money_tv,item.getPrice()+"")
-                    .setText(R.id.item_man_jian_tv,"满￥"+item.getOrder_limit()+"使用")
-                    .setText(R.id.item_name_tv,item.getTitle())
-                    .setText(R.id.item_date_tv,"使用期限："+item.getStart_date()+"-"+item.getEnd_date());
+            helper.setText(R.id.item_money_tv, item.getPrice() + "")
+                    .setText(R.id.item_man_jian_tv, "满￥" + item.getOrder_limit() + "使用")
+                    .setText(R.id.item_name_tv, item.getTitle())
+                    .setText(R.id.item_date_tv, "使用期限：" + item.getStart_date() + "-" + item.getEnd_date());
         }
+    }
+
+    private void getQuan(String quanId) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("id", quanId);
+        OkGo.<RegisterBean>get(Urls.BASEURL + "api/v2/get-voucher")
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<RegisterBean>(QuanListActivity.this, RegisterBean.class) {
+                    @Override
+                    public void onSuccess(Response<RegisterBean> response) {
+                        RegisterBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(QuanListActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            Toast.makeText(QuanListActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                            showLingquDialog();
+                        }
+                    }
+                });
     }
 
     private void showLingquDialog() {
@@ -151,7 +176,9 @@ public class QuanListActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(QuanListActivity.this,GoodListActivity.class));
+                Intent intent1 = new Intent(mContext, GoodListActivity.class);
+                intent1.putExtra("type","hot");
+                startActivity(intent1);
             }
         });
     }

@@ -144,6 +144,8 @@ public class MyDongTaiActivity extends BaseActivity implements View.OnClickListe
                             }
                             if (!TextUtils.isEmpty(user.getUser_avatar())) {
                                 Glide.with(MyApplication.getGloableContext()).load(user.getUser_avatar()).into(mIvHead);
+                            }else {
+                                mIvHead.setImageResource(R.drawable.face);
                             }
                             if (!isLoadMore) {
                                 mFeed = data.getFeed();
@@ -192,7 +194,7 @@ public class MyDongTaiActivity extends BaseActivity implements View.OnClickListe
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(MyDongTaiActivity.this, DongTaiDetailActivity.class);
-                                    intent.putExtra("id",mFeed.get(position).getId()+"");
+                                    intent.putExtra("id", mFeed.get(position).getId() + "");
                                     startActivity(intent);
                                 }
                             });
@@ -217,6 +219,11 @@ public class MyDongTaiActivity extends BaseActivity implements View.OnClickListe
             MyDongTaiBean.DataEntity.FeedEntity feedEntity = item.getFeedEntity();
             after = feedEntity.getId() + "";
             helper.setText(R.id.tv_content, feedEntity.getFeed_content());
+            String created_at = item.getFeedEntity().getCreated_at();
+            String month = created_at.substring(6, 7);
+            String day = created_at.substring(8, 10);
+            helper.setText(R.id.tv_month, month+"月")
+                    .setText(R.id.tv_day, day);
             switch (item.getItemType()) {
                 case MultiItemBean.NOIMAGE:
                     break;
@@ -285,7 +292,7 @@ public class MyDongTaiActivity extends BaseActivity implements View.OnClickListe
                 dialog.dismiss();
                 Intent intent = new Intent(MyDongTaiActivity.this, FaDongTaiActivity.class);
                 intent.putExtra("type", "photo");
-                startActivity(intent);
+                startActivityForResult(intent,0);
             }
         });
         dialog.getView(R.id.tv_takephoto).setOnClickListener(new View.OnClickListener() {
@@ -294,7 +301,7 @@ public class MyDongTaiActivity extends BaseActivity implements View.OnClickListe
                 dialog.dismiss();
                 Intent intent = new Intent(MyDongTaiActivity.this, FaDongTaiActivity.class);
                 intent.putExtra("type", "camera");
-                startActivity(intent);
+                startActivityForResult(intent,0);
             }
         });
         dialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
@@ -304,5 +311,14 @@ public class MyDongTaiActivity extends BaseActivity implements View.OnClickListe
             }
         });
         dialog.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode==1){
+            isLoadMore = false;
+            initData();
+        }
     }
 }

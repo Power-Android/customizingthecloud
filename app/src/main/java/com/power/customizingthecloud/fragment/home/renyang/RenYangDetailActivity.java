@@ -2,6 +2,8 @@ package com.power.customizingthecloud.fragment.home.renyang;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -18,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alipay.sdk.app.PayTask;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -27,11 +30,15 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
-import com.power.customizingthecloud.activity.mine.MyOrderActivity;
+import com.power.customizingthecloud.activity.mine.MyRenyangCenterActivity;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.bean.AliPayBean;
+import com.power.customizingthecloud.bean.BaseBean;
+import com.power.customizingthecloud.bean.EventBean;
+import com.power.customizingthecloud.bean.PayResult;
+import com.power.customizingthecloud.bean.WXPayBean;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.ServiceAgreementActivity;
-import com.power.customizingthecloud.fragment.home.bean.OrderBean;
 import com.power.customizingthecloud.fragment.home.bean.RenYangDetailBean;
 import com.power.customizingthecloud.listener.SnappingStepperValueChangeListener;
 import com.power.customizingthecloud.login.LoginActivity;
@@ -40,6 +47,13 @@ import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.CustomViewPager;
 import com.power.customizingthecloud.view.SnappingStepper;
+import com.tencent.mm.sdk.modelpay.PayReq;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -129,14 +143,66 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
     private BaseDialog.Builder mBuilder;
     private boolean isChecked = true;
     private RenYangDetailBean.DataEntity datas;
-    private int payStyle = 1;
+    private String payType = "1";
+    private String order_type;
     private float mLirun;
+    // IWXAPI 是第三方app和微信通信的openapi接口
+    private IWXAPI api;
+    private String WX_APPID = "wx5c1cdc0f4545b7b5";// 微信appid
+    private static final int SDK_PAY_FLAG = 1;//支付宝
+    //-------------------------------------支付宝支付---------------------------------------------
+    private Handler mHandler = new Handler() {
+        @SuppressWarnings("unused")
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SDK_PAY_FLAG: {
+                    PayResult payResult = new PayResult((String) msg.obj);
+                    //                    Toast.makeText(ZhuanLanActivity.this, " " + payResult.getResultStatus(), Toast.LENGTH_SHORT).show();
+                    /**
+                     * 同步返回的结果必须放置到服务端进行验证（验证的规则请看https://doc.open.alipay.com/doc2/
+                     * detail.htm?spm=0.0.0.0.xdvAU6&treeId=59&articleId=103665&
+                     * docType=1) 建议商户依赖异步通知
+                     */
+                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                    String resultStatus = payResult.getResultStatus();
+                    // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        Toast.makeText(RenYangDetailActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
+                        setResult(1, new Intent());
+                        finish();
+                        Intent intent = new Intent(RenYangDetailActivity.this, MyRenyangCenterActivity.class);
+                        startActivity(intent);
+                    } else {
+                        // 判断resultStatus 为非"9000"则代表可能支付失败
+                        /*
+                        "8000"代表支付结果因为支付渠道原因或者系统原因还在等待支付结果确认，
+                        最终交易是否成功以服务端异步通知为准（小概率状态）
+                         */
+                        if (TextUtils.equals(resultStatus, "8000")) {
+                            Toast.makeText(RenYangDetailActivity.this, "支付结果确认中", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
+                            Toast.makeText(RenYangDetailActivity.this, "支付宝支付取消", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ren_yang_detail);
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
+        // 通过WXAPIFactory工厂，获取IWXAPI的实例
+        api = WXAPIFactory.createWXAPI(this, WX_APPID, false);
+        // 将该app注册到微信
+        api.registerApp(WX_APPID);
         mTitleBackIv.setVisibility(View.VISIBLE);
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("认养详情");
@@ -168,14 +234,27 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         mItemStepper.setOnValueChangeListener(new SnappingStepperValueChangeListener() {
             @Override
             public void onValueChange(View view, int value) {
+                if (value > datas.getLast_amount()) {
+                    value = datas.getLast_amount();
+                }
                 mTvPrice.setText(Float.parseFloat(datas.getPrice()) * value + "元");
-                DecimalFormat decimalFormat=new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+                DecimalFormat decimalFormat = new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
                 String p = decimalFormat.format(mLirun * value);//format 返回的是字符串
-                mTvLirun.setText( p + "元");
-                mTvShengyu.setText(datas.getLast_amount()-value + "");
+                mTvLirun.setText(p + "元");
+                mTvShengyu.setText(datas.getLast_amount() - value + "");
             }
         });
+        initData();
+    }
+
+    private void initData() {
         String id = getIntent().getStringExtra("id");
+        order_type = getIntent().getStringExtra("order_type");
+        if (TextUtils.isEmpty(order_type)) {
+            order_type = "1";//普通
+        } else {
+            order_type = "2";//分销
+        }
         HttpParams params = new HttpParams();
         params.put("id", id);
         OkGo.<RenYangDetailBean>get(Urls.BASEURL + "api/v2/adopt/show")
@@ -204,18 +283,34 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                             mRecyclerTop.setAdapter(topAdapter);
                             mTvShengyu.setText(datas.getLast_amount() + "");
                             mTvTotalCount.setText(datas.getAmount() + "");
-                            mItemStepper.setMaxValue(datas.getAmount());
+                            mItemStepper.setMaxValue(datas.getLast_amount());
                             mTvPrice.setText(datas.getAmount() + "");
                             Glide.with(MyApplication.getGloableContext()).load(datas.getImage()).into(mIvTop);
                             mTvIntro.setText(datas.getIntroduce());
                             mTvPrice.setText(Float.parseFloat(datas.getPrice()) * mItemStepper.getValue() + "元");
                             float lirun = mLirun * mItemStepper.getValue();
-                            DecimalFormat decimalFormat=new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+                            DecimalFormat decimalFormat = new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
                             String p = decimalFormat.format(lirun);//format 返回的是字符串
                             mTvLirun.setText(p + "元");
                         }
                     }
                 });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("weixinpaysuccess")) {
+            setResult(1, new Intent());
+            finish();
+            Intent intent = new Intent(RenYangDetailActivity.this, MyRenyangCenterActivity.class);
+            startActivity(intent);
+        }
     }
 
     private class TopAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
@@ -297,29 +392,89 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         headers.put("Authorization", "Bearer " + SpUtils.getString(RenYangDetailActivity.this, "token", ""));
         HttpParams params = new HttpParams();
         params.put("id", datas.getId() + "");
-        params.put("pay_type", payStyle + "");
-        params.put("order_type", "1");
+        params.put("pay_type", payType);
+        params.put("order_type", order_type);
         params.put("number", mItemStepper.getValue() + "");
-        OkGo.<OrderBean>post(Urls.BASEURL + "api/v2/adopt/order")
-                .tag(this)
-                .headers(headers)
-                .params(params)
-                .execute(new DialogCallback<OrderBean>(RenYangDetailActivity.this, OrderBean.class) {
-                    @Override
-                    public void onSuccess(Response<OrderBean> response) {
-                        OrderBean bean = response.body();
-                        int code = bean.getCode();
-                        if (code == 0) {
-                            Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
-                        } else if (code == 1) {
-                            Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
-                            String pay_sn = bean.getData().getPay_sn();//订单号
-                            Intent intent = new Intent(RenYangDetailActivity.this, MyOrderActivity.class);
-                            intent.putExtra("type", "0");
-                            startActivity(intent);
-                        }
-                    }
-                });
+        switch (payType) {
+            case "1": //支付宝
+                OkGo.<AliPayBean>post(Urls.BASEURL + "api/v2/adopt/order")
+                        .tag(this)
+                        .headers(headers)
+                        .params(params)
+                        .execute(new DialogCallback<AliPayBean>(RenYangDetailActivity.this, AliPayBean.class) {
+                            @Override
+                            public void onSuccess(Response<AliPayBean> response) {
+                                AliPayBean bean = response.body();
+                                final AliPayBean aliPayBean = response.body();
+                                Runnable payRunnable = new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        PayTask alipay = new PayTask(RenYangDetailActivity.this);
+                                        String result = alipay.pay(aliPayBean.getData().getAlipay(), true);//调用支付接口，获取支付结果
+                                        Message msg = new Message();
+                                        msg.what = SDK_PAY_FLAG;
+                                        msg.obj = result;
+                                        mHandler.sendMessage(msg);
+                                    }
+                                };
+
+                                // 必须异步调用，支付或者授权的行为需要在独立的非ui线程中执行
+                                Thread payThread = new Thread(payRunnable);
+                                payThread.start();
+                            }
+
+                            @Override
+                            public void onError(Response<AliPayBean> response) {
+                                super.onError(response);
+                            }
+                        });
+                break;
+            case "2": //微信支付
+                OkGo.<WXPayBean>post(Urls.BASEURL + "api/v2/adopt/order")
+                        .tag(this)
+                        .headers(headers)
+                        .params(params)
+                        .execute(new DialogCallback<WXPayBean>(RenYangDetailActivity.this, WXPayBean.class) {
+                                     @Override
+                                     public void onSuccess(Response<WXPayBean> response) {
+                                         int code = response.code();
+                                         WXPayBean wxPayBean = response.body();
+                                         WXPayBean.DataEntity data = wxPayBean.getData();
+                                         PayReq req = new PayReq();
+                                         req.appId = data.getAppid();// 微信开放平台审核通过的应用APPID
+                                         req.partnerId = data.getPartnerid();// 微信支付分配的商户号
+                                         req.prepayId = data.getPrepayid();// 预支付订单号，app服务器调用“统一下单”接口获取
+                                         req.nonceStr = data.getNoncestr();// 随机字符串，不长于32位，服务器小哥会给咱生成
+                                         req.timeStamp = data.getTimestamp() + "";// 时间戳，app服务器小哥给出
+                                         req.packageValue = data.getPackage1();// 固定值Sign=WXPay，可以直接写死，服务器返回的也是这个固定值
+                                         req.sign = data.getSign();// 签名，服务器小哥给出
+                                         //                        req.extData = "app data"; // optional
+                                         // 在支付之前，如果应用没有注册到微信，应该先调用IWXMsg.registerApp将应用注册到微信
+                                         api.sendReq(req);//调起支付
+                                     }
+
+                                     @Override
+                                     public void onError(Response<WXPayBean> response) {
+                                         super.onError(response);
+                                     }
+                                 }
+                        );
+                break;
+            case "3": //银联支付
+                OkGo.<BaseBean>post(Urls.BASEURL + "api/v2/adopt/order")
+                        .tag(this)
+                        .headers(headers)
+                        .params(params)
+                        .execute(new DialogCallback<BaseBean>(RenYangDetailActivity.this, BaseBean.class) {
+                                     @Override
+                                     public void onSuccess(Response<BaseBean> response) {
+
+                                     }
+                                 }
+                        );
+                break;
+        }
     }
 
     private void showPayStyleDialog() {
@@ -344,6 +499,8 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                 mDialog.dismiss();
             }
         });
+        TextView tv_price=mDialog.getView(R.id.tv_price);
+        tv_price.setText("¥"+mTvPrice.getText().toString());
         mDialog.getView(R.id.view_lastline).setVisibility(View.VISIBLE);
         mDialog.getView(R.id.ll_zhuanzhang).setVisibility(View.VISIBLE);
         mDialog.getView(R.id.tv_zhuanzhang).setOnClickListener(new View.OnClickListener() {
@@ -361,7 +518,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                 if (isChecked) {
                     cb_weixin.setChecked(false);
                     cb_yinlian.setChecked(false);
-                    payStyle = 1;
+                    payType = "1";
                 }
             }
         });
@@ -371,7 +528,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                 if (isChecked) {
                     cb_alipay.setChecked(false);
                     cb_yinlian.setChecked(false);
-                    payStyle = 2;
+                    payType = "2";
                 }
             }
         });
@@ -381,7 +538,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                 if (isChecked) {
                     cb_weixin.setChecked(false);
                     cb_alipay.setChecked(false);
-                    payStyle = 3;
+                    payType = "3";
                 }
             }
         });
@@ -404,8 +561,6 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         //        mWebview.setVisibility(View.VISIBLE);
         mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.GONE);
-
-
         mLvXiangqing.setVisibility(View.VISIBLE);
         mTvIntro.setVisibility(View.GONE);
     }

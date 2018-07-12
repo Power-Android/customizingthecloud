@@ -262,17 +262,24 @@ public class FaDongTaiActivity extends BaseActivity implements View.OnClickListe
                                     }
                                 }
                             }
+
+                            @Override
+                            public void onError(Response<UploadPhotoBean> response) {
+                                super.onError(response);
+                            }
                         });
             }
+        }else {
+            Toast.makeText(this, "请至少选择一张图片~", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void goDongTai(String s, String s1) {
+    private void goDongTai(String content, String images) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("content", s);
-        params.put("images", s1);
+        params.put("content", content);
+        params.put("images", images);
         OkGo.<RegisterBean>post(Urls.BASEURL + "api/v2/feed/store")
                 .headers(headers)
                 .params(params)
@@ -285,6 +292,7 @@ public class FaDongTaiActivity extends BaseActivity implements View.OnClickListe
                             Toast.makeText(FaDongTaiActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
                             Toast.makeText(FaDongTaiActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                            setResult(1,new Intent());
                             finish();
                         }
                     }

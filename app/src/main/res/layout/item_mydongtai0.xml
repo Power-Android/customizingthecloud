@@ -15,17 +15,19 @@
             android:orientation="vertical"
             android:padding="10dp">
             <TextView
+                android:id="@+id/tv_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="10"
+                android:text=""
                 android:textColor="@color/text_black"
                 android:textSize="20sp"
                 android:textStyle="bold"/>
             <TextView
+                android:id="@+id/tv_month"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="11月"
+                android:text=""
                 android:textColor="@color/text_black"
                 android:textSize="14sp"
             />
@@ -41,7 +43,6 @@
             android:gravity="center_vertical"
             android:lineSpacingExtra="2dp"
             android:padding="15dp"
-            android:text="卡卡夫卡范德萨范德萨发的范德萨发的说法是的范德萨范德萨高铁滚辉煌国际"
             android:textColor="@color/text_black"/>
     </LinearLayout>
     <View

@@ -54,8 +54,8 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:background="@drawable/selector_gouwuche"
-            android:checked="true"
-            android:button="@null"/>
+            android:button="@null"
+            android:checked="true"/>
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
@@ -91,7 +91,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:visibility="gone">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -115,31 +116,31 @@
         android:id="@+id/view_lastline"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:visibility="gone"
-        android:background="@color/backgourd"></View>
+        android:background="@color/backgourd"
+        android:visibility="gone"></View>
     <LinearLayout
         android:id="@+id/ll_zhuanzhang"
-        android:padding="10dp"
-        android:layout_marginLeft="5dp"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:padding="10dp"
+        android:visibility="gone">
         <TextView
-            android:textColor="@color/text_gray"
-            android:text="不想支付，或支付失败，就试试"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="不想支付，或支付失败，就试试"
+            android:textColor="@color/text_gray"/>
         <TextView
             android:id="@+id/tv_zhuanzhang"
-            android:textColor="@color/green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="转账"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:textColor="@color/green"/>
         <TextView
-            android:textColor="@color/text_gray"
-            android:text="吧"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="吧"
+            android:textColor="@color/text_gray"/>
     </LinearLayout>
     <TextView
         android:id="@+id/tv_pay"

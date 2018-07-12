@@ -11,7 +11,7 @@
         android:id="@+id/iv_head"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/face"/>
+        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,14 +21,14 @@
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="大头娃娃"
+            android:text=""
             android:textColor="@color/text_black"/>
         <TextView
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="2018.2.13"
+            android:text=""
             android:textColor="@color/text_gray"
             android:textSize="12sp"/>
         <TextView
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="俺是房间卡快放假了大家发垃圾肯定是妇女节会带来非常快了解到今年初房间内的斯诺克"
+            android:text=""
             android:textColor="@color/text_black"/>
         <com.power.customizingthecloud.view.NineGridTestLayout
             android:id="@+id/nine_gridlayout"
@@ -109,7 +109,7 @@
                     android:paddingLeft="15dp"
                     android:paddingBottom="10dp"
                     android:paddingRight="15dp"
-                    android:text="小豆子，大头，兔子"/>
+                    android:text=""/>
                 <View
                     android:id="@+id/view_line"
                     android:layout_width="match_parent"

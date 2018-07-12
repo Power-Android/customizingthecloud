@@ -70,6 +70,7 @@ public class MarketMaolvFragment extends BaseFragment {
                                     Intent intent = new Intent(mContext, RenYangDetailActivity.class);
                                     intent.putExtra("state",list.get(position).getState());
                                     intent.putExtra("id",list.get(position).getId()+"");
+                                    intent.putExtra("order_type","2");//分销
                                     startActivity(intent);
                                 }
                             });

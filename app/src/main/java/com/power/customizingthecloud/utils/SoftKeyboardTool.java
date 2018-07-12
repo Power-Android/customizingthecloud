@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 public class SoftKeyboardTool {
     /**
@@ -24,4 +25,9 @@ public class SoftKeyboardTool {
                         InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
+    //关闭软键盘
+    public static void closeKeyboard(EditText et) {
+        InputMethodManager imm = (InputMethodManager) et.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+    }
 }

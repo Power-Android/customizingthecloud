@@ -291,8 +291,8 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                                     } else {
                                         hasAddress = false;
                                     }
-                                    if (!TextUtils.isEmpty(address)) {
-                                        mTvAddress.setText("地址：" + address);
+                                    if (!TextUtils.isEmpty(area_info)) {
+                                        mTvAddress.setText("地址：" + area_info + address);
                                     } else {
                                         hasAddress = false;
                                     }
@@ -395,6 +395,8 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                 mDialog.dismiss();
             }
         });
+        TextView tv_price = mDialog.getView(R.id.tv_price);
+        tv_price.setText("¥" + mTvTotalprice.getText().toString());
         final CheckBox cb_alipay = mDialog.getView(R.id.cb_alipay);
         final CheckBox cb_weixin = mDialog.getView(R.id.cb_weixin);
         final CheckBox cb_yinlian = mDialog.getView(R.id.cb_yinlian);
@@ -566,8 +568,8 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                 mTvPersonname.setText("姓名：" + true_name);
                 mTvPhone.setText("电话：" + mobile);
                 mTvAddress.setText("地址：" + address);
-            }else {
-                mTvPersonname.setText("姓名：暂无" );
+            } else {
+                mTvPersonname.setText("姓名：暂无");
                 mTvPhone.setText("电话：暂无");
                 mTvAddress.setText("地址：暂无");
                 hasAddress = false;

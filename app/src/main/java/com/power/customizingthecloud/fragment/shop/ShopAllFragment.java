@@ -399,11 +399,11 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
         }
     }
 
-    private void getQuan(String s) {
+    private void getQuan(String quanId) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("id", s);
+        params.put("id", quanId);
         OkGo.<RegisterBean>get(Urls.BASEURL + "api/v2/get-voucher")
                 .headers(headers)
                 .params(params)

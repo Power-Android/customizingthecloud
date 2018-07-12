@@ -150,6 +150,8 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                             }
                             if (!TextUtils.isEmpty(user.getUser_avatar())) {
                                 Glide.with(mContext).load(user.getUser_avatar()).into(mIvHead);
+                            }else {
+                                mIvHead.setImageResource(R.drawable.face);
                             }
                             if (!isLoadMore) {
                                 mFeed = data.getFeed();
@@ -383,6 +385,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(edt.getText().toString().trim())) {
                     String content = edt.getText().toString().trim();
+                    SoftKeyboardTool.closeKeyboard(edt);
                     sendComment(feed_id, content, reply_user);
                     popWiw.dismiss();
                 }
@@ -466,7 +469,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                 startActivity(new Intent(mContext, MyMessageActivity.class));
                 break;
             case R.id.title_content_right_tv:
-                startActivity(new Intent(mContext, FaDongTaiActivity.class));
+                startActivityForResult(new Intent(mContext, FaDongTaiActivity.class),0);
                 break;
             case R.id.iv_head:
                 startActivity(new Intent(mContext, MyDongTaiActivity.class));
@@ -474,6 +477,15 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             case R.id.iv_photo:
                 showPhotoDialog(Gravity.BOTTOM, R.style.Bottom_Top_aniamtion);
                 break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode==1){
+            isLoadMore = false;
+            initData();
         }
     }
 
@@ -498,7 +510,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                 dialog.dismiss();
                 Intent intent = new Intent(mContext, FaDongTaiActivity.class);
                 intent.putExtra("type", "photo");
-                startActivity(intent);
+                startActivityForResult(intent,0);
             }
         });
         dialog.getView(R.id.tv_takephoto).setOnClickListener(new View.OnClickListener() {
@@ -507,7 +519,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                 dialog.dismiss();
                 Intent intent = new Intent(mContext, FaDongTaiActivity.class);
                 intent.putExtra("type", "camera");
-                startActivity(intent);
+                startActivityForResult(intent,0);
             }
         });
         dialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {

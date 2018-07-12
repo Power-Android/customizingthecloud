@@ -19,7 +19,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
-import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
@@ -182,6 +181,7 @@ public class MyDonkeyEarsActivity extends BaseActivity implements View.OnClickLi
                             TUtils.showShort(mContext,body.getMessage());
                             qiandaoTv.setText("已签到");
                             qiandaoTv.setClickable(false);
+                            initData();
                         }else {
                             TUtils.showShort(mContext,body.getMessage());
                         }

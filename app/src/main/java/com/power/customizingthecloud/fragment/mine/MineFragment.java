@@ -34,7 +34,6 @@ import com.power.customizingthecloud.activity.mine.RefundAfterActivity;
 import com.power.customizingthecloud.activity.mine.SettingActivity;
 import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseFragment;
-import com.power.customizingthecloud.bean.DonkeyEarsBean;
 import com.power.customizingthecloud.bean.EventBean;
 import com.power.customizingthecloud.bean.UserBean;
 import com.power.customizingthecloud.callback.DialogCallback;
@@ -209,6 +208,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                             user_avatar = userBean.getData().getUser_avatar();
                             if (!TextUtils.isEmpty(userBean.getData().getUser_avatar())){
                                 Glide.with(mContext).load(userBean.getData().getUser_avatar()).into(mineFaceIv);
+                            }else {
+                                mineFaceIv.setImageResource(R.drawable.face);
                             }
                         }
                     }
