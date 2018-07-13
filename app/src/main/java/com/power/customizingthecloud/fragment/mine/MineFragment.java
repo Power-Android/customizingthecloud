@@ -36,7 +36,7 @@ import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.EventBean;
 import com.power.customizingthecloud.bean.UserBean;
-import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.callback.JsonCallback;
 import com.power.customizingthecloud.fragment.home.top.KaiDianActivity;
 import com.power.customizingthecloud.fragment.home.top.MyShareActivity;
 import com.power.customizingthecloud.login.LoginActivity;
@@ -190,11 +190,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private void initData() {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
-
         OkGo.<UserBean>get(Urls.BASEURL + "api/v2/user")
                 .tag(this)
                 .headers(headers)
-                .execute(new DialogCallback<UserBean>(mActivity,UserBean.class) {
+                .execute(new JsonCallback<UserBean>(UserBean.class) {
                     @Override
                     public void onSuccess(Response<UserBean> response) {
                         UserBean userBean = response.body();
@@ -224,6 +223,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             if (TextUtils.isEmpty(userid)) {
                 startActivity(new Intent(mContext, LoginActivity.class));
                 mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
+            }else {
+                //这是当用户在别的界面点击领取代金券的时候或者获得驴耳朵的时候刷新一下
+                initData();
             }
         }
     }

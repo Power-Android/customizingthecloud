@@ -64,7 +64,7 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
-                    android:text="毛驴线上认养活动开始了！时间：2018年1月1日"/>
+                />
             </LinearLayout>
             <FrameLayout
                 android:layout_width="match_parent"

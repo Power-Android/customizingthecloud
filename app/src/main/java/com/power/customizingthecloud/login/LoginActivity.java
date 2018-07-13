@@ -18,7 +18,6 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.MainActivity;
 import com.power.customizingthecloud.R;
-import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.base.UMLoginActivity;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.login.bean.LoginBean;
@@ -108,11 +107,21 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
                 isPswVisible = !isPswVisible;
                 break;
             case R.id.tv_loginby_phone:
-                isPhoneLogin = true;
-                mLlCode.setVisibility(View.VISIBLE);
-                mViewLineCode.setVisibility(View.VISIBLE);
-                mLlMima.setVisibility(View.GONE);
-                mViewLineMima.setVisibility(View.GONE);
+                if (!isPhoneLogin) {
+                    isPhoneLogin = true;
+                    mLlCode.setVisibility(View.VISIBLE);
+                    mViewLineCode.setVisibility(View.VISIBLE);
+                    mLlMima.setVisibility(View.GONE);
+                    mViewLineMima.setVisibility(View.GONE);
+                    mTvLoginbyPhone.setText("手机登录");
+                }else {
+                    isPhoneLogin = false;
+                    mLlCode.setVisibility(View.GONE);
+                    mViewLineCode.setVisibility(View.GONE);
+                    mLlMima.setVisibility(View.VISIBLE);
+                    mViewLineMima.setVisibility(View.VISIBLE);
+                    mTvLoginbyPhone.setText("快速登录");
+                }
                 break;
             case R.id.tv_loginby_weixin:
                 loginByWeiXin(this);
@@ -190,7 +199,7 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
                             SpUtils.putString(LoginActivity.this, "totalMs", totalMs + "");
                             if (getIntent().getType() != null && getIntent().getType().equals("mian")) {
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            }else {
+                            } else {
                                 finish();
                             }
                         }

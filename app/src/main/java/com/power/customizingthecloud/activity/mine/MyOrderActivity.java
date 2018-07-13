@@ -35,6 +35,7 @@ import com.power.customizingthecloud.bean.MyOderBean;
 import com.power.customizingthecloud.bean.PayResult;
 import com.power.customizingthecloud.bean.WXPayBean;
 import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.callback.JsonCallback;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
@@ -316,7 +317,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<BaseBean>(MyOrderActivity.this, BaseBean.class) {
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
                              @Override
                              public void onSuccess(Response<BaseBean> response) {
                                  int code = response.code();
@@ -343,7 +344,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<BaseBean>(MyOrderActivity.this, BaseBean.class) {
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
                              @Override
                              public void onSuccess(Response<BaseBean> response) {
                                  int code = response.code();
@@ -370,7 +371,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<BaseBean>(MyOrderActivity.this, BaseBean.class) {
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
                              @Override
                              public void onSuccess(Response<BaseBean> response) {
                                  int code = response.code();

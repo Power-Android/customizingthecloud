@@ -160,6 +160,7 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("weixinpaysuccess")) {
+            setResult(1, new Intent());
             finish();
             Intent intent = new Intent(MiaoConfirmOrderActivity.this, MyOrderActivity.class);
             intent.putExtra("type", "0");
@@ -193,9 +194,21 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
                                 String mobile = addressObj.optString("mobile");
                                 mAdressId = addressObj.optInt("id");
                                 hasAddress = true;
-                                mTvPersonname.setText("姓名：" + true_name);
-                                mTvPhone.setText("电话：" + mobile);
-                                mTvAddress.setText("地址：" + address);
+                                if (!TextUtils.isEmpty(true_name)) {
+                                    mTvPersonname.setText("姓名：" + true_name);
+                                } else {
+                                    hasAddress = false;
+                                }
+                                if (!TextUtils.isEmpty(mobile)) {
+                                    mTvPhone.setText("电话：" + mobile);
+                                } else {
+                                    hasAddress = false;
+                                }
+                                if (!TextUtils.isEmpty(area_info)) {
+                                    mTvAddress.setText("地址：" + area_info + address);
+                                } else {
+                                    hasAddress = false;
+                                }
                             }
                             Gson gson = new Gson();
                             JSONArray good_list = dataObj.optJSONArray("good_list");
@@ -281,7 +294,7 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
                     Toast.makeText(MiaoConfirmOrderActivity.this, "至少选择一种支付方式~", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                goPay();
+                pushOrder();
                 mDialog.dismiss();
             }
         });
@@ -467,7 +480,11 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
                     overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
-                pushOrder();
+                if (!hasAddress) {
+                    Toast.makeText(this, "请确保姓名、电话、地址都填写完整", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                showPayStyleDialog();
                 break;
             case R.id.tv_time:
             case R.id.iv_time:
@@ -489,15 +506,23 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 2) {
             AddressManageBean.DataBean result = (AddressManageBean.DataBean) data.getSerializableExtra("result");
-            String true_name = result.getTrue_name();
-            String area_info = result.getArea_info();
-            String address = result.getAddress();
-            String mobile = result.getMobile();
-            mAdressId = result.getId();
-            hasAddress = true;
-            mTvPersonname.setText("姓名：" + true_name);
-            mTvPhone.setText("电话：" + mobile);
-            mTvAddress.setText("地址：" + address);
+            if (result != null) {
+                hasAddress = true;
+                String true_name = result.getTrue_name();
+                String area_info = result.getArea_info();
+                String address = area_info + result.getAddress();
+                String mobile = result.getMobile();
+                mAdressId = result.getId();
+                hasAddress = true;
+                mTvPersonname.setText("姓名：" + true_name);
+                mTvPhone.setText("电话：" + mobile);
+                mTvAddress.setText("地址：" + address);
+            } else {
+                mTvPersonname.setText("姓名：暂无");
+                mTvPhone.setText("电话：暂无");
+                mTvAddress.setText("地址：暂无");
+                hasAddress = false;
+            }
         }
     }
 
@@ -531,7 +556,7 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
                         } else if (code == 1) {
                             Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
                             order_sn = bean.getData().getOrder_sn();
-                            showPayStyleDialog();
+                            goPay();
                         }
                     }
                 });

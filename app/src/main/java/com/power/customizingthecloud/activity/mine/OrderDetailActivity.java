@@ -37,6 +37,7 @@ import com.power.customizingthecloud.bean.OrderDetailBean;
 import com.power.customizingthecloud.bean.PayResult;
 import com.power.customizingthecloud.bean.WXPayBean;
 import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.callback.JsonCallback;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.TUtils;
 import com.power.customizingthecloud.utils.Urls;
@@ -270,7 +271,7 @@ public class OrderDetailActivity extends BaseActivity {
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<BaseBean>(OrderDetailActivity.this, BaseBean.class) {
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
                              @Override
                              public void onSuccess(Response<BaseBean> response) {
                                  int code = response.code();
@@ -296,7 +297,7 @@ public class OrderDetailActivity extends BaseActivity {
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<BaseBean>(OrderDetailActivity.this, BaseBean.class) {
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
                              @Override
                              public void onSuccess(Response<BaseBean> response) {
                                  int code = response.code();
@@ -322,7 +323,7 @@ public class OrderDetailActivity extends BaseActivity {
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<BaseBean>(OrderDetailActivity.this, BaseBean.class) {
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
                              @Override
                              public void onSuccess(Response<BaseBean> response) {
                                  int code = response.code();

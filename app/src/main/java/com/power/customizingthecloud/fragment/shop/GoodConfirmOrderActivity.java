@@ -62,6 +62,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -187,6 +188,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
     private String is_cart;
     private String buy_type;
     private String good_quantity;
+    private DecimalFormat df = new DecimalFormat("########0.00");//转换成小数点后2位的格式
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,9 +235,11 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    mTvTotalprice.setText("¥" + (Float.parseFloat(mOrder_good_total) - mDaijinquanprice - mEselsohr_total));
+                    double v = Double.parseDouble(mOrder_good_total) - mDaijinquanprice - mEselsohr_total;
+                    mTvTotalprice.setText("¥" + df.format(v));
                 } else {
-                    mTvTotalprice.setText("¥" + (Float.parseFloat(mOrder_good_total) - mDaijinquanprice));
+                    double v = Double.parseDouble(mOrder_good_total) - mDaijinquanprice;
+                    mTvTotalprice.setText("¥" + df.format(v));
                 }
             }
         });
@@ -329,13 +333,15 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                                     if (mDaijinquanprice != 0) {
                                         mTvQuanPrice.setText("¥" + mDaijinquanprice + "");
                                     }
-                                    mTvZongprice2.setText("¥" + (Float.parseFloat(mOrder_good_total) - mDaijinquanprice));
+                                    double v = Double.parseDouble(mOrder_good_total) - mDaijinquanprice;
+                                    mTvZongprice2.setText("¥" + df.format(v));
                                     mEselsohr_total = dataObj.optInt("eselsohr_total");
                                     mTvEar.setText("可用" + mEselsohr_total + "驴耳朵抵用" + mEselsohr_total + "元");
                                     if (mCbEar.isChecked()) {
-                                        mTvTotalprice.setText("¥" + (Float.parseFloat(mOrder_good_total) - mDaijinquanprice - mEselsohr_total));
+                                        double v1 = Double.parseDouble(mOrder_good_total) - mDaijinquanprice - mEselsohr_total;
+                                        mTvTotalprice.setText("¥" + df.format(v1));
                                     } else {
-                                        mTvTotalprice.setText("¥" + (Float.parseFloat(mOrder_good_total) - mDaijinquanprice));
+                                        mTvTotalprice.setText("¥" + df.format(v));
                                     }
                                 }
                             }
@@ -396,7 +402,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
             }
         });
         TextView tv_price = mDialog.getView(R.id.tv_price);
-        tv_price.setText("¥" + mTvTotalprice.getText().toString());
+        tv_price.setText(mTvTotalprice.getText().toString());
         final CheckBox cb_alipay = mDialog.getView(R.id.cb_alipay);
         final CheckBox cb_weixin = mDialog.getView(R.id.cb_weixin);
         final CheckBox cb_yinlian = mDialog.getView(R.id.cb_yinlian);
@@ -549,11 +555,13 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
             if (mDaijinquanprice != 0) {
                 mTvQuanPrice.setText("¥" + mDaijinquanprice + "");
             }
-            mTvZongprice2.setText("¥" + (Float.parseFloat(mOrder_good_total) - mDaijinquanprice));
+            double v = Double.parseDouble(mOrder_good_total) - mDaijinquanprice;
+            mTvZongprice2.setText("¥" + df.format(v));
             if (mCbEar.isChecked()) {
-                mTvTotalprice.setText("¥" + (Float.parseFloat(mOrder_good_total) - mDaijinquanprice - mEselsohr_total));
+                double v1 = Double.parseDouble(mOrder_good_total) - mDaijinquanprice - mEselsohr_total;
+                mTvTotalprice.setText("¥" + df.format(v1));
             } else {
-                mTvTotalprice.setText("¥" + (Float.parseFloat(mOrder_good_total) - mDaijinquanprice));
+                mTvTotalprice.setText("¥" + df.format(v));
             }
         } else if (resultCode == 2) {//修改地址返回
             AddressManageBean.DataBean result = (AddressManageBean.DataBean) data.getSerializableExtra("result");
@@ -561,7 +569,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                 hasAddress = true;
                 String true_name = result.getTrue_name();
                 String area_info = result.getArea_info();
-                String address = result.getArea_info() + result.getAddress();
+                String address = area_info + result.getAddress();
                 String mobile = result.getMobile();
                 mAdressId = result.getId();
                 hasAddress = true;

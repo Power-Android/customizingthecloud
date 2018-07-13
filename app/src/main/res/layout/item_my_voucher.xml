@@ -88,5 +88,14 @@
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
             android:layout_marginRight="15dp"/>
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/yi_use_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/quan_yishiyong"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="15dp"/>
     </RelativeLayout>
 </LinearLayout>

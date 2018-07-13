@@ -149,8 +149,17 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
                             EditInfoBean.DataBean data = body.getData();
                             if (!TextUtils.isEmpty(data.getUser_avatar())) {
                                 Glide.with(MyApplication.getGloableContext()).load(data.getUser_avatar()).into(editFaceIv);
+                            }else {
+                                editFaceIv.setImageResource(R.drawable.face);
                             }
-                            editNameTv.setText(data.getUser_name());
+
+                            if (!TextUtils.isEmpty(data.getUser_name()) && data.getUser_name().length() > 10) {
+                                String user_name = data.getUser_name();
+                                String substring = user_name.substring(0, 10);
+                                editNameTv.setText(substring+"...");
+                            } else {
+                                editNameTv.setText(data.getUser_name());
+                            }
                             if (data.getUser_sex() == 1) {
                                 editSexTv.setText("男");
                             } else if (data.getUser_sex() == 2) {

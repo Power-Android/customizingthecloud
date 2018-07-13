@@ -72,6 +72,9 @@ public abstract class DialogCallback<T> extends JsonCallback<T> {
     @Override
     public void onFinish() {
         //网络请求结束后关闭对话框
+        if (activity==null){
+            return;
+        }
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }

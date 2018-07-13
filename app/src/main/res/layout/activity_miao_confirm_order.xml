@@ -35,21 +35,21 @@
                             android:id="@+id/tv_personname"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="姓名：蒋先生"
+                            android:text="姓名：暂无"
                             android:textColor="@color/text_black"/>
                         <TextView
                             android:id="@+id/tv_phone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="电话：15154541435"
+                            android:text="电话：暂无"
                             android:textColor="@color/text_black"/>
                         <TextView
                             android:id="@+id/tv_address"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="地址：北京市海淀区中关村软件园23号楼"
+                            android:text="暂无"
                             android:textColor="@color/text_black"/>
                     </LinearLayout>
                     <ImageView
@@ -89,9 +89,10 @@
                     >
                         <ImageView
                             android:id="@+id/iv_good"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/face"/>
+                            android:layout_width="90dp"
+                            android:layout_height="90dp"
+                            android:scaleType="fitXY"
+                        />
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -102,7 +103,6 @@
                                 android:id="@+id/tv_shopname"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="驴奶粉驴奶粉驴奶粉驴奶粉驴奶粉驴奶粉驴奶粉驴奶粉驴奶粉驴奶粉驴奶粉驴奶粉"
                                 android:textColor="@color/text_black"/>
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -114,7 +114,6 @@
                                     android:layout_height="wrap_content"
                                     android:layout_centerVertical="true"
                                     android:gravity="center"
-                                    android:text="¥300.00"
                                     android:textColor="@color/red3"
                                 />
                                 <TextView
@@ -184,12 +183,12 @@
                     <EditText
                         android:id="@+id/edt_liuyan"
                         android:layout_width="match_parent"
-                        android:gravity="left"
                         android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:padding="10dp"
                         android:background="@drawable/bg_huise_line2"
-                        android:minHeight="100dp"/>
+                        android:gravity="left"
+                        android:minHeight="100dp"
+                        android:padding="10dp"
+                        android:textSize="14sp"/>
                 </LinearLayout>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>

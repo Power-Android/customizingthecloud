@@ -53,10 +53,19 @@ public class InteractionBean implements Serializable {
          */
 
         private int id;
+        private int feed_id;
         private String user_avatar;
         private String user_name;
         private String body;
         private String image;
+
+        public int getFeed_id() {
+            return feed_id;
+        }
+
+        public void setFeed_id(int feed_id) {
+            this.feed_id = feed_id;
+        }
 
         public int getId() {
             return id;

@@ -6,6 +6,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.InteractionBean;
 import com.power.customizingthecloud.callback.DialogCallback;
-import com.power.customizingthecloud.fragment.market.MyDongTaiActivity;
+import com.power.customizingthecloud.fragment.market.DongTaiDetailActivity;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.Urls;
 
@@ -128,7 +129,9 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        startActivity(new Intent(mContext, MyDongTaiActivity.class));
+        Intent intent = new Intent(mContext, DongTaiDetailActivity.class);
+        intent.putExtra("id", list.get(position).getFeed_id() + "");
+        startActivity(intent);
     }
 
     private class InteractionAdapter extends BaseQuickAdapter<InteractionBean.DataBean, BaseViewHolder> {
@@ -139,8 +142,14 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
 
         @Override
         protected void convert(BaseViewHolder helper, InteractionBean.DataBean item) {
-            helper.setText(R.id.item_name_tv, item.getUser_name())
-                    .setText(R.id.item_content_tv, item.getBody())
+            if (!TextUtils.isEmpty(item.getUser_name()) && item.getUser_name().length() > 14) {
+                String user_name = item.getUser_name();
+                String substring = user_name.substring(0, 14);
+                helper.setText(R.id.item_name_tv, substring + "...");
+            } else {
+                helper.setText(R.id.item_name_tv, item.getUser_name());
+            }
+            helper.setText(R.id.item_content_tv, item.getBody())
                     .addOnClickListener(R.id.item_content_tv);
             ImageView imageView = helper.getView(R.id.item_pic_iv);
             ImageView faceiV = helper.getView(R.id.item_face_iv);

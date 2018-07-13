@@ -37,7 +37,7 @@
                 android:layout_height="35dp"
                 android:layout_marginRight="15dp"
                 android:layout_toLeftOf="@+id/view_01"
-                android:src="@drawable/face"/>
+                />
 
             <ImageView
                 android:id="@+id/view_01"

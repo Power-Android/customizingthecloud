@@ -54,8 +54,9 @@ public class MyDonkeyEarsActivity extends BaseActivity implements View.OnClickLi
     private DonkeyEarsAdapter adapter;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
-    private List<DonkeyEarsBean.DataBean.GoodBean> list = new ArrayList<>();
+    private List<DonkeyEarsBean.DataEntity.GoodEntity> list = new ArrayList<>();
     private int user_eselsohr;
+    private boolean sign;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +73,6 @@ public class MyDonkeyEarsActivity extends BaseActivity implements View.OnClickLi
         titleContentRightTv.setText("明细");
         titleBackIv.setOnClickListener(this);
         titleContentRightTv.setOnClickListener(this);
-
-
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
         initData();
@@ -83,20 +82,21 @@ public class MyDonkeyEarsActivity extends BaseActivity implements View.OnClickLi
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
 
-        OkGo.<DonkeyEarsBean>get(Urls.BASEURL + "api/v2/user/eselsohr")
+        OkGo.<DonkeyEarsBean>get(Urls.BASEURL + "api/v2/sign")
                 .tag(this)
                 .headers(headers)
-                .execute(new DialogCallback<DonkeyEarsBean>(this,DonkeyEarsBean.class) {
+                .execute(new DialogCallback<DonkeyEarsBean>(this, DonkeyEarsBean.class) {
                     @Override
                     public void onSuccess(Response<DonkeyEarsBean> response) {
                         DonkeyEarsBean body = response.body();
-                        if (body.getCode() == 1){
+                        if (body.getCode() == 1) {
                             user_eselsohr = body.getData().getUser_eselsohr();
                             list = body.getData().getGood();
                             adapter = new DonkeyEarsAdapter(R.layout.item_donkey_ears, list);
+                            sign = body.getData().isIs_sign();
                             initHead();
                             recyclerView.setAdapter(adapter);
-                            numTv.setText(user_eselsohr+"");
+                            numTv.setText(user_eselsohr + "");
                             adapter.setOnItemClickListener(MyDonkeyEarsActivity.this);
                             adapter.setOnItemChildClickListener(MyDonkeyEarsActivity.this);
                         }
@@ -110,35 +110,41 @@ public class MyDonkeyEarsActivity extends BaseActivity implements View.OnClickLi
         qiandaoTv = (TextView) headerTop.findViewById(R.id.item_qiandao_tv);
         gonglueRl = (RelativeLayout) headerTop.findViewById(R.id.item_gonglue_rl);
         guizeLl = (LinearLayout) headerTop.findViewById(R.id.item_guize_ll);
-
         qiandaoTv.setOnClickListener(this);
         gonglueRl.setOnClickListener(this);
         guizeLl.setOnClickListener(this);
         adapter.addHeaderView(headerTop);
+        if (sign) {
+            qiandaoTv.setText("已签到");
+            qiandaoTv.setClickable(false);
+        } else {
+            qiandaoTv.setText("签到");
+            qiandaoTv.setClickable(true);
+        }
     }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-//        TUtils.showShort(mContext,"点击了---item"+position);
+        //        TUtils.showShort(mContext,"点击了---item"+position);
     }
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        Intent intent = new Intent(mContext,GoodDetailActivity.class);
-        intent.putExtra("id",list.get(position).getId()+"");
+        Intent intent = new Intent(mContext, GoodDetailActivity.class);
+        intent.putExtra("id", list.get(position).getId() + "");
         startActivity(intent);
     }
 
-    private class DonkeyEarsAdapter extends BaseQuickAdapter<DonkeyEarsBean.DataBean.GoodBean, BaseViewHolder> {
+    private class DonkeyEarsAdapter extends BaseQuickAdapter<DonkeyEarsBean.DataEntity.GoodEntity, BaseViewHolder> {
 
-        public DonkeyEarsAdapter(@LayoutRes int layoutResId, @Nullable List<DonkeyEarsBean.DataBean.GoodBean> data) {
+        public DonkeyEarsAdapter(@LayoutRes int layoutResId, @Nullable List<DonkeyEarsBean.DataEntity.GoodEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, DonkeyEarsBean.DataBean.GoodBean item) {
+        protected void convert(BaseViewHolder helper, DonkeyEarsBean.DataEntity.GoodEntity item) {
             Glide.with(mContext).load(item.getImage()).into((ImageView) helper.getView(R.id.item_img_iv));
-            helper  .setText(R.id.item_name_tv, item.getName())
+            helper.setText(R.id.item_name_tv, item.getName())
                     .setText(R.id.item_yuanjia_tv, item.getPrice())
                     .setText(R.id.item_xianjia_tv, item.getEselsohr_deduction())
                     .addOnClickListener(R.id.item_query_tv);
@@ -147,21 +153,23 @@ public class MyDonkeyEarsActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.title_back_iv:
                 finish();
                 break;
             case R.id.title_content_right_tv:
-                startActivity(new Intent(mContext,DonkeyEarsDetailActivity.class));
+                startActivity(new Intent(mContext, DonkeyEarsDetailActivity.class));
                 break;
             case R.id.item_qiandao_tv:
-                initSign();
+                if (!sign) {
+                    initSign();
+                }
                 break;
             case R.id.item_gonglue_rl:
                 showShareDialog();
                 break;
             case R.id.item_guize_ll:
-                startActivity(new Intent(mContext,ServiceRegulationsActivity.class));
+                startActivity(new Intent(mContext, ServiceRegulationsActivity.class));
                 break;
         }
     }
@@ -169,21 +177,20 @@ public class MyDonkeyEarsActivity extends BaseActivity implements View.OnClickLi
     private void initSign() {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
-
         OkGo.<SignBean>get(Urls.BASEURL + "api/v2/sign/store")
                 .tag(this)
                 .headers(headers)
-                .execute(new DialogCallback<SignBean>(this,SignBean.class) {
+                .execute(new DialogCallback<SignBean>(this, SignBean.class) {
                     @Override
                     public void onSuccess(Response<SignBean> response) {
                         SignBean body = response.body();
-                        if (body.getCode() == 1){
-                            TUtils.showShort(mContext,body.getMessage());
+                        if (body.getCode() == 1) {
+                            TUtils.showShort(mContext, body.getMessage());
                             qiandaoTv.setText("已签到");
                             qiandaoTv.setClickable(false);
-                            initData();
-                        }else {
-                            TUtils.showShort(mContext,body.getMessage());
+                            numTv.setText(user_eselsohr + 1 + "");
+                        } else {
+                            TUtils.showShort(mContext, body.getMessage());
                         }
                     }
                 });

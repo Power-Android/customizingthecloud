@@ -10,9 +10,12 @@ import android.widget.TextView;
 import com.power.customizingthecloud.MainActivity;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.bean.EventBean;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -109,6 +112,7 @@ public class SettingActivity extends BaseActivity {
                         finish();
                         removeAllActivitys();
                         startActivity(new Intent(mContext, MainActivity.class));
+                        EventBus.getDefault().postSticky(new EventBean("loginout"));
                     }
 
                     @Override

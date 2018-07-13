@@ -83,7 +83,6 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
     private ShopCartAdapter adapter;
     private boolean isEdit;
     private int TYPE = -1;
-    private boolean good_quantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -238,9 +237,16 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        Intent intent = new Intent(mContext, GoodDetailActivity.class);
-        intent.putExtra("id",list.get(position).getId()+"");
-        startActivity(intent);
+        int buy_type = list.get(position).getBuy_type();
+        if (buy_type == 1) {
+            Intent intent = new Intent(mContext, GoodDetailActivity.class);
+            intent.putExtra("id", list.get(position).getGood_id() + "");
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(mContext, FenxiaoDetailActivity.class);
+            intent.putExtra("id", list.get(position).getGood_id() + "");
+            startActivity(intent);
+        }
     }
 
     @OnClick({R.id.fenixiao_ll, R.id.shangcheng_ll})
@@ -354,7 +360,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
                     }
                     intent.putExtra("good_quantity", getGood_quantity());
                     intent.putExtra("is_cart", "1");
-                    startActivityForResult(intent,0);
+                    startActivityForResult(intent, 0);
                 }
                 break;
         }
@@ -364,7 +370,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode==1){
+        if (resultCode == 1) {
             finish();
         }
     }

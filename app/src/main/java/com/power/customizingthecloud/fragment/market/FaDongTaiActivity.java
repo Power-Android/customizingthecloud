@@ -38,6 +38,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import id.zelory.compressor.Compressor;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class FaDongTaiActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.title_message_iv)
@@ -75,7 +79,7 @@ public class FaDongTaiActivity extends BaseActivity implements View.OnClickListe
     private List<LocalMedia> selectList = new ArrayList<>();
     private List<String> cameraList;
     private GridViewAddImgesAdpter addImgesAdpter;
-    private List<UploadPhotoBean.DataEntity> jsonList=new ArrayList<>();
+    private List<UploadPhotoBean.DataEntity> jsonList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,52 +230,70 @@ public class FaDongTaiActivity extends BaseActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.title_content_right_tv:
-                commit();
+                jsonList.clear();
+                photoCount = 0;
+                commit(listAll.get(0).getPath());
                 break;
         }
     }
 
-    private void commit() {
-        jsonList.clear();
+    private int photoCount;
+
+    //同步上传
+    private void commit(String path) {
+        //压缩一下再上传，不然拍照基本都四五兆一张图片，上传太耗时间，而且服务器也有限制，不接受3M以上的图片
+        new Compressor(this)
+                .compressToFileAsFlowable(new File(path))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<File>() {
+                    @Override
+                    public void accept(File file) {
+                        pushPhoto(file);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) {
+                        throwable.printStackTrace();
+
+                    }
+                });
+    }
+
+    private void pushPhoto(File file) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
-        if (listAll.size() > 0) {
-            for (int i = 0; i < listAll.size(); i++) {
-                String path = listAll.get(i).getPath();
-                File file = new File(path);
-                HttpParams params = new HttpParams();
-                params.put("file", file);
-                params.put("path", "feed");
-                final int finalI = i;
-                OkGo.<UploadPhotoBean>post(Urls.BASEURL + "api/v2/file/store")
-                        .headers(headers)
-                        .params(params)
-                        .execute(new DialogCallback<UploadPhotoBean>(FaDongTaiActivity.this, UploadPhotoBean.class) {
-                            @Override
-                            public void onSuccess(Response<UploadPhotoBean> response) {
-                                UploadPhotoBean photoBean = response.body();
-                                int code = photoBean.getCode();
-                                if (code == 0) {
-                                    Toast.makeText(FaDongTaiActivity.this, photoBean.getMessage(), Toast.LENGTH_SHORT).show();
-                                } else if (code == 1) {
-                                    UploadPhotoBean.DataEntity data = photoBean.getData();
-                                    jsonList.add(data);
-                                    if (finalI ==listAll.size()-1){
-                                        //图片全部上传完毕，下面发布动态
-                                        goDongTai(mContentEt.getText().toString(),new Gson().toJson(jsonList));
-                                    }
-                                }
+        HttpParams params = new HttpParams();
+        params.put("file", file);
+        params.put("path", "feed");
+        OkGo.<UploadPhotoBean>post(Urls.BASEURL + "api/v2/file/store")
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<UploadPhotoBean>(FaDongTaiActivity.this, UploadPhotoBean.class) {
+                    @Override
+                    public void onSuccess(Response<UploadPhotoBean> response) {
+                        UploadPhotoBean photoBean = response.body();
+                        int code = photoBean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(FaDongTaiActivity.this, photoBean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            UploadPhotoBean.DataEntity data = photoBean.getData();
+                            jsonList.add(data);
+                            photoCount++;
+                            if (photoCount == listAll.size()) {
+                                //图片全部上传完毕，下面发布动态
+                                goDongTai(mContentEt.getText().toString(), new Gson().toJson(jsonList));
+                            } else {
+                                commit(listAll.get(photoCount).getPath());
                             }
+                        }
+                    }
 
-                            @Override
-                            public void onError(Response<UploadPhotoBean> response) {
-                                super.onError(response);
-                            }
-                        });
-            }
-        }else {
-            Toast.makeText(this, "请至少选择一张图片~", Toast.LENGTH_SHORT).show();
-        }
+                    @Override
+                    public void onError(Response<UploadPhotoBean> response) {
+                        super.onError(response);
+                    }
+                });
     }
 
     private void goDongTai(String content, String images) {
@@ -292,7 +314,7 @@ public class FaDongTaiActivity extends BaseActivity implements View.OnClickListe
                             Toast.makeText(FaDongTaiActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
                             Toast.makeText(FaDongTaiActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
-                            setResult(1,new Intent());
+                            setResult(1, new Intent());
                             finish();
                         }
                     }

@@ -67,6 +67,11 @@ public class MainActivity extends BaseActivity {
         EventBus.getDefault().register(this);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("checkmuchang")){//选中牧场

@@ -282,6 +282,10 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                             TopAdapter topAdapter = new TopAdapter(R.layout.item_renyang_detail_top, list);
                             mRecyclerTop.setAdapter(topAdapter);
                             mTvShengyu.setText(datas.getLast_amount() + "");
+                            if (datas.getLast_amount()<=0){
+                                mTvCommit.setBackgroundResource(R.drawable.bg_yuanjiao_huise);
+                                mTvCommit.setClickable(false);
+                            }
                             mTvTotalCount.setText(datas.getAmount() + "");
                             mItemStepper.setMaxValue(datas.getLast_amount());
                             mTvPrice.setText(datas.getAmount() + "");

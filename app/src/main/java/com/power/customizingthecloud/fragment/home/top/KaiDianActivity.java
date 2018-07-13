@@ -139,12 +139,15 @@ public class KaiDianActivity extends BaseActivity implements View.OnClickListene
                         KaidianBean body = response.body();
                         if (body.getCode() == 1) {
                             KaidianBean.DataBean data = body.getData();
-                            if (!TextUtils.isEmpty(data.getUser_avatar()))
+                            if (!TextUtils.isEmpty(data.getUser_avatar())){
                                 Glide.with(MyApplication.getGloableContext()).load(data.getUser_avatar()).into(dianpuFaceIv);
-                            if (!TextUtils.isEmpty(data.getUser_name()) && data.getUser_name().length() > 15) {
+                            }else {
+                                dianpuFaceIv.setImageResource(R.drawable.face);
+                            }
+                            if (!TextUtils.isEmpty(data.getUser_name()) && data.getUser_name().length() > 10) {
                                 String user_name = data.getUser_name();
-                                String substring = user_name.substring(0, 15);
-                                dianpuNameTv.setText(substring);
+                                String substring = user_name.substring(0, 10);
+                                dianpuNameTv.setText(substring+"...");
                             } else {
                                 dianpuNameTv.setText(data.getUser_name());
                             }

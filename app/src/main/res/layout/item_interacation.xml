@@ -39,6 +39,7 @@
             android:id="@+id/item_pic_iv"
             android:layout_width="70dp"
             android:layout_height="70dp"
+            android:scaleType="fitXY"
             android:src="@drawable/face"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>

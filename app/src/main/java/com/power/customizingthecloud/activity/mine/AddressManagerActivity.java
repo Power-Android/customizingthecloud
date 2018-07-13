@@ -291,7 +291,7 @@ public class AddressManagerActivity extends BaseActivity implements View.OnClick
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 1) {
             manager=false;
-            xinzengTv.setVisibility(View.GONE);
+            titleContentRightTv.setText("管理");
             initData();
         }
     }

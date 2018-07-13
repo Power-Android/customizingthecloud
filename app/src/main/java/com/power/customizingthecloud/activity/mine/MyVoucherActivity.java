@@ -84,7 +84,7 @@ public class MyVoucherActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        if (list.get(position).getState() != 1){
+        if (list.get(position).getState() == 1){
             if (type != null && type.equals("query")){
                 //数据是使用Intent返回
                 Intent intent = new Intent();
@@ -111,9 +111,11 @@ public class MyVoucherActivity extends BaseActivity implements View.OnClickListe
                     .setText(R.id.item_name_tv,item.getTitle())
 //                    .setText(R.id.item_use_tv,item.getUse())
                     .setText(R.id.item_date_tv,item.getStart_date()+"-"+item.getEnd_date());
-            if (item.getState() == 3){
+            if (item.getState() == 3){//过期
                 helper.getView(R.id.yi_guo_qi_iv).setVisibility(View.VISIBLE);
             }else if (item.getState()==2){//已用
+                helper.getView(R.id.yi_use_iv).setVisibility(View.VISIBLE);
+            }else {//未使用
 
             }
         }
