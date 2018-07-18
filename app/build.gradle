@@ -56,7 +56,7 @@ dependencies {
     compile 'org.zackratos:ultimatebar:1.1.1'
     compile 'com.github.LuckSiege.PictureSelector:picture_library:v2.1.1'
     compile 'com.contrarywind:Android-PickerView:3.2.6'
-    compile 'com.github.iwgang:countdownview:2.1.6'
+    //    compile 'com.github.iwgang:countdownview:2.1.6'
     compile 'cn.jzvd:jiaozivideoplayer:6.2.7'
     compile 'id.zelory:compressor:2.1.0'
     compile 'cn.yipianfengye.android:zxing-library:2.1'
@@ -73,4 +73,5 @@ dependencies {
     compile files('libs/libammsdk.jar')
     compile files('libs/universal-image-loader-1.9.4-with-sources.jar')
     compile files('libs/alipaySdk-20170922.jar')
+    compile project(':CountdownView-library')
 }

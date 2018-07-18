@@ -39,6 +39,12 @@ public class GridViewAddImgesAdpter extends BaseAdapter {
 
     public void setList(List<LocalMedia> list) {
         this.list = list;
+        notifyDataSetChanged();
+    }
+
+    public void addList(List<LocalMedia> list){
+        this.list.addAll(list);
+        notifyDataSetChanged();
     }
 
     /**

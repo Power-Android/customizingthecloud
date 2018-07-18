@@ -14,9 +14,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
-import com.power.customizingthecloud.bean.RedPacketBean;
 import com.power.customizingthecloud.bean.RefundAfterBean;
-import com.power.customizingthecloud.utils.TUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +47,7 @@ public class RefundAfterActivity extends BaseActivity implements View.OnClickLis
 
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
-
+        recyclerView.setVisibility(View.GONE);
 
         list = new ArrayList<>();
         for (int i = 0; i < 4; i++) {

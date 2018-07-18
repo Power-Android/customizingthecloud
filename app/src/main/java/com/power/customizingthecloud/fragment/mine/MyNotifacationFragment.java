@@ -51,7 +51,6 @@ public class MyNotifacationFragment extends BaseFragment {
     private void initView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
-
         initData();
     }
 
@@ -60,7 +59,6 @@ public class MyNotifacationFragment extends BaseFragment {
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
         params.put("after","");
-
         OkGo.<NotifacationBean>get(Urls.BASEURL + "api/v2/system")
                 .tag(this)
                 .headers(headers)

@@ -151,7 +151,7 @@ public class KaiDianActivity extends BaseActivity implements View.OnClickListene
                             } else {
                                 dianpuNameTv.setText(data.getUser_name());
                             }
-                            ljsyTv.setText(data.getUser_distribution());
+                            ljsyTv.setText("累计收益："+data.getUser_distribution());
 
                             teamList = data.getTeam();
                             KaidianAdapter adapter = new KaidianAdapter(R.layout.item_kai_dian, teamList);

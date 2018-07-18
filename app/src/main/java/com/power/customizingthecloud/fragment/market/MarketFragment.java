@@ -40,6 +40,7 @@ import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.MyMessageActivity;
 import com.power.customizingthecloud.base.BaseFragment;
+import com.power.customizingthecloud.bean.EventBean;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.market.bean.CircleHomeBean;
 import com.power.customizingthecloud.login.bean.RegisterBean;
@@ -50,6 +51,10 @@ import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.BaseSelectPopupWindow;
 import com.power.customizingthecloud.view.CircleImageView;
 import com.power.customizingthecloud.view.NineGridTestLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,11 +109,13 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
     SpringView mSpringview;
     private String after = "";
     private boolean isLoadMore;
+    private CircleHomeBean.DataEntity.UserEntity user;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ganji, null);
         unbinder = ButterKnife.bind(this, view);
+        EventBus.getDefault().register(this);
         mTitleMessageIv.setVisibility(View.VISIBLE);
         mTitleMessageIv.setOnClickListener(this);
         mTitleContentTv.setText("我的圈子");
@@ -120,9 +127,22 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
         return view;
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent(EventBean eventBean) {
+        if (eventBean.getMsg().equals("userinfo")) {
+            initData();
+        }
+    }
+
     @Override
     protected void initLazyData() {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     private void initData() {
@@ -144,13 +164,13 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                             Toast.makeText(mActivity, circleHomeBean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
                             CircleHomeBean.DataEntity data = circleHomeBean.getData();
-                            CircleHomeBean.DataEntity.UserEntity user = data.getUser();
+                            user = data.getUser();
                             if (!TextUtils.isEmpty(user.getUser_name())) {
                                 mTvName.setText(user.getUser_name());
                             }
                             if (!TextUtils.isEmpty(user.getUser_avatar())) {
                                 Glide.with(mContext).load(user.getUser_avatar()).into(mIvHead);
-                            }else {
+                            } else {
                                 mIvHead.setImageResource(R.drawable.face);
                             }
                             if (!isLoadMore) {
@@ -241,6 +261,8 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             ImageView iv_head = helper.getView(R.id.iv_head);
             if (!TextUtils.isEmpty(item.getUser_avatar())) {
                 Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into(iv_head);
+            } else {
+                iv_head.setImageResource(R.drawable.face);
             }
             if (TextUtils.isEmpty(builder.toString())) {
                 helper.setVisible(R.id.tv_likeperson, false)
@@ -267,7 +289,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                 chatAdapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                        showCommentPopWindow(view, item.getId() + "", comments.get(position).getReply_user() + "");
+                        showCommentPopWindow(helper.getAdapterPosition(), position, view, item.getId() + "", comments.get(position).getUser_id() + "");
                     }
                 });
             }
@@ -280,7 +302,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             helper.getView(R.id.ll_pinglun).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showCommentPopWindow(v, item.getId() + "", "");
+                    showCommentPopWindow(helper.getAdapterPosition(), -1, v, item.getId() + "", "");
                 }
             });
             if ((comments == null || comments.size() == 0) && TextUtils.isEmpty(builder.toString())) {
@@ -332,15 +354,15 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                                 likes.remove(finalLikesEntity);
                             } else {
                                 iv_like.setImageResource(R.drawable.ganji_like3);
-                                likes.add(new CircleHomeBean.DataEntity.FeedEntity.LikesEntity(Integer.parseInt(userid), "名字"));
+                                likes.add(new CircleHomeBean.DataEntity.FeedEntity.LikesEntity(Integer.parseInt(userid), user.getUser_name()));
                             }
-                            mMyAdapter.notifyDataSetChanged();
+                            mMyAdapter.notifyItemChanged(position);
                         }
                     }
                 });
     }
 
-    private void showCommentPopWindow(View view, final String feed_id, final String reply_user) {
+    private void showCommentPopWindow(final int adapterPosition, final int position, View view, final String feed_id, final String userid) {
         if (popWiw == null) {
             popWiw = new BaseSelectPopupWindow(mContext, R.layout.edit_data);
             // popWiw.setOpenKeyboard(true);
@@ -386,7 +408,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                 if (!TextUtils.isEmpty(edt.getText().toString().trim())) {
                     String content = edt.getText().toString().trim();
                     SoftKeyboardTool.closeKeyboard(edt);
-                    sendComment(feed_id, content, reply_user);
+                    sendComment(adapterPosition, position, feed_id, content, userid);
                     popWiw.dismiss();
                 }
             }
@@ -401,14 +423,14 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                 | Gravity.CENTER_HORIZONTAL, 0, 0);
     }
 
-    private void sendComment(String feed_id, String content, String reply_user) {
+    private void sendComment(final int adapterPosition, final int position, String feed_id, final String content, final String userid) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
         params.put("feed_id", feed_id);
         params.put("body", content);
-        if (!TextUtils.isEmpty(reply_user))
-            params.put("reply_user", reply_user);
+        if (!TextUtils.isEmpty(userid))
+            params.put("reply_user", userid);
         OkGo.<RegisterBean>post(Urls.BASEURL + "api/v2/feed/comments")
                 .headers(headers)
                 .params(params)
@@ -421,7 +443,26 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                             Toast.makeText(mActivity, bean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
                             Toast.makeText(mActivity, bean.getMessage(), Toast.LENGTH_SHORT).show();
-                            initData();
+                            if (TextUtils.isEmpty(userid)) {
+                                //自己直接评论
+                                if (position == -1) {
+                                    List<CircleHomeBean.DataEntity.FeedEntity.CommentsEntity> comments = mFeed.get(adapterPosition).getComments();
+                                    CircleHomeBean.DataEntity.FeedEntity.CommentsEntity commentsEntity = new CircleHomeBean.DataEntity.FeedEntity.CommentsEntity();
+                                    commentsEntity.setBody(content);
+                                    commentsEntity.setUser_name(user.getUser_name());
+                                    comments.add(commentsEntity);
+                                    mMyAdapter.notifyItemChanged(adapterPosition);
+                                }
+                            } else {
+                                //评论别人说过的话
+                                List<CircleHomeBean.DataEntity.FeedEntity.CommentsEntity> comments = mFeed.get(adapterPosition).getComments();
+                                CircleHomeBean.DataEntity.FeedEntity.CommentsEntity commentsEntity = new CircleHomeBean.DataEntity.FeedEntity.CommentsEntity();
+                                commentsEntity.setBody(content);
+                                commentsEntity.setUser_name(user.getUser_name());
+                                commentsEntity.setReply_name(comments.get(position).getUser_name());
+                                comments.add(commentsEntity);
+                                mMyAdapter.notifyItemChanged(adapterPosition);
+                            }
                         }
                     }
                 });
@@ -469,7 +510,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                 startActivity(new Intent(mContext, MyMessageActivity.class));
                 break;
             case R.id.title_content_right_tv:
-                startActivityForResult(new Intent(mContext, FaDongTaiActivity.class),0);
+                startActivityForResult(new Intent(mContext, FaDongTaiActivity.class), 0);
                 break;
             case R.id.iv_head:
                 startActivity(new Intent(mContext, MyDongTaiActivity.class));
@@ -483,7 +524,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode==1){
+        if (resultCode == 1) {
             isLoadMore = false;
             initData();
         }
@@ -510,7 +551,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                 dialog.dismiss();
                 Intent intent = new Intent(mContext, FaDongTaiActivity.class);
                 intent.putExtra("type", "photo");
-                startActivityForResult(intent,0);
+                startActivityForResult(intent, 0);
             }
         });
         dialog.getView(R.id.tv_takephoto).setOnClickListener(new View.OnClickListener() {
@@ -519,7 +560,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                 dialog.dismiss();
                 Intent intent = new Intent(mContext, FaDongTaiActivity.class);
                 intent.putExtra("type", "camera");
-                startActivityForResult(intent,0);
+                startActivityForResult(intent, 0);
             }
         });
         dialog.getView(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {

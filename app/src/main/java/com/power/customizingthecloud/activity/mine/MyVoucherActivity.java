@@ -93,7 +93,9 @@ public class MyVoucherActivity extends BaseActivity implements View.OnClickListe
                 setResult(1,intent);
                 finish();
             }else {
-                startActivity(new Intent(mContext, GoodListActivity.class));
+                Intent intent = new Intent(mContext, GoodListActivity.class);
+                intent.putExtra("type","hot");
+                startActivity(intent);
             }
         }
     }

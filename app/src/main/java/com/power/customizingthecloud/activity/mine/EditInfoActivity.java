@@ -58,6 +58,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import id.zelory.compressor.Compressor;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class EditInfoActivity extends BaseActivity implements View.OnClickListener {
 
@@ -93,7 +97,6 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
     private BaseSelectPopupWindow popWiw;// 昵称 编辑框
     private List<String> sexLiset;
     private int SEX = 1;
-
     private List<ProviceBean.DataBean> options1Items = new ArrayList<>();
     private ArrayList<ArrayList<CityBean>> options2Items = new ArrayList<>();
     private ArrayList<ArrayList<ArrayList<QuBean>>> options3Items = new ArrayList<>();
@@ -149,14 +152,14 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
                             EditInfoBean.DataBean data = body.getData();
                             if (!TextUtils.isEmpty(data.getUser_avatar())) {
                                 Glide.with(MyApplication.getGloableContext()).load(data.getUser_avatar()).into(editFaceIv);
-                            }else {
+                            } else {
                                 editFaceIv.setImageResource(R.drawable.face);
                             }
 
                             if (!TextUtils.isEmpty(data.getUser_name()) && data.getUser_name().length() > 10) {
                                 String user_name = data.getUser_name();
                                 String substring = user_name.substring(0, 10);
-                                editNameTv.setText(substring+"...");
+                                editNameTv.setText(substring + "...");
                             } else {
                                 editNameTv.setText(data.getUser_name());
                             }
@@ -392,7 +395,23 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
                     cutPath = selectList.get(0).getCutPath();
                     Glide.with(this).load(cutPath).into(editFaceIv);
                     File file = new File(cutPath);
-                    initPicData(file);
+                    //压缩一下再上传，不然拍照基本都四五兆一张图片，上传太耗时间，而且服务器也有限制，不接受3M以上的图片
+                    new Compressor(this)
+                            .compressToFileAsFlowable(file)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<File>() {
+                                @Override
+                                public void accept(File file) {
+                                    initPicData(file);
+                                }
+                            }, new Consumer<Throwable>() {
+                                @Override
+                                public void accept(Throwable throwable) {
+                                    throwable.printStackTrace();
+
+                                }
+                            });
                     break;
             }
         }
@@ -475,7 +494,6 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void afterTextChanged(Editable s) {
 
-
             }
         });
 
@@ -486,8 +504,15 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
                 if (!TextUtils.isEmpty(edt.getText().toString().trim())) {
                     // 昵称
                     String content = edt.getText().toString().trim();
-                    if (type.equals("name"))
-                        editNameTv.setText(content);
+                    if (type.equals("name")) {
+                        if (!TextUtils.isEmpty(content) && content.length() > 10) {
+                            String user_name = content;
+                            String substring = user_name.substring(0, 10);
+                            editNameTv.setText(substring + "...");
+                        } else {
+                            editNameTv.setText(content);
+                        }
+                    }
                     if (type.equals("age"))
                         editAgeTv.setText(content);
                     popWiw.dismiss();

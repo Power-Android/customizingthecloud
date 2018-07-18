@@ -78,6 +78,7 @@ public class NotifaDetailActivity extends BaseActivity {
 
     @OnClick(R.id.title_back_iv)
     public void onViewClicked() {
+        setResult(1,new Intent());
         finish();
     }
 }

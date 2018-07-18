@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -242,7 +243,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
             Intent intent = new Intent(mContext, GoodDetailActivity.class);
             intent.putExtra("id", list.get(position).getGood_id() + "");
             startActivity(intent);
-        }else {
+        } else {
             Intent intent = new Intent(mContext, FenxiaoDetailActivity.class);
             intent.putExtra("id", list.get(position).getGood_id() + "");
             startActivity(intent);
@@ -288,7 +289,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
 
         @Override
         protected void convert(final BaseViewHolder helper, final ShopcartBean.DataBean item) {
-            SnappingStepper stepper = helper.getView(R.id.item_stepper);
+            final SnappingStepper stepper = helper.getView(R.id.item_stepper);
             CheckBox checkBox = helper.getView(R.id.item_checkBox);
             final TextView moneyTv = helper.getView(R.id.item_money_tv);
             stepper.setValue(item.getGood_num());
@@ -301,14 +302,67 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
             stepper.setOnValueChangeListener(new SnappingStepperValueChangeListener() {
                 @Override
                 public void onValueChange(View view, int value) {
+                    if (value <= 0) {
+                    } else {
+                        if (value > item.getGood_num()) {
+                            addCar(item.getGood_id() + "");
+                        } else if (value < item.getGood_num()) {
+                            minusCar(item.getGood_id() + "");
+                        }
+                    }
                     item.setGood_num(value);
                     moneyTv.setText("￥" + item.getGood_price() * value);
-                    jiesuan();
                     notifyDataSetChanged();
+                    jiesuan();
                 }
             });
-
         }
+    }
+
+    private void addCar(String good_id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("good_id", good_id);
+        OkGo.<BaseBean>get(Urls.BASEURL + "api/v2/cart/plus")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<BaseBean>(ShopCartActivity.this, BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        int code = response.body().getCode();
+                        String message = response.body().getMessage();
+                        if (code == 0) {
+                            Toast.makeText(ShopCartActivity.this, message, Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            Toast.makeText(ShopCartActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void minusCar(String good_id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("good_id", good_id);
+        OkGo.<BaseBean>get(Urls.BASEURL + "api/v2/cart/minus")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<BaseBean>(ShopCartActivity.this, BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        int code = response.body().getCode();
+                        String message = response.body().getMessage();
+                        if (code == 0) {
+                            Toast.makeText(ShopCartActivity.this, message, Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            Toast.makeText(ShopCartActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     @Override

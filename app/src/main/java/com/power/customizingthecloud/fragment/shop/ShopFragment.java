@@ -19,7 +19,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseFragment;
-import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.callback.JsonCallback;
 import com.power.customizingthecloud.fragment.shop.bean.ShopTypeBean;
 import com.power.customizingthecloud.utils.Urls;
 
@@ -89,7 +89,7 @@ public class ShopFragment extends BaseFragment implements View.OnClickListener {
         mTitleSearchIv.setOnClickListener(this);
         OkGo.<ShopTypeBean>get(Urls.BASEURL + "api/v2/good/class")
                 .tag(this)
-                .execute(new DialogCallback<ShopTypeBean>(mActivity, ShopTypeBean.class) {
+                .execute(new JsonCallback<ShopTypeBean>(ShopTypeBean.class) {
                     @Override
                     public void onSuccess(Response<ShopTypeBean> response) {
                         ShopTypeBean bean = response.body();

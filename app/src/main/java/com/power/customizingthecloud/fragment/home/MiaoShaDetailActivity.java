@@ -3,6 +3,7 @@ package com.power.customizingthecloud.fragment.home;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -112,6 +114,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
     private List<String> mSpec_value = new ArrayList<>();
     private List<MiaoDetailBean.DataEntity.CommentsEntity> mComments;
     private MiaoDetailBean.DataEntity mData;
+    private CountDownTimer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,15 +162,21 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
                             BannerUtils.startBanner(mBanner, imgList);
                             mTvName.setText(mData.getName());
                             mTvShengyu.setText(mData.getSeckill_storage() + "");
-                            mTvPrice.setText(mData.getPrice());
-                            int time1 = mData.getSeckill_end_time() - mData.getEckill_start_time();
-                            int time = time1 / 60 / 60;
-                            if (time >= 24) {
-                                int day = time / 24;
-                                int hour = time % 24;
-                                mTvTime.setText("距离秒杀结束还有"+day+"天"+hour+"小时");
+                            mTvPrice.setText(mData.getSeckill_price());
+                            long time1 = mData.getSeckill_end_time() * 1000L - System.currentTimeMillis();
+                            long time = time1 / 1000 / 60 / 60;
+                            if (time1 <= 0) {
+                                mTvTime.setText("秒杀已结束");
+                                mTvBuy.setBackgroundColor(getResources().getColor(R.color.huise));
+                                mTvBuy.setClickable(false);
+                            } else if (time >= 24) {
+                                int day = (int) (time / 24);
+                                int hour = (int) (time % 24);
+                                mTvTime.setText("距离秒杀结束还有" + day + "天" + hour + "小时");
+                                startTimer(time1);
                             } else {
-                                mTvTime.setText("距离秒杀结束还有0天"+time+"小时");
+                                mTvTime.setText("距离秒杀结束还有0天" + time + "小时");
+                                startTimer(time1);
                             }
                             String spec_value = mData.getSpec_value();
                             String[] split = spec_value.split("@");
@@ -175,9 +184,35 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
                                 mSpec_value.add(split[i]);
                             }
                             mComments = mData.getComments();
+                            detail();
                         }
                     }
                 });
+    }
+
+    private void startTimer(long time) {
+        timer = new CountDownTimer(time, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                // TODO Auto-generated method stub
+                //                tv.setText("还剩"+millisUntilFinished/1000+"秒");
+            }
+
+            @Override
+            public void onFinish() {
+                //                tv.setText("倒计时完毕了");
+                mTvTime.setText("秒杀已结束");
+                mTvBuy.setBackgroundColor(getResources().getColor(R.color.huise));
+                mTvBuy.setClickable(false);
+            }
+        }.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (timer != null)
+            timer.cancel();
     }
 
     @Override
@@ -239,40 +274,40 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com","qq分享","http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg","1",MiaoShaDetailActivity.this, SHARE_MEDIA.WEIXIN);
-//                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl("http://www.baidu.com", "qq分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "1", MiaoShaDetailActivity.this, SHARE_MEDIA.WEIXIN);
+                //                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com","qq分享","http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg","2",MiaoShaDetailActivity.this,SHARE_MEDIA.WEIXIN_CIRCLE);
-//                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl("http://www.baidu.com", "qq分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "2", MiaoShaDetailActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                //                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com","qq分享","http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg","3",MiaoShaDetailActivity.this,SHARE_MEDIA.QZONE);
-//                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl("http://www.baidu.com", "qq分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "3", MiaoShaDetailActivity.this, SHARE_MEDIA.QZONE);
+                //                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com","qq分享","http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg","4",MiaoShaDetailActivity.this,SHARE_MEDIA.QQ);
-//                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl("http://www.baidu.com", "qq分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "4", MiaoShaDetailActivity.this, SHARE_MEDIA.QQ);
+                //                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com","微博分享","http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg","5",MiaoShaDetailActivity.this,SHARE_MEDIA.SINA);
-//                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl("http://www.baidu.com", "微博分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "5", MiaoShaDetailActivity.this, SHARE_MEDIA.SINA);
+                //                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
     }
@@ -280,9 +315,12 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
     @OnClick(R.id.detail_ll)
     public void detail() {
         initDetailColor();
-        //        mWebview.setVisibility(View.VISIBLE);
-        mWebview.setVisibility(View.GONE);
-        mLvXiangqing.setVisibility(View.VISIBLE);
+        mWebview.setVisibility(View.VISIBLE);
+        mWebview.setWebChromeClient(new WebChromeClient());
+        mWebview.loadData(mData.getBody(), "text/html;charset=UTF-8", null);
+
+        //        mWebview.setVisibility(View.GONE);
+        mLvXiangqing.setVisibility(View.GONE);
         mRecycler.setVisibility(View.GONE);
         mLlCanshu.setVisibility(View.GONE);
     }

@@ -207,7 +207,7 @@
         <activity android:name=".activity.mine.BindCartActivity"/>
         <activity android:name=".activity.mine.DonkeyEarsDetailActivity"/>
         <activity android:name=".activity.mine.ServiceRegulationsActivity"/>
-        <activity android:name=".activity.mine.RengyangDetail1Activity"/>
+        <activity android:name=".activity.mine.MyRenyangDetailActivity"/>
         <activity android:name=".fragment.shop.SearchActivity"/>
         <activity android:name=".activity.mine.RengYangHeTongActivity"/>
         <activity android:name=".activity.mine.FenxiaoListActivoty"/>

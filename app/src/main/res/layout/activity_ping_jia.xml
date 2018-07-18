@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/backgourd"
+    android:orientation="vertical"
     tools:context="com.power.customizingthecloud.activity.mine.PingJiaActivity">
     <include layout="@layout/item_title_layout"/>
     <android.support.v4.widget.NestedScrollView
@@ -13,91 +13,26 @@
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
-            <RelativeLayout
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_pingjia"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="@color/white">
-                <ImageView
-                    android:id="@+id/face_iv"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_margin="10dp"
-                    android:src="@drawable/face"/>
-                <TextView
-                    android:id="@+id/name_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/text_black"
-                    android:layout_toRightOf="@+id/face_iv"
-                    android:layout_marginTop="25dp"
-                    android:layout_marginLeft="5dp"/>
-                <TextView
-                    android:id="@+id/fenlei_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/gray"
-                    android:layout_below="@+id/name_tv"
-                    android:layout_toRightOf="@+id/face_iv"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="5dp"/>
-            </RelativeLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp">
-                <EditText
-                    android:id="@+id/content_et"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minLines="7"
-                    android:background="@null"
-                    android:gravity="start"
-                    android:padding="5dp"
-                    android:hint="请填写您的问题或者建议"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_black"/>
-                <com.power.customizingthecloud.view.MyGridView
-                    android:id="@+id/uppic_iv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:numColumns="3"
-                    android:horizontalSpacing="3dp"
-                    android:verticalSpacing="3dp"/>
-            </LinearLayout>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:text="评价即可获得2个驴耳朵"/>
+                android:layout_height="wrap_content"/>
             <TextView
                 android:id="@+id/commit_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_green_button"
-                android:text="提交评价"
-                android:textColor="@color/white"
-                android:gravity="center"
-                android:padding="10dp"
-                android:textSize="16sp"
-                android:layout_marginTop="40dp"
+                android:layout_marginBottom="40dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
-                android:layout_marginBottom="40dp"/>
+                android:layout_marginTop="40dp"
+                android:background="@drawable/bg_green_button"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="提交评价"
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

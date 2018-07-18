@@ -6,7 +6,6 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,13 +13,17 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
-import com.power.customizingthecloud.bean.MyMoneyRecordBean;
-import com.power.customizingthecloud.bean.MyOderBean;
-import com.power.customizingthecloud.utils.TUtils;
+import com.power.customizingthecloud.bean.AllMoneyRecordDetailBean;
+import com.power.customizingthecloud.callback.JsonCallback;
+import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -33,26 +36,36 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
     ImageView titleBackIv;
     @BindView(R.id.title_content_tv)
     TextView titleContentTv;
-    @BindView(R.id.quanbu_tv) TextView quanbuTv;
-    @BindView(R.id.indicator_quanbu) View indicatorQuanbu;
-    @BindView(R.id.quanbu_ll) LinearLayout quanbuLl;
-    @BindView(R.id.shouyi_tv) TextView shouyiTv;
-    @BindView(R.id.indicator_shouyi) View indicatorShouyi;
-    @BindView(R.id.shouyi_ll) LinearLayout shouyiLl;
-    @BindView(R.id.tixian_tv) TextView tixianTv;
-    @BindView(R.id.indicator_tixian) View indicatorTixian;
-    @BindView(R.id.tixian_ll) LinearLayout tixianLl;
-    @BindView(R.id.yongjin_tv) TextView yongjinTv;
-    @BindView(R.id.indicator_yongjin) View indicatorYongjin;
-    @BindView(R.id.yongjin_ll) LinearLayout yongjinLl;
-    @BindView(R.id.recyclerView) RecyclerView recyclerView;
-
-    private List<MyMoneyRecordBean> list;
-    private MyMoneyRecordBean bean1;
-    private MyMoneyRecordBean bean2;
-    private MyMoneyRecordBean bean3;
-    private final int ALL = 1, SHOUYI = 2, TIXIAN = 3, YONGJIN = 4;
+    @BindView(R.id.quanbu_tv)
+    TextView quanbuTv;
+    @BindView(R.id.indicator_quanbu)
+    View indicatorQuanbu;
+    @BindView(R.id.quanbu_ll)
+    LinearLayout quanbuLl;
+    @BindView(R.id.shouyi_tv)
+    TextView shouyiTv;
+    @BindView(R.id.indicator_shouyi)
+    View indicatorShouyi;
+    @BindView(R.id.shouyi_ll)
+    LinearLayout shouyiLl;
+    @BindView(R.id.tixian_tv)
+    TextView tixianTv;
+    @BindView(R.id.indicator_tixian)
+    View indicatorTixian;
+    @BindView(R.id.tixian_ll)
+    LinearLayout tixianLl;
+    @BindView(R.id.yongjin_tv)
+    TextView yongjinTv;
+    @BindView(R.id.indicator_yongjin)
+    View indicatorYongjin;
+    @BindView(R.id.yongjin_ll)
+    LinearLayout yongjinLl;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
+    private final int ALL = 0, SHOUYI = 2, TIXIAN = 3, YONGJIN = 4;
     private MyMoneyRecordAdapter adapter;
+    private int type;
+    private List<AllMoneyRecordDetailBean.DataEntity> data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,48 +79,40 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
         titleBackIv.setVisibility(View.VISIBLE);
         titleContentTv.setText("全部记录");
         titleBackIv.setOnClickListener(this);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
-
-        list = new ArrayList<>();
         initData();
     }
 
     private void initData() {
-        bean1 = new MyMoneyRecordBean();
-        bean1.setType("shouyi");
-        bean1.setDate("2018.02.07");
-        bean1.setContent("您认养的第32期驴宝宝-------------------------驴宝获得收益到账800.00元");
-
-        bean2 = new MyMoneyRecordBean();
-        bean2.setType("tixian");
-        bean2.setDate("2018.02.07");
-        bean2.setContent("您向招商银行提现100.00元");
-
-        bean3 = new MyMoneyRecordBean();
-        bean3.setType("yongjin");
-        bean3.setDate("2018.02.07");
-        bean3.setContent("您分享的驴奶粉获得一级销售收益100.00元");
-
-        list.add(bean1);
-        list.add(bean2);
-        list.add(bean3);
-        adapter = new MyMoneyRecordAdapter(R.layout.item_money_record,list,ALL);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(this);
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("after", "");
+        params.put("type", type);
+        OkGo.<AllMoneyRecordDetailBean>get(Urls.BASEURL + "api/v2/user/all-details")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<AllMoneyRecordDetailBean>(AllMoneyRecordDetailBean.class) {
+                    @Override
+                    public void onSuccess(Response<AllMoneyRecordDetailBean> response) {
+                        AllMoneyRecordDetailBean caiFuBean = response.body();
+                        if (caiFuBean.getCode() == 1) {
+                            data = caiFuBean.getData();
+                            adapter = new MyMoneyRecordAdapter(R.layout.item_money_record, data);
+                            recyclerView.setAdapter(adapter);
+                            adapter.setOnItemClickListener(MyMoneyRecordActivity.this);
+                        }
+                    }
+                });
     }
 
     @OnClick(R.id.quanbu_ll)
     public void quanbu() {
         initQuanbuColor();
-        list.clear();
-        list.add(bean1);
-        list.add(bean2);
-        list.add(bean3);
-        adapter = new MyMoneyRecordAdapter(R.layout.item_money_record,list,ALL);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(this);
+        type=ALL;
+        initData();
     }
 
     private void initQuanbuColor() {
@@ -122,13 +127,10 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
     }
 
     @OnClick(R.id.shouyi_ll)
-    public void shouyi(){
+    public void shouyi() {
         initShouyiColor();
-        list.clear();
-        list.add(bean1);
-        adapter = new MyMoneyRecordAdapter(R.layout.item_money_record,list,SHOUYI);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(this);
+        type=SHOUYI;
+        initData();
     }
 
     private void initShouyiColor() {
@@ -143,13 +145,10 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
     }
 
     @OnClick(R.id.tixian_ll)
-    public void tixian(){
+    public void tixian() {
         initTixianColor();
-        list.clear();
-        list.add(bean2);
-        adapter = new MyMoneyRecordAdapter(R.layout.item_money_record,list,TIXIAN);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(this);
+        type=TIXIAN;
+        initData();
     }
 
     private void initTixianColor() {
@@ -164,13 +163,10 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
     }
 
     @OnClick(R.id.yongjin_ll)
-    public void yongjin(){
+    public void yongjin() {
         initYongjinColor();
-        list.clear();
-        list.add(bean3);
-        adapter = new MyMoneyRecordAdapter(R.layout.item_money_record,list,YONGJIN);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(this);
+        type=YONGJIN;
+        initData();
     }
 
     private void initYongjinColor() {
@@ -186,33 +182,27 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        if (TextUtils.equals("tixian",list.get(position).getType())){
-            TUtils.showShort(mContext,"点击了---item" + position);
-            startActivity(new Intent(mContext,TixianMingxiDetailActivity.class));
+        if (type == TIXIAN) {
+            startActivity(new Intent(mContext, TixianMingxiDetailActivity.class));
         }
     }
 
-    private class MyMoneyRecordAdapter extends BaseQuickAdapter<MyMoneyRecordBean,BaseViewHolder>{
-        private int mPosition;
+    private class MyMoneyRecordAdapter extends BaseQuickAdapter<AllMoneyRecordDetailBean.DataEntity, BaseViewHolder> {
 
-        public MyMoneyRecordAdapter(@LayoutRes int layoutResId, @Nullable List<MyMoneyRecordBean> data, int position) {
+        public MyMoneyRecordAdapter(@LayoutRes int layoutResId, @Nullable List<AllMoneyRecordDetailBean.DataEntity> data) {
             super(layoutResId, data);
-            this.mPosition = position;
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, MyMoneyRecordBean item) {
+        protected void convert(BaseViewHolder helper, AllMoneyRecordDetailBean.DataEntity item) {
             ImageView tixianIv = helper.getView(R.id.item_tixian_iv);
             TextView dateTv = helper.getView(R.id.item_date_tv);
             TextView contentTv = helper.getView(R.id.item_content_tv);
-            dateTv.setText(item.getDate());
-            contentTv.setText(item.getContent());
-            String type = item.getType();
-            switch (mPosition){
+            dateTv.setText(item.getCreated_at());
+            contentTv.setText(item.getNote());
+            switch (type) {
                 case ALL:
-                    if (TextUtils.equals(type,"tixian")){
-                        tixianIv.setVisibility(View.VISIBLE);
-                    }
+                    tixianIv.setVisibility(View.VISIBLE);
                     break;
                 case SHOUYI:
                     break;
@@ -227,7 +217,7 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.title_back_iv:
                 finish();
                 break;

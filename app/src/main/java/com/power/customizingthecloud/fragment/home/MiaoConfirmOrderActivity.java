@@ -254,6 +254,8 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
                 mDialog.dismiss();
             }
         });
+        TextView tv_price = mDialog.getView(R.id.tv_price);
+        tv_price.setText(mTvTotalprice.getText().toString());
         final CheckBox cb_alipay = mDialog.getView(R.id.cb_alipay);
         final CheckBox cb_weixin = mDialog.getView(R.id.cb_weixin);
         final CheckBox cb_yinlian = mDialog.getView(R.id.cb_yinlian);
@@ -541,7 +543,7 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
         params.put("shipping_time", mTvTime.getText().toString());
         String liuyan = mEdtLiuyan.getText().toString();
         if (!TextUtils.isEmpty(liuyan)) {
-            params.put("order_message", "");
+            params.put("order_message", liuyan);
         }
         OkGo.<PushOrderBean>post(Urls.BASEURL + "api/v2/buy/buy-step2")
                 .headers(headers)

@@ -49,6 +49,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -253,12 +254,14 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                         break;
                     case 40:
                         Intent intent = new Intent(mContext, PingJiaActivity.class);
-                        intent.putExtra("name", list.get(position).getGoods().get(0).getGoods_name());
-                        intent.putExtra("type", list.get(position).getGoods().get(0).getGoods_class());
-                        intent.putExtra("image", list.get(position).getGoods().get(0).getGoods_image());
+                        intent.putExtra("data", (Serializable) list.get(position).getGoods());
+                        intent.putExtra("type", "myorder");
                         intent.putExtra("order_id", list.get(position).getId() + "");
-                        intent.putExtra("good_id", list.get(position).getGoods().get(0).getGoods_id() + "");
-                        startActivity(intent);
+//                        intent.putExtra("name", list.get(position).getGoods().get(0).getGoods_name());
+//                        intent.putExtra("type", list.get(position).getGoods().get(0).getGoods_class());
+//                        intent.putExtra("image", list.get(position).getGoods().get(0).getGoods_image());
+//                        intent.putExtra("good_id", list.get(position).getGoods().get(0).getGoods_id() + "");
+                        startActivityForResult(intent,0);
                         break;
                 }
                 break;
@@ -278,6 +281,15 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                         break;
                 }
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode==1){
+            type="0";
+            initData();
         }
     }
 

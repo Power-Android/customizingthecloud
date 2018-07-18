@@ -2,6 +2,10 @@ package com.power.customizingthecloud.activity.mine;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,6 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
+import com.google.gson.Gson;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.compress.Luban;
 import com.luck.picture.lib.config.PictureConfig;
@@ -25,7 +32,10 @@ import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.adapter.GridViewAddImgesAdpter;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.BaseBean;
+import com.power.customizingthecloud.bean.MyOderBean;
+import com.power.customizingthecloud.bean.OrderDetailBean;
 import com.power.customizingthecloud.bean.PicBean;
+import com.power.customizingthecloud.bean.PingjiaPushBean;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.callback.JsonCallback;
 import com.power.customizingthecloud.utils.SpUtils;
@@ -37,11 +47,16 @@ import com.wevey.selector.dialog.NormalSelectionDialog;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import id.zelory.compressor.Compressor;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class PingJiaActivity extends BaseActivity {
 
@@ -49,24 +64,27 @@ public class PingJiaActivity extends BaseActivity {
     ImageView titleBackIv;
     @BindView(R.id.title_content_tv)
     TextView titleContentTv;
-    @BindView(R.id.face_iv)
-    ImageView faceIv;
-    @BindView(R.id.name_tv)
-    TextView nameTv;
-    @BindView(R.id.fenlei_tv)
-    TextView fenleiTv;
-    @BindView(R.id.content_et)
-    EditText contentEt;
-    @BindView(R.id.uppic_iv)
-    MyGridView gridview;
     @BindView(R.id.commit_tv)
     TextView commitTv;
+    @BindView(R.id.recycler_pingjia)
+    RecyclerView recycler_pingjia;
     private List<String> cameraList = new ArrayList<>();
     private List<LocalMedia> selectList = new ArrayList<>();
     private List<LocalMedia> listAll = new ArrayList<>();
-    private GridViewAddImgesAdpter addImgesAdpter;
-    private StringBuilder stringBuilder=new StringBuilder();
-    private int position;
+    private StringBuilder stringBuilder = new StringBuilder();
+    private int picposition;
+    private int mytype;
+    private List<MyOderBean.DataEntity.GoodsEntity> goods1;
+    private List<OrderDetailBean.DataEntity.GoodsEntity> goods2;
+    private OrderDetailPingAdapter orderDetailPingAdapter;
+    private MyOrderPingAdapter myOrderPingAdapter;
+    private String order_id;
+    private int adapterPosition;
+    private HashMap<Integer, List<LocalMedia>> hashMap_photos = new HashMap<>();
+    private int goodCount;
+    private int goodPosition;
+    private List<PingjiaPushBean> pingjiaPushBeanList = new ArrayList<>();
+    private HashMap<Integer, GridViewAddImgesAdpter> hashMap_adapters = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,27 +95,80 @@ public class PingJiaActivity extends BaseActivity {
     }
 
     private void initview() {
+        recycler_pingjia.setNestedScrollingEnabled(false);
+        recycler_pingjia.setLayoutManager(new LinearLayoutManager(this));
         cameraList.add("从相册中选择");
         cameraList.add("拍照");
         titleBackIv.setVisibility(View.VISIBLE);
         titleContentTv.setText("发表评论");
-        String name = getIntent().getStringExtra("name");
+        order_id = getIntent().getStringExtra("order_id");
         String type = getIntent().getStringExtra("type");
-        String image = getIntent().getStringExtra("image");
-        nameTv.setText(name);
-        fenleiTv.setText("商品分类："+type);
-        Glide.with(MyApplication.getGloableContext()).load(image).into(faceIv);
-        /**
-         * 添加照片adapter
-         */
-        addImgesAdpter = new GridViewAddImgesAdpter(listAll, this);
-        gridview.setAdapter(addImgesAdpter);
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                showCamera();
-            }
-        });
+        if (type.equals("myorder")) {
+            mytype = 0;
+            goods1 = (List<MyOderBean.DataEntity.GoodsEntity>) getIntent().getSerializableExtra("data");
+            myOrderPingAdapter = new MyOrderPingAdapter(R.layout.item_orderpingjia, goods1);
+            recycler_pingjia.setAdapter(myOrderPingAdapter);
+        } else {
+            mytype = 1;
+            goods2 = (List<OrderDetailBean.DataEntity.GoodsEntity>) getIntent().getSerializableExtra("data");
+            orderDetailPingAdapter = new OrderDetailPingAdapter(R.layout.item_orderpingjia, goods2);
+            recycler_pingjia.setAdapter(orderDetailPingAdapter);
+        }
+    }
+
+    private class MyOrderPingAdapter extends BaseQuickAdapter<MyOderBean.DataEntity.GoodsEntity, BaseViewHolder> {
+
+        public MyOrderPingAdapter(@LayoutRes int layoutResId, @Nullable List<MyOderBean.DataEntity.GoodsEntity> data) {
+            super(layoutResId, data);
+        }
+
+        @Override
+        protected void convert(final BaseViewHolder helper, MyOderBean.DataEntity.GoodsEntity item) {
+            helper.setText(R.id.name_tv, item.getGoods_name())
+                    .setText(R.id.fenlei_tv, item.getGoods_class());
+            Glide.with(MyApplication.getGloableContext()).load(item.getGoods_image()).into((ImageView) helper.getView(R.id.face_iv));
+            /**
+             * 添加照片adapter
+             */
+            MyGridView gridView = helper.getView(R.id.uppic_iv);
+            GridViewAddImgesAdpter addImgesAdpter = new GridViewAddImgesAdpter(listAll, PingJiaActivity.this);
+            gridView.setAdapter(addImgesAdpter);
+            hashMap_adapters.put(helper.getAdapterPosition(), addImgesAdpter);
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    adapterPosition = helper.getAdapterPosition();
+                    showCamera();
+                }
+            });
+        }
+    }
+
+    private class OrderDetailPingAdapter extends BaseQuickAdapter<OrderDetailBean.DataEntity.GoodsEntity, BaseViewHolder> {
+
+        public OrderDetailPingAdapter(@LayoutRes int layoutResId, @Nullable List<OrderDetailBean.DataEntity.GoodsEntity> data) {
+            super(layoutResId, data);
+        }
+
+        @Override
+        protected void convert(final BaseViewHolder helper, OrderDetailBean.DataEntity.GoodsEntity item) {
+            helper.setText(R.id.name_tv, item.getGoods_name())
+                    .setText(R.id.fenlei_tv, item.getGoods_class());
+            Glide.with(MyApplication.getGloableContext()).load(item.getGoods_image()).into((ImageView) helper.getView(R.id.face_iv));
+            /**
+             * 添加照片adapter
+             */
+            MyGridView gridView = helper.getView(R.id.uppic_iv);
+            GridViewAddImgesAdpter addImgesAdpter = new GridViewAddImgesAdpter(listAll, PingJiaActivity.this);
+            gridView.setAdapter(addImgesAdpter);
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    adapterPosition = helper.getAdapterPosition();
+                    showCamera();
+                }
+            });
+        }
     }
 
     private void showCamera() {
@@ -184,19 +255,29 @@ public class PingJiaActivity extends BaseActivity {
                 .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case PictureConfig.CHOOSE_REQUEST:
+                    selectList.clear();
                     // 图片选择结果回调
                     selectList = PictureSelector.obtainMultipleResult(data);
-                    listAll.addAll(selectList);
-                    selectList.clear();
-                    addImgesAdpter.setList(listAll);
-                    addImgesAdpter.notifyDataSetChanged();
+                    List<LocalMedia> localMedias = hashMap_photos.get(adapterPosition);
+                    if (localMedias != null && localMedias.size() > 0) {
+                        localMedias.addAll(selectList);
+                        hashMap_photos.put(adapterPosition, localMedias);
+                        GridViewAddImgesAdpter gridViewAddImgesAdpter = hashMap_adapters.get(adapterPosition);
+                        gridViewAddImgesAdpter.setList(localMedias);
+                    } else {
+                        listAll.clear();
+                        //我他妈的是真服了，为什么hashMap直接存selectList就存不进去value，存个listAll就存进去了
+                        listAll.addAll(selectList);
+                        hashMap_photos.put(adapterPosition, listAll);
+                        GridViewAddImgesAdpter gridViewAddImgesAdpter = hashMap_adapters.get(adapterPosition);
+                        gridViewAddImgesAdpter.setList(listAll);
+                    }
                     break;
             }
         }
@@ -216,7 +297,7 @@ public class PingJiaActivity extends BaseActivity {
         }
     }
 
-    private void pushPhoto2(File file) {
+    private void pushPhoto3(File file, final int i) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
@@ -231,10 +312,57 @@ public class PingJiaActivity extends BaseActivity {
                     public void onSuccess(Response<PicBean> response) {
                         PicBean body = response.body();
                         if (body.getCode() == 1) {
-                            position++;
-                            stringBuilder.append(body.getData().getFileurl()+"@");
-                            if (position==listAll.size()){
-                                commitPingjia();
+                            picposition++;
+                            stringBuilder.append(body.getData().getFileurl() + "@");
+                            if (picposition == listAll.size()) {
+                                String content = "";
+                                String substring = stringBuilder.substring(0, stringBuilder.length() - 1);
+                                stringBuilder = new StringBuilder();
+                                stringBuilder.append(substring);
+                                if (mytype == 0) {
+                                    EditText content_et = (EditText) myOrderPingAdapter.getViewByPosition(recycler_pingjia, goodPosition, R.id.content_et);
+                                    content = content_et.getText().toString();
+                                    PingjiaPushBean pingjiaPushBean = new PingjiaPushBean();
+                                    pingjiaPushBean.setContent(content);
+                                    pingjiaPushBean.setGood_id(goods1.get(i).getGoods_id() + "");
+                                    pingjiaPushBean.setImages(stringBuilder.toString());
+                                    pingjiaPushBeanList.add(pingjiaPushBean);
+                                } else {
+                                    EditText content_et = (EditText) orderDetailPingAdapter.getViewByPosition(recycler_pingjia, goodPosition, R.id.content_et);
+                                    content = content_et.getText().toString();
+                                    PingjiaPushBean pingjiaPushBean = new PingjiaPushBean();
+                                    pingjiaPushBean.setContent(content);
+                                    pingjiaPushBean.setGood_id(goods2.get(i).getGoods_id() + "");
+                                    pingjiaPushBean.setImages(stringBuilder.toString());
+                                    pingjiaPushBeanList.add(pingjiaPushBean);
+                                }
+                                goodPosition++;
+                                if (goodPosition == goodCount) {
+                                    commitPingjia(order_id, new Gson().toJson(pingjiaPushBeanList));
+                                } else {
+                                    listAll = hashMap_photos.get(goodPosition);
+                                    picposition = 0;
+                                    stringBuilder = new StringBuilder();
+                                    pushPhoto2(goodPosition);
+                                }
+                            } else {
+                                String compressPath = listAll.get(picposition).getCompressPath();
+                                File file = new File(compressPath);
+                                new Compressor(PingJiaActivity.this)
+                                        .compressToFileAsFlowable(file)
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(new Consumer<File>() {
+                                            @Override
+                                            public void accept(File file) {
+                                                pushPhoto3(file, picposition);
+                                            }
+                                        }, new Consumer<Throwable>() {
+                                            @Override
+                                            public void accept(Throwable throwable) {
+                                                throwable.printStackTrace();
+                                            }
+                                        });
                             }
                         } else {
                             TUtils.showShort(mContext, body.getMessage());
@@ -244,29 +372,106 @@ public class PingJiaActivity extends BaseActivity {
     }
 
     private void pushPhoto1() {
-        if (TextUtils.isEmpty(contentEt.getText().toString())) {
-            Toast.makeText(this, "请填写您的问题或者建议", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (listAll!=null && listAll.size()>0){
-            for (int i = 0; i < listAll.size(); i++) {
-                String cutPath = listAll.get(i).getCompressPath();
-                File file = new File(cutPath);
-                pushPhoto2(file);
+        if (mytype == 0) {
+            if (goods1 != null && goods1.size() > 0) {
+                goodCount = goods1.size();
+                for (int i = 0; i < goodCount; i++) {
+                    EditText content_et = (EditText) myOrderPingAdapter.getViewByPosition(recycler_pingjia, i, R.id.content_et);
+                    String content = content_et.getText().toString();
+                    if (TextUtils.isEmpty(content)) {
+                        Toast.makeText(this, "请填写第" + (i + 1) + "件商品的评价~", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                listAll = hashMap_photos.get(0);
+                picposition = 0;
+                stringBuilder = new StringBuilder();
+                pushPhoto2(0);
+            }
+        } else {
+            if (goods2 != null && goods2.size() > 0) {
+                goodCount = goods2.size();
+                for (int i = 0; i < goodCount; i++) {
+                    EditText content_et = (EditText) orderDetailPingAdapter.getViewByPosition(recycler_pingjia, i, R.id.content_et);
+                    String content = content_et.getText().toString();
+                    if (TextUtils.isEmpty(content)) {
+                        Toast.makeText(this, "请填写第" + (i + 1) + "件商品的评价~", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                listAll = hashMap_photos.get(0);
+                picposition = 0;
+                stringBuilder = new StringBuilder();
+                pushPhoto2(0);
             }
         }
     }
 
-    private void commitPingjia() {
+    private void pushPhoto2(int i) {
+        if (this.listAll != null && this.listAll.size() > 0) {
+            for (int i1 = 0; i1 < this.listAll.size(); i1++) {
+                String cutPath = this.listAll.get(i1).getCompressPath();
+                File file = new File(cutPath);
+                //压缩一下再上传，不然拍照基本都四五兆一张图片，上传太耗时间，而且服务器也有限制，不接受3M以上的图片
+                final int finalI = i1;
+                new Compressor(this)
+                        .compressToFileAsFlowable(file)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<File>() {
+                            @Override
+                            public void accept(File file) {
+                                pushPhoto3(file, finalI);
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                        });
+            }
+        } else {
+            if (mytype == 0) {
+                PingjiaPushBean pingjiaPushBean = new PingjiaPushBean();
+                EditText content_et = (EditText) myOrderPingAdapter.getViewByPosition(recycler_pingjia, i, R.id.content_et);
+                String content = content_et.getText().toString();
+                if (TextUtils.isEmpty(content)) {
+                    Toast.makeText(this, "请填写第" + (i + 1) + "件商品的评价~", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                pingjiaPushBean.setContent(content);
+                pingjiaPushBean.setGood_id(goods1.get(i).getGoods_id() + "");
+                pingjiaPushBeanList.add(pingjiaPushBean);
+            } else {
+                PingjiaPushBean pingjiaPushBean = new PingjiaPushBean();
+                EditText content_et = (EditText) orderDetailPingAdapter.getViewByPosition(recycler_pingjia, i, R.id.content_et);
+                String content = content_et.getText().toString();
+                if (TextUtils.isEmpty(content)) {
+                    Toast.makeText(this, "请填写第" + (i + 1) + "件商品的评价~", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                pingjiaPushBean.setContent(content);
+                pingjiaPushBean.setGood_id(goods2.get(i).getGoods_id() + "");
+                pingjiaPushBeanList.add(pingjiaPushBean);
+            }
+            goodPosition++;
+            if (goodPosition == goodCount) {
+                commitPingjia(order_id, new Gson().toJson(pingjiaPushBeanList));
+            } else {
+                listAll = hashMap_photos.get(goodPosition);
+                picposition = 0;
+                stringBuilder = new StringBuilder();
+                pushPhoto2(goodPosition);
+            }
+        }
+    }
+
+    private void commitPingjia(String order_id, String data) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
-        String order_id = getIntent().getStringExtra("order_id");
-        String good_id = getIntent().getStringExtra("good_id");
         params.put("order_id", order_id);
-        params.put("good_id", good_id);
-        params.put("content", contentEt.getText().toString());
-        params.put("images", stringBuilder.toString());
+        params.put("data", data);
         OkGo.<BaseBean>post(Urls.BASEURL + "api/v2/user/order-good-evaluate")
                 .tag(this)
                 .headers(headers)
@@ -276,7 +481,11 @@ public class PingJiaActivity extends BaseActivity {
                              public void onSuccess(Response<BaseBean> response) {
                                  int code = response.code();
                                  BaseBean body = response.body();
+                                 if (body == null) {
+                                     return;
+                                 }
                                  Toast.makeText(PingJiaActivity.this, body.getMessage(), Toast.LENGTH_SHORT).show();
+                                 setResult(1, new Intent());
                                  finish();
                              }
 

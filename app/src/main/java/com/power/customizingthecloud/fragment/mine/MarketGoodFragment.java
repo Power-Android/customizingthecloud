@@ -50,7 +50,6 @@ public class MarketGoodFragment extends BaseFragment {
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
         params.put("after","");
-
         OkGo.<MarketShopBean>get(Urls.BASEURL + "api/v2/user/fx-good")
                 .tag(this)
                 .headers(headers)

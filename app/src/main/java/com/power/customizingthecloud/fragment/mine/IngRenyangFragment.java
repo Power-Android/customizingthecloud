@@ -2,7 +2,6 @@ package com.power.customizingthecloud.fragment.mine;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,7 +14,7 @@ import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
-import com.power.customizingthecloud.activity.mine.RengyangDetail1Activity;
+import com.power.customizingthecloud.activity.mine.MyRenyangDetailActivity;
 import com.power.customizingthecloud.adapter.MyRenYangAdapter;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.MyRenyangBean;
@@ -82,7 +81,7 @@ public class IngRenyangFragment extends BaseFragment implements BaseQuickAdapter
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        Intent intent = new Intent(mContext,RengyangDetail1Activity.class);
+        Intent intent = new Intent(mContext,MyRenyangDetailActivity.class);
         intent.putExtra("id",list.get(position).getId()+"");
         startActivity(intent);
     }

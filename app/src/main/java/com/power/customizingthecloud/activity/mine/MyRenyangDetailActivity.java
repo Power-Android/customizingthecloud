@@ -33,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RengyangDetail1Activity extends BaseActivity {
+public class MyRenyangDetailActivity extends BaseActivity {
 
     @BindView(R.id.title_back_iv) ImageView titleBackIv;
     @BindView(R.id.title_content_tv) TextView titleContentTv;
@@ -52,7 +52,7 @@ public class RengyangDetail1Activity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rengyang_detail);
+        setContentView(R.layout.activity_myrenyang_detail);
         ButterKnife.bind(this);
         initView();
     }
@@ -87,12 +87,13 @@ public class RengyangDetail1Activity extends BaseActivity {
                         if (body.getCode() == 1){
                             RengyangDetailBean.DataBean data = body.getData();
                             Glide.with(mContext).load(data.getImage()).into(picIv);
+                            titleTv.setText(data.getTitle());
                             chengbenTv.setText("养殖成本：￥" + data.getPrice());
                             nameTv.setText("名称：" + data.getTitle());
                             chandiTv.setText("产地：" + data.getPlace());
                             chushengDateTv.setText("出生日期：" + data.getBirth_date());
                             renyangDateTv.setText("认养时间：" + data.getPayment_time());
-
+                            numTv.setText("X "+data.getAmount());
                             List<String> list = data.getDonkey_images();
                             List<ImgBean> imgBeanList = new ArrayList<>();
                             for (int i = 0; i < list.size(); i++) {

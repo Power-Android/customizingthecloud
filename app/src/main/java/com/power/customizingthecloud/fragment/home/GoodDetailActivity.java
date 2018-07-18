@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -176,6 +177,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
                                 mSpec_value.add(split[i]);
                             }
                             mComments = mData.getComments();
+                            detail();
                         }
                     }
                 });
@@ -216,8 +218,8 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
                     return;
                 }
                 Intent intent = new Intent(GoodDetailActivity.this, GoodConfirmOrderActivity.class);
-                intent.putExtra("good_quantity",mData.getId() + "=" + mItemStepper.getValue());
-                intent.putExtra("buy_type","2");
+                intent.putExtra("good_quantity", mData.getId() + "=" + mItemStepper.getValue());
+                intent.putExtra("buy_type", "2");
                 startActivity(intent);
                 break;
         }
@@ -249,40 +251,40 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com","qq分享","http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg","1",GoodDetailActivity.this,SHARE_MEDIA.WEIXIN);
-//                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl("http://www.baidu.com", "qq分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "1", GoodDetailActivity.this, SHARE_MEDIA.WEIXIN);
+                //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com","qq分享","http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg","2",GoodDetailActivity.this,SHARE_MEDIA.WEIXIN_CIRCLE);
-//                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl("http://www.baidu.com", "qq分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "2", GoodDetailActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com","qq分享","http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg","3",GoodDetailActivity.this,SHARE_MEDIA.QZONE);
-//                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl("http://www.baidu.com", "qq分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "3", GoodDetailActivity.this, SHARE_MEDIA.QZONE);
+                //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com","qq分享","http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg","4",GoodDetailActivity.this,SHARE_MEDIA.QQ);
-//                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl("http://www.baidu.com", "qq分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "4", GoodDetailActivity.this, SHARE_MEDIA.QQ);
+                //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com","微博分享","http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg","5",GoodDetailActivity.this,SHARE_MEDIA.SINA);
-//                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl("http://www.baidu.com", "微博分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "5", GoodDetailActivity.this, SHARE_MEDIA.SINA);
+                //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
     }
@@ -290,11 +292,13 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
     @OnClick(R.id.detail_ll)
     public void detail() {
         initDetailColor();
-        //        mWebview.setVisibility(View.VISIBLE);
+        mWebview.setVisibility(View.VISIBLE);
+        mWebview.setWebChromeClient(new WebChromeClient());
+        mWebview.loadData(mData.getBody(), "text/html;charset=UTF-8", null);
+        mLvXiangqing.setVisibility(View.GONE);
         mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.GONE);
         mLlCanshu.setVisibility(View.GONE);
-        mLvXiangqing.setVisibility(View.VISIBLE);
 
     }
 

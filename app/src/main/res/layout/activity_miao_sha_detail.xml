@@ -33,7 +33,6 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="特惠驴奶粉"
                     android:textColor="@color/text_black"
                     android:textSize="17sp"/>
                 <RelativeLayout
@@ -53,7 +52,6 @@
                             android:id="@+id/tv_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="99.00"
                             android:textColor="@color/red1"
                             android:textSize="17sp"/>
                         <TextView
@@ -61,7 +59,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
-                            android:text="¥299.00"
                             android:textSize="13sp"/>
                     </LinearLayout>
                     <LinearLayout
@@ -81,7 +78,6 @@
                             android:id="@+id/tv_shengyu"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="10"
                             android:textColor="@color/red1"
                             android:textSize="16sp"/>
                         <TextView
@@ -100,7 +96,6 @@
                     android:background="#FFDCDD"
                     android:gravity="left"
                     android:padding="10dp"
-                    android:text="距离秒杀结束还有0天12小时"
                     android:textColor="@color/red1"/>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -230,6 +225,7 @@
                     android:visibility="gone"
                 />
                 <ImageView
+                    android:visibility="gone"
                     android:id="@+id/lv_xiangqing"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

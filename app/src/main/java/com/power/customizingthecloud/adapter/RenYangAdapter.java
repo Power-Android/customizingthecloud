@@ -41,7 +41,8 @@ public class RenYangAdapter extends BaseQuickAdapter<RenYangListBean.DataEntity,
         TextView tv_shengyu = helper.getView(R.id.tv_shengyu);
         TextView tv_state = helper.getView(R.id.tv_state);
         tv_shengyu.setText("剩余数量：" + item.getLast_amount());
-        helper.setText(R.id.tv_totalcount, "总数量：" + item.getAmount())
+        helper.setText(R.id.tv_title, item.getTitle())
+                .setText(R.id.tv_totalcount, "总数量：" + item.getAmount())
                 .setText(R.id.tv_nianshouyi, item.getProfit())
                 .setText(R.id.tv_yangzhichengben, item.getPrice())
                 .setText(R.id.tv_touzizhouqi, item.getPeriod());

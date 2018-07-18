@@ -114,6 +114,7 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
                     mLlMima.setVisibility(View.GONE);
                     mViewLineMima.setVisibility(View.GONE);
                     mTvLoginbyPhone.setText("手机登录");
+                    mTvForgetPsw.setVisibility(View.INVISIBLE);
                 }else {
                     isPhoneLogin = false;
                     mLlCode.setVisibility(View.GONE);
@@ -121,6 +122,7 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
                     mLlMima.setVisibility(View.VISIBLE);
                     mViewLineMima.setVisibility(View.VISIBLE);
                     mTvLoginbyPhone.setText("快速登录");
+                    mTvForgetPsw.setVisibility(View.VISIBLE);
                 }
                 break;
             case R.id.tv_loginby_weixin:

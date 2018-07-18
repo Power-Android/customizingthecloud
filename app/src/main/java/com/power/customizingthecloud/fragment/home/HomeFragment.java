@@ -286,6 +286,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             startActivity(new Intent(mContext, MiaoShaActivity.class));
                             break;
                         case 1:
+                            if (TextUtils.isEmpty(userid)){
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                                return;
+                            }
                             startActivity(new Intent(mContext, FortuneCenterAcitivity.class));
                             break;
                         case 2:
@@ -550,8 +555,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             //添加删除线
             tv_yuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             CountdownView cv_countdownView = helper.getView(R.id.cv_countdownView);
-            int time = item.getSeckill_end_time() - item.getSeckill_start_time();
-            cv_countdownView.start(time*1000); // Millisecond
+            long time = item.getSeckill_end_time() * 1000L - System.currentTimeMillis();
+            cv_countdownView.start(time); // Millisecond
             ImageView iv_img = helper.getView(R.id.iv_image);
             Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_img);
             helper.setText(R.id.tv_title, item.getName())

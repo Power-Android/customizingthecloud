@@ -24,24 +24,32 @@ import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.TUtils;
 import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
-import com.power.customizingthecloud.view.CommonPopupWindow;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MyTransferAccountsActivity extends BaseActivity implements View.OnClickListener {
 
-    @BindView(R.id.title_back_iv) ImageView titleBackIv;
-    @BindView(R.id.title_content_tv) TextView titleContentTv;
-    @BindView(R.id.money_et) EditText moneyEt;
-    @BindView(R.id.danhao_et) EditText danhaoEt;
-    @BindView(R.id.name_et) EditText nameEt;
-    @BindView(R.id.paystyle_tv) TextView paystyleTv;
-    @BindView(R.id.paystyle_rl) RelativeLayout paystyleRl;
-    @BindView(R.id.tijiao_tv) TextView tijiaoTv;
+    @BindView(R.id.title_back_iv)
+    ImageView titleBackIv;
+    @BindView(R.id.title_content_tv)
+    TextView titleContentTv;
+    @BindView(R.id.money_et)
+    EditText moneyEt;
+    @BindView(R.id.danhao_et)
+    EditText danhaoEt;
+    @BindView(R.id.name_et)
+    EditText nameEt;
+    @BindView(R.id.paystyle_tv)
+    TextView paystyleTv;
+    @BindView(R.id.paystyle_rl)
+    RelativeLayout paystyleRl;
+    @BindView(R.id.tijiao_tv)
+    TextView tijiaoTv;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
-    private int payType = 1;
+    private int payType = 2;
+    private String[] zhuanzhangfangshi = {"手机银行", "支付宝", "柜台"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +69,7 @@ public class MyTransferAccountsActivity extends BaseActivity implements View.OnC
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.title_back_iv:
                 finish();
                 break;
@@ -70,44 +78,43 @@ public class MyTransferAccountsActivity extends BaseActivity implements View.OnC
                 break;
             case R.id.tijiao_tv:
                 commit();
-                finish();
                 break;
         }
     }
 
     private void commit() {
-        if (TextUtils.isEmpty(moneyEt.getText().toString().trim())){
-            TUtils.showShort(mContext,"请输入转账金额");
+        if (TextUtils.isEmpty(moneyEt.getText().toString().trim())) {
+            TUtils.showShort(mContext, "请输入转账金额");
             return;
         }
-        if (TextUtils.isEmpty(danhaoEt.getText().toString().trim())){
-            TUtils.showShort(mContext,"请输入转账单号");
+        if (TextUtils.isEmpty(danhaoEt.getText().toString().trim())) {
+            TUtils.showShort(mContext, "请输入转账单号");
             return;
         }
-        if (TextUtils.isEmpty(nameEt.getText().toString().trim())){
-            TUtils.showShort(mContext,"请输入用户姓名");
+        if (TextUtils.isEmpty(nameEt.getText().toString().trim())) {
+            TUtils.showShort(mContext, "请输入用户姓名");
             return;
         }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
         params.put("money", moneyEt.getText().toString());
-        params.put("transfer_sn",danhaoEt.getText().toString());
-        params.put("name",nameEt.getText().toString());
-        params.put("transfer_type",payType+"");
-
-        OkGo.<BaseBean>post(Urls.BASEURL + "api/v2/user/transfer_accounts")
+        params.put("transfer_sn", danhaoEt.getText().toString());
+        params.put("name", nameEt.getText().toString());
+        params.put("transfer_type", payType + "");
+        OkGo.<BaseBean>post(Urls.BASEURL + "api/v2/user/transfer")
                 .tag(this)
                 .headers(headers)
                 .params(params)
-                .execute(new DialogCallback<BaseBean>(this,BaseBean.class) {
+                .execute(new DialogCallback<BaseBean>(this, BaseBean.class) {
                     @Override
                     public void onSuccess(Response<BaseBean> response) {
                         BaseBean body = response.body();
-                        if (body.getCode() == 1){
-                            TUtils.showShort(mContext,body.getMessage());
-                        }else {
-                            TUtils.showShort(mContext,body.getMessage());
+                        if (body.getCode() == 1) {
+                            TUtils.showShort(mContext, body.getMessage());
+                            finish();
+                        } else {
+                            TUtils.showShort(mContext, body.getMessage());
                         }
                     }
                 });
@@ -139,12 +146,26 @@ public class MyTransferAccountsActivity extends BaseActivity implements View.OnC
         mDialog.getView(R.id.tv_pay).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                paystyleTv.setText(zhuanzhangfangshi[payType - 1]);
                 mDialog.dismiss();
             }
         });
         final CheckBox cb_yinlian = mDialog.getView(R.id.cb_yinlian);
         final CheckBox cb_alipay = mDialog.getView(R.id.cb_alipay);
         final CheckBox cb_guitai = mDialog.getView(R.id.cb_guitai);
+        if (payType == 1) {
+            cb_yinlian.setChecked(true);
+            cb_alipay.setChecked(false);
+            cb_guitai.setChecked(false);
+        } else if (payType == 2) {
+            cb_yinlian.setChecked(false);
+            cb_alipay.setChecked(true);
+            cb_guitai.setChecked(false);
+        } else if (payType == 3) {
+            cb_guitai.setChecked(true);
+            cb_yinlian.setChecked(false);
+            cb_alipay.setChecked(false);
+        }
         cb_yinlian.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.bean.MyRenyangBean;
 import com.power.customizingthecloud.fragment.home.jiankong.JianKongActivity;
@@ -49,7 +52,7 @@ public class MyRenYangAdapter extends BaseQuickAdapter<MyRenyangBean.DataBean,Ba
                 .setText(R.id.yangzhichengben_tv,item.getPrice())
                 .setText(R.id.yangzhizhouqi_tv,item.getPeriod())
                 .setText(R.id.yangzhishouyi_tv,item.getIncome());
-
+        Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into((ImageView) helper.getView(R.id.iv_tupian));
         helper.getView(R.id.tv_jiankong).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

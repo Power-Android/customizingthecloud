@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -192,6 +193,8 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
             }
         }
     };
+    private List<RenYangDetailBean.DataEntity.BuyUsersEntity> buy_users;
+    private List<RenYangDetailBean.DataEntity.RankEntity> rank;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -282,9 +285,10 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                             TopAdapter topAdapter = new TopAdapter(R.layout.item_renyang_detail_top, list);
                             mRecyclerTop.setAdapter(topAdapter);
                             mTvShengyu.setText(datas.getLast_amount() + "");
-                            if (datas.getLast_amount()<=0){
+                            if (datas.getLast_amount() <= 0) {
                                 mTvCommit.setBackgroundResource(R.drawable.bg_yuanjiao_huise);
                                 mTvCommit.setClickable(false);
+                                mItemStepper.setValue(0);
                             }
                             mTvTotalCount.setText(datas.getAmount() + "");
                             mItemStepper.setMaxValue(datas.getLast_amount());
@@ -296,6 +300,9 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                             DecimalFormat decimalFormat = new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
                             String p = decimalFormat.format(lirun);//format 返回的是字符串
                             mTvLirun.setText(p + "元");
+                            buy_users = datas.getBuy_users();
+                            rank = datas.getRank();
+                            xiangmu();
                         }
                     }
                 });
@@ -503,8 +510,8 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                 mDialog.dismiss();
             }
         });
-        TextView tv_price=mDialog.getView(R.id.tv_price);
-        tv_price.setText("¥"+mTvPrice.getText().toString());
+        TextView tv_price = mDialog.getView(R.id.tv_price);
+        tv_price.setText("¥" + mTvPrice.getText().toString());
         mDialog.getView(R.id.view_lastline).setVisibility(View.VISIBLE);
         mDialog.getView(R.id.ll_zhuanzhang).setVisibility(View.VISIBLE);
         mDialog.getView(R.id.tv_zhuanzhang).setOnClickListener(new View.OnClickListener() {
@@ -562,10 +569,12 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
     @OnClick(R.id.xiangmu_ll)
     public void xiangmu() {
         initXiangMuColor();
-        //        mWebview.setVisibility(View.VISIBLE);
+        mWebview.setVisibility(View.VISIBLE);
+        mLvXiangqing.setVisibility(View.GONE);
+        mWebview.setWebChromeClient(new WebChromeClient());
+        mWebview.loadData(datas.getContent(), "text/html;charset=UTF-8", null);
         mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.GONE);
-        mLvXiangqing.setVisibility(View.VISIBLE);
         mTvIntro.setVisibility(View.GONE);
     }
 
@@ -585,26 +594,25 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         initRecordColor();
         mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.VISIBLE);
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        RecordAdapter recordAdapter = new RecordAdapter(R.layout.item_record, list);
+        RecordAdapter recordAdapter = new RecordAdapter(R.layout.item_record, buy_users);
         mRecycler.setAdapter(recordAdapter);
-
-
         mTvIntro.setVisibility(View.GONE);
         mLvXiangqing.setVisibility(View.GONE);
     }
 
-    private class RecordAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class RecordAdapter extends BaseQuickAdapter<RenYangDetailBean.DataEntity.BuyUsersEntity, BaseViewHolder> {
 
-        public RecordAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public RecordAdapter(@LayoutRes int layoutResId, @Nullable List<RenYangDetailBean.DataEntity.BuyUsersEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, RenYangDetailBean.DataEntity.BuyUsersEntity item) {
+            Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar())
+                    .into((ImageView) helper.getView(R.id.iv_face));
+            helper.setText(R.id.tv_name, item.getUser_name())
+                    .setText(R.id.tv_time, item.getCreated_at())
+                    .setText(R.id.tv_count, item.getAmount() + "头");
         }
     }
 
@@ -624,28 +632,20 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         initPaiHangColor();
         mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.VISIBLE);
-        List<String> list = new ArrayList<>();
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
-        PaiHangAdapter paiHangAdapter = new PaiHangAdapter(R.layout.item_paihangbang, list);
+        PaiHangAdapter paiHangAdapter = new PaiHangAdapter(R.layout.item_paihangbang, rank);
         mRecycler.setAdapter(paiHangAdapter);
-
-
         mTvIntro.setVisibility(View.GONE);
         mLvXiangqing.setVisibility(View.GONE);
     }
 
-    private class PaiHangAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+    private class PaiHangAdapter extends BaseQuickAdapter<RenYangDetailBean.DataEntity.RankEntity, BaseViewHolder> {
 
-        public PaiHangAdapter(@LayoutRes int layoutResId, @Nullable List<String> data) {
+        public PaiHangAdapter(@LayoutRes int layoutResId, @Nullable List<RenYangDetailBean.DataEntity.RankEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, RenYangDetailBean.DataEntity.RankEntity item) {
             int adapterPosition = helper.getAdapterPosition();
             ImageView iv_pai = helper.getView(R.id.iv_pai);
             TextView tv_paixu = helper.getView(R.id.tv_paixu);
@@ -660,6 +660,14 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                 tv_paixu.setVisibility(View.VISIBLE);
                 tv_paixu.setText(adapterPosition + 1 + "");
             }
+            ImageView iv_face = (ImageView) helper.getView(R.id.iv_face);
+            if (!TextUtils.isEmpty(item.getUser_avatar())) {
+                Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into(iv_face);
+            }else {
+                iv_face.setImageResource(R.drawable.face);
+            }
+            helper.setText(R.id.tv_phone, item.getUser_name())
+                    .setText(R.id.tv_count, item.getAmount() + "头");
         }
     }
 

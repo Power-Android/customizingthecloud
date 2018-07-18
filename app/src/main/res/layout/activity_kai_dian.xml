@@ -80,7 +80,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
                         android:layout_centerVertical="true"
-                        android:text="累计收益："
+                        android:text=""
                         android:textColor="@color/text_black"
                         android:layout_toRightOf="@+id/view_01"/>
                     <TextView

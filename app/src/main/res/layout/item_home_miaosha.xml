@@ -115,7 +115,7 @@
                     app:suffixTextSize="13sp"
                     app:timeBgDivisionLineSize="1dp"
                     app:timeBgRadius="5dp"
-                    app:timeBgSize="16dp"
+                    app:timeBgSize="19dp"
                     app:timeTextColor="#FFFFFF"
                     app:timeTextSize="13sp"/>
             </LinearLayout>

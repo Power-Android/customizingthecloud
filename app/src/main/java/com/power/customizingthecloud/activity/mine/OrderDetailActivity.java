@@ -52,6 +52,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.Serializable;
 import java.util.List;
 
 import butterknife.BindView;
@@ -314,6 +315,7 @@ public class OrderDetailActivity extends BaseActivity {
                 );
     }
 
+
     private void confirmOrder() {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
@@ -366,12 +368,14 @@ public class OrderDetailActivity extends BaseActivity {
                         break;
                     case 40://待评价
                         Intent intent = new Intent(mContext, PingJiaActivity.class);
-                        intent.putExtra("name", goods.get(0).getGoods_name());
-                        intent.putExtra("type", goods.get(0).getGoods_class());
-                        intent.putExtra("image", goods.get(0).getGoods_image());
+                        intent.putExtra("data", (Serializable) goods);
+                        intent.putExtra("type", "orderdetail");
                         intent.putExtra("order_id", order_id);
-                        intent.putExtra("good_id", goods.get(0).getGoods_id() + "");
-                        startActivity(intent);
+//                        intent.putExtra("name", goods.get(0).getGoods_name());
+//                        intent.putExtra("type", goods.get(0).getGoods_class());
+//                        intent.putExtra("image", goods.get(0).getGoods_image());
+//                        intent.putExtra("good_id", goods.get(0).getGoods_id() + "");
+                        startActivityForResult(intent,0);
                         break;
                 }
                 break;
@@ -573,4 +577,11 @@ public class OrderDetailActivity extends BaseActivity {
                 .show();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode==1){
+            initData();
+        }
+    }
 }

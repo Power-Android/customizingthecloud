@@ -259,7 +259,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
         if (!TextUtils.isEmpty(is_cart) && is_cart.equals("1")) {//购物车
             params.put("is_cart", "1");
             params.put("cart_id", cart_id);
-        } else {
+        } else {//直接购买
             is_cart = "0";
             params.put("is_cart", "0");
             params.put("good_quantity", good_quantity);
@@ -602,7 +602,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
         params.put("shipping_time", mTvTime.getText().toString());
         String liuyan = mEdtLiuyan.getText().toString();
         if (!TextUtils.isEmpty(liuyan)) {
-            params.put("order_message", "");
+            params.put("order_message", liuyan);
         }
         OkGo.<PushOrderBean>post(Urls.BASEURL + "api/v2/buy/buy-step2")
                 .headers(headers)

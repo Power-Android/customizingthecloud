@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -175,7 +176,7 @@ public class OrderDetailBean {
             return order_sn;
         }
 
-        public static class GoodsEntity {
+        public static class GoodsEntity implements Serializable{
             /**
              * goods_name : 特色有机奶粉
              * goods_class : 休闲食品

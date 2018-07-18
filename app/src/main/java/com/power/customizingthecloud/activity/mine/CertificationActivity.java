@@ -2,11 +2,14 @@ package com.power.customizingthecloud.activity.mine;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.luck.picture.lib.PictureSelector;
@@ -14,8 +17,17 @@ import com.luck.picture.lib.compress.Luban;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.fragment.market.bean.UploadPhotoBean;
+import com.power.customizingthecloud.login.bean.RegisterBean;
+import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalSelectionDialog;
 
@@ -25,18 +37,33 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import id.zelory.compressor.Compressor;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class CertificationActivity extends BaseActivity implements View.OnClickListener {
 
-    @BindView(R.id.title_back_iv) ImageView titleBackIv;
-    @BindView(R.id.title_content_tv) TextView titleContentTv;
-    @BindView(R.id.upload_pic) ImageView uploadPic;
-    @BindView(R.id.name_tv) EditText nameTv;
-    @BindView(R.id.num_tv) EditText numTv;
-    @BindView(R.id.commit_tv) TextView commitTv;
-    @BindView(R.id.shenheing_rl) RelativeLayout shenheingRl;
-    @BindView(R.id.shenhefiled_rl) RelativeLayout shenhefiledRl;
-    @BindView(R.id.shenhe_again_tv) TextView shenheAgainTv;
+    @BindView(R.id.title_back_iv)
+    ImageView titleBackIv;
+    @BindView(R.id.title_content_tv)
+    TextView titleContentTv;
+    @BindView(R.id.upload_pic)
+    ImageView uploadPic;
+    @BindView(R.id.name_tv)
+    EditText nameTv;
+    @BindView(R.id.num_tv)
+    EditText numTv;
+    @BindView(R.id.commit_tv)
+    TextView commitTv;
+    @BindView(R.id.shenheing_rl)
+    RelativeLayout shenheingRl;
+    @BindView(R.id.shenhefiled_rl)
+    RelativeLayout shenhefiledRl;
+    @BindView(R.id.shenhe_again_tv)
+    TextView shenheAgainTv;
+    @BindView(R.id.normal_ll)
+    LinearLayout normal_ll;
     private List<String> cameraList;
     private List<LocalMedia> selectList = new ArrayList<>();
     private String cutPath;
@@ -60,7 +87,7 @@ public class CertificationActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.title_back_iv:
                 finish();
                 break;
@@ -71,7 +98,7 @@ public class CertificationActivity extends BaseActivity implements View.OnClickL
                 showCamera();
                 break;
             case R.id.commit_tv:
-                finish();
+                commit(cutPath);
                 break;
             case R.id.shenhe_again_tv:
                 break;
@@ -90,7 +117,7 @@ public class CertificationActivity extends BaseActivity implements View.OnClickL
                     @Override
                     public void onItemClick(NormalSelectionDialog dialog, View button, int
                             position) {
-                        switch (position){
+                        switch (position) {
                             case 0://从相册选择
                                 requestPhoto();
                                 break;
@@ -128,7 +155,7 @@ public class CertificationActivity extends BaseActivity implements View.OnClickL
                 .compressMode(PictureConfig.SYSTEM_COMPRESS_MODE)//系统自带 or 鲁班压缩 PictureConfig.SYSTEM_COMPRESS_MODE or LUBAN_COMPRESS_MODE
                 //.sizeMultiplier(0.5f)// glide 加载图片大小 0~1之间 如设置 .glideOverride()无效
                 .glideOverride(200, 200)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
-//                .withAspectRatio(aspect_ratio_x, aspect_ratio_y)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+                //                .withAspectRatio(aspect_ratio_x, aspect_ratio_y)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
                 .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
                 .isGif(false)// 是否显示gif图片
                 .freeStyleCropEnabled(false)// 裁剪框是否可拖拽
@@ -136,9 +163,9 @@ public class CertificationActivity extends BaseActivity implements View.OnClickL
                 .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
                 .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
                 .openClickSound(false)// 是否开启点击声音
-//                .selectionMedia(list)// 是否传入已选图片
-//                        .videoMaxSecond(15)
-//                        .videoMinSecond(10)
+                //                .selectionMedia(list)// 是否传入已选图片
+                //                        .videoMaxSecond(15)
+                //                        .videoMinSecond(10)
                 //.previewEggs(false)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
                 //.cropCompressQuality(90)// 裁剪压缩质量 默认100
                 //.compressMaxKB()//压缩最大值kb compressGrade()为Luban.CUSTOM_GEAR有效
@@ -164,9 +191,9 @@ public class CertificationActivity extends BaseActivity implements View.OnClickL
                 .showCropFrame(false)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
                 .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
                 .scaleEnabled(false)// 裁剪是否可放大缩小图片
-//                .glideOverride(160, 160)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
-//                .selectionMedia(list)// 是否传入已选图片
-//                .previewEggs(true)//预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
+                //                .glideOverride(160, 160)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
+                //                .selectionMedia(list)// 是否传入已选图片
+                //                .previewEggs(true)//预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
                 .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
     }
 
@@ -180,9 +207,100 @@ public class CertificationActivity extends BaseActivity implements View.OnClickL
                     selectList = PictureSelector.obtainMultipleResult(data);
                     cutPath = selectList.get(0).getPath();
                     Glide.with(this).load(cutPath).into(uploadPic);
-                    File file = new File(cutPath);
                     break;
             }
         }
+    }
+
+    //同步上传
+    private void commit(String path) {
+        if (TextUtils.isEmpty(nameTv.getText().toString())) {
+            Toast.makeText(this, "请输入姓名~", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(numTv.getText().toString())) {
+            Toast.makeText(this, "请输入身份证号~", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(cutPath)) {
+            Toast.makeText(this, "请选择身份证正面照片~", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //压缩一下再上传，不然拍照基本都四五兆一张图片，上传太耗时间，而且服务器也有限制，不接受3M以上的图片
+        new Compressor(this)
+                .compressToFileAsFlowable(new File(path))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<File>() {
+                    @Override
+                    public void accept(File file) {
+                        pushPhoto(file);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) {
+                        throwable.printStackTrace();
+
+                    }
+                });
+    }
+
+    private void pushPhoto(File file) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("file", file);
+        params.put("path", "users");
+        OkGo.<UploadPhotoBean>post(Urls.BASEURL + "api/v2/file/store")
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<UploadPhotoBean>(CertificationActivity.this, UploadPhotoBean.class) {
+                    @Override
+                    public void onSuccess(Response<UploadPhotoBean> response) {
+                        UploadPhotoBean photoBean = response.body();
+                        int code = photoBean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(CertificationActivity.this, photoBean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            UploadPhotoBean.DataEntity data = photoBean.getData();
+                            shenhe(data.getFileurl());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<UploadPhotoBean> response) {
+                        super.onError(response);
+                    }
+                });
+    }
+
+    private void shenhe(String image) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("true_name", nameTv.getText().toString());
+        params.put("user_card", numTv.getText().toString());
+        params.put("card_img", image);
+        OkGo.<RegisterBean>post(Urls.BASEURL + "api/v2/user/card")
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<RegisterBean>(CertificationActivity.this, RegisterBean.class) {
+                    @Override
+                    public void onSuccess(Response<RegisterBean> response) {
+                        RegisterBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(CertificationActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                            normal_ll.setVisibility(View.GONE);
+                            shenheingRl.setVisibility(View.GONE);
+                            shenhefiledRl.setVisibility(View.VISIBLE);
+                        } else if (code == 1) {
+                            Toast.makeText(CertificationActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                            normal_ll.setVisibility(View.GONE);
+                            shenheingRl.setVisibility(View.VISIBLE);
+                            shenhefiledRl.setVisibility(View.GONE);
+                        }
+                    }
+                });
     }
 }

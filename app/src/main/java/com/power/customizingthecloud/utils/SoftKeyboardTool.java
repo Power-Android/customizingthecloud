@@ -20,9 +20,11 @@ public class SoftKeyboardTool {
 
     //关闭软键盘
     public static void closeKeyboard(Activity context) {
-        ((InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE))
-                .hideSoftInputFromWindow(context.getCurrentFocus().getWindowToken(),
-                        InputMethodManager.HIDE_NOT_ALWAYS);
+        View view = context.getWindow().peekDecorView();
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     //关闭软键盘

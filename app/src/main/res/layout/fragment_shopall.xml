@@ -45,7 +45,7 @@
                             android:layout_gravity="center_vertical"
                             android:text="限量秒杀"
                             android:textColor="@color/text_black"
-                            android:textSize="16sp"/>
+                            android:textSize="15sp"/>
                         <cn.iwgang.countdownview.CountdownView
                             android:id="@+id/cv_countdownView"
                             android:layout_width="wrap_content"
@@ -63,7 +63,7 @@
                             app:suffixTextSize="16sp"
                             app:timeBgDivisionLineSize="1dp"
                             app:timeBgRadius="5dp"
-                            app:timeBgSize="20dp"
+                            app:timeBgSize="23dp"
                             app:timeTextColor="#FFFFFF"
                             app:timeTextSize="16sp"/>
                     </LinearLayout>

@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.power.customizingthecloud.R;
-import com.power.customizingthecloud.adapter.MyBreedIncomeAdapter;
 import com.power.customizingthecloud.base.BaseFragment;
 
 import java.util.ArrayList;
@@ -42,8 +41,8 @@ public class OverBreedIncomeFragment extends BaseFragment {
         list.add("");
         list.add("");
         mRecyclerRenyang.setLayoutManager(new LinearLayoutManager(mContext));
-        MyBreedIncomeAdapter breedIncomeAdapter=new MyBreedIncomeAdapter(R.layout.item_breed_income,list,mContext,3);
-        mRecyclerRenyang.setAdapter(breedIncomeAdapter);
+//        MyBreedIncomeAdapter breedIncomeAdapter=new MyBreedIncomeAdapter(R.layout.item_breed_income,list,mContext,3);
+//        mRecyclerRenyang.setAdapter(breedIncomeAdapter);
     }
 
     @Override

@@ -191,7 +191,7 @@
             android:layout_height="50dp"
             android:background="@null"
             android:gravity="left"
-            android:hint="请输入邀请人手机号"
+            android:hint="请输入邀请码"
             android:inputType="number"
             android:paddingBottom="13dp"
             android:paddingLeft="8dp"
@@ -212,7 +212,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="5dp"
         android:textSize="12sp"
-        android:text="填写邀请手机号，双方都可获得50驴耳朵喔~"
+        android:text="填写邀请码，双方都可获得50驴耳朵喔~"
         android:textColor="@color/text_gray"/>
     <LinearLayout
         android:layout_width="wrap_content"

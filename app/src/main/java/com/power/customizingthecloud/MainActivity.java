@@ -90,6 +90,12 @@ public class MainActivity extends BaseActivity {
             tvMarket.setTextColor(getResources().getColor(R.color.text_gray));
             tvMine.setTextColor(getResources().getColor(R.color.text_gray));
         }else if (eventBean.getMsg().equals("checkganji")){//选中赶集啦
+            String userid = SpUtils.getString(this, "userid", "");
+            if (TextUtils.isEmpty(userid)){
+                startActivity(new Intent(this, LoginActivity.class));
+                overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                return;
+            }
             if (marketFragment == null) {
                 marketFragment = new MarketFragment();
             }

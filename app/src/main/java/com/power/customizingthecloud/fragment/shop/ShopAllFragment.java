@@ -222,8 +222,8 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                             mHot_seckill = data.getHot_seckill();
                             Glide.with(MyApplication.getGloableContext()).load(mHot_seckill.getImage()).into(iv_miaosha);
                             mTvXianlianggou.setText(mHot_seckill.getPrice()+"元");
-                            int time = mHot_seckill.getSeckill_end_time() - mHot_seckill.getSeckill_start_time();
-                            mCvCountdownView.start(time*1000);
+                            long time = mHot_seckill.getSeckill_end_time()*1000L - System.currentTimeMillis();
+                            mCvCountdownView.start(time);
                         }
                     }
                 });
@@ -273,6 +273,11 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                 EventBus.getDefault().postSticky(new EventBean("checkganji"));
                 break;
             case R.id.tv_kaidian:
+                String userid = SpUtils.getString(mContext, "userid", "");
+                if (TextUtils.isEmpty(userid)){
+                    startActivity(new Intent(mContext, LoginActivity.class));
+                    return;
+                }
                 startActivity(new Intent(mContext, KaiDianActivity.class));
                 break;
             case R.id.tv_meichu:
@@ -361,8 +366,8 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
             //添加删除线
             tv_yuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             CountdownView cv_countdownView = helper.getView(R.id.cv_countdownView);
-            int time = item.getSeckill_end_time() - item.getSeckill_start_time();
-            cv_countdownView.start(time*1000); // Millisecond
+            long time = item.getSeckill_end_time() * 1000L - System.currentTimeMillis();
+            cv_countdownView.start(time); // Millisecond
             ImageView iv_img = helper.getView(R.id.iv_image);
             Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_img);
             helper.setText(R.id.tv_title, item.getName())
