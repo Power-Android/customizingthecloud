@@ -161,6 +161,7 @@ public class PingJiaActivity extends BaseActivity {
             MyGridView gridView = helper.getView(R.id.uppic_iv);
             GridViewAddImgesAdpter addImgesAdpter = new GridViewAddImgesAdpter(listAll, PingJiaActivity.this);
             gridView.setAdapter(addImgesAdpter);
+            hashMap_adapters.put(helper.getAdapterPosition(), addImgesAdpter);
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -270,13 +271,12 @@ public class PingJiaActivity extends BaseActivity {
                         hashMap_photos.put(adapterPosition, localMedias);
                         GridViewAddImgesAdpter gridViewAddImgesAdpter = hashMap_adapters.get(adapterPosition);
                         gridViewAddImgesAdpter.setList(localMedias);
+                        gridViewAddImgesAdpter.notifyDataSetChanged();
                     } else {
-                        listAll.clear();
-                        //我他妈的是真服了，为什么hashMap直接存selectList就存不进去value，存个listAll就存进去了
-                        listAll.addAll(selectList);
-                        hashMap_photos.put(adapterPosition, listAll);
+                        hashMap_photos.put(adapterPosition, selectList);
                         GridViewAddImgesAdpter gridViewAddImgesAdpter = hashMap_adapters.get(adapterPosition);
-                        gridViewAddImgesAdpter.setList(listAll);
+                        gridViewAddImgesAdpter.setList(selectList);
+                        gridViewAddImgesAdpter.notifyDataSetChanged();
                     }
                     break;
             }

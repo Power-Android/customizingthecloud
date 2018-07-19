@@ -1,11 +1,15 @@
 package com.power.customizingthecloud.callback;
 
 import android.app.Activity;
+import android.content.Intent;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.lzy.okgo.request.base.Request;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.login.LoginActivity;
 
 import java.lang.reflect.Type;
 
@@ -60,7 +64,15 @@ public abstract class DialogCallback<T> extends JsonCallback<T> {
     public T convertResponse(Response response) throws Throwable {
         ResponseBody body = response.body();
         if (body == null) return null;
-
+        int code = response.code();
+        if (code==401){
+            //登录过期
+            BaseActivity.removeAllActivitys();
+            Intent intent = new Intent(MyApplication.getGloableContext(), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            MyApplication.getGloableContext().startActivity(intent);
+            return null;
+        }
         T data = null;
         Gson gson = new Gson();
         JsonReader jsonReader = new JsonReader(body.charStream());

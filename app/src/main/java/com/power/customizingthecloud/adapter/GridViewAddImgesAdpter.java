@@ -39,12 +39,10 @@ public class GridViewAddImgesAdpter extends BaseAdapter {
 
     public void setList(List<LocalMedia> list) {
         this.list = list;
-        notifyDataSetChanged();
     }
 
-    public void addList(List<LocalMedia> list){
+    public void addList(List<LocalMedia> list) {
         this.list.addAll(list);
-        notifyDataSetChanged();
     }
 
     /**
@@ -68,16 +66,11 @@ public class GridViewAddImgesAdpter extends BaseAdapter {
     /**
      * 让GridView中的数据数目加1最后一个显示+号
      * 当到达最大张数时不再显示+号
+     *
      * @return 返回GridView中的数量
      */
     @Override
     public int getCount() {
-        /*int count = datas == null ? 1 : datas.size()+ 1;
-        if (count >= maxImages) {
-            return datas.size();
-        } else {
-            return count;
-        }*/
         if (list.size() < maxImages) {
             return list.size() + 1;
         } else {
@@ -97,8 +90,6 @@ public class GridViewAddImgesAdpter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-
-
         ViewHolder viewHolder = null;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_published_grid, parent, false);
@@ -109,12 +100,10 @@ public class GridViewAddImgesAdpter extends BaseAdapter {
         }
         /**代表+号之前的需要正常显示图片**/
         if (list != null && position < list.size()) {
-//            final File file = new File(list.get(position).getPath());
             Logger.e(list.get(position).getPath());
             RequestOptions options = new RequestOptions()
                     .centerCrop()
                     .placeholder(R.color.green);
-//                    .diskCacheStrategy(DiskCacheStrategy.ALL);
             Glide.with(context)
                     .load(list.get(position).getPath())
                     .apply(options)
@@ -123,10 +112,7 @@ public class GridViewAddImgesAdpter extends BaseAdapter {
             viewHolder.btdel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /*if (file.exists()) { //删除图片文件
-                        file.delete();
-                    }*/
-                    if (list.size() > 0){
+                    if (list.size() > 0) {
                         list.remove(position);
                     }
                     notifyDataSetChanged();
