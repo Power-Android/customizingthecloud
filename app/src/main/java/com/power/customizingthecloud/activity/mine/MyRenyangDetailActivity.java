@@ -60,15 +60,10 @@ public class MyRenyangDetailActivity extends BaseActivity {
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
         titleContentTv.setText("认养详情");
-
         String id = getIntent().getStringExtra("id");
-
         recyclerView.setLayoutManager(new GridLayoutManager(mContext,3));
         recyclerView.setNestedScrollingEnabled(false);
-
         initData(id);
-
-
     }
 
     private void initData(String id) {

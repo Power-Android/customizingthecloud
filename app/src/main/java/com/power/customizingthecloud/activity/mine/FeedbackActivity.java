@@ -2,30 +2,47 @@ package com.power.customizingthecloud.activity.mine;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.compress.Luban;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.adapter.GridViewAddImgesAdpter;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.bean.BaseBean;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.fragment.market.bean.UploadPhotoBean;
+import com.power.customizingthecloud.utils.MyUtils;
+import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.MyGridView;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalSelectionDialog;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import id.zelory.compressor.Compressor;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class FeedbackActivity extends BaseActivity {
 
@@ -87,7 +104,7 @@ public class FeedbackActivity extends BaseActivity {
                     @Override
                     public void onItemClick(NormalSelectionDialog dialog, View button, int
                             position) {
-                        switch (position){
+                        switch (position) {
                             case 0://从相册选择
                                 requestPhoto();
                                 break;
@@ -125,7 +142,7 @@ public class FeedbackActivity extends BaseActivity {
                 .compressMode(PictureConfig.SYSTEM_COMPRESS_MODE)//系统自带 or 鲁班压缩 PictureConfig.SYSTEM_COMPRESS_MODE or LUBAN_COMPRESS_MODE
                 //.sizeMultiplier(0.5f)// glide 加载图片大小 0~1之间 如设置 .glideOverride()无效
                 .glideOverride(200, 200)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
-//                .withAspectRatio(aspect_ratio_x, aspect_ratio_y)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+                //                .withAspectRatio(aspect_ratio_x, aspect_ratio_y)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
                 .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
                 .isGif(false)// 是否显示gif图片
                 .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
@@ -133,9 +150,9 @@ public class FeedbackActivity extends BaseActivity {
                 .showCropFrame(true)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
                 .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
                 .openClickSound(false)// 是否开启点击声音
-//                .selectionMedia(list)// 是否传入已选图片
-//                        .videoMaxSecond(15)
-//                        .videoMinSecond(10)
+                //                .selectionMedia(list)// 是否传入已选图片
+                //                        .videoMaxSecond(15)
+                //                        .videoMinSecond(10)
                 //.previewEggs(false)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
                 //.cropCompressQuality(90)// 裁剪压缩质量 默认100
                 //.compressMaxKB()//压缩最大值kb compressGrade()为Luban.CUSTOM_GEAR有效
@@ -154,7 +171,7 @@ public class FeedbackActivity extends BaseActivity {
                 .openCamera(PictureMimeType.ofImage())// 单独拍照，也可录像或也可音频 看你传入的类型是图片or视频
                 .theme(R.style.picture_default_style)// 主题样式设置 具体参考 values/styles
                 .glideOverride(200, 200)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
-//                .selectionMedia(list)// 是否传入已选图片
+                //                .selectionMedia(list)// 是否传入已选图片
                 .previewEggs(true)//预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
                 .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
     }
@@ -177,10 +194,16 @@ public class FeedbackActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.commit_tv,R.id.title_back_iv,R.id.title_content_tv})
+    @OnClick({R.id.commit_tv, R.id.title_back_iv, R.id.title_content_tv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.commit_tv:
+                photoCount = 0;
+                if (listAll != null && listAll.size() > 0) {
+                    commit(listAll.get(0).getPath());
+                } else {
+                    submit("", false);
+                }
                 break;
             case R.id.title_back_iv:
                 finish();
@@ -188,5 +211,98 @@ public class FeedbackActivity extends BaseActivity {
             case R.id.title_content_tv:
                 break;
         }
+    }
+
+    private int photoCount;
+    private StringBuilder stringBuilder = new StringBuilder();
+
+    //同步上传
+    private void commit(String path) {
+        //压缩一下再上传，不然拍照基本都四五兆一张图片，上传太耗时间，而且服务器也有限制，不接受3M以上的图片
+        new Compressor(this)
+                .compressToFileAsFlowable(new File(path))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<File>() {
+                    @Override
+                    public void accept(File file) {
+                        pushPhoto(file);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                });
+    }
+
+    private void pushPhoto(File file) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("file", file);
+        params.put("path", "feed");
+        OkGo.<UploadPhotoBean>post(Urls.BASEURL + "api/v2/file/store")
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<UploadPhotoBean>(FeedbackActivity.this, UploadPhotoBean.class) {
+                    @Override
+                    public void onSuccess(Response<UploadPhotoBean> response) {
+                        UploadPhotoBean photoBean = response.body();
+                        int code = photoBean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(FeedbackActivity.this, photoBean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            photoCount++;
+                            stringBuilder.append(photoBean.getData().getFileurl() + "@");
+                            if (photoCount == listAll.size()) {
+                                //图片全部上传完毕
+                                String substring = stringBuilder.substring(0, stringBuilder.length() - 1);
+                                stringBuilder = new StringBuilder();
+                                stringBuilder.append(substring);
+                                submit(stringBuilder.toString(), true);
+                            } else {
+                                commit(listAll.get(photoCount).getPath());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<UploadPhotoBean> response) {
+                        super.onError(response);
+                    }
+                });
+    }
+
+    private void submit(String images, boolean b) {
+        if (!TextUtils.isEmpty(phoneEt.getText().toString())) {
+            if (!MyUtils.isMobileNO(phoneEt.getText().toString())) {
+                Toast.makeText(this, "请输入正确格式的手机号~", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("content", contentEt.getText().toString());
+        params.put("mobile", phoneEt.getText().toString());
+        if (b)
+            params.put("images", images);
+        OkGo.<BaseBean>post(Urls.BASEURL + "api/v2/kefu/feed-back")
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<BaseBean>(FeedbackActivity.this, BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        BaseBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(FeedbackActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            Toast.makeText(FeedbackActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    }
+                });
     }
 }

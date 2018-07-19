@@ -6,10 +6,19 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.bean.BaseBean;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.TUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.wevey.selector.dialog.DialogInterface;
 import com.wevey.selector.dialog.NormalAlertDialog;
 
@@ -53,10 +62,34 @@ public class BindEmailActivity extends BaseActivity {
                     TUtils.showShort(mContext,"请填写邮箱地址");
                     return;
                 }else {
-                    showTip(emailStr);
+//                    showTip(emailStr);
+                    bindEmail();
                 }
                 break;
         }
+    }
+
+    private void bindEmail() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("bind_email", emailEt.getText().toString());
+        OkGo.<BaseBean>post(Urls.BASEURL + "api/v2/user/bind-email")
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<BaseBean>(BindEmailActivity.this, BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        BaseBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(BindEmailActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            Toast.makeText(BindEmailActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    }
+                });
     }
 
     private void showTip(final String str) {
