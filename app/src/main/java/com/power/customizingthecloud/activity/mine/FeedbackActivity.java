@@ -20,7 +20,7 @@ import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
-import com.power.customizingthecloud.adapter.GridViewAddImgesAdpter;
+import com.power.customizingthecloud.adapter.GridViewAddImgesAdapter;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.BaseBean;
 import com.power.customizingthecloud.callback.DialogCallback;
@@ -62,7 +62,7 @@ public class FeedbackActivity extends BaseActivity {
     private List<LocalMedia> selectList = new ArrayList<>();
     List<LocalMedia> list = new ArrayList<>();
     List<LocalMedia> listAll = new ArrayList<>();
-    private GridViewAddImgesAdpter addImgesAdpter;
+    private GridViewAddImgesAdapter addImgesAdpter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +79,7 @@ public class FeedbackActivity extends BaseActivity {
         /**
          * 添加照片adapter
          */
-        addImgesAdpter = new GridViewAddImgesAdpter(list, this);
+        addImgesAdpter = new GridViewAddImgesAdapter(list, this);
         gridview.setAdapter(addImgesAdpter);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -10,7 +10,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.luck.picture.lib.entity.LocalMedia;
 import com.orhanobut.logger.Logger;
 import com.power.customizingthecloud.R;
 
@@ -20,10 +19,10 @@ import java.util.List;
  * Created by Administrator on 2017/10/12.
  */
 
-public class GridViewAddImgesAdpter extends BaseAdapter {
+public class GridViewAddImgesAdapter2 extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
-    private List<LocalMedia> list;
+    private List<String> list;
 
     /**
      * 可以动态设置最多上传几张，之后就不显示+号了，用户也无法上传了
@@ -31,17 +30,17 @@ public class GridViewAddImgesAdpter extends BaseAdapter {
      */
     private int maxImages = 9;
 
-    public GridViewAddImgesAdpter(List<LocalMedia> list, Context context) {
+    public GridViewAddImgesAdapter2(List<String> list, Context context) {
         this.context = context;
         this.list = list;
         inflater = LayoutInflater.from(context);
     }
 
-    public void setList(List<LocalMedia> list) {
+    public void setList(List<String> list) {
         this.list = list;
     }
 
-    public void addList(List<LocalMedia> list) {
+    public void addList(List<String> list) {
         this.list.addAll(list);
     }
 
@@ -100,12 +99,12 @@ public class GridViewAddImgesAdpter extends BaseAdapter {
         }
         /**代表+号之前的需要正常显示图片**/
         if (list != null && position < list.size()) {
-            Logger.e(list.get(position).getPath());
+            Logger.e(list.get(position));
             RequestOptions options = new RequestOptions()
                     .centerCrop()
                     .placeholder(R.color.green);
             Glide.with(context)
-                    .load(list.get(position).getPath())
+                    .load(list.get(position))
                     .apply(options)
                     .into(viewHolder.ivimage);
             viewHolder.btdel.setVisibility(View.VISIBLE);

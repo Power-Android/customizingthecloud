@@ -21,7 +21,7 @@ import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
-import com.power.customizingthecloud.adapter.GridViewAddImgesAdpter;
+import com.power.customizingthecloud.adapter.GridViewAddImgesAdapter;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.market.bean.UploadPhotoBean;
@@ -78,7 +78,7 @@ public class FaDongTaiActivity extends BaseActivity implements View.OnClickListe
     List<LocalMedia> listAll = new ArrayList<>();
     private List<LocalMedia> selectList = new ArrayList<>();
     private List<String> cameraList;
-    private GridViewAddImgesAdpter addImgesAdpter;
+    private GridViewAddImgesAdapter addImgesAdpter;
     private List<UploadPhotoBean.DataEntity> jsonList = new ArrayList<>();
 
     @Override
@@ -99,7 +99,7 @@ public class FaDongTaiActivity extends BaseActivity implements View.OnClickListe
         /**
          * 添加照片adapter
          */
-        addImgesAdpter = new GridViewAddImgesAdpter(list, this);
+        addImgesAdpter = new GridViewAddImgesAdapter(list, this);
         gridview.setAdapter(addImgesAdpter);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -29,7 +29,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
-import com.power.customizingthecloud.adapter.GridViewAddImgesAdpter;
+import com.power.customizingthecloud.adapter.GridViewAddImgesAdapter2;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.BaseBean;
 import com.power.customizingthecloud.bean.MyOderBean;
@@ -80,11 +80,13 @@ public class PingJiaActivity extends BaseActivity {
     private MyOrderPingAdapter myOrderPingAdapter;
     private String order_id;
     private int adapterPosition;
-    private HashMap<Integer, List<LocalMedia>> hashMap_photos = new HashMap<>();
     private int goodCount;
     private int goodPosition;
     private List<PingjiaPushBean> pingjiaPushBeanList = new ArrayList<>();
-    private HashMap<Integer, GridViewAddImgesAdpter> hashMap_adapters = new HashMap<>();
+    private List<String> listAll2 = new ArrayList<>();
+    private HashMap<Integer, List<LocalMedia>> hashMap_photos = new HashMap<>();
+    private HashMap<Integer, List<String>> hashMap_photos2 = new HashMap<>();
+    private HashMap<Integer, GridViewAddImgesAdapter2> hashMap_adapters2 = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,9 +133,9 @@ public class PingJiaActivity extends BaseActivity {
              * 添加照片adapter
              */
             MyGridView gridView = helper.getView(R.id.uppic_iv);
-            GridViewAddImgesAdpter addImgesAdpter = new GridViewAddImgesAdpter(listAll, PingJiaActivity.this);
+            GridViewAddImgesAdapter2 addImgesAdpter = new GridViewAddImgesAdapter2(listAll2, PingJiaActivity.this);
             gridView.setAdapter(addImgesAdpter);
-            hashMap_adapters.put(helper.getAdapterPosition(), addImgesAdpter);
+            hashMap_adapters2.put(helper.getAdapterPosition(), addImgesAdpter);
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -159,9 +161,9 @@ public class PingJiaActivity extends BaseActivity {
              * 添加照片adapter
              */
             MyGridView gridView = helper.getView(R.id.uppic_iv);
-            GridViewAddImgesAdpter addImgesAdpter = new GridViewAddImgesAdpter(listAll, PingJiaActivity.this);
+            GridViewAddImgesAdapter2 addImgesAdpter = new GridViewAddImgesAdapter2(listAll2, PingJiaActivity.this);
             gridView.setAdapter(addImgesAdpter);
-            hashMap_adapters.put(helper.getAdapterPosition(), addImgesAdpter);
+            hashMap_adapters2.put(helper.getAdapterPosition(), addImgesAdpter);
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -265,18 +267,45 @@ public class PingJiaActivity extends BaseActivity {
                     selectList.clear();
                     // 图片选择结果回调
                     selectList = PictureSelector.obtainMultipleResult(data);
-                    List<LocalMedia> localMedias = hashMap_photos.get(adapterPosition);
-                    if (localMedias != null && localMedias.size() > 0) {
-                        localMedias.addAll(selectList);
-                        hashMap_photos.put(adapterPosition, localMedias);
-                        GridViewAddImgesAdpter gridViewAddImgesAdpter = hashMap_adapters.get(adapterPosition);
-                        gridViewAddImgesAdpter.setList(localMedias);
-                        gridViewAddImgesAdpter.notifyDataSetChanged();
-                    } else {
-                        hashMap_photos.put(adapterPosition, selectList);
-                        GridViewAddImgesAdpter gridViewAddImgesAdpter = hashMap_adapters.get(adapterPosition);
-                        gridViewAddImgesAdpter.setList(selectList);
-                        gridViewAddImgesAdpter.notifyDataSetChanged();
+                    if (selectList.size() > 0) {
+                        /*
+                        之前用hashmap存List<LocalMedia>的数据，就会出现一些稀奇古怪的bug，折磨了3天，整了他妈的3天没弄好，
+                        以为是逻辑的问题，就一直调，最后改成List<String>就好了，真是他妈的奇葩，太邪门了
+                         */
+//                        List<LocalMedia> localMedias = hashMap_photos.get(adapterPosition);
+//                        if (localMedias != null && localMedias.size() > 0) {
+//                            localMedias.addAll(selectList);
+//                            hashMap_photos.put(adapterPosition, localMedias);
+//                            GridViewAddImgesAdapter gridViewAddImgesAdpter = hashMap_adapters.get(adapterPosition);
+//                            gridViewAddImgesAdpter.setList(localMedias);
+//                            gridViewAddImgesAdpter.notifyDataSetChanged();
+//                        } else {
+//                            hashMap_photos.put(adapterPosition, selectList);
+//                            GridViewAddImgesAdapter gridViewAddImgesAdpter = hashMap_adapters.get(adapterPosition);
+//                            gridViewAddImgesAdpter.setList(selectList);
+//                            gridViewAddImgesAdpter.notifyDataSetChanged();
+//                        }
+                        List<String> localMedias = hashMap_photos2.get(adapterPosition);
+                        if (localMedias != null && localMedias.size() > 0) {
+                            for (int i = 0; i < selectList.size(); i++) {
+                                String path = selectList.get(i).getPath();
+                                localMedias.add(path);
+                            }
+                            hashMap_photos2.put(adapterPosition, localMedias);
+                            GridViewAddImgesAdapter2 gridViewAddImgesAdpter = hashMap_adapters2.get(adapterPosition);
+                            gridViewAddImgesAdpter.setList(localMedias);
+                            gridViewAddImgesAdpter.notifyDataSetChanged();
+                        } else {
+                            List<String> strList=new ArrayList<>();
+                            for (int i = 0; i < selectList.size(); i++) {
+                                String path = selectList.get(i).getPath();
+                                strList.add(path);
+                            }
+                            hashMap_photos2.put(adapterPosition, strList);
+                            GridViewAddImgesAdapter2 gridViewAddImgesAdpter = hashMap_adapters2.get(adapterPosition);
+                            gridViewAddImgesAdpter.setList(strList);
+                            gridViewAddImgesAdpter.notifyDataSetChanged();
+                        }
                     }
                     break;
             }

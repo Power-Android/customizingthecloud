@@ -416,6 +416,10 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                             @Override
                             public void onSuccess(Response<AliPayBean> response) {
                                 AliPayBean bean = response.body();
+                                if (bean.getCode()==0){
+                                    Toast.makeText(RenYangDetailActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
                                 final AliPayBean aliPayBean = response.body();
                                 Runnable payRunnable = new Runnable() {
 
@@ -451,6 +455,10 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                                      public void onSuccess(Response<WXPayBean> response) {
                                          int code = response.code();
                                          WXPayBean wxPayBean = response.body();
+                                         if (wxPayBean.getCode()==0){
+                                             Toast.makeText(RenYangDetailActivity.this, wxPayBean.getMessage(), Toast.LENGTH_SHORT).show();
+                                             return;
+                                         }
                                          WXPayBean.DataEntity data = wxPayBean.getData();
                                          PayReq req = new PayReq();
                                          req.appId = data.getAppid();// 微信开放平台审核通过的应用APPID
