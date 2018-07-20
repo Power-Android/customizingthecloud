@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
     <com.power.customizingthecloud.view.EasySwipeMenuLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,75 +14,77 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="15dp"
-            android:paddingTop="15dp"
-            android:paddingRight="15dp">
+            android:paddingRight="15dp"
+            android:paddingTop="15dp">
             <ImageView
                 android:id="@+id/item_img_iv"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@drawable/face"/>
+                android:scaleType="fitXY"/>
             <TextView
                 android:id="@+id/item_name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/item_img_iv"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:text="驴奶粉"
+                android:layout_toRightOf="@+id/item_img_iv"
+                android:text=""
+                android:textColor="@color/text_black"/>
+            <TextView
+                android:id="@+id/item_type_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/item_name_tv"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/item_img_iv"
+                android:text="分类："
+                android:textColor="@color/text_black"/>
+            <TextView
+                android:id="@+id/item_price_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/item_type_tv"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/item_img_iv"
+                android:text="价格："
                 android:textColor="@color/text_black"/>
             <TextView
                 android:id="@+id/item_money_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="￥50"
-                android:textColor="@color/red2"
-                android:layout_toRightOf="@+id/item_img_iv"
-                android:layout_below="@id/item_name_tv"
+                android:layout_below="@id/item_type_tv"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"/>
+                android:layout_toRightOf="@+id/item_price_tv"
+                android:text=""
+                android:textColor="@color/red2"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/item_name_tv"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/item_money_tv"
                 android:text="/斤"
                 android:textColor="@color/text_black"
-                android:layout_toRightOf="@+id/item_money_tv"
-                android:layout_below="@+id/item_name_tv"
-                android:layout_marginTop="10dp"/>
-            <TextView
-                android:id="@+id/item_xiaoliang_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="月销量：100斤"
-                android:textColor="@color/text_black"
-                android:layout_below="@+id/item_money_tv"
-                android:layout_toRightOf="@+id/item_img_iv"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="10dp"/>
-            <TextView
-                android:id="@+id/item_pingjia_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="累计评价：100"
-                android:textColor="@color/text_black"
-                android:layout_below="@+id/item_money_tv"
-                android:layout_toRightOf="@+id/item_xiaoliang_tv"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="10dp"/>
+                android:visibility="gone"/>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/backgourd"
                 android:layout_below="@+id/item_img_iv"
-                android:layout_marginTop="15dp"/>
+                android:layout_marginTop="15dp"
+                android:background="@color/backgourd"/>
         </RelativeLayout>
         <TextView
             android:id="@+id/shachu_tv"
             android:layout_width="80dp"
             android:layout_height="match_parent"
+            android:background="@color/red2"
             android:gravity="center"
             android:text="删 除"
-            android:textColor="@color/white"
-            android:background="@color/red2"/>
+            android:textColor="@color/white"/>
     </com.power.customizingthecloud.view.EasySwipeMenuLayout>
 
 </LinearLayout>

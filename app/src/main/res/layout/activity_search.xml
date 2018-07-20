@@ -58,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="15dp"
-            android:text="热门标签"
+            android:text="历史记录"
             android:textColor="@color/text_black"
             android:textSize="15sp"
         />

@@ -16,6 +16,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.liaoinstan.springview.container.DefaultFooter;
+import com.liaoinstan.springview.container.DefaultHeader;
+import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
@@ -69,6 +72,12 @@ public class GoodTypeActivity extends BaseActivity implements View.OnClickListen
     private TitleAdapter mTitleAdapter;
     private int scrollPosition;
     private ContentAdapter mContentAdapter;
+    private String after;
+    private boolean isLoadMore;
+    @BindView(R.id.springview)
+    SpringView mSpringview;
+    private String currId;
+    private List<GoodTypeListBean.DataEntity> rightData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,34 +88,64 @@ public class GoodTypeActivity extends BaseActivity implements View.OnClickListen
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("全部分类");
         initData();
+        initListener();
     }
 
-    private void initData() {
-        final List<ShopTypeBean.DataEntity.SeriesClassEntity> data=
-                (List<ShopTypeBean.DataEntity.SeriesClassEntity>) getIntent().getSerializableExtra("data");
-        mRecyclerContent.setLayoutManager(new GridLayoutManager(this,3));
-        mRecyclerTitle.setLayoutManager(new LinearLayoutManager(this));
-        data.get(0).setChecked(true);
-        mTitleAdapter = new TitleAdapter(R.layout.good_title_item,data);
-        mRecyclerTitle.setAdapter(mTitleAdapter);
-        changeRightData(data.get(0).getId()+"");
-        mTitleAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+    private void initListener() {
+        mSpringview.setHeader(new DefaultHeader(mContext));
+        mSpringview.setFooter(new DefaultFooter(mContext));
+        mSpringview.setListener(new SpringView.OnFreshListener() {
             @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                data.get(scrollPosition).setChecked(false);
-                scrollPosition = position;
-                data.get(scrollPosition).setChecked(true);
-                mTitleAdapter.notifyDataSetChanged();
-                switchData(data.get(position).getName());
-                changeRightData(data.get(position).getId()+"");
+            public void onRefresh() {
+                after="";
+                isLoadMore = false;
+                changeRightData(currId);
+                mSpringview.onFinishFreshAndLoad();
+            }
+
+            @Override
+            public void onLoadmore() {
+                isLoadMore = true;
+                changeRightData(currId);
+                mSpringview.onFinishFreshAndLoad();
             }
         });
     }
 
-    private void changeRightData(String id){
+    private void initData() {
+        final List<ShopTypeBean.DataEntity.SeriesClassEntity> data =
+                (List<ShopTypeBean.DataEntity.SeriesClassEntity>) getIntent().getSerializableExtra("data");
+        mRecyclerContent.setLayoutManager(new GridLayoutManager(this, 3));
+        mRecyclerTitle.setLayoutManager(new LinearLayoutManager(this));
+        data.get(0).setChecked(true);
+        mTitleAdapter = new TitleAdapter(R.layout.good_title_item, data);
+        mRecyclerTitle.setAdapter(mTitleAdapter);
+        currId = data.get(0).getId() + "";
+        changeRightData(currId);
+        mTitleAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                if (scrollPosition == position) {
+                    return;
+                } else {
+                    data.get(scrollPosition).setChecked(false);
+                    scrollPosition = position;
+                    data.get(scrollPosition).setChecked(true);
+                    mTitleAdapter.notifyDataSetChanged();
+                    mTvContent.setText(data.get(position).getName());
+                    after = "";
+                    currId = data.get(position).getId() + "";
+                    isLoadMore=false;
+                    changeRightData(currId);
+                }
+            }
+        });
+    }
+
+    private void changeRightData(String id) {
         HttpParams params = new HttpParams();
         params.put("id", id);
-        params.put("after", "");
+        params.put("after", after);
         params.put("limit", "10");
         OkGo.<GoodTypeListBean>get(Urls.BASEURL + "api/v2/good/series-list")
                 .tag(this)
@@ -119,14 +158,23 @@ public class GoodTypeActivity extends BaseActivity implements View.OnClickListen
                         if (code == 0) {
                             Toast.makeText(mContext, listBean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
-                            final List<GoodTypeListBean.DataEntity> rightData = listBean.getData();
-                            mContentAdapter = new ContentAdapter(R.layout.item_goodcontent,rightData);
-                            mRecyclerContent.setAdapter(mContentAdapter);
+                            if (!isLoadMore) {
+                                rightData = listBean.getData();
+                                mContentAdapter = new ContentAdapter(R.layout.item_goodcontent, rightData);
+                                mRecyclerContent.setAdapter(mContentAdapter);
+                            } else {
+                                if (listBean.getData() != null && listBean.getData().size() > 0) {
+                                    rightData.addAll(listBean.getData());
+                                    mContentAdapter.notifyDataSetChanged();
+                                } else {
+                                    Toast.makeText(mContext, "没有更多了~", Toast.LENGTH_SHORT).show();
+                                }
+                            }
                             mContentAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(GoodTypeActivity.this, GoodDetailActivity.class);
-                                    intent.putExtra("id",rightData.get(position).getId()+"");
+                                    intent.putExtra("id", rightData.get(position).getId() + "");
                                     startActivity(intent);
                                 }
                             });
@@ -135,9 +183,6 @@ public class GoodTypeActivity extends BaseActivity implements View.OnClickListen
                 });
     }
 
-    private void switchData(String name) {
-        mTvContent.setText(name);
-    }
 
     class TitleAdapter extends BaseQuickAdapter<ShopTypeBean.DataEntity.SeriesClassEntity, BaseViewHolder> {
 
@@ -167,10 +212,11 @@ public class GoodTypeActivity extends BaseActivity implements View.OnClickListen
 
         @Override
         protected void convert(BaseViewHolder helper, GoodTypeListBean.DataEntity item) {
-            ImageView iv_top=helper.getView(R.id.iv_top);
-            int width = MyUtils.getScreenWidth(mContext)*3/4 - MyUtils.dip2px(mContext, 25);
+            after = item.getId() + "";
+            ImageView iv_top = helper.getView(R.id.iv_top);
+            int width = MyUtils.getScreenWidth(mContext) * 3 / 4 - MyUtils.dip2px(mContext, 25);
             ViewGroup.LayoutParams layoutParams = iv_top.getLayoutParams();
-            layoutParams.height=width/3;
+            layoutParams.height = width / 3;
             iv_top.setLayoutParams(layoutParams);
             Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_top);
             helper.setText(R.id.tv_title, item.getName());

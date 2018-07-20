@@ -15,7 +15,9 @@ import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.BaseBean;
+import com.power.customizingthecloud.bean.BindEmailBean;
 import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.callback.JsonCallback;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.TUtils;
 import com.power.customizingthecloud.utils.Urls;
@@ -32,10 +34,13 @@ public class BindEmailActivity extends BaseActivity {
     EditText emailEt;
     @BindView(R.id.bind_tv)
     TextView bindTv;
+    @BindView(R.id.tv_tishi)
+    TextView tv_tishi;
     @BindView(R.id.title_back_iv)
     ImageView titleBackIv;
     @BindView(R.id.title_content_tv)
     TextView titleContentTv;
+    private boolean isBind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +48,39 @@ public class BindEmailActivity extends BaseActivity {
         setContentView(R.layout.activity_bind_email);
         ButterKnife.bind(this);
         initView();
+        initData();
     }
 
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
         titleContentTv.setText("邮箱绑定");
+    }
+
+    private void initData() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        OkGo.<BindEmailBean>get(Urls.BASEURL + "api/v2/user/get-email")
+                .headers(headers)
+                .execute(new JsonCallback<BindEmailBean>(BindEmailBean.class) {
+                    @Override
+                    public void onSuccess(Response<BindEmailBean> response) {
+                        BindEmailBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(BindEmailActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            String user_email = bean.getData().getUser_email();
+                            if (!TextUtils.isEmpty(user_email)) {
+                                tv_tishi.setVisibility(View.VISIBLE);
+                                emailEt.setText(user_email);
+                                emailEt.setClickable(false);
+                                bindTv.setText("解除绑定");
+                                titleContentTv.setText("修改邮箱账号");
+                                isBind = true;
+                            }
+                        }
+                    }
+                });
     }
 
     @OnClick({R.id.title_back_iv, R.id.bind_tv})
@@ -58,11 +91,10 @@ public class BindEmailActivity extends BaseActivity {
                 break;
             case R.id.bind_tv:
                 String emailStr = emailEt.getText().toString();
-                if (TextUtils.isEmpty(emailStr) || emailStr.equals("")){
-                    TUtils.showShort(mContext,"请填写邮箱地址");
+                if (TextUtils.isEmpty(emailStr) || emailStr.equals("")) {
+                    TUtils.showShort(mContext, "请填写邮箱地址");
                     return;
-                }else {
-//                    showTip(emailStr);
+                } else {
                     bindEmail();
                 }
                 break;
@@ -73,8 +105,14 @@ public class BindEmailActivity extends BaseActivity {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("bind_email", emailEt.getText().toString());
-        OkGo.<BaseBean>post(Urls.BASEURL + "api/v2/user/bind-email")
+        String url;
+        if (isBind) {
+            url = Urls.BASEURL + "api/v2/user/unbind-email";
+        } else {
+            url = Urls.BASEURL + "api/v2/user/bind-email";
+            params.put("bind_email", emailEt.getText().toString());
+        }
+        OkGo.<BaseBean>post(url)
                 .headers(headers)
                 .params(params)
                 .execute(new DialogCallback<BaseBean>(BindEmailActivity.this, BaseBean.class) {
@@ -86,7 +124,16 @@ public class BindEmailActivity extends BaseActivity {
                             Toast.makeText(BindEmailActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
                             Toast.makeText(BindEmailActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
-                            finish();
+                            if (!isBind) {
+                                showTip(emailEt.getText().toString());
+                            } else {
+                                tv_tishi.setVisibility(View.GONE);
+                                emailEt.setClickable(true);
+                                emailEt.setText("");
+                                isBind = false;
+                                bindTv.setText("绑定");
+                                titleContentTv.setText("邮箱绑定");
+                            }
                         }
                     }
                 });
@@ -105,6 +152,7 @@ public class BindEmailActivity extends BaseActivity {
                     @Override
                     public void clickSingleButton(NormalAlertDialog dialog, View view) {
                         dialog.dismiss();
+                        finish();
                     }
                 })
                 .build()

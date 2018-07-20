@@ -21,9 +21,12 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.bean.PersonCardBean;
 import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.callback.JsonCallback;
 import com.power.customizingthecloud.fragment.market.bean.UploadPhotoBean;
 import com.power.customizingthecloud.login.bean.RegisterBean;
 import com.power.customizingthecloud.utils.SpUtils;
@@ -74,6 +77,35 @@ public class CertificationActivity extends BaseActivity implements View.OnClickL
         setContentView(R.layout.activity_certification);
         ButterKnife.bind(this);
         initView();
+        initData();
+    }
+
+    private void initData() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        OkGo.<PersonCardBean>get(Urls.BASEURL + "api/v2/user/card-show")
+                .headers(headers)
+                .execute(new JsonCallback<PersonCardBean>(PersonCardBean.class) {
+                    @Override
+                    public void onSuccess(Response<PersonCardBean> response) {
+                        PersonCardBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(CertificationActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            PersonCardBean.DataEntity data = bean.getData();
+                            if (!TextUtils.isEmpty(data.getTrue_name())) {
+                                normal_ll.setVisibility(View.VISIBLE);
+                                shenheingRl.setVisibility(View.GONE);
+                                shenhefiledRl.setVisibility(View.GONE);
+                                commitTv.setVisibility(View.GONE);
+                                Glide.with(MyApplication.getGloableContext()).load(data.getCard_img()).into(uploadPic);
+                                nameTv.setText(data.getTrue_name());
+                                numTv.setText(data.getUser_card());
+                            }
+                        }
+                    }
+                });
     }
 
     private void initView() {

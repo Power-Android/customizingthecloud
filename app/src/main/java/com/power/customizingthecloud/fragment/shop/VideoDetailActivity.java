@@ -7,12 +7,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.bean.VideoDetailBean;
+import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.home.ShareSuccessActivity;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
 
 import butterknife.BindView;
@@ -48,6 +55,8 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
     ImageView mTitleKefuIv;
     @BindView(R.id.title_content_right_tv)
     TextView mTitleContentRightTv;
+    @BindView(R.id.tv_content)
+    TextView tv_content;
     @BindView(R.id.videoplayer)
     JZVideoPlayerStandard mVideoplayer;
     private BaseDialog mDialog;
@@ -63,16 +72,35 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
         mTitleContentTv.setText("视频详情");
         mTitleShareIv.setVisibility(View.VISIBLE);
         mTitleShareIv.setOnClickListener(this);
-        String videourl = getIntent().getStringExtra("videourl");
-        String imgurl = getIntent().getStringExtra("imgurl");
-        mVideoplayer.setUp(videourl
-                , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
-        mVideoplayer.thumbImageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        Glide.with(MyApplication.getGloableContext())
-                .load(imgurl)
-                .into(mVideoplayer.thumbImageView);
-        //模拟点击事件，在调用performClick之前必须设置了点击事件，不然无效
-        mVideoplayer.startButton.performClick();
+        initData();
+    }
+
+    private void initData() {
+        String kc_id = getIntent().getStringExtra("id");
+        HttpParams params = new HttpParams();
+        params.put("kc_id", kc_id);
+        OkGo.<VideoDetailBean>get(Urls.BASEURL + "api/v2/kitchen/show")
+                .params(params)
+                .execute(new DialogCallback<VideoDetailBean>(VideoDetailActivity.this, VideoDetailBean.class) {
+                    @Override
+                    public void onSuccess(Response<VideoDetailBean> response) {
+                        VideoDetailBean bean = response.body();
+                        int code = bean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(VideoDetailActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            VideoDetailBean.DataEntity data = bean.getData();
+                            mVideoplayer.setUp(data.getVideo_url(), JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
+                            mVideoplayer.thumbImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                            Glide.with(MyApplication.getGloableContext())
+                                    .load(data.getImgurl())
+                                    .into(mVideoplayer.thumbImageView);
+                            //模拟点击事件，在调用performClick之前必须设置了点击事件，不然无效
+                            mVideoplayer.startButton.performClick();
+                            tv_content.setText(data.getBody());
+                        }
+                    }
+                });
     }
 
     @Override

@@ -195,6 +195,7 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
                             LoginBean.DataEntity dataEntity = loginBean.getData().get(0);
                             SpUtils.putString(LoginActivity.this, "userid", dataEntity.getUser_id() + "");
                             SpUtils.putString(LoginActivity.this, "token", dataEntity.getToken());
+                            SpUtils.putString(LoginActivity.this, "phone", dataEntity.getUser_mobile());
                             long ttlMs = dataEntity.getTtl() * 60 * 1000L;
                             long timeMillis = System.currentTimeMillis();
                             long totalMs = ttlMs + timeMillis;

@@ -10,9 +10,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.liaoinstan.springview.container.DefaultFooter;
+import com.liaoinstan.springview.container.DefaultHeader;
+import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
@@ -66,6 +70,10 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
     private MyMoneyRecordAdapter adapter;
     private int type;
     private List<AllMoneyRecordDetailBean.DataEntity> data;
+    private String after;
+    private boolean isLoadMore;
+    @BindView(R.id.springview)
+    SpringView mSpringview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +81,31 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
         setContentView(R.layout.activity_my_money_record);
         ButterKnife.bind(this);
         initView();
+        initData();
+        initListener();
     }
+
+    private void initListener() {
+        mSpringview.setHeader(new DefaultHeader(mContext));
+        mSpringview.setFooter(new DefaultFooter(mContext));
+        mSpringview.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                after = "";
+                isLoadMore = false;
+                initData();
+                mSpringview.onFinishFreshAndLoad();
+            }
+
+            @Override
+            public void onLoadmore() {
+                isLoadMore = true;
+                initData();
+                mSpringview.onFinishFreshAndLoad();
+            }
+        });
+    }
+
 
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
@@ -81,14 +113,13 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
         titleBackIv.setOnClickListener(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
-        initData();
     }
 
     private void initData() {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("after", "");
+        params.put("after", after);
         params.put("type", type);
         OkGo.<AllMoneyRecordDetailBean>get(Urls.BASEURL + "api/v2/user/all-details")
                 .tag(this)
@@ -99,9 +130,18 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
                     public void onSuccess(Response<AllMoneyRecordDetailBean> response) {
                         AllMoneyRecordDetailBean caiFuBean = response.body();
                         if (caiFuBean.getCode() == 1) {
-                            data = caiFuBean.getData();
-                            adapter = new MyMoneyRecordAdapter(R.layout.item_money_record, data);
-                            recyclerView.setAdapter(adapter);
+                            if (!isLoadMore) {
+                                data = caiFuBean.getData();
+                                adapter = new MyMoneyRecordAdapter(R.layout.item_money_record, data);
+                                recyclerView.setAdapter(adapter);
+                            } else {
+                                if (caiFuBean.getData() != null && caiFuBean.getData().size() > 0) {
+                                    data.addAll(caiFuBean.getData());
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    Toast.makeText(mContext, "没有更多了~", Toast.LENGTH_SHORT).show();
+                                }
+                            }
                             adapter.setOnItemClickListener(MyMoneyRecordActivity.this);
                         }
                     }
@@ -111,7 +151,8 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
     @OnClick(R.id.quanbu_ll)
     public void quanbu() {
         initQuanbuColor();
-        type=ALL;
+        type = ALL;
+        after="";
         initData();
     }
 
@@ -129,7 +170,8 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
     @OnClick(R.id.shouyi_ll)
     public void shouyi() {
         initShouyiColor();
-        type=SHOUYI;
+        type = SHOUYI;
+        after="";
         initData();
     }
 
@@ -147,7 +189,8 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
     @OnClick(R.id.tixian_ll)
     public void tixian() {
         initTixianColor();
-        type=TIXIAN;
+        type = TIXIAN;
+        after="";
         initData();
     }
 
@@ -165,7 +208,8 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
     @OnClick(R.id.yongjin_ll)
     public void yongjin() {
         initYongjinColor();
-        type=YONGJIN;
+        type = YONGJIN;
+        after="";
         initData();
     }
 
@@ -195,6 +239,7 @@ public class MyMoneyRecordActivity extends BaseActivity implements View.OnClickL
 
         @Override
         protected void convert(BaseViewHolder helper, AllMoneyRecordDetailBean.DataEntity item) {
+            after = item.getId() + "";
             ImageView tixianIv = helper.getView(R.id.item_tixian_iv);
             TextView dateTv = helper.getView(R.id.item_date_tv);
             TextView contentTv = helper.getView(R.id.item_content_tv);

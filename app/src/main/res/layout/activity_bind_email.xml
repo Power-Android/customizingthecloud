@@ -5,17 +5,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/backgourd"
+    android:orientation="vertical"
     tools:context="com.power.customizingthecloud.activity.mine.BindEmailActivity">
     <include layout="@layout/item_title_layout"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
         android:padding="15dp">
         <TextView
             android:layout_width="wrap_content"
@@ -27,23 +27,32 @@
             android:id="@+id/email_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:background="@null"
-            android:textSize="16sp"
             android:hint="请输入邮箱帐号"
             android:textColorHint="@color/gray"
-            android:layout_marginLeft="10dp"/>
+            android:textSize="16sp"/>
     </LinearLayout>
+    <TextView
+        android:id="@+id/tv_tishi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:text="如果你更改了邮箱账号，需要对邮箱账号重新进行验证。"/>
     <TextView
         android:id="@+id/bind_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_green_button"
-        android:padding="10dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginTop="40dp"
+        android:background="@drawable/bg_green_button"
+        android:gravity="center"
+        android:padding="10dp"
         android:text="绑定"
         android:textColor="@color/white"
-        android:textSize="16sp"
-        android:gravity="center"/>
+        android:textSize="16sp"/>
 </LinearLayout>

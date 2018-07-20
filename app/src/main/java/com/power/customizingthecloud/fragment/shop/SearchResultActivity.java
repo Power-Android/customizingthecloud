@@ -1,4 +1,4 @@
-package com.power.customizingthecloud.fragment.home;
+package com.power.customizingthecloud.fragment.shop;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +27,7 @@ import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.ShopCartActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
 import com.power.customizingthecloud.fragment.shop.bean.GoodListBean;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.CommonUtils;
@@ -39,8 +40,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GoodListActivity extends BaseActivity implements View.OnClickListener {
-
+public class SearchResultActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.title_message_iv)
     ImageView mTitleMessageIv;
     @BindView(R.id.title_back_iv)
@@ -57,12 +57,12 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
     TextView mTitleContentRightTv;
     @BindView(R.id.recycler_shop)
     RecyclerView mRecyclerShop;
-    private int page = 1;
     private boolean isLoadMore;
     @BindView(R.id.springview)
     SpringView mSpringview;
     private List<GoodListBean.DataEntity> mData;
     private ShopAdapter mShopAdapter;
+    private String after;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +86,7 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onRefresh() {
                 isLoadMore = false;
-                page = 1;
+                after = "";
                 initData();
                 mSpringview.onFinishFreshAndLoad();
             }
@@ -94,7 +94,6 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onLoadmore() {
                 isLoadMore = true;
-                page++;
                 initData();
                 mSpringview.onFinishFreshAndLoad();
             }
@@ -102,22 +101,15 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initData() {
-        String type = getIntent().getStringExtra("type");
-        String url = "";
+        String keyword = getIntent().getStringExtra("keyword");
         HttpParams params = new HttpParams();
-        if (type != null && type.equals("new")) {
-            url = Urls.BASEURL + "api/v2/good/new-good-list";
-            params.put("page", page);
-            params.put("limit", "10");
-        } else if (type != null && type.equals("hot")) {
-            url = Urls.BASEURL + "api/v2/good/hot-good-list";
-            params.put("page", page);
-            params.put("limit", "10");
-        }
-        OkGo.<GoodListBean>get(url)
+        params.put("after", after);
+        params.put("limit", "10");
+        params.put("keyword", keyword);
+        OkGo.<GoodListBean>get(Urls.BASEURL + "api/v2/good/search")
                 .tag(this)
                 .params(params)
-                .execute(new DialogCallback<GoodListBean>(GoodListActivity.this, GoodListBean.class) {
+                .execute(new DialogCallback<GoodListBean>(SearchResultActivity.this, GoodListBean.class) {
                     @Override
                     public void onSuccess(Response<GoodListBean> response) {
                         GoodListBean goodListBean = response.body();
@@ -135,13 +127,12 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
                                     mShopAdapter.notifyDataSetChanged();
                                 } else {
                                     Toast.makeText(mContext, "没有更多了~", Toast.LENGTH_SHORT).show();
-                                    page--;
                                 }
                             }
                             mShopAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                    Intent intent = new Intent(GoodListActivity.this, GoodDetailActivity.class);
+                                    Intent intent = new Intent(SearchResultActivity.this, GoodDetailActivity.class);
                                     intent.putExtra("id", mData.get(position).getId() + "");
                                     startActivity(intent);
                                 }
@@ -159,6 +150,7 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
 
         @Override
         protected void convert(BaseViewHolder helper, final GoodListBean.DataEntity item) {
+            after = item.getId() + "";
             ImageView iv_insertcar = helper.getView(R.id.iv_insertcar);
             iv_insertcar.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -169,7 +161,7 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
                         overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                         return;
                     }
-                    CommonUtils.insertCar(GoodListActivity.this, item.getId() + "", item.getGood_type());
+                    CommonUtils.insertCar(SearchResultActivity.this, item.getId() + "", item.getGood_type());
                 }
             });
             ImageView iv_top = helper.getView(R.id.iv_top);
@@ -179,7 +171,7 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
             iv_top.setLayoutParams(layoutParams);
             Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_top);
             helper.setText(R.id.tv_name, item.getClass_name())
-                    .setText(R.id.tv_price, "¥" + item.getPrice());
+                    .setText(R.id.tv_price, item.getPrice());
         }
     }
 

@@ -10,15 +10,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
-import com.power.customizingthecloud.bean.FootprintBean;
+import com.power.customizingthecloud.db.LookBean;
+import com.power.customizingthecloud.db.LookUtils;
 import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
-import com.power.customizingthecloud.utils.TUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -32,39 +33,33 @@ public class MyFootprintActivity extends BaseActivity implements View.OnClickLis
     TextView titleContentTv;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    private List<LookBean> search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_footprint);
         ButterKnife.bind(this);
-        initView();
-    }
-
-    private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
         titleContentTv.setText("我的足迹");
         titleBackIv.setOnClickListener(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
+        initData();
+    }
 
-        List<FootprintBean> list = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            FootprintBean bean = new FootprintBean();
-            bean.setName("驴奶粉");
-            bean.setMoney("￥50");
-            bean.setXiaoliang("月销量：100斤");
-            bean.setPingjia("累计评价：100");
-            list.add(bean);
+    private void initData() {
+        search = LookUtils.search();
+        if (search != null && search.size() > 0) {
+            FootprintAdapter adapter = new FootprintAdapter(R.layout.item_foot_print, search);
+            recyclerView.setAdapter(adapter);
+            adapter.setOnItemChildClickListener(this);
         }
-        FootprintAdapter adapter = new FootprintAdapter(R.layout.item_foot_print,list);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemChildClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.title_back_iv:
                 finish();
                 break;
@@ -73,28 +68,32 @@ public class MyFootprintActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.content_rl:
-                startActivity(new Intent(mContext, GoodDetailActivity.class));
+                Intent intent = new Intent(mContext, GoodDetailActivity.class);
+                intent.putExtra("id", search.get(position).getId() + "");
+                startActivity(intent);
                 break;
             case R.id.shachu_tv:
-                TUtils.showShort(mContext,"点击了---删除"+position);
+                LookUtils.deleteOne(search.get(position).getName());
+                initData();
                 break;
         }
     }
 
-    private class FootprintAdapter extends BaseQuickAdapter<FootprintBean,BaseViewHolder>{
+    private class FootprintAdapter extends BaseQuickAdapter<LookBean, BaseViewHolder> {
 
-        public FootprintAdapter(@LayoutRes int layoutResId, @Nullable List<FootprintBean> data) {
+        public FootprintAdapter(@LayoutRes int layoutResId, @Nullable List<LookBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, FootprintBean item) {
-            helper.setText(R.id.item_name_tv,item.getName())
-                    .setText(R.id.item_money_tv,item.getMoney())
-                    .setText(R.id.item_xiaoliang_tv,item.getXiaoliang())
-                    .setText(R.id.item_pingjia_tv,item.getPingjia())
+        protected void convert(BaseViewHolder helper, LookBean item) {
+            Glide.with(MyApplication.getGloableContext()).load(item.getImage())
+                    .into((ImageView) helper.getView(R.id.item_img_iv));
+            helper.setText(R.id.item_name_tv, item.getName())
+                    .setText(R.id.item_money_tv, "¥"+item.getPrice())
+                    .setText(R.id.item_type_tv, "分类："+item.getClass_name())
                     .addOnClickListener(R.id.content_rl)
                     .addOnClickListener(R.id.shachu_tv);
         }

@@ -7,8 +7,13 @@
     android:orientation="vertical"
 >
     <include layout="@layout/item_title_layout"/>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recylcer_video"
+    <com.liaoinstan.springview.widget.SpringView
+        android:id="@+id/springview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recylcer_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.liaoinstan.springview.widget.SpringView>
 </LinearLayout>

@@ -16,6 +16,9 @@ import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.liaoinstan.springview.container.DefaultFooter;
+import com.liaoinstan.springview.container.DefaultHeader;
+import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
@@ -67,6 +70,11 @@ public class QuanListActivity extends BaseActivity implements View.OnClickListen
     private QuanAdapter mQuanAdapter;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
+    private String after;
+    private boolean isLoadMore;
+    @BindView(R.id.springview)
+    SpringView mSpringview;
+    private List<QuanListBean.DataEntity> data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +85,34 @@ public class QuanListActivity extends BaseActivity implements View.OnClickListen
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("代金券");
         mRecyclerQuan.setLayoutManager(new LinearLayoutManager(this));
+        initData();
+        initListener();
+    }
+
+    private void initListener() {
+        mSpringview.setHeader(new DefaultHeader(mContext));
+        mSpringview.setFooter(new DefaultFooter(mContext));
+        mSpringview.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                after = "";
+                isLoadMore = false;
+                initData();
+                mSpringview.onFinishFreshAndLoad();
+            }
+
+            @Override
+            public void onLoadmore() {
+                isLoadMore = true;
+                initData();
+                mSpringview.onFinishFreshAndLoad();
+            }
+        });
+    }
+
+    private void initData() {
         HttpParams params = new HttpParams();
-        params.put("after", "");
+        params.put("after", after);
         params.put("limit", "10");
         OkGo.<QuanListBean>get(Urls.BASEURL + "api/v2/voucher-template-list")
                 .tag(this)
@@ -91,9 +125,18 @@ public class QuanListActivity extends BaseActivity implements View.OnClickListen
                         if (code == 0) {
                             Toast.makeText(mContext, listBean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
-                            List<QuanListBean.DataEntity> data = listBean.getData();
-                            mQuanAdapter = new QuanAdapter(R.layout.item_daijinquan, data);
-                            mRecyclerQuan.setAdapter(mQuanAdapter);
+                            if (!isLoadMore) {
+                                data = listBean.getData();
+                                mQuanAdapter = new QuanAdapter(R.layout.item_daijinquan, data);
+                                mRecyclerQuan.setAdapter(mQuanAdapter);
+                            } else {
+                                if (listBean.getData() != null && listBean.getData().size() > 0) {
+                                    data.addAll(listBean.getData());
+                                    mQuanAdapter.notifyDataSetChanged();
+                                } else {
+                                    Toast.makeText(mContext, "没有更多了~", Toast.LENGTH_SHORT).show();
+                                }
+                            }
                         }
                     }
                 });
@@ -107,6 +150,7 @@ public class QuanListActivity extends BaseActivity implements View.OnClickListen
 
         @Override
         protected void convert(BaseViewHolder helper, final QuanListBean.DataEntity item) {
+            after = item.getId() + "";
             TextView tv_lingqu = helper.getView(R.id.tv_lingqu);
             tv_lingqu.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -177,7 +221,7 @@ public class QuanListActivity extends BaseActivity implements View.OnClickListen
             public void onClick(View v) {
                 mDialog.dismiss();
                 Intent intent1 = new Intent(mContext, GoodListActivity.class);
-                intent1.putExtra("type","hot");
+                intent1.putExtra("type", "hot");
                 startActivity(intent1);
             }
         });

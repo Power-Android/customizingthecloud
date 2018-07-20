@@ -5,15 +5,26 @@
     android:layout_height="match_parent"
     android:background="@color/backgourd"
     android:orientation="vertical"
-    >
+>
     <include layout="@layout/item_title_layout"/>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_quan"
+    <com.liaoinstan.springview.widget.SpringView
+        android:id="@+id/springview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="10dp"
-        android:background="@color/white"></android.support.v7.widget.RecyclerView>
+    >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_quan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/white"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"/>
+        </LinearLayout>
+    </com.liaoinstan.springview.widget.SpringView>
 </LinearLayout>

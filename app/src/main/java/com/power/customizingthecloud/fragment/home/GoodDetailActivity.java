@@ -28,6 +28,8 @@ import com.power.customizingthecloud.activity.mine.ChatActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.base.UMShareActivity;
 import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.db.LookBean;
+import com.power.customizingthecloud.db.LookUtils;
 import com.power.customizingthecloud.fragment.home.bean.GoodDetailBean;
 import com.power.customizingthecloud.fragment.shop.GoodConfirmOrderActivity;
 import com.power.customizingthecloud.login.LoginActivity;
@@ -178,6 +180,14 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
                             }
                             mComments = mData.getComments();
                             detail();
+                            //添加数据库，我的足迹
+                            LookBean lookBean = new LookBean();
+                            lookBean.setId(mData.getId());
+                            lookBean.setClass_name(mData.getClass_name());
+                            lookBean.setName(mData.getName());
+                            lookBean.setPrice(mData.getPrice());
+                            lookBean.setImage(mData.getThumb());
+                            LookUtils.add(lookBean);
                         }
                     }
                 });

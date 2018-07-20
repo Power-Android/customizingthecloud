@@ -65,7 +65,16 @@ public class GoodDetailBean {
         private String spec_value;
         private String body;
         private String class_name;
+        private String thumb;
         private int good_storage;
+
+        public String getThumb() {
+            return thumb;
+        }
+
+        public void setThumb(String thumb) {
+            this.thumb = thumb;
+        }
 
         public void setEselsohr_deduction(int eselsohr_deduction) {
             this.eselsohr_deduction = eselsohr_deduction;

@@ -176,8 +176,8 @@
         <activity android:name=".activity.mine.AddressManagerActivity"/>
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity android:name=".fragment.home.MiaoConfirmOrderActivity"/>
         <activity android:name=".fragment.shop.GoodConfirmOrderActivity"/>
         <activity android:name=".login.RegisterActivity"/>
@@ -243,6 +243,8 @@
         <activity android:name=".activity.mine.SelectTuiTypeActiviy">
         </activity>
         <activity android:name=".activity.mine.TuiHuoAndMoneyActivity">
+        </activity>
+        <activity android:name=".fragment.shop.SearchResultActivity">
         </activity>
     </application>
 

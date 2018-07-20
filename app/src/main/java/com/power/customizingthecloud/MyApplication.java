@@ -2,7 +2,6 @@ package com.power.customizingthecloud;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.multidex.MultiDex;
 
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
@@ -24,6 +23,8 @@ import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
+import org.litepal.LitePalApplication;
+
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -33,7 +34,7 @@ import okhttp3.OkHttpClient;
  * Created by Administrator on 2017/8/24.
  */
 
-public class MyApplication extends Application {
+public class MyApplication extends LitePalApplication {
     private static MyApplication application;
 
     @Override

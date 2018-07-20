@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/backgourd"
+    android:orientation="vertical"
     tools:context="com.power.customizingthecloud.activity.mine.MyMoneyRecordActivity">
     <include layout="@layout/item_title_layout"/>
     <LinearLayout
@@ -30,17 +30,17 @@
                     android:id="@+id/quanbu_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="12dp"
                     android:layout_centerInParent="true"
                     android:paddingBottom="12dp"
+                    android:paddingTop="12dp"
                     android:text="全部"
                     android:textColor="@color/green"
                     android:textSize="16sp"/>
                 <View
                     android:layout_width="2dp"
                     android:layout_height="20dp"
-                    android:layout_marginTop="12dp"
                     android:layout_alignParentRight="true"
+                    android:layout_marginTop="12dp"
                     android:background="@color/backgourd"/>
             </RelativeLayout>
 
@@ -65,24 +65,24 @@
                     android:id="@+id/shouyi_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="12dp"
                     android:layout_centerInParent="true"
                     android:paddingBottom="12dp"
+                    android:paddingTop="12dp"
                     android:text="收益"
                     android:textColor="@color/gray"
                     android:textSize="16sp"/>
                 <View
                     android:layout_width="2dp"
                     android:layout_height="20dp"
-                    android:layout_marginTop="12dp"
                     android:layout_alignParentRight="true"
+                    android:layout_marginTop="12dp"
                     android:background="@color/backgourd"/>
             </RelativeLayout>
 
             <View
                 android:id="@+id/indicator_shouyi"
                 android:layout_width="match_parent"
-                android:layout_height="2dp" />
+                android:layout_height="2dp"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/tixian_ll"
@@ -99,24 +99,24 @@
                     android:id="@+id/tixian_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="12dp"
                     android:layout_centerInParent="true"
                     android:paddingBottom="12dp"
+                    android:paddingTop="12dp"
                     android:text="提现"
                     android:textColor="@color/gray"
                     android:textSize="16sp"/>
                 <View
                     android:layout_width="2dp"
                     android:layout_height="20dp"
-                    android:layout_marginTop="12dp"
                     android:layout_alignParentRight="true"
+                    android:layout_marginTop="12dp"
                     android:background="@color/backgourd"/>
             </RelativeLayout>
 
             <View
                 android:id="@+id/indicator_tixian"
                 android:layout_width="match_parent"
-                android:layout_height="2dp" />
+                android:layout_height="2dp"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/yongjin_ll"
@@ -133,32 +133,42 @@
                     android:id="@+id/yongjin_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="12dp"
                     android:layout_centerInParent="true"
                     android:paddingBottom="12dp"
+                    android:paddingTop="12dp"
                     android:text="佣金"
                     android:textColor="@color/gray"
                     android:textSize="16sp"/>
                 <View
                     android:layout_width="2dp"
                     android:layout_height="20dp"
-                    android:layout_marginTop="12dp"
                     android:layout_alignParentRight="true"
+                    android:layout_marginTop="12dp"
                     android:background="@color/backgourd"/>
             </RelativeLayout>
 
             <View
                 android:id="@+id/indicator_yongjin"
                 android:layout_width="match_parent"
-                android:layout_height="2dp" />
+                android:layout_height="2dp"/>
         </LinearLayout>
     </LinearLayout>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <com.liaoinstan.springview.widget.SpringView
+        android:id="@+id/springview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
-        android:background="@color/white"/>
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+            />
+        </LinearLayout>
+    </com.liaoinstan.springview.widget.SpringView>
 </LinearLayout>
