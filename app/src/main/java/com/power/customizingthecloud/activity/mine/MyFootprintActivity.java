@@ -34,6 +34,7 @@ public class MyFootprintActivity extends BaseActivity implements View.OnClickLis
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     private List<LookBean> search;
+    private FootprintAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +51,9 @@ public class MyFootprintActivity extends BaseActivity implements View.OnClickLis
 
     private void initData() {
         search = LookUtils.search();
-        if (search != null && search.size() > 0) {
-            FootprintAdapter adapter = new FootprintAdapter(R.layout.item_foot_print, search);
-            recyclerView.setAdapter(adapter);
-            adapter.setOnItemChildClickListener(this);
-        }
+        adapter = new FootprintAdapter(R.layout.item_foot_print, search);
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemChildClickListener(this);
     }
 
     @Override
@@ -75,7 +74,10 @@ public class MyFootprintActivity extends BaseActivity implements View.OnClickLis
                 startActivity(intent);
                 break;
             case R.id.shachu_tv:
-                LookUtils.deleteOne(search.get(position).getName());
+                search = LookUtils.search();
+                if (search != null && search.size() > 0) {
+                    LookUtils.deleteOne(search.get(position).getName());
+                }
                 initData();
                 break;
         }
@@ -92,8 +94,8 @@ public class MyFootprintActivity extends BaseActivity implements View.OnClickLis
             Glide.with(MyApplication.getGloableContext()).load(item.getImage())
                     .into((ImageView) helper.getView(R.id.item_img_iv));
             helper.setText(R.id.item_name_tv, item.getName())
-                    .setText(R.id.item_money_tv, "¥"+item.getPrice())
-                    .setText(R.id.item_type_tv, "分类："+item.getClass_name())
+                    .setText(R.id.item_money_tv, "¥" + item.getPrice())
+                    .setText(R.id.item_type_tv, "分类：" + item.getClass_name())
                     .addOnClickListener(R.id.content_rl)
                     .addOnClickListener(R.id.shachu_tv);
         }

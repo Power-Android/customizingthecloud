@@ -79,6 +79,7 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
         initListener();
     }
 
+
     private void initListener() {
         mSpringview.setHeader(new DefaultHeader(mContext));
         mSpringview.setFooter(new DefaultFooter(mContext));
@@ -178,7 +179,7 @@ public class GoodListActivity extends BaseActivity implements View.OnClickListen
             layoutParams.height = width / 2;
             iv_top.setLayoutParams(layoutParams);
             Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_top);
-            helper.setText(R.id.tv_name, item.getClass_name())
+            helper.setText(R.id.tv_name, item.getName())
                     .setText(R.id.tv_price, "¥" + item.getPrice());
         }
     }

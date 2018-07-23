@@ -58,7 +58,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="15dp"
                 android:layout_toLeftOf="@+id/view_01"
-                android:text="未认证"
+                android:text=""
                 android:textColor="@color/green"/>
             <ImageView
                 android:id="@+id/view_01"

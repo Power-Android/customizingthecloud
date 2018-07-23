@@ -60,6 +60,11 @@ public class SettingActivity extends BaseActivity {
         setContentView(R.layout.activity_setting);
         ButterKnife.bind(this);
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         initData();
     }
 
@@ -77,8 +82,16 @@ public class SettingActivity extends BaseActivity {
                             Toast.makeText(SettingActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
                             PersonCardBean.DataEntity data = bean.getData();
-                            if (!TextUtils.isEmpty(data.getTrue_name())) {
+                            if (data.getIs_card_bind() == 1) {
                                 tv_isrenzheng.setText("已认证");
+                            } else if (data.getIs_card_bind() == 2) {
+                                tv_isrenzheng.setText("审核未通过");
+                            } else if (data.getIs_card_bind() == 0) {
+                                if (!TextUtils.isEmpty(data.getTrue_name())) {
+                                    tv_isrenzheng.setText("审核中");
+                                }else {
+                                    tv_isrenzheng.setText("未认证");
+                                }
                             }
                         }
                     }

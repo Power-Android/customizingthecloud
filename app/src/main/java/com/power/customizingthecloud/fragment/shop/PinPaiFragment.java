@@ -217,7 +217,7 @@ public class PinPaiFragment extends BaseFragment implements View.OnClickListener
             iv_top.setLayoutParams(layoutParams);
             Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_top);
             helper.setText(R.id.tv_name, item.getName())
-                    .setText(R.id.tv_price, item.getPrice());
+                    .setText(R.id.tv_price, "¥"+item.getPrice());
         }
     }
 

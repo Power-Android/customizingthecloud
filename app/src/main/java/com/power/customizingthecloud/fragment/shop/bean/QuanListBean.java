@@ -58,7 +58,15 @@ public class QuanListBean {
         private String title;
         private int order_limit;
         private String start_date;
+        private String describe;
 
+        public String getDescribe() {
+            return describe;
+        }
+
+        public void setDescribe(String describe) {
+            this.describe = describe;
+        }
         public void setEnd_date(String end_date) {
             this.end_date = end_date;
         }

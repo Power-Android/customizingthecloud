@@ -398,8 +398,9 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                 }
             });
             helper.setText(R.id.item_money_tv,item.getPrice()+"")
-                    .setText(R.id.item_man_jian_tv,"满￥"+item.getOrder_limit()+"使用")
+                    .setText(R.id.item_man_jian_tv,"满¥"+item.getOrder_limit()+"使用")
                     .setText(R.id.item_name_tv,item.getTitle())
+                    .setText(R.id.item_use_tv,item.getDescribe())
                     .setText(R.id.item_date_tv,"使用期限："+item.getStart_date()+"-"+item.getEnd_date());
         }
     }

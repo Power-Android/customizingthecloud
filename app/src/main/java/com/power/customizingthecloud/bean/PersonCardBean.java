@@ -56,6 +56,15 @@ public class PersonCardBean {
         private String true_name;
         private String created_at;
         private int id;
+        private int is_card_bind;
+
+        public int getIs_card_bind() {
+            return is_card_bind;
+        }
+
+        public void setIs_card_bind(int is_card_bind) {
+            this.is_card_bind = is_card_bind;
+        }
 
         public void setUser_card(String user_card) {
             this.user_card = user_card;

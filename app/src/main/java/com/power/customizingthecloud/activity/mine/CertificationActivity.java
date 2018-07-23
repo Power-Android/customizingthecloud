@@ -90,11 +90,12 @@ public class CertificationActivity extends BaseActivity implements View.OnClickL
                     public void onSuccess(Response<PersonCardBean> response) {
                         PersonCardBean bean = response.body();
                         int code = bean.getCode();
+                        //0未认证 1 已认证 2 审核未通过 如果有数据+0代表审核中
                         if (code == 0) {
                             Toast.makeText(CertificationActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
                             PersonCardBean.DataEntity data = bean.getData();
-                            if (!TextUtils.isEmpty(data.getTrue_name())) {
+                            if (data.getIs_card_bind() == 1) {
                                 normal_ll.setVisibility(View.VISIBLE);
                                 shenheingRl.setVisibility(View.GONE);
                                 shenhefiledRl.setVisibility(View.GONE);
@@ -102,6 +103,24 @@ public class CertificationActivity extends BaseActivity implements View.OnClickL
                                 Glide.with(MyApplication.getGloableContext()).load(data.getCard_img()).into(uploadPic);
                                 nameTv.setText(data.getTrue_name());
                                 numTv.setText(data.getUser_card());
+                                nameTv.setEnabled(false);//只有设置enable属性才不能点击，而且文字颜色也变了，要重新设置一下
+                                numTv.setEnabled(false);
+                                nameTv.setTextColor(getResources().getColor(R.color.text_black));
+                                numTv.setTextColor(getResources().getColor(R.color.text_black));
+                            } else if (data.getIs_card_bind() == 2) {
+                                normal_ll.setVisibility(View.GONE);
+                                shenheingRl.setVisibility(View.GONE);
+                                shenhefiledRl.setVisibility(View.VISIBLE);
+                            } else if (data.getIs_card_bind() == 0) {
+                                if (!TextUtils.isEmpty(data.getTrue_name())) {
+                                    normal_ll.setVisibility(View.GONE);
+                                    shenheingRl.setVisibility(View.VISIBLE);
+                                    shenhefiledRl.setVisibility(View.GONE);
+                                }else {
+                                    normal_ll.setVisibility(View.VISIBLE);
+                                    shenheingRl.setVisibility(View.GONE);
+                                    shenhefiledRl.setVisibility(View.GONE);
+                                }
                             }
                         }
                     }
@@ -133,6 +152,9 @@ public class CertificationActivity extends BaseActivity implements View.OnClickL
                 commit(cutPath);
                 break;
             case R.id.shenhe_again_tv:
+                normal_ll.setVisibility(View.VISIBLE);
+                shenheingRl.setVisibility(View.GONE);
+                shenhefiledRl.setVisibility(View.GONE);
                 break;
         }
     }
