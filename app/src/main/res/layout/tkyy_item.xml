@@ -4,6 +4,7 @@
               android:layout_height="wrap_content"
               android:orientation="vertical">
     <RelativeLayout
+        android:id="@+id/rl_reson"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="15dp">
@@ -12,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="买错了"
+            android:text=""
             android:textColor="@color/text_black"/>
         <CheckBox
             android:id="@+id/cbbb"
@@ -23,7 +24,7 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/selector_gouwuche"
             android:button="@null"
-            android:checked="true"/>
+            android:clickable="false"/>
     </RelativeLayout>
     <View
         android:layout_width="match_parent"

@@ -91,6 +91,15 @@ public class ReturnMoneyTypeBean {
              */
             private String reason_info;
             private int id;
+            private boolean isChecked;
+
+            public boolean isChecked() {
+                return isChecked;
+            }
+
+            public void setChecked(boolean checked) {
+                isChecked = checked;
+            }
 
             public void setReason_info(String reason_info) {
                 this.reason_info = reason_info;

@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.power.customizingthecloud.fragment.market.ViewPagerActivity;
@@ -33,7 +35,7 @@ public class NineGridTestLayout extends NineGridLayout {
 
     @Override
     protected boolean displayOneImage(final RatioImageView imageView, String url, final int parentWidth) {
-        ImageLoaderUtil.displayImage(mContext, imageView, url, ImageLoaderUtil.getPhotoImageOption(), new ImageLoadingListener() {
+        ImageLoaderUtil.displayImage(mContext, imageView, url, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
 
@@ -73,8 +75,11 @@ public class NineGridTestLayout extends NineGridLayout {
     }
 
     @Override
-    protected void displayImage(RatioImageView imageView, String url) {
-        ImageLoaderUtil.getImageLoader(mContext).displayImage(url, imageView, ImageLoaderUtil.getPhotoImageOption());
+    protected void displayImage(RatioImageView imageView, String url, int singleWidth, int singleHeight) {
+        //        ImageLoaderUtil.getImageLoader(mContext).displayImage(url, imageView);
+        //用imageLoader会出现oom，真是个垃圾框架
+        RequestOptions options = new RequestOptions().override(singleWidth, singleHeight);
+        Glide.with(mContext).load(url).apply(options).thumbnail(0.1f).into(imageView);
     }
 
     @Override

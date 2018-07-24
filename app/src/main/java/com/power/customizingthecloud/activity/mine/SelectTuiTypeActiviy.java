@@ -68,6 +68,8 @@ public class SelectTuiTypeActiviy extends BaseActivity {
         titleContentTv.setText("退款类型");
         String image = getIntent().getStringExtra("image");
         Glide.with(MyApplication.getGloableContext()).load(image).into(faceIv);
+        nameTv.setText(getIntent().getStringExtra("name"));
+        fenleiTv.setText("商品分类："+getIntent().getStringExtra("type"));
     }
 
     @OnClick({R.id.title_back_iv, R.id.ll_tuihuotuikuan, R.id.ll_tuikuan})
@@ -77,15 +79,6 @@ public class SelectTuiTypeActiviy extends BaseActivity {
                 finish();
                 break;
             case R.id.ll_tuihuotuikuan:
-                Intent intent = new Intent(mContext, OnlyTuiMoneyActiviy.class);
-                intent.putExtra("name", getIntent().getStringExtra("name"));
-                intent.putExtra("type", getIntent().getStringExtra("type"));
-                intent.putExtra("image", getIntent().getStringExtra("image"));
-                intent.putExtra("price", getIntent().getStringExtra("price"));
-                intent.putExtra("order_id", getIntent().getStringExtra("order_id"));
-                startActivity(intent);
-                break;
-            case R.id.ll_tuikuan:
                 Intent intent2 = new Intent(mContext, TuiHuoAndMoneyActivity.class);
                 intent2.putExtra("name", getIntent().getStringExtra("name"));
                 intent2.putExtra("type", getIntent().getStringExtra("type"));
@@ -93,6 +86,15 @@ public class SelectTuiTypeActiviy extends BaseActivity {
                 intent2.putExtra("price", getIntent().getStringExtra("price"));
                 intent2.putExtra("order_id", getIntent().getStringExtra("order_id"));
                 startActivity(intent2);
+                break;
+            case R.id.ll_tuikuan:
+                Intent intent = new Intent(mContext, OnlyTuiMoneyActiviy.class);
+                intent.putExtra("name", getIntent().getStringExtra("name"));
+                intent.putExtra("type", getIntent().getStringExtra("type"));
+                intent.putExtra("image", getIntent().getStringExtra("image"));
+                intent.putExtra("price", getIntent().getStringExtra("price"));
+                intent.putExtra("order_id", getIntent().getStringExtra("order_id"));
+                startActivity(intent);
                 break;
         }
     }

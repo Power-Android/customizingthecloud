@@ -227,7 +227,7 @@ public abstract class NineGridLayout extends ViewGroup {//注意抽象类的view
                 addView(textView);
             }
         }
-        displayImage(imageView, url);
+        displayImage(imageView, url,singleWidth,singleHeight);
     }
 
     private int[] findPosition(int childNum) {
@@ -279,7 +279,7 @@ public abstract class NineGridLayout extends ViewGroup {//注意抽象类的view
         imageView.layout(0, 0, width, height);
 
         LayoutParams params = getLayoutParams();
-//        params.width = width;
+        //        params.width = width;
         params.height = height;
         setLayoutParams(params);
     }
@@ -306,7 +306,7 @@ public abstract class NineGridLayout extends ViewGroup {//注意抽象类的view
      */
     protected abstract boolean displayOneImage(RatioImageView imageView, String url, int parentWidth);
 
-    protected abstract void displayImage(RatioImageView imageView, String url);
+    protected abstract void displayImage(RatioImageView imageView, String url, int singleWidth, int singleHeight);
 
     protected abstract void onClickImage(int position, String url, List<String> urlList);
 }

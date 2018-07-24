@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,10 +51,6 @@ public class TuiHuoAndMoneyActivity extends BaseActivity {
     TextView nameTv;
     @BindView(R.id.fenlei_tv)
     TextView fenleiTv;
-    @BindView(R.id.hwzt_tv)
-    TextView hwztTv;
-    @BindView(R.id.hwzt_ll)
-    RelativeLayout hwztLl;
     @BindView(R.id.reason_tv)
     TextView reasonTv;
     @BindView(R.id.tkyy_ll)
@@ -68,10 +63,10 @@ public class TuiHuoAndMoneyActivity extends BaseActivity {
     TextView commitTv;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
-    private int goods_state= 1;
+    private int goods_state = 2;
     private TuiReasonAdapter tuiReasonAdapter;
     private List<ReturnMoneyTypeBean.DataEntity.ReaseonEntity> reaseon;
-    private int reasonPosition;
+    private int reaseonId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +74,7 @@ public class TuiHuoAndMoneyActivity extends BaseActivity {
         setContentView(R.layout.activity_tui_huo_and_money);
         ButterKnife.bind(this);
         initView();
+        initTkyyDialog();
     }
 
     private void initView() {
@@ -89,65 +85,16 @@ public class TuiHuoAndMoneyActivity extends BaseActivity {
         String image = getIntent().getStringExtra("image");
         String price = getIntent().getStringExtra("price");
         nameTv.setText(name);
-        moneyTv.setText("¥"+price);
+        moneyTv.setText("¥" + price);
         fenleiTv.setText("商品分类：" + type);
         Glide.with(MyApplication.getGloableContext()).load(image).into(faceIv);
     }
 
-    private void showHwztDialog() {
-        mBuilder = new BaseDialog.Builder(this);
-        mDialog = mBuilder.setViewId(R.layout.dialog_hwzt)
-                //设置dialogpadding
-                .setPaddingdp(0, 0, 0, 0)
-                //设置显示位置
-                .setGravity(Gravity.BOTTOM)
-                //设置动画
-                .setAnimation(R.style.Bottom_Top_aniamtion)
-                //设置dialog的宽高
-                .setWidthHeightpx(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                //设置触摸dialog外围是否关闭
-                .isOnTouchCanceled(true)
-                //设置监听事件
-                .builder();
+    private void showTkyyDialog() {
         mDialog.show();
-        mDialog.getView(R.id.tv_cancle).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDialog.dismiss();
-            }
-        });
-        final CheckBox cb_not = mDialog.getView(R.id.cb_not);
-        final CheckBox cb_already = mDialog.getView(R.id.cb_already);
-        if (goods_state == 1) {
-            cb_not.setChecked(true);
-            cb_already.setChecked(false);
-        } else if (goods_state == 2) {
-            cb_already.setChecked(true);
-            cb_not.setChecked(false);
-        }
-        cb_not.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    cb_already.setChecked(false);
-                    cb_not.setChecked(true);
-                    goods_state = 2;
-                }
-            }
-        });
-        cb_already.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    cb_not.setChecked(false);
-                    cb_already.setChecked(true);
-                    goods_state = 1;
-                }
-            }
-        });
     }
 
-    private void showTkyyDialog() {
+    private void initTkyyDialog() {
         mBuilder = new BaseDialog.Builder(this);
         mDialog = mBuilder.setViewId(R.layout.dialog_tkyy)
                 //设置dialogpadding
@@ -162,7 +109,6 @@ public class TuiHuoAndMoneyActivity extends BaseActivity {
                 .isOnTouchCanceled(true)
                 //设置监听事件
                 .builder();
-        mDialog.show();
         mDialog.getView(R.id.tv_cancle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,23 +155,26 @@ public class TuiHuoAndMoneyActivity extends BaseActivity {
         }
 
         @Override
-        protected void convert(final BaseViewHolder helper, ReturnMoneyTypeBean.DataEntity.ReaseonEntity item) {
+        protected void convert(final BaseViewHolder helper, final ReturnMoneyTypeBean.DataEntity.ReaseonEntity item) {
             helper.setText(R.id.tv_status, item.getReason_info());
             final CheckBox checkBox = helper.getView(R.id.cbbb);
-            if (helper.getAdapterPosition()==reasonPosition){
+            if (item.isChecked()) {
                 checkBox.setChecked(true);
+            } else {
+                checkBox.setChecked(false);
             }
-            checkBox.setOnClickListener(new View.OnClickListener() {
+            helper.getView(R.id.rl_reson).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     for (int i = 0; i < reaseon.size(); i++) {
                         if (i == helper.getAdapterPosition()) {
-                            reasonPosition = helper.getAdapterPosition();
-                            checkBox.setChecked(true);
-                        }else {
-                            checkBox.setChecked(false);
+                            reaseon.get(i).setChecked(true);
+                            reaseonId=item.getId();
+                        } else {
+                            reaseon.get(i).setChecked(false);
                         }
                     }
+                    tuiReasonAdapter.notifyDataSetChanged();
                 }
             });
         }
@@ -243,7 +192,7 @@ public class TuiHuoAndMoneyActivity extends BaseActivity {
         params.put("order_id", order_id);
         params.put("refund_type", "2");
         params.put("goods_state", goods_state);
-        params.put("reason_id", reaseon.get(reasonPosition).getId()+"");
+        params.put("reason_id", reaseonId + "");
         params.put("reason_info", instructionsEt.getText().toString());
         OkGo.<BaseBean>post(Urls.BASEURL + "api/v2/user/order-return-post")
                 .tag(this)
@@ -266,14 +215,11 @@ public class TuiHuoAndMoneyActivity extends BaseActivity {
                 );
     }
 
-    @OnClick({R.id.title_back_iv, R.id.hwzt_ll, R.id.tkyy_ll, R.id.commit_tv})
+    @OnClick({R.id.title_back_iv, R.id.tkyy_ll, R.id.commit_tv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.title_back_iv:
                 finish();
-                break;
-            case R.id.hwzt_ll:
-                showHwztDialog();
                 break;
             case R.id.tkyy_ll:
                 showTkyyDialog();

@@ -2,6 +2,7 @@ package com.power.customizingthecloud;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
@@ -12,8 +13,13 @@ import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
+import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
@@ -47,14 +53,44 @@ public class MyApplication extends LitePalApplication {
         //初始化二维码工具类
         ZXingLibrary.initDisplayOpinion(this);
         //imageLoader
-        ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(this);
-        ImageLoader.getInstance().init(configuration);
+        initImageLoader();
+    }
+
+    private void initImageLoader() {
+        //防止oom
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory(false).cacheOnDisk(true)
+                .showImageForEmptyUri(R.drawable.face).showImageOnFail(R.drawable.face)
+                .showImageOnLoading(R.drawable.face)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+                .threadPoolSize(3)
+                // default
+                .threadPriority(Thread.NORM_PRIORITY - 2)
+                .denyCacheImageMultipleSizesInMemory()
+                .diskCacheFileNameGenerator(new Md5FileNameGenerator())
+                .tasksProcessingOrder(QueueProcessingType.LIFO)
+                .denyCacheImageMultipleSizesInMemory()
+                // .memoryCache(new LruMemoryCache((int) (6 * 1024 * 1024)))
+                .memoryCache(new WeakMemoryCache())
+                .memoryCacheSize((int) (2 * 1024 * 1024))
+                .memoryCacheSizePercentage(13)
+                // default
+                //.diskCache(new UnlimitedDiscCache(cacheDir))
+                // default
+                .diskCacheSize(50 * 1024 * 1024).diskCacheFileCount(100)
+                .diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
+                .defaultDisplayImageOptions(defaultOptions).writeDebugLogs() // Remove
+                .build();
+        //Initialize ImageLoader with configuration.
+        ImageLoader.getInstance().init(config);
     }
 
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-//        MultiDex.install(this);
+        //        MultiDex.install(this);
     }
 
     public static Application getInstance() {

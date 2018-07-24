@@ -20,14 +20,13 @@
             android:id="@+id/face_iv"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:src="@drawable/face"
             android:layout_margin="10dp"/>
         <TextView
             android:id="@+id/name_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/face_iv"
-            android:text="驴奶粉"
+            android:text=""
             android:textColor="@color/text_black"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="20dp"/>
@@ -35,7 +34,7 @@
             android:id="@+id/fenlei_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="商品分类：驴奶粉"
+            android:text=""
             android:textColor="@color/gray"
             android:layout_toRightOf="@+id/face_iv"
             android:layout_marginLeft="5dp"
@@ -105,7 +104,7 @@
                 android:id="@+id/reason_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="买错了"
+                android:text="七天无理由"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/view_03"
                 android:layout_marginRight="10dp"/>
@@ -130,7 +129,7 @@
                 android:id="@+id/money_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="¥99.00"
+                android:text=""
                 android:layout_toRightOf="@+id/view_02"
                 android:textColor="@color/red1"
                 android:layout_centerVertical="true"

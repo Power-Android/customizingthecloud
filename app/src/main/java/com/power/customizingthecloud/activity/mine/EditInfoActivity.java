@@ -409,7 +409,6 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
                                 @Override
                                 public void accept(Throwable throwable) {
                                     throwable.printStackTrace();
-
                                 }
                             });
                     break;

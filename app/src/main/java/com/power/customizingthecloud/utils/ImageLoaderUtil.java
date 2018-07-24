@@ -35,4 +35,8 @@ public class ImageLoaderUtil {
     public static void displayImage(Context context, ImageView imageView, String url, DisplayImageOptions options, ImageLoadingListener listener) {
         getImageLoader(context).displayImage(url, imageView, options, listener);
     }
+
+    public static void displayImage(Context context, ImageView imageView, String url, ImageLoadingListener listener) {
+        getImageLoader(context).displayImage(url, imageView, listener);
+    }
 }
