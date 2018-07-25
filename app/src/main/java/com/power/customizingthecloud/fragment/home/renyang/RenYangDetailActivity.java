@@ -277,10 +277,11 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                             list.add(datas.getPlace());
                             list.add(datas.getProfit() + "%");
                             list.add(datas.getPeriod() + "天");
+                            DecimalFormat decimalFormat = new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
                             String price = datas.getPrice();
                             list.add(price + "元");
                             mLirun = Float.parseFloat(price) * datas.getProfit() * datas.getPeriod() / 36500;
-                            list.add(mLirun + "元");
+                            list.add(decimalFormat.format(mLirun) + "元");
                             list.add(datas.getProfit_type());
                             TopAdapter topAdapter = new TopAdapter(R.layout.item_renyang_detail_top, list);
                             mRecyclerTop.setAdapter(topAdapter);
@@ -297,7 +298,6 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                             mTvIntro.setText(datas.getIntroduce());
                             mTvPrice.setText(Float.parseFloat(datas.getPrice()) * mItemStepper.getValue() + "元");
                             float lirun = mLirun * mItemStepper.getValue();
-                            DecimalFormat decimalFormat = new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
                             String p = decimalFormat.format(lirun);//format 返回的是字符串
                             mTvLirun.setText(p + "元");
                             buy_users = datas.getBuy_users();

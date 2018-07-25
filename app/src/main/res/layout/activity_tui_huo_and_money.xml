@@ -75,7 +75,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@+id/view_03"
-                android:text="七天无理由"/>
+            />
         </RelativeLayout>
         <View
             android:layout_width="match_parent"

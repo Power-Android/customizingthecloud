@@ -104,6 +104,7 @@ public class OrderDetailActivity extends BaseActivity {
     private String payType = "1";
     private OrderDetailBean.DataEntity data;
     // IWXAPI 是第三方app和微信通信的openapi接口
+    private int refund_state;
     private IWXAPI api;
     private String WX_APPID = "wx5c1cdc0f4545b7b5";// 微信appid
     private static final int SDK_PAY_FLAG = 1;//支付宝
@@ -181,6 +182,7 @@ public class OrderDetailActivity extends BaseActivity {
         HttpParams params = new HttpParams();
         order_id = getIntent().getStringExtra("order_id");
         evaluation_state = getIntent().getIntExtra("evaluation_state", 0);
+        refund_state = getIntent().getIntExtra("refund_state", 0);
         params.put("order_id", order_id);
         OkGo.<OrderDetailBean>get(Urls.BASEURL + "api/v2/user/order-show")
                 .tag(this)
@@ -209,11 +211,25 @@ public class OrderDetailActivity extends BaseActivity {
                                 mItemUseTv.setText("提醒发货");
                                 break;
                             case 30://待收货
-                                mTypeContentTv.setText("交易成功");
                                 topBg.setBackground(getResources().getDrawable(R.drawable.yifahuo_top_iv));
-                                mItemCancleOrderTv.setVisibility(View.VISIBLE);
-                                mItemCancleOrderTv.setText("退款");
                                 mItemUseTv.setText("确认收货");
+                                mItemCancleOrderTv.setVisibility(View.VISIBLE);
+                                if (refund_state == 1) {
+                                    mItemCancleOrderTv.setText("退款申请中");
+                                    mItemCancleOrderTv.setClickable(false);
+                                    mTypeContentTv.setText("退款申请中");
+                                } else if (refund_state == 2) {
+                                    mItemCancleOrderTv.setText("退款中");
+                                    mItemCancleOrderTv.setClickable(false);
+                                    mTypeContentTv.setText("退款中");
+                                } else if (refund_state == 3) {
+                                    mItemCancleOrderTv.setText("已退款");
+                                    mItemCancleOrderTv.setClickable(false);
+                                    mTypeContentTv.setText("已退款");
+                                } else {
+                                    mItemCancleOrderTv.setText("退款");
+                                    mTypeContentTv.setText("交易成功");
+                                }
                                 break;
                             case 40://待评价
                                 if (evaluation_state == 1) {
@@ -236,18 +252,18 @@ public class OrderDetailActivity extends BaseActivity {
                         mPeisongTv.setText(data.getShipping_time());
                         mLiuyanTv.setText(data.getOrder_message());
                         goods = data.getGoods();
-                        OrderAdapter orderAdapter=new OrderAdapter(R.layout.item_orderdetail,goods);
+                        OrderAdapter orderAdapter = new OrderAdapter(R.layout.item_orderdetail, goods);
                         recycler_order.setAdapter(orderAdapter);
                         mOrderBianhaoTv.setText("订单编号：" + data.getOrder_sn() + "");
                         mDateTv.setText("创建时间：" + data.getCreated_at());
                         mWuliuBianhaoTv.setText("物流编号：" + data.getShipping_code());
-                        mItemShifukuanTv.setText("实付款：￥"+data.getOrder_amount());
+                        mItemShifukuanTv.setText("实付款：￥" + data.getOrder_amount());
                     }
                 });
     }
 
 
-    private class OrderAdapter extends BaseQuickAdapter<OrderDetailBean.DataEntity.GoodsEntity,BaseViewHolder>{
+    private class OrderAdapter extends BaseQuickAdapter<OrderDetailBean.DataEntity.GoodsEntity, BaseViewHolder> {
 
         public OrderAdapter(@LayoutRes int layoutResId, @Nullable List<OrderDetailBean.DataEntity.GoodsEntity> data) {
             super(layoutResId, data);
@@ -256,10 +272,10 @@ public class OrderDetailActivity extends BaseActivity {
         @Override
         protected void convert(BaseViewHolder helper, OrderDetailBean.DataEntity.GoodsEntity item) {
             Glide.with(MyApplication.getGloableContext()).load(item.getGoods_image()).into((ImageView) helper.getView(R.id.item_img_iv));
-            helper.setText(R.id.item_name_tv,item.getGoods_name())
-                    .setText(R.id.item_fenlei_tv,item.getGoods_class())
-                    .setText(R.id.item_money_tv,"￥" + item.getGoods_price())
-                    .setText(R.id.item_num_tv,"x" + item.getGoods_num());
+            helper.setText(R.id.item_name_tv, item.getGoods_name())
+                    .setText(R.id.item_fenlei_tv, item.getGoods_class())
+                    .setText(R.id.item_money_tv, "￥" + item.getGoods_price())
+                    .setText(R.id.item_num_tv, "x" + item.getGoods_num());
         }
     }
 
@@ -371,11 +387,11 @@ public class OrderDetailActivity extends BaseActivity {
                         intent.putExtra("data", (Serializable) goods);
                         intent.putExtra("type", "orderdetail");
                         intent.putExtra("order_id", order_id);
-//                        intent.putExtra("name", goods.get(0).getGoods_name());
-//                        intent.putExtra("type", goods.get(0).getGoods_class());
-//                        intent.putExtra("image", goods.get(0).getGoods_image());
-//                        intent.putExtra("good_id", goods.get(0).getGoods_id() + "");
-                        startActivityForResult(intent,0);
+                        //                        intent.putExtra("name", goods.get(0).getGoods_name());
+                        //                        intent.putExtra("type", goods.get(0).getGoods_class());
+                        //                        intent.putExtra("image", goods.get(0).getGoods_image());
+                        //                        intent.putExtra("good_id", goods.get(0).getGoods_id() + "");
+                        startActivityForResult(intent, 0);
                         break;
                 }
                 break;
@@ -580,7 +596,7 @@ public class OrderDetailActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode==1){
+        if (resultCode == 1) {
             initData();
         }
     }

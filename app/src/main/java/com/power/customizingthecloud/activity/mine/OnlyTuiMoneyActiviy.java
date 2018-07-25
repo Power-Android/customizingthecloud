@@ -68,10 +68,10 @@ public class OnlyTuiMoneyActiviy extends BaseActivity {
     TextView commitTv;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
-    private int goods_state = 1;
+    private int goods_state = 2;
     private TuiReasonAdapter tuiReasonAdapter;
     private List<ReturnMoneyTypeBean.DataEntity.ReaseonEntity> reaseon;
-    private int reaseonId;
+    private int reaseonId=-1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,9 +122,11 @@ public class OnlyTuiMoneyActiviy extends BaseActivity {
         if (goods_state == 1) {
             cb_not.setChecked(true);
             cb_already.setChecked(false);
+            hwztTv.setText("已收到货");
         } else if (goods_state == 2) {
             cb_already.setChecked(true);
             cb_not.setChecked(false);
+            hwztTv.setText("未收到货");
         }
         cb_not.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -133,6 +135,7 @@ public class OnlyTuiMoneyActiviy extends BaseActivity {
                     cb_already.setChecked(false);
                     cb_not.setChecked(true);
                     goods_state = 2;
+                    hwztTv.setText("未收到货");
                 }
             }
         });
@@ -143,6 +146,7 @@ public class OnlyTuiMoneyActiviy extends BaseActivity {
                     cb_not.setChecked(false);
                     cb_already.setChecked(true);
                     goods_state = 1;
+                    hwztTv.setText("已收到货");
                 }
             }
         });
@@ -228,6 +232,7 @@ public class OnlyTuiMoneyActiviy extends BaseActivity {
                         if (i == helper.getAdapterPosition()) {
                             reaseon.get(i).setChecked(true);
                             reaseonId=item.getId();
+                            reasonTv.setText(item.getReason_info());
                         } else {
                             reaseon.get(i).setChecked(false);
                         }
@@ -241,6 +246,10 @@ public class OnlyTuiMoneyActiviy extends BaseActivity {
     private void commitTuikuan() {
         if (TextUtils.isEmpty(instructionsEt.getText().toString())) {
             Toast.makeText(this, "请填写退款说明", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (reaseonId==-1){
+            Toast.makeText(this, "请选择退款原因", Toast.LENGTH_SHORT).show();
             return;
         }
         HttpHeaders headers = new HttpHeaders();

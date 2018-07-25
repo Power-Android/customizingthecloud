@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.fragment.market.ViewPagerActivity;
 import com.power.customizingthecloud.utils.ImageLoaderUtil;
 
@@ -24,6 +25,7 @@ import java.util.List;
 public class NineGridTestLayout extends NineGridLayout {
 
     protected static final int MAX_W_H_RATIO = 3;
+    private RequestOptions options=new RequestOptions();
 
     public NineGridTestLayout(Context context) {
         super(context);
@@ -78,8 +80,9 @@ public class NineGridTestLayout extends NineGridLayout {
     protected void displayImage(RatioImageView imageView, String url, int singleWidth, int singleHeight) {
         //        ImageLoaderUtil.getImageLoader(mContext).displayImage(url, imageView);
         //用imageLoader会出现oom，真是个垃圾框架
-        RequestOptions options = new RequestOptions().override(singleWidth, singleHeight);
-        Glide.with(mContext).load(url).apply(options).thumbnail(0.1f).into(imageView);
+        options.placeholder(R.drawable.face);
+        options.override(singleWidth, singleHeight);
+        Glide.with(mContext).load(url).apply(options).into(imageView);
     }
 
     @Override

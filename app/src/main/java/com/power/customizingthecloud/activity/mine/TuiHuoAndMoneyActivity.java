@@ -66,7 +66,7 @@ public class TuiHuoAndMoneyActivity extends BaseActivity {
     private int goods_state = 2;
     private TuiReasonAdapter tuiReasonAdapter;
     private List<ReturnMoneyTypeBean.DataEntity.ReaseonEntity> reaseon;
-    private int reaseonId;
+    private int reaseonId=-1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +170,7 @@ public class TuiHuoAndMoneyActivity extends BaseActivity {
                         if (i == helper.getAdapterPosition()) {
                             reaseon.get(i).setChecked(true);
                             reaseonId=item.getId();
+                            reasonTv.setText(item.getReason_info());
                         } else {
                             reaseon.get(i).setChecked(false);
                         }
@@ -183,6 +184,10 @@ public class TuiHuoAndMoneyActivity extends BaseActivity {
     private void commitTuikuan() {
         if (TextUtils.isEmpty(instructionsEt.getText().toString())) {
             Toast.makeText(this, "请填写退款说明", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (reaseonId==-1){
+            Toast.makeText(this, "请选择退款原因", Toast.LENGTH_SHORT).show();
             return;
         }
         HttpHeaders headers = new HttpHeaders();

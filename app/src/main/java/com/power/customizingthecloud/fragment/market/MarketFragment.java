@@ -182,7 +182,8 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                             } else {
                                 if (data.getFeed() != null && data.getFeed().size() > 0) {
                                     mFeed.addAll(data.getFeed());
-                                    mMyAdapter.notifyDataSetChanged();
+                                    mMyAdapter.addData(data.getFeed());
+                                    //adapter里面自动调用了notifyItemRangeInserted，会使滑动更平滑
                                 } else {
                                     Toast.makeText(mContext, "没有更多了~", Toast.LENGTH_SHORT).show();
                                 }

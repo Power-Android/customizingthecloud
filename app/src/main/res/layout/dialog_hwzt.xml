@@ -34,7 +34,6 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:background="@drawable/selector_gouwuche"
-            android:checked="true"
             android:button="@null"/>
     </RelativeLayout>
     <View
@@ -61,6 +60,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:background="@drawable/selector_gouwuche"
+            android:checked="true"
             android:button="@null"/>
     </RelativeLayout>
     <TextView

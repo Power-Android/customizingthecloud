@@ -126,7 +126,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                     // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
                     if (TextUtils.equals(resultStatus, "9000")) {
                         Toast.makeText(MyOrderActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
-                        type="0";
+                        type = "0";
                         initData();
                     } else {
                         // 判断resultStatus 为非"9000"则代表可能支付失败
@@ -171,7 +171,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("weixinpaysuccess")) {
-            type="0";
+            type = "0";
             initData();
         }
     }
@@ -257,11 +257,11 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                         intent.putExtra("data", (Serializable) list.get(position).getGoods());
                         intent.putExtra("type", "myorder");
                         intent.putExtra("order_id", list.get(position).getId() + "");
-//                        intent.putExtra("name", list.get(position).getGoods().get(0).getGoods_name());
-//                        intent.putExtra("type", list.get(position).getGoods().get(0).getGoods_class());
-//                        intent.putExtra("image", list.get(position).getGoods().get(0).getGoods_image());
-//                        intent.putExtra("good_id", list.get(position).getGoods().get(0).getGoods_id() + "");
-                        startActivityForResult(intent,0);
+                        //                        intent.putExtra("name", list.get(position).getGoods().get(0).getGoods_name());
+                        //                        intent.putExtra("type", list.get(position).getGoods().get(0).getGoods_class());
+                        //                        intent.putExtra("image", list.get(position).getGoods().get(0).getGoods_image());
+                        //                        intent.putExtra("good_id", list.get(position).getGoods().get(0).getGoods_id() + "");
+                        startActivityForResult(intent, 0);
                         break;
                 }
                 break;
@@ -287,8 +287,8 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode==1){
-            type="0";
+        if (resultCode == 1) {
+            type = "0";
             initData();
         }
     }
@@ -335,7 +335,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                                  int code = response.code();
                                  BaseBean body = response.body();
                                  Toast.makeText(MyOrderActivity.this, body.getMessage(), Toast.LENGTH_SHORT).show();
-                                 type="0";
+                                 type = "0";
                                  initData();
                              }
 
@@ -362,7 +362,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                                  int code = response.code();
                                  BaseBean body = response.body();
                                  Toast.makeText(MyOrderActivity.this, body.getMessage(), Toast.LENGTH_SHORT).show();
-                                 type="0";
+//                                 type = "0";
                                  initData();
                              }
 
@@ -389,7 +389,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                                  int code = response.code();
                                  BaseBean body = response.body();
                                  Toast.makeText(MyOrderActivity.this, body.getMessage(), Toast.LENGTH_SHORT).show();
-                                 type="0";
+                                 type = "0";
                                  initData();
                              }
 
@@ -555,7 +555,7 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    private class MyOrderAdapter extends BaseQuickAdapter<MyOderBean.DataEntity, BaseViewHolder>{
+    private class MyOrderAdapter extends BaseQuickAdapter<MyOderBean.DataEntity, BaseViewHolder> {
 
         public MyOrderAdapter(@LayoutRes int layoutResId, @Nullable List<MyOderBean.DataEntity> data) {
             super(layoutResId, data);
@@ -587,6 +587,17 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                     cancleTv.setVisibility(View.VISIBLE);
                     cancleTv.setText("退款");
                     useTv.setText("确认收货");
+                    int refund_state = item.getRefund_state();
+                    if (refund_state == 1) {
+                        cancleTv.setText("退款申请中");
+                        cancleTv.setClickable(false);
+                    } else if (refund_state == 2) {
+                        cancleTv.setText("退款中");
+                        cancleTv.setClickable(false);
+                    } else if (refund_state == 3) {
+                        cancleTv.setText("已退款");
+                        cancleTv.setClickable(false);
+                    }
                     break;
                 case 40://已收货
                     cancleTv.setVisibility(View.GONE);
@@ -612,8 +623,9 @@ public class MyOrderActivity extends BaseActivity implements View.OnClickListene
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                     intent = new Intent(mContext, OrderDetailActivity.class);
-                    intent.putExtra("order_id", list.get(helper.getAdapterPosition()).getId()+"");
+                    intent.putExtra("order_id", list.get(helper.getAdapterPosition()).getId() + "");
                     intent.putExtra("evaluation_state", list.get(helper.getAdapterPosition()).getEvaluation_state());
+                    intent.putExtra("refund_state", list.get(helper.getAdapterPosition()).getRefund_state());
                     startActivity(intent);
                 }
             });

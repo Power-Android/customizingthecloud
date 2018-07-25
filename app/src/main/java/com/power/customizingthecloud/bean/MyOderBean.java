@@ -58,7 +58,16 @@ public class MyOderBean implements Serializable {
         private List<GoodsEntity> goods;
         private int id;
         private int order_state;
+        private int refund_state;
         private long order_sn;
+
+        public int getRefund_state() {
+            return refund_state;
+        }
+
+        public void setRefund_state(int refund_state) {
+            this.refund_state = refund_state;
+        }
 
         public void setGood_count(int good_count) {
             this.good_count = good_count;

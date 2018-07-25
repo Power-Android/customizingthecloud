@@ -104,7 +104,6 @@
                 android:id="@+id/reason_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="七天无理由"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/view_03"
                 android:layout_marginRight="10dp"/>
