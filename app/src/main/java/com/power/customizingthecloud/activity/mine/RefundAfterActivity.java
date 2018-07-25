@@ -10,13 +10,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
-import com.power.customizingthecloud.bean.RefundAfterBean;
+import com.power.customizingthecloud.bean.ReturnMoneyListBean;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -30,7 +37,7 @@ public class RefundAfterActivity extends BaseActivity implements View.OnClickLis
     TextView titleContentTv;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
-    private List<RefundAfterBean> list;
+    private List<ReturnMoneyListBean.DataEntity> data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,29 +45,37 @@ public class RefundAfterActivity extends BaseActivity implements View.OnClickLis
         setContentView(R.layout.activity_refund_after);
         ButterKnife.bind(this);
         initView();
+        initData();
+    }
+
+    private void initData() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        OkGo.<ReturnMoneyListBean>get(Urls.BASEURL + "api/v2/user/order-return-list")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<ReturnMoneyListBean>(this, ReturnMoneyListBean.class) {
+                    @Override
+                    public void onSuccess(Response<ReturnMoneyListBean> response) {
+                        ReturnMoneyListBean body = response.body();
+                        if (body.getCode() == 1) {
+                            data = body.getData();
+                            RefundAfterAdapter adapter = new RefundAfterAdapter(R.layout.item_refund_after, data);
+                            recyclerView.setAdapter(adapter);
+                            adapter.setOnItemChildClickListener(RefundAfterActivity.this);
+                        }
+                    }
+                });
     }
 
     private void initView() {
         titleBackIv.setVisibility(View.VISIBLE);
         titleContentTv.setText("退款/售后");
         titleBackIv.setOnClickListener(this);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
-        recyclerView.setVisibility(View.GONE);
-
-        list = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            RefundAfterBean bean = new RefundAfterBean();
-            bean.setName("驴奶粉");
-            bean.setNum("x1");
-            bean.setMoney("￥99.00");
-            bean.setFeilei("商品分类：驴奶粉");
-            list.add(bean);
-        }
-        RefundAfterAdapter adapter = new RefundAfterAdapter(R.layout.item_refund_after, list);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemChildClickListener(this);
     }
 
     @Override
@@ -68,18 +83,18 @@ public class RefundAfterActivity extends BaseActivity implements View.OnClickLis
         startActivity(new Intent(mContext,RefundGoodActivity.class));
     }
 
-    private class RefundAfterAdapter extends BaseQuickAdapter<RefundAfterBean,BaseViewHolder> implements BaseQuickAdapter.OnItemClickListener {
+    private class RefundAfterAdapter extends BaseQuickAdapter<ReturnMoneyListBean.DataEntity,BaseViewHolder> implements BaseQuickAdapter.OnItemClickListener {
 
-        public RefundAfterAdapter(@LayoutRes int layoutResId, @Nullable List<RefundAfterBean> data) {
+        public RefundAfterAdapter(@LayoutRes int layoutResId, @Nullable List<ReturnMoneyListBean.DataEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, RefundAfterBean item) {
+        protected void convert(BaseViewHolder helper, ReturnMoneyListBean.DataEntity item) {
             RecyclerView itemRecycler = helper.getView(R.id.item_recycler);
             itemRecycler.setNestedScrollingEnabled(false);
             itemRecycler.setLayoutManager(new LinearLayoutManager(mContext));
-            ItemAdapter adapter = new ItemAdapter(R.layout.item_recycler_refund,list);
+            ItemAdapter adapter = new ItemAdapter(R.layout.item_recycler_refund,item.getGoods());
             helper.addOnClickListener(R.id.item_use_tv);
             itemRecycler.setAdapter(adapter);
             adapter.setOnItemClickListener(this);
@@ -87,22 +102,25 @@ public class RefundAfterActivity extends BaseActivity implements View.OnClickLis
 
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-            startActivity(new Intent(mContext,RefundGoodActivity.class));
+            Intent intent = new Intent(mContext, RefundGoodActivity.class);
+            intent.putExtra("id",data.get(position).getId());
+            startActivity(intent);
         }
     }
 
-    private class ItemAdapter extends BaseQuickAdapter<RefundAfterBean,BaseViewHolder>{
+    private class ItemAdapter extends BaseQuickAdapter<ReturnMoneyListBean.DataEntity.GoodsEntity,BaseViewHolder>{
 
-        public ItemAdapter(int layoutResId, @Nullable List<RefundAfterBean> data) {
+        public ItemAdapter(int layoutResId, @Nullable List<ReturnMoneyListBean.DataEntity.GoodsEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, RefundAfterBean item) {
-            helper.setText(R.id.item_name_tv,item.getName())
-                    .setText(R.id.item_fenlei_tv,item.getFeilei())
-                    .setText(R.id.item_money_tv,item.getMoney())
-                    .setText(R.id.item_num_tv,item.getNum());
+        protected void convert(BaseViewHolder helper, ReturnMoneyListBean.DataEntity.GoodsEntity item) {
+            Glide.with(mContext).load(item.getGoods_image()).into((ImageView) helper.getView(R.id.item_img_iv));
+            helper.setText(R.id.item_name_tv,item.getGoods_name())
+                    .setText(R.id.item_fenlei_tv,"商品分类："+item.getGoods_class())
+                    .setText(R.id.item_money_tv,"¥"+item.getGoods_price())
+                    .setText(R.id.item_num_tv,"x"+item.getGoods_num());
         }
     }
 
