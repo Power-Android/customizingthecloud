@@ -26,7 +26,6 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
-import com.power.customizingthecloud.activity.mine.ChatActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.base.UMShareActivity;
 import com.power.customizingthecloud.callback.DialogCallback;
@@ -45,6 +44,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.rong.imkit.RongIM;
+import io.rong.imlib.model.Conversation;
 
 public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickListener {
 
@@ -108,6 +109,8 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
     TextView mTvBuy;
     @BindView(R.id.lv_xiangqing)
     ImageView mLvXiangqing;
+    @BindView(R.id.tv_unit)
+    TextView tv_unit;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
     private List<String> imgList = new ArrayList<>();
@@ -161,6 +164,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
                             }
                             BannerUtils.startBanner(mBanner, imgList);
                             mTvName.setText(mData.getName());
+                            tv_unit.setText(mData.getUnit());
                             mTvShengyu.setText(mData.getSeckill_storage() + "");
                             mTvPrice.setText(mData.getSeckill_price());
                             long time1 = mData.getSeckill_end_time() * 1000L - System.currentTimeMillis();
@@ -231,7 +235,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
                     overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
-                startActivity(new Intent(this, ChatActivity.class));
+                RongIM.getInstance().startConversation(this, Conversation.ConversationType.PRIVATE, "admin_1", "客服牧小童");
                 break;
             case R.id.tv_buy:
                 String userid2 = SpUtils.getString(this, "userid", "");

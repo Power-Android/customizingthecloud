@@ -1,7 +1,6 @@
 package com.power.customizingthecloud.bean;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Created by power on 2018/3/22.
@@ -17,7 +16,6 @@ public class SignBean implements Serializable {
 
     private int code;
     private String message;
-    private List<?> data;
 
     public int getCode() {
         return code;
@@ -33,13 +31,5 @@ public class SignBean implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public List<?> getData() {
-        return data;
-    }
-
-    public void setData(List<?> data) {
-        this.data = data;
     }
 }

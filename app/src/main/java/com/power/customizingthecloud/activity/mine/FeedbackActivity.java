@@ -198,6 +198,13 @@ public class FeedbackActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.commit_tv:
+                if (!TextUtils.isEmpty(phoneEt.getText().toString())){
+                    boolean mobileNO = MyUtils.isMobileNO(phoneEt.getText().toString());
+                    if (!mobileNO){
+                        Toast.makeText(this, "请输入正确格式的手机号~", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
                 photoCount = 0;
                 if (listAll != null && listAll.size() > 0) {
                     commit(listAll.get(0).getPath());

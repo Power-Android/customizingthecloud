@@ -19,6 +19,7 @@
                     android:id="@+id/iv_img"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:scaleType="fitXY"
                     />
                 <View
                     android:layout_width="100dp"
@@ -71,6 +72,7 @@
                         android:textColor="@color/white"
                         android:textSize="15sp"/>
                 </RelativeLayout>
+                <!--如果设置了progressDrawable的属性，再去设置progressbar的background是没有效果的-->
                 <ProgressBar
                     android:id="@+id/progressBar"
                     style="?android:attr/progressBarStyleHorizontal"

@@ -3,6 +3,7 @@ package com.power.customizingthecloud;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.multidex.MultiDex;
 
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
@@ -24,6 +25,7 @@ import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
+import com.power.customizingthecloud.im.RcConnect;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
@@ -34,6 +36,7 @@ import org.litepal.LitePalApplication;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
+import io.rong.imkit.RongIM;
 import okhttp3.OkHttpClient;
 
 /**
@@ -54,6 +57,13 @@ public class MyApplication extends LitePalApplication {
         ZXingLibrary.initDisplayOpinion(this);
         //imageLoader
         initImageLoader();
+        initRong();
+    }
+
+    private void initRong() {
+        RongIM.init(this);
+        RcConnect.rongCloudConnection(this,
+                "WohzvdWJxIdTY2vvKBZNesSX1qFZ6RYaPq0iMXS8lbRFGb4oPLOMAan6hljsLL5yyPK95UXVXFeu1/0KNm82tLcmtJO7P3TD");
     }
 
     private void initImageLoader() {
@@ -90,7 +100,7 @@ public class MyApplication extends LitePalApplication {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        //        MultiDex.install(this);
+        MultiDex.install(this);
     }
 
     public static Application getInstance() {
@@ -141,7 +151,7 @@ public class MyApplication extends LitePalApplication {
 
         HttpHeaders headers = new HttpHeaders();
         HttpParams params = new HttpParams();
-        //log相关
+        //log相关---接口打印的一些数据是来源于这里
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor("TAG");
         loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);        //log打印级别，决定了log显示的详细程度
         loggingInterceptor.setColorLevel(Level.SEVERE);                     //log颜色级别，决定了log在控制台显示的颜色

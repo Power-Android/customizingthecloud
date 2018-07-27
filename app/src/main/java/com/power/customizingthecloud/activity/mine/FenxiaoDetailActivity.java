@@ -43,6 +43,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.rong.imkit.RongIM;
+import io.rong.imlib.model.Conversation;
 
 public class FenxiaoDetailActivity extends BaseActivity implements View.OnClickListener {
 
@@ -187,7 +189,7 @@ public class FenxiaoDetailActivity extends BaseActivity implements View.OnClickL
                     overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
                     return;
                 }
-                startActivity(new Intent(this, ChatActivity.class));
+                RongIM.getInstance().startConversation(this, Conversation.ConversationType.PRIVATE, "admin_1", "客服牧小童");
                 break;
             case R.id.tv_insertcar:
                 String userid2 = SpUtils.getString(mContext, "userid", "");

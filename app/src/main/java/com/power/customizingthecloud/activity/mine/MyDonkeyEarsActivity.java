@@ -145,7 +145,7 @@ public class MyDonkeyEarsActivity extends BaseActivity implements View.OnClickLi
         protected void convert(BaseViewHolder helper, DonkeyEarsBean.DataEntity.GoodEntity item) {
             Glide.with(mContext).load(item.getImage()).into((ImageView) helper.getView(R.id.item_img_iv));
             helper.setText(R.id.item_name_tv, item.getName())
-                    .setText(R.id.item_yuanjia_tv, item.getPrice())
+                    .setText(R.id.item_yuanjia_tv, "原价："+item.getPrice())
                     .setText(R.id.item_xianjia_tv, item.getEselsohr_deduction())
                     .addOnClickListener(R.id.item_query_tv);
         }

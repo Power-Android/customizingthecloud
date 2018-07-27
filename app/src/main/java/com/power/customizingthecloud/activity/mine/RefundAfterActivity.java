@@ -80,7 +80,9 @@ public class RefundAfterActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        startActivity(new Intent(mContext,RefundGoodActivity.class));
+        Intent intent = new Intent(mContext, RefundGoodActivity.class);
+        intent.putExtra("order_id",data.get(position).getId()+"");
+        startActivity(intent);
     }
 
     private class RefundAfterAdapter extends BaseQuickAdapter<ReturnMoneyListBean.DataEntity,BaseViewHolder> implements BaseQuickAdapter.OnItemClickListener {
@@ -103,7 +105,7 @@ public class RefundAfterActivity extends BaseActivity implements View.OnClickLis
         @Override
         public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
             Intent intent = new Intent(mContext, RefundGoodActivity.class);
-            intent.putExtra("id",data.get(position).getId());
+            intent.putExtra("order_id",data.get(position).getId()+"");
             startActivity(intent);
         }
     }

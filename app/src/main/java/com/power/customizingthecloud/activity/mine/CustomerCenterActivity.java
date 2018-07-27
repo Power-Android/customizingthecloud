@@ -29,6 +29,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.rong.imkit.RongIM;
+import io.rong.imlib.model.Conversation;
 
 public class CustomerCenterActivity extends BaseActivity implements View.OnClickListener, BaseQuickAdapter.OnItemClickListener {
 
@@ -217,7 +219,7 @@ public class CustomerCenterActivity extends BaseActivity implements View.OnClick
                 startActivity(new Intent(mContext, IssuesListActivity.class));
                 break;
             case R.id.zxkf_ll://咨询客服
-                startActivity(new Intent(mContext, ChatActivity.class));
+                RongIM.getInstance().startConversation(this, Conversation.ConversationType.PRIVATE, "admin_1", "客服牧小童");
                 break;
             case R.id.pjfk_ll://评价反馈
                 startActivity(new Intent(mContext, FeedbackActivity.class));

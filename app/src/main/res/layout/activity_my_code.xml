@@ -11,11 +11,12 @@
         android:layout_height="match_parent"
         android:background="@drawable/mycode_bg">
         <TextView
+            android:id="@+id/tv_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="160dp"
-            android:text="12345678"
+            android:text=""
             android:textColor="#F7E87A"
             android:textSize="40sp"
             android:textStyle="bold"/>
@@ -26,17 +27,19 @@
             android:layout_marginTop="205dp"
             android:text="邀请码"
             android:textColor="@color/white"
-            android:textSize="25sp"/>
+            android:textSize="25sp"
+            android:visibility="gone"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="260dp"
             android:orientation="vertical">
             <ImageView
+                android:id="@+id/iv_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/icon_mycode"/>
+            />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,7 +47,8 @@
                 android:layout_marginTop="5dp"
                 android:text="我的二维码"
                 android:textColor="#67221B"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:visibility="gone"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -56,7 +60,8 @@
                 android:text="请长按或在应用商店下载“养驴啦”app即刻开启塞上云端之旅"
                 android:textColor="#67221B"
                 android:textSize="14sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:visibility="gone"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,7 +72,8 @@
                 android:text="注册页、首页右上角点一点，扫一扫，或输入6位邀请码你也可以享有自己的专属店铺，售卖商品，好礼多多!"
                 android:textColor="#67221B"
                 android:textSize="14sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:visibility="gone"/>
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

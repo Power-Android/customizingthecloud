@@ -470,6 +470,7 @@ public class PingJiaActivity extends BaseActivity {
                 }
                 pingjiaPushBean.setContent(content);
                 pingjiaPushBean.setGood_id(goods1.get(i).getGoods_id() + "");
+                pingjiaPushBean.setImages("");//服务器要这个字段，即便是空
                 pingjiaPushBeanList.add(pingjiaPushBean);
             } else {
                 PingjiaPushBean pingjiaPushBean = new PingjiaPushBean();
@@ -481,6 +482,7 @@ public class PingJiaActivity extends BaseActivity {
                 }
                 pingjiaPushBean.setContent(content);
                 pingjiaPushBean.setGood_id(goods2.get(i).getGoods_id() + "");
+                pingjiaPushBean.setImages("");//服务器要这个字段，即便是空
                 pingjiaPushBeanList.add(pingjiaPushBean);
             }
             goodPosition++;

@@ -1,6 +1,5 @@
 package com.power.customizingthecloud.activity.mine;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,6 +19,8 @@ import com.power.customizingthecloud.utils.Urls;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.rong.imkit.RongIM;
+import io.rong.imlib.model.Conversation;
 
 public class WentiDetailActivity extends BaseActivity {
 
@@ -76,7 +77,7 @@ public class WentiDetailActivity extends BaseActivity {
                 break;
             case R.id.title_kefu_iv:
                 //                TUtils.showShort(mContext,"点击了---客服");
-                startActivity(new Intent(mContext,ChatActivity.class));
+                RongIM.getInstance().startConversation(this, Conversation.ConversationType.PRIVATE, "admin_1", "客服牧小童");
                 break;
         }
     }

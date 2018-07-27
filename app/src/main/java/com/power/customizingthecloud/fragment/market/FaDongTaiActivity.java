@@ -232,7 +232,11 @@ public class FaDongTaiActivity extends BaseActivity implements View.OnClickListe
             case R.id.title_content_right_tv:
                 jsonList.clear();
                 photoCount = 0;
-                commit(listAll.get(0).getPath());
+                if (listAll.size() > 0) {
+                    commit(listAll.get(0).getPath());
+                }else {
+                    Toast.makeText(this, "请选择至少一张图片~", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }

@@ -197,17 +197,19 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                     @Override
                     public void onSuccess(Response<UserBean> response) {
                         UserBean userBean = response.body();
-                        if (userBean.getCode() == 1){
+                        if (userBean.getCode() == 1) {
                             mineNameTv.setText(userBean.getData().getUser_name());
-                            mineLverduoTv.setText(userBean.getData().getUser_eselsohr()+"只");
-                            mineDaijinquanTv.setText(userBean.getData().getVoucher_count()+"张");
-                            mineHongbaoTv.setText(userBean.getData().getPackage_count()+"个");
-                            mineYuETv.setText(userBean.getData().getUser_balance()+"元");
+                            SpUtils.putString(mContext, "userName", userBean.getData().getUser_name());
+                            mineLverduoTv.setText(userBean.getData().getUser_eselsohr() + "只");
+                            mineDaijinquanTv.setText(userBean.getData().getVoucher_count() + "张");
+                            mineHongbaoTv.setText(userBean.getData().getPackage_count() + "个");
+                            mineYuETv.setText(userBean.getData().getUser_balance() + "元");
                             user_name = userBean.getData().getUser_name();
                             user_avatar = userBean.getData().getUser_avatar();
-                            if (!TextUtils.isEmpty(userBean.getData().getUser_avatar())){
+                            if (!TextUtils.isEmpty(userBean.getData().getUser_avatar())) {
                                 Glide.with(mContext).load(userBean.getData().getUser_avatar()).into(mineFaceIv);
-                            }else {
+                                SpUtils.putString(mContext, "userHead", userBean.getData().getUser_avatar());
+                            } else {
                                 mineFaceIv.setImageResource(R.drawable.face);
                             }
                         }
@@ -223,7 +225,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             if (TextUtils.isEmpty(userid)) {
                 startActivity(new Intent(mContext, LoginActivity.class));
                 mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
-            }else {
+            } else {
                 //这是当用户在别的界面点击领取代金券的时候或者获得驴耳朵的时候刷新一下
                 initData();
             }

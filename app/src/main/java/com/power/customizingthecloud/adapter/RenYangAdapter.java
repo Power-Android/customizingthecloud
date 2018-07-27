@@ -49,9 +49,9 @@ public class RenYangAdapter extends BaseQuickAdapter<RenYangListBean.DataEntity,
         ImageView iv_img = helper.getView(R.id.iv_img);
         ImageView iv_shouqing = helper.getView(R.id.iv_shouqing);
         Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_img);
-        int bili = item.getLast_amount() / item.getAmount();
+        float bili = Float.parseFloat(item.getLast_amount()+"") / Float.parseFloat(item.getAmount()+"");
         if (item.getState() == 2) {
-            progressBar.setProgress(bili * 100);
+            progressBar.setProgress((int) ((1 - bili) * 100));
             tv_shengyu.setTextColor(mContext.getResources().getColor(R.color.red1));
             tv_state.setText("进行中");
             tv_state.setBackgroundColor(mContext.getResources().getColor(R.color.red1));

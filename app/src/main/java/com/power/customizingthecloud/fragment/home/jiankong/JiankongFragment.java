@@ -32,7 +32,7 @@ import butterknife.Unbinder;
  */
 
 public class JiankongFragment extends BaseFragment {
-//    @BindView(R.id.recycler)
+    //    @BindView(R.id.recycler)
     RecyclerView mRecycler;
     Unbinder unbinder;
     private int page = 1;
@@ -59,7 +59,7 @@ public class JiankongFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mRecycler.setLayoutManager(new GridLayoutManager(mContext,3));
+        mRecycler.setLayoutManager(new GridLayoutManager(mContext, 3));
         mClass_id = getArguments().getString("class_id");
         initData();
         initListener();
@@ -88,10 +88,11 @@ public class JiankongFragment extends BaseFragment {
     }
 
     private void initData() {
-        HttpParams params=new HttpParams();
-        params.put("page",page);
-        params.put("limit","10");
-        params.put("class_id", mClass_id);
+        HttpParams params = new HttpParams();
+        params.put("page", page);
+        params.put("limit", "10");
+        if (mClass_id != null)
+            params.put("class_id", mClass_id);
         OkGo.<MuChangListBean>post(Urls.BASEURL + "api/v2/muchang/show")
                 .tag(this)
                 .params(params)
@@ -105,7 +106,7 @@ public class JiankongFragment extends BaseFragment {
                         } else if (code == 1) {
                             if (!isLoadMore) {
                                 mData = listBean.getData();
-                                mJianKongAdapter = new JianKongAdapter(R.layout.item_jiankong, mData,mContext);
+                                mJianKongAdapter = new JianKongAdapter(R.layout.item_jiankong, mData, mContext);
                                 mRecycler.setAdapter(mJianKongAdapter);
                             } else {
                                 if (listBean.getData() != null && listBean.getData().size() > 0) {

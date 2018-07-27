@@ -24,7 +24,6 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
-import com.power.customizingthecloud.activity.mine.ChatActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.base.UMShareActivity;
 import com.power.customizingthecloud.callback.DialogCallback;
@@ -48,6 +47,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.rong.imkit.RongIM;
+import io.rong.imlib.model.Conversation;
 
 public class GoodDetailActivity extends BaseActivity implements View.OnClickListener {
 
@@ -71,8 +72,8 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
     Banner mBanner;
     @BindView(R.id.tv_name)
     TextView mTvName;
-    @BindView(R.id.tv_shengyu)
-    TextView mTvShengyu;
+    @BindView(R.id.tv_price)
+    TextView tv_price;
     @BindView(R.id.tv_good_type)
     TextView mTvGoodType;
     @BindView(R.id.tv_diyong)
@@ -111,6 +112,8 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
     TextView mTvInsertcar;
     @BindView(R.id.tv_buy)
     TextView mTvBuy;
+    @BindView(R.id.tv_unit)
+    TextView tv_unit;
     @BindView(R.id.lv_xiangqing)
     ImageView mLvXiangqing;
     private BaseDialog mDialog;
@@ -170,7 +173,8 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
                             mItemStepper.setMaxValue(mData.getGood_storage());
                             BannerUtils.startBanner(mBanner, imgList);
                             mTvName.setText(mData.getName());
-                            mTvShengyu.setText(mData.getGood_storage() + "");
+                            tv_unit.setText("/"+mData.getUnit());
+                            tv_price.setText(mData.getPrice());
                             mTvDiyong.setText("可用" + mData.getEselsohr_deduction() + "驴耳朵抵用" + mData.getEselsohr_deduction() + "元");
                             mTvGoodType.setText("商品分类：" + mData.getClass_name());
                             String spec_value = mData.getSpec_value();
@@ -209,7 +213,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
                     overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                     return;
                 }
-                startActivity(new Intent(this, ChatActivity.class));
+                RongIM.getInstance().startConversation(this, Conversation.ConversationType.PRIVATE, "admin_1", "客服牧小童");
                 break;
             case R.id.tv_insertcar:
                 String userid2 = SpUtils.getString(mContext, "userid", "");
@@ -306,7 +310,6 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
         mWebview.setWebChromeClient(new WebChromeClient());
         mWebview.loadData(mData.getBody(), "text/html;charset=UTF-8", null);
         mLvXiangqing.setVisibility(View.GONE);
-        mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.GONE);
         mLlCanshu.setVisibility(View.GONE);
 

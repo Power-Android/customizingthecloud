@@ -7,9 +7,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.Response;
+import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.bean.MyCodeBean;
+import com.power.customizingthecloud.callback.JsonCallback;
+import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
 
 import butterknife.BindView;
@@ -41,8 +51,12 @@ public class MyCodeActivity extends BaseActivity implements View.OnClickListener
     ImageView mTitleJiaIv;
     @BindView(R.id.title_kefu_iv)
     ImageView mTitleKefuIv;
+    @BindView(R.id.iv_code)
+    ImageView iv_code;
     @BindView(R.id.title_content_right_tv)
     TextView mTitleContentRightTv;
+    @BindView(R.id.tv_code)
+    TextView tv_code;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
 
@@ -56,6 +70,27 @@ public class MyCodeActivity extends BaseActivity implements View.OnClickListener
         mTitleContentTv.setText("我的二维码");
         mTitleShareIv.setVisibility(View.VISIBLE);
         mTitleShareIv.setOnClickListener(this);
+        initData();
+    }
+
+    private void initData() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        OkGo.<MyCodeBean>get(Urls.BASEURL + "api/v2/qrcode")
+                .tag(this)
+                .headers(headers)
+                .execute(new JsonCallback<MyCodeBean>(MyCodeBean.class) {
+                    @Override
+                    public void onSuccess(Response<MyCodeBean> response) {
+                        MyCodeBean myCodeBean = response.body();
+                        if (myCodeBean.getCode() == 1) {
+                            tv_code.setText(myCodeBean.getData().getInviter_code());
+                            Glide.with(MyApplication.getGloableContext()).load(myCodeBean.getData().getImage()).into(iv_code);
+                        }else {
+                            Toast.makeText(mContext, myCodeBean.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     @Override

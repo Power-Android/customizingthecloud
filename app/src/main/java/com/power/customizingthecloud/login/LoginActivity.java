@@ -191,6 +191,7 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
                         int code = loginBean.getCode();
                         Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         if (code == 0) {
+                            Toast.makeText(LoginActivity.this, loginBean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
                             LoginBean.DataEntity dataEntity = loginBean.getData().get(0);
                             SpUtils.putString(LoginActivity.this, "userid", dataEntity.getUser_id() + "");

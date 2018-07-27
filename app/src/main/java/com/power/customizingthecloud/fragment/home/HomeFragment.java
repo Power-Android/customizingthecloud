@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -23,6 +24,8 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
@@ -31,12 +34,14 @@ import com.power.customizingthecloud.activity.mine.LatestActivity;
 import com.power.customizingthecloud.activity.mine.MyDonkeyEarsActivity;
 import com.power.customizingthecloud.activity.mine.MyMessageActivity;
 import com.power.customizingthecloud.base.BaseFragment;
+import com.power.customizingthecloud.bean.BaseBean;
 import com.power.customizingthecloud.bean.EventBean;
 import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.callback.JsonCallback;
 import com.power.customizingthecloud.fragment.home.bean.HomeBean;
 import com.power.customizingthecloud.fragment.home.jiankong.JianKongActivity;
-import com.power.customizingthecloud.fragment.home.renyang.RenYangListActivity;
 import com.power.customizingthecloud.fragment.home.renyang.RenYangDetailActivity;
+import com.power.customizingthecloud.fragment.home.renyang.RenYangListActivity;
 import com.power.customizingthecloud.fragment.home.top.CanWeiYuDingAcitivity;
 import com.power.customizingthecloud.fragment.home.top.KaiDianActivity;
 import com.power.customizingthecloud.fragment.home.top.MiaoShaActivity;
@@ -189,8 +194,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                 public void OnBannerClick(int position) {
                                     int state = homeslid.get(position).getState();
                                     Intent intent = new Intent(mContext, RenYangDetailActivity.class);
-                                    intent.putExtra("state",state);
-                                    intent.putExtra("id",homeslid.get(position).getId()+"");
+                                    intent.putExtra("state", state);
+                                    intent.putExtra("id", homeslid.get(position).getId() + "");
                                     startActivity(intent);
                                 }
                             });
@@ -206,8 +211,8 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(mContext, RenYangDetailActivity.class);
-                                    intent.putExtra("state",mDonkey.get(position).getState());
-                                    intent.putExtra("id",mDonkey.get(position).getId()+"");
+                                    intent.putExtra("state", mDonkey.get(position).getState());
+                                    intent.putExtra("id", mDonkey.get(position).getId() + "");
                                     startActivity(intent);
                                 }
                             });
@@ -229,7 +234,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(mContext, GoodDetailActivity.class);
-                                    intent.putExtra("id",mHot_goods.get(position).getId()+"");
+                                    intent.putExtra("id", mHot_goods.get(position).getId() + "");
                                     startActivity(intent);
                                 }
                             });
@@ -240,7 +245,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                 @Override
                                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                                     Intent intent = new Intent(mContext, MiaoShaDetailActivity.class);
-                                    intent.putExtra("id",mSeckill_good.get(position).getId()+"");
+                                    intent.putExtra("id", mSeckill_good.get(position).getId() + "");
                                     startActivity(intent);
                                 }
                             });
@@ -286,9 +291,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             startActivity(new Intent(mContext, MiaoShaActivity.class));
                             break;
                         case 1:
-                            if (TextUtils.isEmpty(userid)){
+                            if (TextUtils.isEmpty(userid)) {
                                 startActivity(new Intent(mContext, LoginActivity.class));
-                                mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                                mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                                 return;
                             }
                             startActivity(new Intent(mContext, FortuneCenterAcitivity.class));
@@ -304,9 +309,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             break;
                         case 5:
                             //                            showRenYangDialog();
-                            if (TextUtils.isEmpty(userid)){
+                            if (TextUtils.isEmpty(userid)) {
                                 startActivity(new Intent(mContext, LoginActivity.class));
-                                mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                                mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                                 return;
                             }
                             startActivity(new Intent(mContext, KaiDianActivity.class));
@@ -321,9 +326,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             startActivity(new Intent(mContext, LatestActivity.class));
                             break;
                         case 9:
-                            if (TextUtils.isEmpty(userid)){
+                            if (TextUtils.isEmpty(userid)) {
                                 startActivity(new Intent(mContext, LoginActivity.class));
-                                mActivity.overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                                mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                                 return;
                             }
                             startActivity(new Intent(mContext, MyDonkeyEarsActivity.class));
@@ -371,7 +376,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.iv_good_more:
                 Intent intent1 = new Intent(mContext, GoodListActivity.class);
-                intent1.putExtra("type","hot");
+                intent1.putExtra("type", "hot");
                 startActivity(intent1);
                 break;
         }
@@ -442,12 +447,34 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 }
                 if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
                     String result = bundle.getString(CodeUtils.RESULT_STRING);
-                    Toast.makeText(mContext, "解析结果:" + result, Toast.LENGTH_LONG).show();
+                    //                    Toast.makeText(mContext, "解析结果:" + result, Toast.LENGTH_LONG).show();
+                    sao(result);
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
                     Toast.makeText(mContext, "解析二维码失败", Toast.LENGTH_LONG).show();
                 }
             }
         }
+    }
+
+    private void sao(String code) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("code", code);
+        OkGo.<BaseBean>post(Urls.BASEURL + "api/v2/sao")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        BaseBean baseBean = response.body();
+                        Toast.makeText(mContext, baseBean.getMessage(), Toast.LENGTH_SHORT).show();
+                        if (baseBean.getCode() == 1) {
+                            startActivity(new Intent(mContext, KaiDianActivity.class));
+                        }
+                    }
+                });
     }
 
     private void showShopMaDialog() {
@@ -472,9 +499,15 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 mDialog.dismiss();
             }
         });
+        final EditText editText = mDialog.getView(R.id.edt_content);
         mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (TextUtils.isEmpty(editText.getText().toString())) {
+                    Toast.makeText(mContext, "请输入店铺码~", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                sao(editText.getText().toString());
                 mDialog.dismiss();
             }
         });
@@ -600,16 +633,16 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_img);
             String lastCount = item.getLast_amount().substring(0, item.getLast_amount().length() - 1);
             String totalCount = item.getAmount().substring(0, item.getAmount().length() - 1);
-            int bili = Integer.parseInt(lastCount) / Integer.parseInt(totalCount);
+            float bili = Float.parseFloat(lastCount) / Float.parseFloat(totalCount);
             if (item.getState() == 2) {
-                progressBar.setProgress(bili * 100);
+                progressBar.setProgress((int) ((1 - bili) * 100));
                 tv_shengyu.setTextColor(getResources().getColor(R.color.red1));
                 tv_state.setText("进行中");
                 tv_state.setBackgroundColor(getResources().getColor(R.color.red1));
-            } else if (item.getState()==1){
+            } else if (item.getState() == 1) {
                 progressBar.setProgress(0);
                 tv_state.setText("即将开始");
-            }else if (item.getState()==3){
+            } else if (item.getState() == 3) {
                 progressBar.setProgress(0);
                 tv_state.setText("已结束");
                 tv_state.setBackgroundColor(getResources().getColor(R.color.huise));

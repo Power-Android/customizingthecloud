@@ -77,6 +77,9 @@ public class JianKongActivity extends BaseActivity implements View.OnClickListen
                             Toast.makeText(mContext, typeBean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
                             mData = typeBean.getData();
+                            MuChangTypeBean.DataEntity dataEntity = new MuChangTypeBean.DataEntity();
+                            dataEntity.setName("全部");//加个全部
+                            mData.add(0,dataEntity);
                             tab_list.clear();
                             for (int i = 0; i < mData.size(); i++) {
                                 tab_list.add(mData.get(i).getName());
@@ -98,7 +101,7 @@ public class JianKongActivity extends BaseActivity implements View.OnClickListen
                             mViewpager.setAdapter(adapter);
                             mTablayout.setupWithViewPager(mViewpager);
                             int class_id = getIntent().getIntExtra("class_id", 0);
-                            int position=getClassIdPosition(class_id);
+                            int position = getClassIdPosition(class_id);
                             mViewpager.setCurrentItem(position);
                         }
                     }

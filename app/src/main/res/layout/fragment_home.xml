@@ -75,6 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="20dp"
+                    android:background="@drawable/cloud_one"
                     android:orientation="vertical">
                     <TextView
                         android:id="@+id/tv_nianshouyi"
@@ -94,6 +95,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="150dp"
                     android:layout_marginTop="10dp"
+                    android:background="@drawable/cloud_two"
                     android:orientation="vertical">
                     <TextView
                         android:id="@+id/tv_yangzhichengben"
@@ -113,6 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="275dp"
                     android:layout_marginTop="20dp"
+                    android:background="@drawable/cloud_two"
                     android:orientation="vertical">
                     <TextView
                         android:id="@+id/tv_touzizhouqi"
@@ -127,14 +130,6 @@
                         android:text="投资周期"
                         android:textSize="12sp"/>
                 </LinearLayout>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="250dp"
-                    android:layout_marginTop="83dp"
-                    android:text="我有一头小毛驴"
-                    android:textColor="@color/text_black"
-                    android:textSize="12sp"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
