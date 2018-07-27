@@ -1,1 +1,1 @@
-include ':app', ':CountdownView-library'
+include ':app', ':CountdownView-library', ':IMLib', ':IMKit'
