@@ -11,16 +11,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.EventBean;
+import com.power.customizingthecloud.callback.JsonCallback;
 import com.power.customizingthecloud.fragment.home.HomeFragment;
 import com.power.customizingthecloud.fragment.market.MarketFragment;
 import com.power.customizingthecloud.fragment.mine.MineFragment;
 import com.power.customizingthecloud.fragment.pasture.PastureFragment;
 import com.power.customizingthecloud.fragment.shop.ShopFragment;
+import com.power.customizingthecloud.im.RcConnect;
+import com.power.customizingthecloud.im.RongTokenBean;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -65,6 +73,31 @@ public class MainActivity extends BaseActivity {
         homeFragment = new HomeFragment();
         addFragments(homeFragment);
         EventBus.getDefault().register(this);
+        getRongToken();
+    }
+
+    private void getRongToken() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
+        String userid = SpUtils.getString(mContext, "userid", "");
+        String userName = SpUtils.getString(mContext, "userName", "");
+        String userHead = SpUtils.getString(mContext, "userHead", "");
+        HttpParams params = new HttpParams();
+        params.put("user_id", "user_"+userid);
+        params.put("user_name", userName);
+        params.put("pic", userHead);
+        OkGo.<RongTokenBean>post(Urls.BASEURL + "api/v2/user/rongcloud")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<RongTokenBean>(RongTokenBean.class) {
+                    @Override
+                    public void onSuccess(Response<RongTokenBean> response) {
+                        RongTokenBean bean = response.body();
+                        String token = bean.getData().getToken();
+                        RcConnect.rongCloudConnection(MainActivity.this, token);
+                    }
+                });
     }
 
     @Override

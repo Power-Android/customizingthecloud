@@ -278,7 +278,11 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                     startActivity(new Intent(mContext, LoginActivity.class));
                     return;
                 }
-                startActivity(new Intent(mContext, KaiDianActivity.class));
+                if (SpUtils.getBoolean(mContext, "inviter_code", false)) {
+                    startActivity(new Intent(mContext, KaiDianActivity.class));
+                }else {
+                    Toast.makeText(mContext, "您还无法开店，先去认养毛驴吧~", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.tv_meichu:
                 startActivity(new Intent(mContext, VideoListActivity.class));

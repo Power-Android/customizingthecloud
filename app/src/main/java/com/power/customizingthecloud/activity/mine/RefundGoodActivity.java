@@ -100,7 +100,7 @@ public class RefundGoodActivity extends BaseActivity {
         protected void convert(BaseViewHolder helper, ReturnMoneyDetailBean.DataEntity.GoodsEntity item) {
             Glide.with(mContext).load(item.getGoods_image()).into((ImageView) helper.getView(R.id.item_img_iv));
             helper.setText(R.id.item_name_tv, item.getGoods_name())
-                    .setText(R.id.item_fenlei_tv, "商品分类：" + item.getGoods_class());
+                    .setText(R.id.item_fenlei_tv, "商品分类：" + item.getClass_name());
         }
     }
 

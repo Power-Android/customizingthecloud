@@ -6,36 +6,62 @@ package com.power.customizingthecloud.im;
 
 public class RongTokenBean {
 
+
     /**
-     * code : 200
-     * userId : jlk456j5
-     * token : sfd9823ihufi
+     * code : 1
+     * data : {"userId":"user_1","token":"RQfsy06775PvPuRsiTzJdcSX1qFZ6RYaPq0iMXS8lbRFGb4oPLOMAXcqxX1BhOEkelp1tfTIOzc2znMxhrOxXw=="}
+     * message : ok
      */
     private int code;
-    private String userId;
-    private String token;
+    private DataEntity data;
+    private String message;
 
     public void setCode(int code) {
         this.code = code;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setData(DataEntity data) {
+        this.data = data;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public int getCode() {
         return code;
     }
 
-    public String getUserId() {
-        return userId;
+    public DataEntity getData() {
+        return data;
     }
 
-    public String getToken() {
-        return token;
+    public String getMessage() {
+        return message;
+    }
+
+    public static class DataEntity {
+        /**
+         * userId : user_1
+         * token : RQfsy06775PvPuRsiTzJdcSX1qFZ6RYaPq0iMXS8lbRFGb4oPLOMAXcqxX1BhOEkelp1tfTIOzc2znMxhrOxXw==
+         */
+        private String userId;
+        private String token;
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public String getToken() {
+            return token;
+        }
     }
 }

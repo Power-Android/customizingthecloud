@@ -116,17 +116,17 @@ public class ReturnMoneyDetailBean {
             private String goods_name;
             private String goods_image;
             private String goods_price;
-            private String goods_class;
+            private String class_name;
             private int goods_id;
             private int goods_num;
             private int order_id;
 
-            public String getGoods_class() {
-                return goods_class;
+            public String getClass_name() {
+                return class_name;
             }
 
-            public void setGoods_class(String goods_class) {
-                this.goods_class = goods_class;
+            public void setClass_name(String class_name) {
+                this.class_name = class_name;
             }
 
             public void setGoods_name(String goods_name) {

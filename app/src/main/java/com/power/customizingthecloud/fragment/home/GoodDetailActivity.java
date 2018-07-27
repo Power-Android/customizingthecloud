@@ -312,7 +312,6 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
         mLvXiangqing.setVisibility(View.GONE);
         mRecycler.setVisibility(View.GONE);
         mLlCanshu.setVisibility(View.GONE);
-
     }
 
     private void initDetailColor() {

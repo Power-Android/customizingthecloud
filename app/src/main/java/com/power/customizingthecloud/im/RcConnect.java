@@ -28,9 +28,7 @@ public class RcConnect {
          */
         RongIM.connect(token, new RongIMClient.ConnectCallback() {
             @Override
-            public void onSuccess(String s) {
-                Log.e("MainActivity", "——onSuccess—-" +
-                        s.toString());
+            public void onSuccess(String userid) {
                 setUserInfo();
             }
 

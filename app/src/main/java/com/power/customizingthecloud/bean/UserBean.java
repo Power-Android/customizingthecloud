@@ -58,8 +58,17 @@ public class UserBean implements Serializable {
         private int user_eselsohr;
         private String user_balance;
         private String user_avatar;
+        private String inviter_code;
         private int voucher_count;
         private int package_count;
+
+        public String getInviter_code() {
+            return inviter_code;
+        }
+
+        public void setInviter_code(String inviter_code) {
+            this.inviter_code = inviter_code;
+        }
 
         public int getId() {
             return id;

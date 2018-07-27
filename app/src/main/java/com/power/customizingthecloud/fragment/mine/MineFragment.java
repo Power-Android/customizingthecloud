@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;
@@ -212,6 +213,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                             } else {
                                 mineFaceIv.setImageResource(R.drawable.face);
                             }
+                            //判断用户有没有邀请码
+                            if (TextUtils.isEmpty(userBean.getData().getInviter_code())){
+                                SpUtils.putBoolean(mContext,"inviter_code",false);
+                            }else {
+                                SpUtils.putBoolean(mContext,"inviter_code",true);
+                            }
                         }
                     }
                 });
@@ -313,7 +320,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(new Intent(mContext, MyReserveActivity.class));
                 break;
             case R.id.mine_dianpu_rl://我的店铺
-                startActivity(new Intent(mContext, KaiDianActivity.class));
+                if (SpUtils.getBoolean(mContext, "inviter_code", false)) {
+                    startActivity(new Intent(mContext, KaiDianActivity.class));
+                }else {
+                    Toast.makeText(mContext, "您还无法开店，先去认养毛驴吧~", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.mine_zhuanzhang_rl://我的转账
                 startActivity(new Intent(mContext, MyTransferAccountsActivity.class));

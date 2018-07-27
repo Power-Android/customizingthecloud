@@ -252,6 +252,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                         }
                     }
                 });
+        EventBus.getDefault().postSticky(new EventBean("userinfo"));//刷新下我的界面
     }
 
     private void initTop() {
@@ -314,7 +315,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                 mActivity.overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
                                 return;
                             }
-                            startActivity(new Intent(mContext, KaiDianActivity.class));
+                            if (SpUtils.getBoolean(mContext, "inviter_code", false)) {
+                                startActivity(new Intent(mContext, KaiDianActivity.class));
+                            }else {
+                                Toast.makeText(mContext, "您还无法开店，先去认养毛驴吧~", Toast.LENGTH_SHORT).show();
+                            }
                             break;
                         case 6:
                             startActivity(new Intent(mContext, ZiXunActivity.class));

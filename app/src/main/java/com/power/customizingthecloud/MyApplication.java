@@ -25,7 +25,6 @@ import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
-import com.power.customizingthecloud.im.RcConnect;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
@@ -62,8 +61,6 @@ public class MyApplication extends LitePalApplication {
 
     private void initRong() {
         RongIM.init(this);
-        RcConnect.rongCloudConnection(this,
-                "WohzvdWJxIdTY2vvKBZNesSX1qFZ6RYaPq0iMXS8lbRFGb4oPLOMAan6hljsLL5yyPK95UXVXFeu1/0KNm82tLcmtJO7P3TD");
     }
 
     private void initImageLoader() {
