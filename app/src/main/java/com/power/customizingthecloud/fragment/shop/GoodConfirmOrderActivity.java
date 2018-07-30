@@ -204,6 +204,8 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
         mTvTime.setOnClickListener(this);
         mIvTime.setOnClickListener(this);
         mIvAddress.setOnClickListener(this);
+        shopRecycler.setLayoutManager(new LinearLayoutManager(mContext));
+        shopRecycler.setNestedScrollingEnabled(false);
         initData();
         initListener();
         // 通过WXAPIFactory工厂，获取IWXAPI的实例
@@ -322,8 +324,6 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                                         }.getType());
                                 if (goodListEntities != null && goodListEntities.size() > 0) {
 
-                                    shopRecycler.setLayoutManager(new LinearLayoutManager(mContext));
-                                    shopRecycler.setNestedScrollingEnabled(false);
                                     ShopAdapter adapter = new ShopAdapter(R.layout.item_confirm_order_shop, goodListEntities);
                                     shopRecycler.setAdapter(adapter);
 

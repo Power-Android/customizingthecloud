@@ -29,7 +29,8 @@ public abstract class DialogCallback<T> extends JsonCallback<T> {
 
 
     private void initDialog(Activity activity) {
-        dialog = new LoadingDialog(activity, R.style.dialog);
+        if (dialog == null)
+            dialog = new LoadingDialog(activity, R.style.dialog);
     }
 
     public DialogCallback(Class<T> clazz) {
@@ -41,7 +42,7 @@ public abstract class DialogCallback<T> extends JsonCallback<T> {
     public DialogCallback(Activity activity, Type type) {
         super();
         this.type = type;
-        this.activity=activity;
+        this.activity = activity;
         initDialog(activity);
     }
 
@@ -64,26 +65,29 @@ public abstract class DialogCallback<T> extends JsonCallback<T> {
     @Override
     public T convertResponse(Response response) throws Throwable {
         ResponseBody body = response.body();
-        if (body == null) return null;
+        if (body == null)
+            return null;
         code = response.code();
         T data = null;
         Gson gson = new Gson();
         JsonReader jsonReader = new JsonReader(body.charStream());
-        if (type != null) data = gson.fromJson(jsonReader,type);
-        if (clazz != null) data = gson.fromJson(jsonReader,clazz);
+        if (type != null)
+            data = gson.fromJson(jsonReader, type);
+        if (clazz != null)
+            data = gson.fromJson(jsonReader, clazz);
         return data;
     }
 
     @Override
     public void onFinish() {
         //网络请求结束后关闭对话框
-        if (activity==null){
+        if (activity == null) {
             return;
         }
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
-        if (code ==401){
+        if (code == 401) {
             //登录过期
             Toast.makeText(MyApplication.getGloableContext(), "登录已过期，请重新登录", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(MyApplication.getGloableContext(), LoginActivity.class);

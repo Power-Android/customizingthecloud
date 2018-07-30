@@ -232,6 +232,7 @@ public class OrderDetailActivity extends BaseActivity {
                                 }
                                 break;
                             case 40://待评价
+                                mItemCancleOrderTv.setVisibility(View.GONE);
                                 if (evaluation_state == 1) {
                                     mTypeContentTv.setText("买家已评价");
                                     mItemUseTv.setText("已评价");

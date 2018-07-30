@@ -1,27 +1,26 @@
 package com.power.customizingthecloud.login.bean;
 
-import java.util.List;
-
 /**
  * Created by Administrator on 2018/3/14.
  */
 
 public class LoginBean {
 
+
     /**
      * code : 1
-     * data : [{"user_id":1,"user_mobile":"15250735030","refresh_ttl":40320,"ttl":20160,"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlzcyI6Imh0dHA6Ly93d3cuc3N5ZC5jb20vYXBpL3YyL2NvZGUtbG9naW4iLCJpYXQiOjE1MTYzNDcyOTMsImV4cCI6MTUxNzU1Njg5MywibmJmIjoxNTE2MzQ3MjkzLCJqdGkiOiJFMnAyUG9aeUIyTlBLS2hZIn0.hJNoONtN8MzkzM3tZ_dzcw4IeohCi5zyp88pXd4WeW0"}]
+     * data : {"user_id":11,"user_mobile":"15250735031","refresh_ttl":40320,"ttl":20160,"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjExLCJpc3MiOiJodHRwOi8vMzkuMTA3LjkxLjkyOjg0L2FwaS92Mi9tb2JpbGUtbG9naW4iLCJpYXQiOjE1MzI5Mzc5OTMsImV4cCI6MTUzNDE0NzU5MywibmJmIjoxNTMyOTM3OTkzLCJqdGkiOiJkelVuUHBGeWZUR1BGUm9FIn0.e0AKDEXDqNGjD7KoH1FQV7EVLEzc8WAksYYAqjwOvZI"}
      * message : 登录成功
      */
     private int code;
-    private List<DataEntity> data;
+    private DataEntity data;
     private String message;
 
     public void setCode(int code) {
         this.code = code;
     }
 
-    public void setData(List<DataEntity> data) {
+    public void setData(DataEntity data) {
         this.data = data;
     }
 
@@ -33,7 +32,7 @@ public class LoginBean {
         return code;
     }
 
-    public List<DataEntity> getData() {
+    public DataEntity getData() {
         return data;
     }
 
@@ -43,11 +42,11 @@ public class LoginBean {
 
     public static class DataEntity {
         /**
-         * user_id : 1
-         * user_mobile : 15250735030
+         * user_id : 11
+         * user_mobile : 15250735031
          * refresh_ttl : 40320
          * ttl : 20160
-         * token : eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlzcyI6Imh0dHA6Ly93d3cuc3N5ZC5jb20vYXBpL3YyL2NvZGUtbG9naW4iLCJpYXQiOjE1MTYzNDcyOTMsImV4cCI6MTUxNzU1Njg5MywibmJmIjoxNTE2MzQ3MjkzLCJqdGkiOiJFMnAyUG9aeUIyTlBLS2hZIn0.hJNoONtN8MzkzM3tZ_dzcw4IeohCi5zyp88pXd4WeW0
+         * token : eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjExLCJpc3MiOiJodHRwOi8vMzkuMTA3LjkxLjkyOjg0L2FwaS92Mi9tb2JpbGUtbG9naW4iLCJpYXQiOjE1MzI5Mzc5OTMsImV4cCI6MTUzNDE0NzU5MywibmJmIjoxNTMyOTM3OTkzLCJqdGkiOiJkelVuUHBGeWZUR1BGUm9FIn0.e0AKDEXDqNGjD7KoH1FQV7EVLEzc8WAksYYAqjwOvZI
          */
         private int user_id;
         private String user_mobile;

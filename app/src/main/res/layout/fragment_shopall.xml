@@ -59,13 +59,14 @@
                             app:isShowMinute="true"
                             app:isShowSecond="true"
                             app:suffixGravity="center"
+                            app:timeBgColor="@color/red3"
                             app:suffixTextColor="@color/red3"
                             app:suffixTextSize="16sp"
                             app:timeBgDivisionLineSize="1dp"
                             app:timeBgRadius="5dp"
-                            app:timeBgSize="23dp"
+                            app:timeBgSize="20dp"
                             app:timeTextColor="#FFFFFF"
-                            app:timeTextSize="16sp"/>
+                            app:timeTextSize="14sp"/>
                     </LinearLayout>
                     <TextView
                         android:layout_width="wrap_content"

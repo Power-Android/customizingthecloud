@@ -51,6 +51,7 @@ import com.power.customizingthecloud.fragment.home.top.ZiXunActivity;
 import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.utils.BannerUtils;
 import com.power.customizingthecloud.utils.MyUtils;
+import com.power.customizingthecloud.utils.SoftKeyboardTool;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
@@ -318,7 +319,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             if (SpUtils.getBoolean(mContext, "inviter_code", false)) {
                                 startActivity(new Intent(mContext, KaiDianActivity.class));
                             }else {
-                                Toast.makeText(mContext, "您还无法开店，先去认养毛驴吧~", Toast.LENGTH_SHORT).show();
+                                showRenYangDialog();
                             }
                             break;
                         case 6:
@@ -514,6 +515,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                 }
                 sao(editText.getText().toString());
                 mDialog.dismiss();
+                SoftKeyboardTool.closeKeyboard(editText);
             }
         });
     }
@@ -543,6 +545,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(mContext,RenYangListActivity.class));
                 mDialog.dismiss();
             }
         });

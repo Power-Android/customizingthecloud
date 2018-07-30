@@ -3,7 +3,6 @@ package com.power.customizingthecloud.fragment.market;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -12,6 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.base.BaseActivity;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import uk.co.senab.photoview.PhotoView;
 
-public class ViewPagerActivity extends AppCompatActivity implements View.OnClickListener {
+public class ViewPagerActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.title_message_iv)
     ImageView mTitleMessageIv;

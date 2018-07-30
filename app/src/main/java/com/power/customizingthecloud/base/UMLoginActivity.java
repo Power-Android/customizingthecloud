@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.lzy.okgo.OkGo;
@@ -14,15 +13,14 @@ import com.orhanobut.logger.Logger;
 import com.power.customizingthecloud.MainActivity;
 import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.callback.DialogCallback;
-import com.power.customizingthecloud.login.LoginActivity;
 import com.power.customizingthecloud.login.bean.LoginBean;
-import com.power.customizingthecloud.utils.MyUtils;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.TUtils;
 import com.power.customizingthecloud.utils.Urls;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.utils.Log;
 
 import java.util.Map;
 
@@ -93,12 +91,12 @@ public class UMLoginActivity extends BaseActivity {
             } else if (platform.equals(SHARE_MEDIA.SINA)) {
                 type = "weibo";
             }
-
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, int action, Throwable t) {
             Toast.makeText(MyApplication.getGloableContext(), "登陆失败", Toast.LENGTH_SHORT).show();
+            Log.e("xxxxxxxx友盟登录失败：",t.getMessage());
         }
 
         @Override
@@ -129,8 +127,8 @@ public class UMLoginActivity extends BaseActivity {
         params.put("wx_name",username);
         params.put("wx_openid",uid);
         params.put("wx_img",userhead);
-//        String device_token = SpUtils.getString(mContext, "device_token", "");
-        params.put("device_token","111");
+        String device_token = SpUtils.getString(mContext, "device_token", "");
+        params.put("device_token",device_token);
 
         OkGo.<LoginBean>post(Urls.BASEURL + "api/v2/wx-login")
                 .tag(mContext)
@@ -142,7 +140,7 @@ public class UMLoginActivity extends BaseActivity {
                         int code = loginBean.getCode();
                         if (code == 0) {
                         } else if (code == 1) {
-                            LoginBean.DataEntity dataEntity = loginBean.getData().get(0);
+                            LoginBean.DataEntity dataEntity = loginBean.getData();
                             SpUtils.putString(mContext, "userid", dataEntity.getUser_id() + "");
                             SpUtils.putString(mContext, "token", dataEntity.getToken());
                             long ttlMs = dataEntity.getTtl() * 60 * 1000L;

@@ -182,6 +182,7 @@ public class ShopMiaoFragment extends BaseFragment {
             ImageView iv_img = helper.getView(R.id.iv_image);
             Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_img);
             helper.setText(R.id.tv_title, item.getName())
+                    .setText(R.id.tv_unit, item.getUnit())
                     .setText(R.id.tv_curprice, item.getSeckill_price())
                     .setText(R.id.tv_last_count, item.getSeckill_storage() + "");
         }

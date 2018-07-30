@@ -19,21 +19,23 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <!-- 访问网络，网络定位需要上网 -->
     <uses-permission android:name="android.permission.INTERNET"/>
-
     <!-- zxing需要的权限start -->
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
-
     <uses-feature android:name="android.hardware.camera"/>
-
     <uses-permission android:name="android.permission.CAMERA"/>
-
     <uses-feature android:name="android.hardware.camera.autofocus"/>
-
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
     <!-- zxing需要的权限end -->
+    <!--极光推送start-->
+    <permission
+        android:name="${applicationId}.permission.JPUSH_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="${applicationId}.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!--极光推送end-->
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -198,7 +200,7 @@
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+            />
         <activity android:name=".fragment.home.MiaoConfirmOrderActivity"/>
         <activity android:name=".fragment.shop.GoodConfirmOrderActivity"/>
         <activity android:name=".login.RegisterActivity"/>
@@ -236,7 +238,7 @@
         <activity android:name=".fragment.market.ViewPagerActivity"/>
         <activity android:name=".activity.mine.TixianMingxiDetailActivity"/>
         <activity android:name=".fragment.home.ShareSuccessActivity"/>
-        <activity android:name=".activity.mine.GoodConfirmOrder1Activity"/>
+        <activity android:name=".activity.mine.PackageDetailActivity"/>
         <activity android:name=".activity.mine.OrderDetailActivity"/>
         <activity android:name=".activity.mine.RefundGoodActivity"/>
         <activity android:name=".fragment.home.MyCodeActivity"/>
@@ -280,5 +282,11 @@
                     android:scheme="rong"/>
             </intent-filter>
         </activity>
+
+
+
+
+
+
     </application>
 </manifest>

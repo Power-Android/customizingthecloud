@@ -25,6 +25,7 @@ import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
+import com.power.customizingthecloud.utils.SpUtils;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
@@ -35,6 +36,7 @@ import org.litepal.LitePalApplication;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
+import cn.jpush.android.api.JPushInterface;
 import io.rong.imkit.RongIM;
 import okhttp3.OkHttpClient;
 
@@ -57,6 +59,14 @@ public class MyApplication extends LitePalApplication {
         //imageLoader
         initImageLoader();
         initRong();
+        initJPush();
+    }
+
+    private void initJPush() {
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
+        String udid = JPushInterface.getUdid(this);
+        SpUtils.putString(this,"device_token",udid);
     }
 
     private void initRong() {
