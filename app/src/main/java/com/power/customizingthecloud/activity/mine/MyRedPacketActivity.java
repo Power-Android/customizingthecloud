@@ -78,7 +78,6 @@ public class MyRedPacketActivity extends BaseActivity implements View.OnClickLis
                 });
     }
 
-    //-----这是个注释-----
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
     }
@@ -103,7 +102,6 @@ public class MyRedPacketActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    /* 这是个注释 */
     private class MyRedPacketAdapter extends BaseQuickAdapter<RedPacketBean.DataBean, BaseViewHolder> {
 
         public MyRedPacketAdapter(@LayoutRes int layoutResId, @Nullable List<RedPacketBean.DataBean> data) {
@@ -114,7 +112,7 @@ public class MyRedPacketActivity extends BaseActivity implements View.OnClickLis
         protected void convert(BaseViewHolder helper, RedPacketBean.DataBean item) {
             helper.setText(R.id.item_name_tv, item.getName())
                     .setText(R.id.item_date_tv, item.getStart_time() + "-" + item.getEnd_time())
-                    .setText(R.id.item_money_tv, "￥" + item.getPrice())
+                    .setText(R.id.item_money_tv, "¥" + item.getPrice())
                     //                    .setText(R.id.item_num_tv,item.getNum())
                     .addOnClickListener(R.id.item_liji_lingqu_tv);
             TextView lijilingquTv = helper.getView(R.id.item_liji_lingqu_tv);

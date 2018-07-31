@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:id="@+id/ll_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <RelativeLayout
@@ -12,12 +13,12 @@
             android:id="@+id/item_face_iv"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/face"/>
+            />
         <TextView
             android:id="@+id/item_name_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="豆沙包"
+            android:text=""
             android:textColor="@color/text_black"
             android:layout_toRightOf="@+id/item_face_iv"
             android:layout_marginTop="12dp"
@@ -28,7 +29,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:background="@color/gray1"
-            android:text="评论：小伙，拍照技术不错"
+            android:text=""
             android:layout_below="@+id/item_name_tv"
             android:layout_toRightOf="@+id/item_face_iv"
             android:layout_toLeftOf="@+id/item_pic_iv"
@@ -40,7 +41,6 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:scaleType="fitXY"
-            android:src="@drawable/face"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
 

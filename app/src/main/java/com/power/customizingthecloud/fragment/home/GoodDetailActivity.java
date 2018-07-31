@@ -147,7 +147,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
     }
 
     private void initData() {
-        String id = getIntent().getStringExtra("id");
+        String id =  getIntent().getStringExtra("id");
         HttpParams params = new HttpParams();
         params.put("good_id", id);
         params.put("type", "1");
@@ -191,6 +191,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
                             lookBean.setName(mData.getName());
                             lookBean.setPrice(mData.getPrice());
                             lookBean.setImage(mData.getThumb());
+                            lookBean.setTime(System.currentTimeMillis());
                             LookUtils.add(lookBean);
                         }
                     }

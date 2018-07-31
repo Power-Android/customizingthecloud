@@ -318,6 +318,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
         CircleHomeBean.DataEntity.FeedEntity feedEntity = mFeed.get(position);
         final List<CircleHomeBean.DataEntity.FeedEntity.LikesEntity> likes = feedEntity.getLikes();
         final String userid = SpUtils.getString(mContext, "userid", "");
+        final String userName = SpUtils.getString(mContext, "userName", "");
         boolean isLike = false;
         CircleHomeBean.DataEntity.FeedEntity.LikesEntity likesEntity = null;
         for (int i = 0; i < likes.size(); i++) {
@@ -355,7 +356,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                                 likes.remove(finalLikesEntity);
                             } else {
                                 iv_like.setImageResource(R.drawable.ganji_like3);
-                                likes.add(new CircleHomeBean.DataEntity.FeedEntity.LikesEntity(Integer.parseInt(userid), user.getUser_name()));
+                                likes.add(new CircleHomeBean.DataEntity.FeedEntity.LikesEntity(Integer.parseInt(userid), userName));
                             }
                             mMyAdapter.notifyItemChanged(position);
                         }

@@ -7,7 +7,7 @@ import org.litepal.crud.DataSupport;
  */
 
 public class LookBean extends DataSupport{
-    private int id;
+    private int myid;
     private String class_name;
     private String name;
     private String image;
@@ -15,11 +15,11 @@ public class LookBean extends DataSupport{
     private long time;//用时间戳来控制排列顺序
 
     public int getId() {
-        return id;
+        return myid;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.myid = id;
     }
 
     public String getClass_name() {

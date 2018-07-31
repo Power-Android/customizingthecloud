@@ -237,6 +237,9 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         mItemStepper.setOnValueChangeListener(new SnappingStepperValueChangeListener() {
             @Override
             public void onValueChange(View view, int value) {
+                if (datas.getLast_amount()==0){
+                    return;
+                }
                 if (value > datas.getLast_amount()) {
                     value = datas.getLast_amount();
                 }

@@ -76,7 +76,7 @@ public class MyFootprintActivity extends BaseActivity implements View.OnClickLis
             case R.id.shachu_tv:
                 search = LookUtils.search();
                 if (search != null && search.size() > 0) {
-                    LookUtils.deleteOne(search.get(position).getName());
+                    LookUtils.deleteOne(search.get(position).getId()+"");
                 }
                 initData();
                 break;

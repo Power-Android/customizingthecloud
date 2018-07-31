@@ -34,7 +34,7 @@
                         android:layout_height="160dp"
                         android:layout_gravity="center_vertical"
                         android:scaleType="fitXY"
-                        android:src="@drawable/face"/>
+                        />
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

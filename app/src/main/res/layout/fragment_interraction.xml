@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgourd">
+    android:background="@color/backgourd"
+    android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp">
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -18,13 +18,13 @@
                 android:id="@+id/pinglun_tv"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="评论"
-                android:textColor="@color/green"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="15dp"
-                android:background="@drawable/bg_text2"/>
+                android:layout_weight="1"
+                android:background="@drawable/bg_text2"
+                android:gravity="center"
+                android:text="评论"
+                android:textColor="@color/green"/>
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="0dp"
@@ -34,20 +34,22 @@
                 android:id="@+id/huifu_tv"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
                 android:layout_weight="1"
+                android:background="@drawable/bg_text2"
                 android:gravity="center"
                 android:text="回复"
-                android:layout_marginLeft="15dp"
-                android:textColor="@color/text_black"
-                android:background="@drawable/bg_text2"/>
+                android:textColor="@color/text_black"/>
         </RelativeLayout>
-
     </LinearLayout>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <com.liaoinstan.springview.widget.SpringView
+        android:id="@+id/springview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
-
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"/>
+    </com.liaoinstan.springview.widget.SpringView>
 </LinearLayout>

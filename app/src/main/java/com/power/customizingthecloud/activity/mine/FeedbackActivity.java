@@ -25,7 +25,6 @@ import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.BaseBean;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.fragment.market.bean.UploadPhotoBean;
-import com.power.customizingthecloud.utils.MyUtils;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.MyGridView;
@@ -198,13 +197,13 @@ public class FeedbackActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.commit_tv:
-                if (!TextUtils.isEmpty(phoneEt.getText().toString())){
-                    boolean mobileNO = MyUtils.isMobileNO(phoneEt.getText().toString());
-                    if (!mobileNO){
-                        Toast.makeText(this, "请输入正确格式的手机号~", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
+                //                if (!TextUtils.isEmpty(phoneEt.getText().toString())){
+                //                    boolean mobileNO = MyUtils.isMobileNO(phoneEt.getText().toString());
+                //                    if (!mobileNO){
+                //                        Toast.makeText(this, "请输入正确格式的手机号~", Toast.LENGTH_SHORT).show();
+                //                        return;
+                //                    }
+                //                }
                 photoCount = 0;
                 if (listAll != null && listAll.size() > 0) {
                     commit(listAll.get(0).getPath());
@@ -282,17 +281,13 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     private void submit(String images, boolean b) {
-        if (!TextUtils.isEmpty(phoneEt.getText().toString())) {
-            if (!MyUtils.isMobileNO(phoneEt.getText().toString())) {
-                Toast.makeText(this, "请输入正确格式的手机号~", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
         HttpParams params = new HttpParams();
         params.put("content", contentEt.getText().toString());
-        params.put("mobile", phoneEt.getText().toString());
+        if (!TextUtils.isEmpty(phoneEt.getText().toString())) {
+            params.put("mobile", phoneEt.getText().toString());
+        }
         if (b)
             params.put("images", images);
         OkGo.<BaseBean>post(Urls.BASEURL + "api/v2/kefu/feed-back")

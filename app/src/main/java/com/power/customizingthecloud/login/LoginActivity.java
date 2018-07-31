@@ -180,7 +180,8 @@ public class LoginActivity extends UMLoginActivity implements View.OnClickListen
             params.put("password", mEdtPsw.getText().toString());
             url = Urls.BASEURL + "api/v2/mobile-login";
         }
-        params.put("device_token", "111");
+        String device_token = SpUtils.getString(this, "device_token", "");
+        params.put("device_token", device_token);
         OkGo.<LoginBean>post(url)
                 .tag(this)
                 .params(params)

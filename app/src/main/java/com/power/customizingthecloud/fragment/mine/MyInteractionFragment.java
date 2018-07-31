@@ -12,10 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.liaoinstan.springview.container.DefaultFooter;
+import com.liaoinstan.springview.container.DefaultHeader;
+import com.liaoinstan.springview.widget.SpringView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.HttpParams;
@@ -36,6 +40,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static com.power.customizingthecloud.utils.Urls.BASEURL;
+
 /**
  * Created by Administrator on 2018/1/26.
  */
@@ -48,7 +54,13 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     Unbinder unbinder;
-    private List<InteractionBean.DataBean> list = new ArrayList<>();
+    private List<InteractionBean.DataBean> list;
+    @BindView(R.id.springview)
+    SpringView mSpringview;
+    private String after;
+    private boolean isLoadMore;
+    private int currPosition = 1;
+    private InteractionAdapter adapter;
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,15 +69,43 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
         initData();
+        initListener();
         return view;
     }
 
+    private void initListener() {
+        mSpringview.setHeader(new DefaultHeader(mContext));
+        mSpringview.setFooter(new DefaultFooter(mContext));
+        mSpringview.setListener(new SpringView.OnFreshListener() {
+            @Override
+            public void onRefresh() {
+                after = "";
+                isLoadMore = false;
+                initData();
+                mSpringview.onFinishFreshAndLoad();
+            }
+
+            @Override
+            public void onLoadmore() {
+                isLoadMore = true;
+                initData();
+                mSpringview.onFinishFreshAndLoad();
+            }
+        });
+    }
+
     private void initData() {
+        String url = "";
+        if (currPosition == 1) {
+            url = Urls.BASEURL + "api/v2/user/my-comment";
+        } else if (currPosition == 2) {
+            url = BASEURL + "api/v2/user/my-reply";
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
-        params.put("after", "");
-        OkGo.<InteractionBean>get(Urls.BASEURL + "api/v2/user/my-comment")
+        params.put("after", after);
+        OkGo.<InteractionBean>get(url)
                 .tag(this)
                 .headers(headers)
                 .params(params)
@@ -74,39 +114,24 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
                     public void onSuccess(Response<InteractionBean> response) {
                         InteractionBean body = response.body();
                         if (body.getCode() == 1) {
-                            list = body.getData();
-                            InteractionAdapter adapter = new InteractionAdapter(R.layout.item_interacation, list);
-                            recyclerView.setAdapter(adapter);
+                            if (!isLoadMore) {
+                                list = body.getData();
+                                adapter = new InteractionAdapter(R.layout.item_interacation, list);
+                                recyclerView.setAdapter(adapter);
+                            } else {
+                                if (body.getData() != null && body.getData().size() > 0) {
+                                    list.addAll(body.getData());
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    Toast.makeText(mContext, "没有更多了~", Toast.LENGTH_SHORT).show();
+                                }
+                            }
                             adapter.setOnItemChildClickListener(MyInteractionFragment.this);
                         }
                     }
                 });
-
     }
 
-    private void initData2() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
-        HttpParams params = new HttpParams();
-        params.put("after", "");
-        OkGo.<InteractionBean>get(Urls.BASEURL + "api/v2/user/my-reply")
-                .tag(this)
-                .headers(headers)
-                .params(params)
-                .execute(new DialogCallback<InteractionBean>(mActivity, InteractionBean.class) {
-                    @Override
-                    public void onSuccess(Response<InteractionBean> response) {
-                        InteractionBean body = response.body();
-                        if (body.getCode() == 1) {
-                            list = body.getData();
-                            InteractionAdapter adapter = new InteractionAdapter(R.layout.item_interacation, list);
-                            recyclerView.setAdapter(adapter);
-                            adapter.setOnItemChildClickListener(MyInteractionFragment.this);
-                        }
-                    }
-                });
-
-    }
 
     @Override
     protected void initLazyData() {
@@ -117,6 +142,10 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
     public void pinglun() {
         pinglunTv.setTextColor(mContext.getResources().getColor(R.color.green));
         huifuTv.setTextColor(mContext.getResources().getColor(R.color.text_black));
+        currPosition = 1;
+        after = "";
+        isLoadMore = false;
+        list = new ArrayList<>();
         initData();
     }
 
@@ -124,7 +153,11 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
     public void huifu() {
         huifuTv.setTextColor(mContext.getResources().getColor(R.color.green));
         pinglunTv.setTextColor(mContext.getResources().getColor(R.color.text_black));
-        initData2();
+        currPosition = 2;
+        isLoadMore = false;
+        after = "";
+        list = new ArrayList<>();
+        initData();
     }
 
     @Override
@@ -142,6 +175,7 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
 
         @Override
         protected void convert(BaseViewHolder helper, InteractionBean.DataBean item) {
+            after = item.getId() + "";
             if (!TextUtils.isEmpty(item.getUser_name()) && item.getUser_name().length() > 14) {
                 String user_name = item.getUser_name();
                 String substring = user_name.substring(0, 14);
@@ -150,7 +184,7 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
                 helper.setText(R.id.item_name_tv, item.getUser_name());
             }
             helper.setText(R.id.item_content_tv, item.getBody())
-                    .addOnClickListener(R.id.item_content_tv);
+                    .addOnClickListener(R.id.ll_root);
             ImageView imageView = helper.getView(R.id.item_pic_iv);
             ImageView faceiV = helper.getView(R.id.item_face_iv);
             Glide.with(mActivity).load(item.getUser_avatar()).into(faceiV);
