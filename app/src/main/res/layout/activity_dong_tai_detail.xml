@@ -21,7 +21,7 @@
                 android:layout_height="50dp"
             />
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:orientation="vertical">
@@ -101,7 +101,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="10dp"
                         android:background="#F0F0F0"
                         android:orientation="vertical"
                         android:paddingBottom="5dp">
@@ -121,7 +121,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_marginBottom="5dp"
-                            android:background="#E5E5E5"/>
+                            android:background="#E5E5E5"
+                            android:visibility="gone"/>
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/recycler_chat"
                             android:layout_width="match_parent"
@@ -131,7 +132,8 @@
                     </LinearLayout>
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="15dp"
+                        android:layout_height="10dp"
+                        android:layout_marginLeft="3dp"
                         android:scaleType="fitXY"
                         android:src="@drawable/sanjiaoxing"/>
                 </FrameLayout>

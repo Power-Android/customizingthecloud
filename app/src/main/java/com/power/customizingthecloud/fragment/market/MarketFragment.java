@@ -297,7 +297,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             helper.getView(R.id.ll_like).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    changeLike(helper.getAdapterPosition(), iv_like);
+                    changeLike(helper.getAdapterPosition());
                 }
             });
             helper.getView(R.id.ll_pinglun).setOnClickListener(new View.OnClickListener() {
@@ -308,17 +308,18 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
             });
             if ((comments == null || comments.size() == 0) && TextUtils.isEmpty(builder.toString())) {
                 helper.setVisible(R.id.fl_chat, false);
+            }else {
+                helper.setVisible(R.id.fl_chat, true);//注意这个逻辑不要忘记，否则notifyItemChanged也会出现问题
             }
         }
     }
 
-    private void changeLike(final int position, final ImageView iv_like) {
+    private void changeLike(final int position) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         CircleHomeBean.DataEntity.FeedEntity feedEntity = mFeed.get(position);
         final List<CircleHomeBean.DataEntity.FeedEntity.LikesEntity> likes = feedEntity.getLikes();
         final String userid = SpUtils.getString(mContext, "userid", "");
-        final String userName = SpUtils.getString(mContext, "userName", "");
         boolean isLike = false;
         CircleHomeBean.DataEntity.FeedEntity.LikesEntity likesEntity = null;
         for (int i = 0; i < likes.size(); i++) {
@@ -352,11 +353,9 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                             Toast.makeText(mActivity, bean.getMessage(), Toast.LENGTH_SHORT).show();
                             //手动设置，不用再请求一次网络
                             if (finalIsLike) {
-                                iv_like.setImageResource(R.drawable.ganji_like2);
                                 likes.remove(finalLikesEntity);
                             } else {
-                                iv_like.setImageResource(R.drawable.ganji_like3);
-                                likes.add(new CircleHomeBean.DataEntity.FeedEntity.LikesEntity(Integer.parseInt(userid), userName));
+                                likes.add(new CircleHomeBean.DataEntity.FeedEntity.LikesEntity(Integer.parseInt(userid), user.getUser_name()));
                             }
                             mMyAdapter.notifyItemChanged(position);
                         }

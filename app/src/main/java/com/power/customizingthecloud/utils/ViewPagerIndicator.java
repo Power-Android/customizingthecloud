@@ -21,8 +21,8 @@ public class ViewPagerIndicator implements ViewPager.OnPageChangeListener {
     private ViewPager viewPager;
     private LinearLayout dotLayout;
     private int size;
-    private int imgSize = 65;
-    int img1= R.drawable.shap_yuan_ture;
+    private int imgSize = 30;
+    int img1= R.drawable.shap_yuan_true;
     int img2=R.drawable.shap_yuan_false;
 
     private List<View> dotViewLists = new ArrayList<>();
@@ -38,8 +38,8 @@ public class ViewPagerIndicator implements ViewPager.OnPageChangeListener {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
             //为小圆点左右添加间距
-            params.leftMargin = 3;
-            params.rightMargin = 3;
+            params.leftMargin = 13;
+            params.rightMargin = 13;
             //手动给小圆点一个大小
             params.height = imgSize;
             params.width = imgSize;

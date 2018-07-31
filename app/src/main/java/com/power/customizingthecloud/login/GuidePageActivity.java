@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.lzy.okgo.OkGo;
@@ -20,6 +21,7 @@ import com.power.customizingthecloud.callback.JsonCallback;
 import com.power.customizingthecloud.login.bean.GuidePageBean;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.Urls;
+import com.power.customizingthecloud.utils.ViewPagerIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +36,14 @@ public class GuidePageActivity extends BaseActivity {
     private int[] imgurls = {R.drawable.guide1, R.drawable.guide2, R.drawable.guide3};
     private List<String> imgUrlList = new ArrayList<>();
     private boolean isNetImg = true;
+    private LinearLayout liner;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guidepage);
         vp = (ViewPager) findViewById(R.id.vp);
+        liner = (LinearLayout) findViewById(R.id.liner);
         OkGo.<GuidePageBean>get(Urls.BASEURL + "api/v2/bootstrapper")
                 .tag(this)
                 .execute(new JsonCallback<GuidePageBean>(GuidePageBean.class) {
@@ -67,6 +71,7 @@ public class GuidePageActivity extends BaseActivity {
                             if (mGuidePagerAdapter == null) {
                                 mGuidePagerAdapter = new GuidePagerAdapter();
                             }
+                            vp.setOnPageChangeListener(new ViewPagerIndicator(GuidePageActivity.this, vp, liner, imgUrlList.size()));
                             vp.setAdapter(mGuidePagerAdapter);
                         }
                     }
@@ -100,7 +105,7 @@ public class GuidePageActivity extends BaseActivity {
             });
             if (isNetImg) {
                 Glide.with(MyApplication.getGloableContext()).load(imgUrlList.get(position)).into(imageView);
-                if (position == imgUrlList.size()-1) {
+                if (position == imgUrlList.size() - 1) {
                     tv_into.setVisibility(View.VISIBLE);
                 } else {
                     tv_into.setVisibility(View.GONE);
