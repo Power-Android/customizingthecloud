@@ -119,6 +119,7 @@ public class CanWeiYuDingAcitivity extends BaseActivity implements View.OnClickL
                             CanWeiListBean.DataEntity data = canWeiListBean.getData();
                             final List<CanWeiListBean.DataEntity.SlidEntity> slid = data.getSlid();
                             if (slid != null && slid.size() > 0) {
+                                imgList.clear();
                                 for (int i = 0; i < slid.size(); i++) {
                                     String image_url = slid.get(i).getImage_url();
                                     imgList.add(image_url);

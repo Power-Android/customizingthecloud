@@ -69,10 +69,11 @@
                             app:timeTextSize="14sp"/>
                     </LinearLayout>
                     <TextView
+                        android:id="@+id/tv_goodname"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:text="每天3个整点9.9元秒杀"
+                        android:text=""
                         android:textSize="14sp"/>
                     <FrameLayout
                         android:layout_width="150dp"

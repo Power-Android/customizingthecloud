@@ -80,6 +80,8 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
     TextView mTvMeichu;
     @BindView(R.id.tv_newactivity)
     TextView mTvNewactivity;
+    @BindView(R.id.tv_goodname)
+    TextView tv_goodname;
     @BindView(R.id.iv_newproduct_more)
     ImageView mIvNewproductMore;
     @BindView(R.id.recycler_new)
@@ -218,10 +220,10 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                                     startActivity(new Intent(mContext,QuanListActivity.class));
                                 }
                             });
-
                             mHot_seckill = data.getHot_seckill();
                             Glide.with(MyApplication.getGloableContext()).load(mHot_seckill.getImage()).into(iv_miaosha);
                             mTvXianlianggou.setText(mHot_seckill.getPrice()+"元");
+                            tv_goodname.setText(mHot_seckill.getName());
                             long time = mHot_seckill.getSeckill_end_time()*1000L - System.currentTimeMillis();
                             mCvCountdownView.start(time);
                         }
