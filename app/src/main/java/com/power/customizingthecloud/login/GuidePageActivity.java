@@ -93,7 +93,7 @@ public class GuidePageActivity extends BaseActivity {
         public Object instantiateItem(ViewGroup container, int position) {
             View view = View.inflate(GuidePageActivity.this, R.layout.item_guide, null);
             ImageView imageView = (ImageView) view.findViewById(R.id.iv_guide);
-            View tv_into = view.findViewById(R.id.tv_into);
+            ImageView tv_into = (ImageView) view.findViewById(R.id.tv_into);
             tv_into.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

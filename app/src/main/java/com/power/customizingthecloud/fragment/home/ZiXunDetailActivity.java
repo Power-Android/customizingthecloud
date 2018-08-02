@@ -3,21 +3,13 @@ package com.power.customizingthecloud.fragment.home;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.model.HttpHeaders;
-import com.lzy.okgo.model.HttpParams;
-import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
-import com.power.customizingthecloud.bean.LatestDetialBean;
-import com.power.customizingthecloud.callback.DialogCallback;
-import com.power.customizingthecloud.utils.SpUtils;
-import com.power.customizingthecloud.utils.TUtils;
-import com.power.customizingthecloud.utils.Urls;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,7 +60,7 @@ public class ZiXunDetailActivity extends BaseActivity implements View.OnClickLis
 
     private void initView() {
         String id = getIntent().getStringExtra("id");
-        HttpHeaders headers = new HttpHeaders();
+        /*HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
         HttpParams params = new HttpParams();
         params.put("type","1");
@@ -89,7 +81,21 @@ public class ZiXunDetailActivity extends BaseActivity implements View.OnClickLis
                             TUtils.showShort(mContext,latestBean.getMessage());
                         }
                     }
-                });
+                });*/
+
+        initWeb();
+        mWebview.loadUrl("http://39.107.91.92:84/wap/informationDetails.html?type=1&id="+id);
+    }
+
+    private void initWeb() {
+        WebSettings webSettings = mWebview.getSettings();
+        webSettings.setJavaScriptEnabled(true); // 设置支持javascript脚本
+        webSettings.setUseWideViewPort(true);//关键点
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        //        webSettings.setBuiltInZoomControls(true); // 设置显示缩放按钮
+        //        webSettings.setSupportZoom(true); // 支持缩放
+        mWebview.setWebChromeClient(new WebChromeClient());
     }
 
     @Override

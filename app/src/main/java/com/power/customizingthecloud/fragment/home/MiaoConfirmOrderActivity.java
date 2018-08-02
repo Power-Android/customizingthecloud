@@ -168,6 +168,17 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent1(EventBean eventBean) {
+        if (eventBean.getMsg().equals("weixinpaycancel")) {
+            setResult(1, new Intent());
+            finish();
+            Intent intent = new Intent(MiaoConfirmOrderActivity.this, MyOrderActivity.class);
+            intent.putExtra("type", "1");
+            startActivity(intent);
+        }
+    }
+
     private void initData() {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
@@ -308,7 +319,7 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
         HttpParams params = new HttpParams();
         params.put("order_sn", order_sn);
         params.put("pay_type", pay_type);
-        switch (pay_type){
+        switch (pay_type) {
             case "1":
                 OkGo.<AliPayBean>post(Urls.BASEURL + "api/v2/buy/pay")
                         .tag(this)
@@ -412,6 +423,11 @@ public class MiaoConfirmOrderActivity extends BaseActivity implements View.OnCli
                         } else {
                             // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
                             Toast.makeText(MiaoConfirmOrderActivity.this, "支付宝支付取消", Toast.LENGTH_SHORT).show();
+                            setResult(1, new Intent());
+                            finish();
+                            Intent intent = new Intent(MiaoConfirmOrderActivity.this, MyOrderActivity.class);
+                            intent.putExtra("type", "1");
+                            startActivity(intent);
                         }
                     }
                     break;

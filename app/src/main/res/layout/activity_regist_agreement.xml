@@ -7,15 +7,8 @@
     android:orientation="vertical"
 >
     <include layout="@layout/item_title_layout"/>
-    <TextView
+    <WebView
+        android:id="@+id/webview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="10dp"
-        android:padding="10dp"
-        android:background="@color/white"
-        android:lineSpacingExtra="2dp"
-        android:text="手机登录手机发了卡萨开放老舅妈的路口附近按时开放撒旦教萨科技代理商科技的撒宽带连接撒肯德基sad来看撒娇没空来得快"/>
+        android:layout_height="wrap_content"/>
 </LinearLayout>

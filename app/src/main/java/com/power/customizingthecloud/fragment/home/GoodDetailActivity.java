@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -144,10 +145,22 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
         mItemStepper.setLeftButtonResources(R.drawable.jianhao_white);
         mItemStepper.setRightButtonResources(R.drawable.jiahao_white);
         initData();
+        initWeb();
+    }
+
+    private void initWeb() {
+        WebSettings webSettings = mWebview.getSettings();
+        webSettings.setJavaScriptEnabled(true); // 设置支持javascript脚本
+        webSettings.setUseWideViewPort(true);//关键点
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+//        webSettings.setBuiltInZoomControls(true); // 设置显示缩放按钮
+//        webSettings.setSupportZoom(true); // 支持缩放
+        mWebview.setWebChromeClient(new WebChromeClient());
     }
 
     private void initData() {
-        String id =  getIntent().getStringExtra("id");
+        String id = getIntent().getStringExtra("id");
         HttpParams params = new HttpParams();
         params.put("good_id", id);
         params.put("type", "1");
@@ -173,7 +186,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
                             mItemStepper.setMaxValue(mData.getGood_storage());
                             BannerUtils.startBanner(mBanner, imgList);
                             mTvName.setText(mData.getName());
-                            tv_unit.setText("/"+mData.getUnit());
+                            tv_unit.setText("/" + mData.getUnit());
                             tv_price.setText(mData.getPrice());
                             mTvDiyong.setText("可用" + mData.getEselsohr_deduction() + "驴耳朵抵用" + mData.getEselsohr_deduction() + "元");
                             mTvGoodType.setText("商品分类：" + mData.getClass_name());
@@ -185,14 +198,18 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
                             mComments = mData.getComments();
                             detail();
                             //添加数据库，我的足迹
-                            LookBean lookBean = new LookBean();
-                            lookBean.setId(mData.getId());
-                            lookBean.setClass_name(mData.getClass_name());
-                            lookBean.setName(mData.getName());
-                            lookBean.setPrice(mData.getPrice());
-                            lookBean.setImage(mData.getThumb());
-                            lookBean.setTime(System.currentTimeMillis());
-                            LookUtils.add(lookBean);
+                            String userid = SpUtils.getString(mContext, "userid", "");
+                            if (!TextUtils.isEmpty(userid)) {
+                                LookBean lookBean = new LookBean();
+                                lookBean.setUser_id(Integer.parseInt(userid));
+                                lookBean.setGood_id(mData.getId());
+                                lookBean.setClass_name(mData.getClass_name());
+                                lookBean.setName(mData.getName());
+                                lookBean.setPrice(mData.getPrice());
+                                lookBean.setImage(mData.getThumb());
+                                lookBean.setTime(System.currentTimeMillis());
+                                LookUtils.add(lookBean);
+                            }
                         }
                     }
                 });
@@ -308,7 +325,6 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
     public void detail() {
         initDetailColor();
         mWebview.setVisibility(View.VISIBLE);
-        mWebview.setWebChromeClient(new WebChromeClient());
         mWebview.loadData(mData.getBody(), "text/html;charset=UTF-8", null);
         mLvXiangqing.setVisibility(View.GONE);
         mRecycler.setVisibility(View.GONE);

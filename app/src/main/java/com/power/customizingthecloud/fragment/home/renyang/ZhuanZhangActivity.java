@@ -2,6 +2,9 @@ package com.power.customizingthecloud.fragment.home.renyang;
 
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,6 +42,8 @@ public class ZhuanZhangActivity extends BaseActivity implements View.OnClickList
     ImageView mTitleKefuIv;
     @BindView(R.id.title_content_right_tv)
     TextView mTitleContentRightTv;
+    @BindView(R.id.webview)
+    WebView mWebview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +53,19 @@ public class ZhuanZhangActivity extends BaseActivity implements View.OnClickList
         mTitleBackIv.setVisibility(View.VISIBLE);
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("转账指引");
+        initWeb();
+        mWebview.loadUrl("http://39.107.91.92:84/wap/protocol.html?id=7");
+    }
+
+    private void initWeb() {
+        WebSettings webSettings = mWebview.getSettings();
+        webSettings.setJavaScriptEnabled(true); // 设置支持javascript脚本
+        webSettings.setUseWideViewPort(true);//关键点
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        //        webSettings.setBuiltInZoomControls(true); // 设置显示缩放按钮
+        //        webSettings.setSupportZoom(true); // 支持缩放
+        mWebview.setWebChromeClient(new WebChromeClient());
     }
 
     @Override

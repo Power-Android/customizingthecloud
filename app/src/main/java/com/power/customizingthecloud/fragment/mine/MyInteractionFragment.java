@@ -187,8 +187,12 @@ public class MyInteractionFragment extends BaseFragment implements BaseQuickAdap
                     .addOnClickListener(R.id.ll_root);
             ImageView imageView = helper.getView(R.id.item_pic_iv);
             ImageView faceiV = helper.getView(R.id.item_face_iv);
-            Glide.with(mActivity).load(item.getUser_avatar()).into(faceiV);
-            if (item.getImage() != null || item.getImage() != "") {
+            if (!TextUtils.isEmpty(item.getUser_avatar())) {
+                Glide.with(mActivity).load(item.getUser_avatar()).into(faceiV);
+            }else {
+                faceiV.setImageResource(R.drawable.face);
+            }
+            if (!TextUtils.isEmpty(item.getImage())) {
                 imageView.setVisibility(View.VISIBLE);
                 Glide.with(mActivity).load(item.getImage()).into(imageView);
             } else {

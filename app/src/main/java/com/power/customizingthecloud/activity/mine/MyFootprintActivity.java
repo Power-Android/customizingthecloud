@@ -19,6 +19,7 @@ import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.db.LookBean;
 import com.power.customizingthecloud.db.LookUtils;
 import com.power.customizingthecloud.fragment.home.GoodDetailActivity;
+import com.power.customizingthecloud.utils.SpUtils;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class MyFootprintActivity extends BaseActivity implements View.OnClickLis
     RecyclerView recyclerView;
     private List<LookBean> search;
     private FootprintAdapter adapter;
+    private String userid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +48,12 @@ public class MyFootprintActivity extends BaseActivity implements View.OnClickLis
         titleBackIv.setOnClickListener(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
+        userid = SpUtils.getString(mContext, "userid", "");
         initData();
     }
 
     private void initData() {
-        search = LookUtils.search();
+        search = LookUtils.search(userid);
         adapter = new FootprintAdapter(R.layout.item_foot_print, search);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemChildClickListener(this);
@@ -70,13 +73,13 @@ public class MyFootprintActivity extends BaseActivity implements View.OnClickLis
         switch (view.getId()) {
             case R.id.content_rl:
                 Intent intent = new Intent(mContext, GoodDetailActivity.class);
-                intent.putExtra("id", search.get(position).getId() + "");
+                intent.putExtra("id", search.get(position).getGood_id() + "");
                 startActivity(intent);
                 break;
             case R.id.shachu_tv:
-                search = LookUtils.search();
+                search = LookUtils.search(userid);
                 if (search != null && search.size() > 0) {
-                    LookUtils.deleteOne(search.get(position).getId()+"");
+                    LookUtils.deleteOne(search.get(position).getGood_id()+"");
                 }
                 initData();
                 break;

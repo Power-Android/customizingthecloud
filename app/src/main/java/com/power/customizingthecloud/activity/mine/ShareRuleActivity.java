@@ -1,4 +1,4 @@
-package com.power.customizingthecloud.fragment.home;
+package com.power.customizingthecloud.activity.mine;
 
 import android.os.Bundle;
 import android.view.View;
@@ -14,47 +14,47 @@ import com.power.customizingthecloud.base.BaseActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DianRuleActivity extends BaseActivity implements View.OnClickListener {
+public class ShareRuleActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.title_message_iv)
-    ImageView mTitleMessageIv;
+    ImageView titleMessageIv;
     @BindView(R.id.title_back_iv)
-    ImageView mTitleBackIv;
+    ImageView titleBackIv;
     @BindView(R.id.title_list_iv)
-    ImageView mTitleListIv;
+    ImageView titleListIv;
     @BindView(R.id.title_content_tv)
-    TextView mTitleContentTv;
+    TextView titleContentTv;
     @BindView(R.id.title_sign_in_iv)
-    ImageView mTitleSignInIv;
+    ImageView titleSignInIv;
     @BindView(R.id.title_setting_iv)
-    ImageView mTitleSettingIv;
+    ImageView titleSettingIv;
     @BindView(R.id.title_qrcode_iv)
-    ImageView mTitleQrcodeIv;
+    ImageView titleQrcodeIv;
     @BindView(R.id.title_shopcar_iv)
-    ImageView mTitleShopcarIv;
+    ImageView titleShopcarIv;
     @BindView(R.id.title_share_iv)
-    ImageView mTitleShareIv;
+    ImageView titleShareIv;
     @BindView(R.id.title_search_iv)
-    ImageView mTitleSearchIv;
+    ImageView titleSearchIv;
     @BindView(R.id.title_jia_iv)
-    ImageView mTitleJiaIv;
+    ImageView titleJiaIv;
     @BindView(R.id.title_kefu_iv)
-    ImageView mTitleKefuIv;
+    ImageView titleKefuIv;
     @BindView(R.id.title_content_right_tv)
-    TextView mTitleContentRightTv;
+    TextView titleContentRightTv;
     @BindView(R.id.webview)
     WebView mWebview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dian_rule);
+        setContentView(R.layout.activity_share_rule);
         ButterKnife.bind(this);
-        mTitleBackIv.setVisibility(View.VISIBLE);
-        mTitleBackIv.setOnClickListener(this);
-        mTitleContentTv.setText("开店规则");
+        titleBackIv.setVisibility(View.VISIBLE);
+        titleBackIv.setOnClickListener(this);
+        titleContentTv.setText("分享规则");
         initWeb();
-        mWebview.loadUrl("http://39.107.91.92:84/wap/protocol.html?id=2");
+        mWebview.loadUrl("http://39.107.91.92:84/wap/protocol.html?id=5");
     }
 
     private void initWeb() {
@@ -70,7 +70,7 @@ public class DianRuleActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
+        switch (v.getId()){
             case R.id.title_back_iv:
                 finish();
                 break;

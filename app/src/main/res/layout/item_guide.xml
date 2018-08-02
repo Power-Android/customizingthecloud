@@ -10,14 +10,14 @@
         android:scaleType="fitXY"
         android:src="@drawable/guide3"
     />
-    <View
+    <ImageView
         android:id="@+id/tv_into"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_gravity="bottom|center"
+        android:src="@drawable/lijitiyan"
         android:layout_marginBottom="70dp"
         android:layout_marginLeft="100dp"
         android:layout_marginRight="100dp"
-        android:background="@drawable/lijitiyan"
-        android:visibility="gone"/>
+        />
 </FrameLayout>

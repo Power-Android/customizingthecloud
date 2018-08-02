@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -136,6 +137,18 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
         mRecycler.setNestedScrollingEnabled(false);
         initData();
+        initWeb();
+    }
+
+    private void initWeb() {
+        WebSettings webSettings = mWebview.getSettings();
+        webSettings.setJavaScriptEnabled(true); // 设置支持javascript脚本
+        webSettings.setUseWideViewPort(true);//关键点
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        //        webSettings.setBuiltInZoomControls(true); // 设置显示缩放按钮
+        //        webSettings.setSupportZoom(true); // 支持缩放
+        mWebview.setWebChromeClient(new WebChromeClient());
     }
 
     private void initData() {
@@ -320,7 +333,6 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
     public void detail() {
         initDetailColor();
         mWebview.setVisibility(View.VISIBLE);
-        mWebview.setWebChromeClient(new WebChromeClient());
         mWebview.loadData(mData.getBody(), "text/html;charset=UTF-8", null);
 
         //        mWebview.setVisibility(View.GONE);

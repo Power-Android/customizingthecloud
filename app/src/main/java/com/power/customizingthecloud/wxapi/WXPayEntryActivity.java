@@ -67,6 +67,7 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
                 Toast.makeText(this, "微信支付失败", Toast.LENGTH_SHORT).show();
             }
             if (baseResp.errCode == -2) {
+                EventBus.getDefault().postSticky(new EventBean("weixinpaycancel"));
                 Toast.makeText(this, "微信支付取消", Toast.LENGTH_SHORT).show();
             }
             finish();

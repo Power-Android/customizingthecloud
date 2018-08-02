@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.utils.TUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,22 +44,35 @@ public class TixianSecondActivity extends BaseActivity implements View.OnClickLi
         titleBackIv.setOnClickListener(this);
         titleContentTv.setText("个人信息");
         jumpTv.setOnClickListener(this);
-
         type = getIntent().getStringExtra("type");
-
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.title_back_iv:
                 finish();
                 break;
             case R.id.jump_tv:
-                if (TextUtils.equals("addCard",type)){
-                    startActivity(new Intent(mContext,BindCartActivity.class));
-                }else {
-                    startActivity(new Intent(mContext,TixianThreeActivity.class));
+                if (TextUtils.isEmpty(nameEt.getText().toString().trim())) {
+                    TUtils.showShort(mContext, "请输入持卡人真实姓名");
+                    return;
+                }
+                if (TextUtils.isEmpty(cardEt.getText().toString().trim())) {
+                    TUtils.showShort(mContext, "请输入本人银行卡号");
+                    return;
+                }
+                if (TextUtils.isEmpty(bankEt.getText().toString().trim())) {
+                    TUtils.showShort(mContext, "请选择所在银行");
+                    return;
+                }
+                if (TextUtils.equals("addCard", type)) {
+                    Intent intent = new Intent(mContext, BindCartActivity.class);
+                    intent.putExtra("card_name",nameEt.getText().toString().trim());
+                    intent.putExtra("bank_card",cardEt.getText().toString().trim());
+                    startActivity(intent);
+                } else {
+                    startActivity(new Intent(mContext, TixianThreeActivity.class));
                 }
                 break;
         }

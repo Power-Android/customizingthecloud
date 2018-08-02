@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -31,6 +32,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.activity.mine.MyOrderActivity;
 import com.power.customizingthecloud.activity.mine.MyRenyangCenterActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.AliPayBean;
@@ -184,6 +186,11 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                         } else {
                             // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
                             Toast.makeText(RenYangDetailActivity.this, "支付宝支付取消", Toast.LENGTH_SHORT).show();
+                            setResult(1, new Intent());
+                            finish();
+                            Intent intent = new Intent(RenYangDetailActivity.this, MyOrderActivity.class);
+                            intent.putExtra("type", "1");
+                            startActivity(intent);
                         }
                     }
                     break;
@@ -237,7 +244,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         mItemStepper.setOnValueChangeListener(new SnappingStepperValueChangeListener() {
             @Override
             public void onValueChange(View view, int value) {
-                if (datas.getLast_amount()==0){
+                if (datas.getLast_amount() == 0) {
                     return;
                 }
                 if (value > datas.getLast_amount()) {
@@ -251,6 +258,18 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
             }
         });
         initData();
+        initWeb();
+    }
+
+    private void initWeb() {
+        WebSettings webSettings = mWebview.getSettings();
+        webSettings.setJavaScriptEnabled(true); // 设置支持javascript脚本
+        webSettings.setUseWideViewPort(true);//关键点
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        //        webSettings.setBuiltInZoomControls(true); // 设置显示缩放按钮
+        //        webSettings.setSupportZoom(true); // 支持缩放
+        mWebview.setWebChromeClient(new WebChromeClient());
     }
 
     private void initData() {
@@ -323,6 +342,17 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
             setResult(1, new Intent());
             finish();
             Intent intent = new Intent(RenYangDetailActivity.this, MyRenyangCenterActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent1(EventBean eventBean) {
+        if (eventBean.getMsg().equals("weixinpaycancel")) {
+            setResult(1, new Intent());
+            finish();
+            Intent intent = new Intent(RenYangDetailActivity.this, MyOrderActivity.class);
+            intent.putExtra("type", "1");
             startActivity(intent);
         }
     }
@@ -419,7 +449,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                             @Override
                             public void onSuccess(Response<AliPayBean> response) {
                                 AliPayBean bean = response.body();
-                                if (bean.getCode()==0){
+                                if (bean.getCode() == 0) {
                                     Toast.makeText(RenYangDetailActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
                                     return;
                                 }
@@ -458,7 +488,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                                      public void onSuccess(Response<WXPayBean> response) {
                                          int code = response.code();
                                          WXPayBean wxPayBean = response.body();
-                                         if (wxPayBean.getCode()==0){
+                                         if (wxPayBean.getCode() == 0) {
                                              Toast.makeText(RenYangDetailActivity.this, wxPayBean.getMessage(), Toast.LENGTH_SHORT).show();
                                              return;
                                          }
@@ -582,9 +612,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
         initXiangMuColor();
         mWebview.setVisibility(View.VISIBLE);
         mLvXiangqing.setVisibility(View.GONE);
-        mWebview.setWebChromeClient(new WebChromeClient());
         mWebview.loadData(datas.getContent(), "text/html;charset=UTF-8", null);
-        mWebview.setVisibility(View.GONE);
         mRecycler.setVisibility(View.GONE);
         mTvIntro.setVisibility(View.GONE);
     }
@@ -674,7 +702,7 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
             ImageView iv_face = (ImageView) helper.getView(R.id.iv_face);
             if (!TextUtils.isEmpty(item.getUser_avatar())) {
                 Glide.with(MyApplication.getGloableContext()).load(item.getUser_avatar()).into(iv_face);
-            }else {
+            } else {
                 iv_face.setImageResource(R.drawable.face);
             }
             helper.setText(R.id.tv_phone, item.getUser_name())

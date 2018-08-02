@@ -9,9 +9,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.login.bean.RegisterBean;
 import com.power.customizingthecloud.utils.SendSmsTimerUtils;
+import com.power.customizingthecloud.utils.Urls;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,7 +62,11 @@ public class TixianFirstActivity extends BaseActivity implements View.OnClickLis
                 finish();
                 break;
             case R.id.getcode_tv:
-                SendSmsTimerUtils.sendSms(getcodeTv, R.color.green, R.color.green);
+                if (TextUtils.isEmpty(phoneEt.getText().toString())){
+                    Toast.makeText(this, "请输入手机号~", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                getCode(phoneEt.getText().toString());
                 break;
             case R.id.jump_tv:
                 if (TextUtils.isEmpty(phoneEt.getText().toString())){
@@ -69,5 +80,31 @@ public class TixianFirstActivity extends BaseActivity implements View.OnClickLis
                 startActivity(new Intent(mContext,TixianThreeActivity.class));
                 break;
         }
+    }
+
+    private void getCode(String phone) {
+        if (TextUtils.isEmpty(phone)) {
+            Toast.makeText(this, "请输入手机号", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("X-Header-Sms", "HxP&sU1YFs78RL&Src@G3YnN5ne3HYvR");
+        HttpParams params = new HttpParams();
+        params.put("mobile", phone);
+        OkGo.<RegisterBean>post(Urls.BASEURL + "api/v2/verifycodes")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new DialogCallback<RegisterBean>(TixianFirstActivity.this, RegisterBean.class) {
+                    @Override
+                    public void onSuccess(Response<RegisterBean> response) {
+                        int code = response.body().getCode();
+                        Toast.makeText(TixianFirstActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        if (code == 0) {
+                        } else if (code == 1) {
+                            SendSmsTimerUtils.sendSms(getcodeTv, R.color.green, R.color.green);
+                        }
+                    }
+                });
     }
 }

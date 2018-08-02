@@ -176,6 +176,11 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                         } else {
                             // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
                             Toast.makeText(GoodConfirmOrderActivity.this, "支付宝支付取消", Toast.LENGTH_SHORT).show();
+                            setResult(1, new Intent());
+                            finish();
+                            Intent intent=new Intent(mContext,MyOrderActivity.class);
+                            intent.putExtra("type","1");
+                            startActivity(intent);
                         }
                     }
                     break;
@@ -228,6 +233,17 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
             finish();
             Intent intent = new Intent(GoodConfirmOrderActivity.this, MyOrderActivity.class);
             intent.putExtra("type", "0");
+            startActivity(intent);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void myEvent1(EventBean eventBean) {
+        if (eventBean.getMsg().equals("weixinpaycancel")) {
+            setResult(1, new Intent());
+            finish();
+            Intent intent = new Intent(GoodConfirmOrderActivity.this, MyOrderActivity.class);
+            intent.putExtra("type", "1");
             startActivity(intent);
         }
     }

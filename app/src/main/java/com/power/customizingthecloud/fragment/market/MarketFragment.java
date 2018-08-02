@@ -145,11 +145,21 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
         EventBus.getDefault().unregister(this);
     }
 
+
+    private void setAfter(){
+        List<CircleHomeBean.DataEntity.FeedEntity> data = mMyAdapter.getData();
+        if (data!=null && data.size()>0){
+            int id = data.get(data.size() - 1).getId();
+            after=id+"";
+        }
+    }
+
     private void initData() {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mActivity, "token", ""));
         HttpParams params = new HttpParams();
         if (isLoadMore) {
+            setAfter();
             params.put("after", after);
         }
         OkGo.<CircleHomeBean>get(Urls.BASEURL + "api/v2/feed")
@@ -181,7 +191,6 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                                 }
                             } else {
                                 if (data.getFeed() != null && data.getFeed().size() > 0) {
-                                    mFeed.addAll(data.getFeed());
                                     mMyAdapter.addData(data.getFeed());
                                     //adapter里面自动调用了notifyItemRangeInserted，会使滑动更平滑
                                 } else {
@@ -230,7 +239,6 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
 
         @Override
         protected void convert(final BaseViewHolder helper, final CircleHomeBean.DataEntity.FeedEntity item) {
-            after = item.getId() + "";
             NineGridTestLayout nineGridlayout = helper.getView(R.id.nine_gridlayout);
             nineGridlayout.setIsShowAll(true);
             final List<CircleHomeBean.DataEntity.FeedEntity.ImagesEntity> images = item.getImages();
@@ -317,7 +325,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
     private void changeLike(final int position) {
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", "Bearer " + SpUtils.getString(mContext, "token", ""));
-        CircleHomeBean.DataEntity.FeedEntity feedEntity = mFeed.get(position);
+        CircleHomeBean.DataEntity.FeedEntity feedEntity = mMyAdapter.getData().get(position);
         final List<CircleHomeBean.DataEntity.FeedEntity.LikesEntity> likes = feedEntity.getLikes();
         final String userid = SpUtils.getString(mContext, "userid", "");
         boolean isLike = false;
@@ -447,7 +455,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                             if (TextUtils.isEmpty(userid)) {
                                 //自己直接评论
                                 if (position == -1) {
-                                    List<CircleHomeBean.DataEntity.FeedEntity.CommentsEntity> comments = mFeed.get(adapterPosition).getComments();
+                                    List<CircleHomeBean.DataEntity.FeedEntity.CommentsEntity> comments = mMyAdapter.getData().get(adapterPosition).getComments();
                                     CircleHomeBean.DataEntity.FeedEntity.CommentsEntity commentsEntity = new CircleHomeBean.DataEntity.FeedEntity.CommentsEntity();
                                     commentsEntity.setBody(content);
                                     commentsEntity.setUser_name(user.getUser_name());
@@ -456,7 +464,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
                                 }
                             } else {
                                 //评论别人说过的话
-                                List<CircleHomeBean.DataEntity.FeedEntity.CommentsEntity> comments = mFeed.get(adapterPosition).getComments();
+                                List<CircleHomeBean.DataEntity.FeedEntity.CommentsEntity> comments = mMyAdapter.getData().get(adapterPosition).getComments();
                                 CircleHomeBean.DataEntity.FeedEntity.CommentsEntity commentsEntity = new CircleHomeBean.DataEntity.FeedEntity.CommentsEntity();
                                 commentsEntity.setBody(content);
                                 commentsEntity.setUser_name(user.getUser_name());

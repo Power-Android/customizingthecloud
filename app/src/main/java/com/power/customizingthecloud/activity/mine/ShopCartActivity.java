@@ -37,6 +37,7 @@ import com.power.customizingthecloud.utils.TUtils;
 import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.SnappingStepper;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,6 +85,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
     private ShopCartAdapter adapter;
     private boolean isEdit;
     private int TYPE = -1;
+    private DecimalFormat df = new DecimalFormat("########0.00");//转换成小数点后2位的格式
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -294,7 +296,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
             final TextView moneyTv = helper.getView(R.id.item_money_tv);
             stepper.setValue(item.getGood_num());
             checkBox.setChecked(item.isChecked());
-            moneyTv.setText("￥" + item.getGood_price() * stepper.getValue());
+            moneyTv.setText("¥" + df.format(item.getGood_price() * stepper.getValue()));
             helper.setText(R.id.item_name_tv, item.getGood_name())
                     .setText(R.id.item_fenlei_tv, "商品分类：" + item.getClass_name())
                     .addOnClickListener(R.id.item_checkBox);
@@ -311,7 +313,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
                         }
                     }
                     item.setGood_num(value);
-                    moneyTv.setText("￥" + item.getGood_price() * value);
+                    moneyTv.setText("¥" + df.format(item.getGood_price() * value));
                     notifyDataSetChanged();
                     jiesuan();
                 }
@@ -468,7 +470,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
                 num += 1;
             }
         }
-        hejiTv.setText("￥" + totalMoney);
+        hejiTv.setText("¥" + df.format(totalMoney));
         jiesuanTv.setText("结算（" + num + "）");
     }
 
@@ -500,7 +502,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
         } else {
             isEditTv.setVisibility(View.VISIBLE);
             hejiTv.setVisibility(View.VISIBLE);
-            hejiTv.setText("￥" + totalMoney);
+            hejiTv.setText("¥" + df.format(totalMoney));
             jiesuanTv.setText("结算（" + list.size() + "）");
         }
         adapter.notifyDataSetChanged();
@@ -512,7 +514,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
         }
         adapter.notifyDataSetChanged();
         totalMoney = 0;
-        hejiTv.setText("￥0.00");
+        hejiTv.setText("¥0.00");
         jiesuanTv.setText("结算（" + 0 + "）");
     }
 

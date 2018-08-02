@@ -52,7 +52,7 @@ public class TixianThreeActivity extends BaseActivity implements View.OnClickLis
                 startActivity(new Intent(mContext,SelectorBankCardActivity.class));
                 break;
             case R.id.tixian_tv:
-                startActivity(new Intent(mContext,FortuneCenterAcitivity.class));
+
                 break;
         }
     }

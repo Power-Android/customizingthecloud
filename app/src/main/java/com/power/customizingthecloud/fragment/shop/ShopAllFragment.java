@@ -222,7 +222,7 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                             });
                             mHot_seckill = data.getHot_seckill();
                             Glide.with(MyApplication.getGloableContext()).load(mHot_seckill.getImage()).into(iv_miaosha);
-                            mTvXianlianggou.setText(mHot_seckill.getPrice()+"元");
+                            mTvXianlianggou.setText(mHot_seckill.getSeckill_price()+"元");
                             tv_goodname.setText(mHot_seckill.getName());
                             long time = mHot_seckill.getSeckill_end_time()*1000L - System.currentTimeMillis();
                             mCvCountdownView.start(time);

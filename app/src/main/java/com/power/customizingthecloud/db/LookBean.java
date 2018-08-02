@@ -7,19 +7,28 @@ import org.litepal.crud.DataSupport;
  */
 
 public class LookBean extends DataSupport{
-    private int myid;
+    private int good_id;
+    private int user_id;
     private String class_name;
     private String name;
     private String image;
     private String price;
     private long time;//用时间戳来控制排列顺序
 
-    public int getId() {
-        return myid;
+    public int getUser_id() {
+        return user_id;
     }
 
-    public void setId(int id) {
-        this.myid = id;
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
+    public int getGood_id() {
+        return good_id;
+    }
+
+    public void setGood_id(int good_id) {
+        this.good_id = good_id;
     }
 
     public String getClass_name() {

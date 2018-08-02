@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -61,6 +64,8 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
     JZVideoPlayerStandard mVideoplayer;
     private BaseDialog mDialog;
     private BaseDialog.Builder mBuilder;
+    @BindView(R.id.webview)
+    WebView mWebview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +106,19 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
                         }
                     }
                 });
+        initWeb();
+        mWebview.loadUrl("http://39.107.91.92:84/wap/videoDetails.html?id="+kc_id);
+    }
+
+    private void initWeb() {
+        WebSettings webSettings = mWebview.getSettings();
+        webSettings.setJavaScriptEnabled(true); // 设置支持javascript脚本
+        webSettings.setUseWideViewPort(true);//关键点
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        //        webSettings.setBuiltInZoomControls(true); // 设置显示缩放按钮
+        //        webSettings.setSupportZoom(true); // 支持缩放
+        mWebview.setWebChromeClient(new WebChromeClient());
     }
 
     @Override

@@ -16,22 +16,79 @@
             android:id="@+id/face_iv"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:src="@drawable/face"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="125dp"/>
+            android:layout_marginTop="15dp"
+            />
         <TextView
-            android:id="@+id/share_tv"
+            android:id="@+id/tv_name"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/face_iv"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/white"/>
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="40dp"
+            android:src="@drawable/share_close"/>
+        <ImageView
+            android:id="@+id/iv_haolvyou"
+            android:layout_width="wrap_content"
+            android:layout_height="180dp"
+            android:layout_below="@id/tv_name"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/share_haolvyou"/>
+        <TextView
+            android:id="@+id/tv_rule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/iv_haolvyou"
+            android:layout_marginRight="100dp"
+            android:text="活动规则>>"
+            android:textColor="@color/text_black"/>
+        <View
+            android:layout_width="70dp"
+            android:layout_height="1dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/tv_rule"
+            android:layout_marginRight="100dp"
+            android:background="@color/text_black"></View>
+        <TextView
+            android:id="@+id/tv_11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_rule"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:text="他赚30，你赚10。他有，你也有哦！"
+            android:textColor="@color/text_black"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_11"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="(一只驴耳朵=1元)"
+            android:textColor="@color/red3"
+        />
+        <TextView
+            android:id="@+id/tv_invite"
+            android:layout_width="180dp"
             android:layout_height="30dp"
-            android:text="我也领养一只"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="100dp"
+            android:background="@drawable/bg_red_button1"
             android:gravity="center"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:textColor="@color/white"
-            android:background="@drawable/bg_red_button1"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"/>
+            android:text="邀请好友"
+            android:textColor="@color/white"/>
     </RelativeLayout>
-
 </LinearLayout>
