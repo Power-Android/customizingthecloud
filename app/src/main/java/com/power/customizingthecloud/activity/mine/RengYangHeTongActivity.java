@@ -13,7 +13,6 @@ import com.power.customizingthecloud.base.BaseActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class RengYangHeTongActivity extends BaseActivity implements View.OnClickListener {
 
@@ -74,13 +73,12 @@ public class RengYangHeTongActivity extends BaseActivity implements View.OnClick
         mWebview.setWebChromeClient(new WebChromeClient());
     }
 
-    @OnClick(R.id.title_back_iv)
-    public void onViewClicked() {
-        finish();
-    }
-
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()){
+            case R.id.title_back_iv:
+                finish();
+                break;
+        }
     }
 }
