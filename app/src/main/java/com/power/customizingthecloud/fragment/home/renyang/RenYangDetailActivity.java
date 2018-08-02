@@ -32,7 +32,6 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
-import com.power.customizingthecloud.activity.mine.MyOrderActivity;
 import com.power.customizingthecloud.activity.mine.MyRenyangCenterActivity;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.AliPayBean;
@@ -186,11 +185,6 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
                         } else {
                             // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
                             Toast.makeText(RenYangDetailActivity.this, "支付宝支付取消", Toast.LENGTH_SHORT).show();
-                            setResult(1, new Intent());
-                            finish();
-                            Intent intent = new Intent(RenYangDetailActivity.this, MyOrderActivity.class);
-                            intent.putExtra("type", "1");
-                            startActivity(intent);
                         }
                     }
                     break;
@@ -342,17 +336,6 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
             setResult(1, new Intent());
             finish();
             Intent intent = new Intent(RenYangDetailActivity.this, MyRenyangCenterActivity.class);
-            startActivity(intent);
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void myEvent1(EventBean eventBean) {
-        if (eventBean.getMsg().equals("weixinpaycancel")) {
-            setResult(1, new Intent());
-            finish();
-            Intent intent = new Intent(RenYangDetailActivity.this, MyOrderActivity.class);
-            intent.putExtra("type", "1");
             startActivity(intent);
         }
     }
