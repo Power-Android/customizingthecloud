@@ -136,18 +136,17 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
         mTvYuanjia.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
         mRecycler.setNestedScrollingEnabled(false);
-        initData();
         initWeb();
+        initData();
     }
 
     private void initWeb() {
         WebSettings webSettings = mWebview.getSettings();
         webSettings.setJavaScriptEnabled(true); // 设置支持javascript脚本
-        webSettings.setUseWideViewPort(true);//关键点
-        webSettings.setLoadWithOverviewMode(true);
-        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        //        webSettings.setBuiltInZoomControls(true); // 设置显示缩放按钮
-        //        webSettings.setSupportZoom(true); // 支持缩放
+        //设置自适应屏幕，两者合用
+//        webSettings.setUseWideViewPort(true); //将图片调整到适合webview的大小
+//        webSettings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
+//        webSettings.setDefaultFontSize(40);
         mWebview.setWebChromeClient(new WebChromeClient());
     }
 
@@ -333,13 +332,25 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
     public void detail() {
         initDetailColor();
         mWebview.setVisibility(View.VISIBLE);
-        mWebview.loadData(mData.getBody(), "text/html;charset=UTF-8", null);
-
-        //        mWebview.setVisibility(View.GONE);
+//        mWebview.loadData(mData.getBody(), "text/html;charset=UTF-8", null);
+        mWebview.loadDataWithBaseURL("",mData.getBody()+js,  "text/html", "UTF-8", null);
         mLvXiangqing.setVisibility(View.GONE);
         mRecycler.setVisibility(View.GONE);
         mLlCanshu.setVisibility(View.GONE);
     }
+
+    //这个是控制加载富文本时候图片适应屏幕
+    private String js = "<script type=\"text/javascript\">"+
+
+            "var imgs = document.getElementsByTagName('img');" + // 找到img标签
+
+            "for(var i = 0; i<imgs.length; i++){" + // 逐个改变
+
+            "imgs[i].style.width = '100%';" + // 宽度改为100%
+
+            "imgs[i].style.height = 'auto';" +
+
+            "}" + "</script>";
 
     private void initDetailColor() {
         mDetailTv.setTextColor(getResources().getColor(R.color.green));

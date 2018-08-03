@@ -214,10 +214,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                                 mineFaceIv.setImageResource(R.drawable.face);
                             }
                             //判断用户有没有邀请码
-                            if (TextUtils.isEmpty(userBean.getData().getInviter_code())){
-                                SpUtils.putBoolean(mContext,"inviter_code",false);
-                            }else {
-                                SpUtils.putBoolean(mContext,"inviter_code",true);
+                            if (TextUtils.isEmpty(userBean.getData().getInviter_code())
+                                    || userBean.getData().getInviter_code().equals("0")) {
+                                SpUtils.putBoolean(mContext, "inviter_code", false);
+                            } else {
+                                SpUtils.putBoolean(mContext, "inviter_code", true);
                             }
                         }
                     }
@@ -322,7 +323,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case R.id.mine_dianpu_rl://我的店铺
                 if (SpUtils.getBoolean(mContext, "inviter_code", false)) {
                     startActivity(new Intent(mContext, KaiDianActivity.class));
-                }else {
+                } else {
                     Toast.makeText(mContext, "您还无法开店，先去认养毛驴吧~", Toast.LENGTH_SHORT).show();
                 }
                 break;

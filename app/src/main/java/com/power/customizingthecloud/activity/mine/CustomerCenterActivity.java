@@ -201,19 +201,22 @@ public class CustomerCenterActivity extends BaseActivity implements View.OnClick
                 finish();
                 break;
             case R.id.shsq_ll://售后申请
-                Intent intent = new Intent(mContext, IssuesListActivity.class);
-                intent.putExtra("class_id",1);
-                startActivity(intent);
+//                Intent intent = new Intent(mContext, IssuesListActivity.class);
+//                intent.putExtra("class_id",1);
+//                startActivity(intent);
+                startActivity(new Intent(mContext, RefundAfterActivity.class));
                 break;
             case R.id.xgdz_ll://修改地址
-                Intent intent1 = new Intent(mContext, IssuesListActivity.class);
-                intent1.putExtra("class_id",2);
-                startActivity(intent1);
+//                Intent intent1 = new Intent(mContext, IssuesListActivity.class);
+//                intent1.putExtra("class_id",2);
+//                startActivity(intent1);
+                startActivity(new Intent(mContext, AddressManagerActivity.class));
                 break;
             case R.id.zhaq_ll://帐号安全
-                Intent intent2 = new Intent(mContext, IssuesListActivity.class);
-                intent2.putExtra("class_id",3);
-                startActivity(intent2);
+//                Intent intent2 = new Intent(mContext, IssuesListActivity.class);
+//                intent2.putExtra("class_id",3);
+//                startActivity(intent2);
+                startActivity(new Intent(mContext, AccountSafeActivity.class));
                 break;
             case R.id.cnxw_ll://猜你想问
                 startActivity(new Intent(mContext, IssuesListActivity.class));

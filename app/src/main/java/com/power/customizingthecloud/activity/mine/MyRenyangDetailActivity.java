@@ -83,7 +83,7 @@ public class MyRenyangDetailActivity extends BaseActivity {
                             RengyangDetailBean.DataBean data = body.getData();
                             Glide.with(mContext).load(data.getImage()).into(picIv);
                             titleTv.setText(data.getTitle());
-                            chengbenTv.setText("养殖成本：￥" + data.getPrice());
+                            chengbenTv.setText("养殖成本：¥" + data.getPrice());
                             nameTv.setText("名称：" + data.getTitle());
                             chandiTv.setText("产地：" + data.getPlace());
                             chushengDateTv.setText("出生日期：" + data.getBirth_date());
