@@ -52,7 +52,7 @@ public class XinShouZhiYinActivity extends BaseActivity implements View.OnClickL
         mTitleBackIv.setVisibility(View.VISIBLE);
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("新手指引");
-        String url = "http://39.107.91.92/html/noviceGuidance.html";
+        String url = "http://39.107.91.92:84/wap/noviceGuidance.html";
         mWebview.setWebChromeClient(new WebChromeClient());
         mWebview.loadUrl(url);
     }
