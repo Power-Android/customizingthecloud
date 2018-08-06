@@ -30,6 +30,7 @@ import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.LatestActivity;
+import com.power.customizingthecloud.activity.mine.WebDetailActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.EventBean;
 import com.power.customizingthecloud.callback.DialogCallback;
@@ -171,9 +172,18 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                             mBanner.setOnBannerListener(new OnBannerListener() {
                                 @Override
                                 public void OnBannerClick(int position) {
-                                    Intent intent = new Intent(mContext, GoodDetailActivity.class);
-                                    intent.putExtra("id", good_slid.get(position).getId() + "");
-                                    startActivity(intent);
+                                    String targe_url = good_slid.get(position).getTarge_url();
+                                    try {
+                                        Integer.parseInt(targe_url);
+                                        Intent intent = new Intent(mContext, GoodDetailActivity.class);
+                                        intent.putExtra("id", good_slid.get(position).getTarge_url());
+                                        startActivity(intent);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Intent intent = new Intent(mContext, WebDetailActivity.class);
+                                        intent.putExtra("url", good_slid.get(position).getTarge_url());
+                                        startActivity(intent);
+                                    }
                                 }
                             });
                             final List<ShopAllBean.DataEntity.NewGoodEntity> new_good = data.getNew_good();

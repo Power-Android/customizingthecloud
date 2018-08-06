@@ -219,7 +219,9 @@ public class CustomerCenterActivity extends BaseActivity implements View.OnClick
                 startActivity(new Intent(mContext, AccountSafeActivity.class));
                 break;
             case R.id.cnxw_ll://猜你想问
-                startActivity(new Intent(mContext, IssuesListActivity.class));
+                Intent intent = new Intent(mContext, IssuesListActivity.class);
+                intent.putExtra("class_id",8);
+                startActivity(intent);
                 break;
             case R.id.zxkf_ll://咨询客服
                 RongIM.getInstance().startConversation(this, Conversation.ConversationType.PRIVATE, "admin_1", "客服牧小童");

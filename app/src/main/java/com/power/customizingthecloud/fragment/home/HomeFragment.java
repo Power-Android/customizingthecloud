@@ -34,6 +34,7 @@ import com.power.customizingthecloud.activity.mine.LatestActivity;
 import com.power.customizingthecloud.activity.mine.LatestDetailActivity;
 import com.power.customizingthecloud.activity.mine.MyDonkeyEarsActivity;
 import com.power.customizingthecloud.activity.mine.MyMessageActivity;
+import com.power.customizingthecloud.activity.mine.WebDetailActivity;
 import com.power.customizingthecloud.base.BaseFragment;
 import com.power.customizingthecloud.bean.BaseBean;
 import com.power.customizingthecloud.bean.EventBean;
@@ -226,6 +227,11 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                                             Intent intent5 = new Intent(mContext, LatestDetailActivity.class);
                                             intent5.putExtra("id", homeslid.get(position).getTarge_url());
                                             startActivity(intent5);
+                                            break;
+                                        default:
+                                            Intent intent6=new Intent(mContext,WebDetailActivity.class);
+                                            intent6.putExtra("url", homeslid.get(position).getTarge_url());
+                                            startActivity(intent6);
                                             break;
                                     }
                                 }
