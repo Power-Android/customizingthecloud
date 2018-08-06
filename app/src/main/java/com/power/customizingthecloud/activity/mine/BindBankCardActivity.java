@@ -10,15 +10,21 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
-import com.power.customizingthecloud.bean.BindCardBean;
+import com.power.customizingthecloud.bean.MyBankListBean;
+import com.power.customizingthecloud.callback.JsonCallback;
+import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -48,55 +54,67 @@ public class BindBankCardActivity extends BaseActivity implements View.OnClickLi
         titleBackIv.setOnClickListener(this);
         titleContentTv.setText("银行卡管理");
         addBankRl.setOnClickListener(this);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setNestedScrollingEnabled(false);
+    }
 
-        List<BindCardBean> list = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            BindCardBean bean = new BindCardBean();
-            bean.setName("中国各种银行");
-            bean.setCardNum("6220 **** **** 666" + i);
-            list.add(bean);
-        }
-        BindCardAdapter adapter = new BindCardAdapter(R.layout.item_bind_cart,list);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(this);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        OkGo.<MyBankListBean>get(Urls.BASEURL + "api/v2/user/bankcard-list")
+                .tag(this)
+                .headers(headers)
+                .execute(new JsonCallback<MyBankListBean>(MyBankListBean.class) {
+                    @Override
+                    public void onSuccess(Response<MyBankListBean> response) {
+                        MyBankListBean body = response.body();
+                        int code = body.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, body.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            List<MyBankListBean.DataEntity> data = body.getData();
+                            BindCardAdapter adapter = new BindCardAdapter(R.layout.item_bind_cart, data);
+                            recyclerView.setAdapter(adapter);
+                            adapter.setOnItemClickListener(BindBankCardActivity.this);
+                        }
+                    }
+                });
     }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        startActivity(new Intent(mContext,BindCardDetailActivity.class));
+        startActivity(new Intent(mContext, BindCardDetailActivity.class));
     }
 
-    private class BindCardAdapter extends BaseQuickAdapter<BindCardBean,BaseViewHolder>{
+    private class BindCardAdapter extends BaseQuickAdapter<MyBankListBean.DataEntity, BaseViewHolder> {
 
-        public BindCardAdapter(@LayoutRes int layoutResId, @Nullable List<BindCardBean> data) {
+        public BindCardAdapter(@LayoutRes int layoutResId, @Nullable List<MyBankListBean.DataEntity> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, BindCardBean item) {
+        protected void convert(BaseViewHolder helper, MyBankListBean.DataEntity item) {
             ImageView picIv = helper.getView(R.id.item_pic_iv);
             TextView nameTv = helper.getView(R.id.item_name_tv);
             TextView typeTv = helper.getView(R.id.item_type_tv);
             TextView numTv = helper.getView(R.id.item_num_tv);
-
-            if (helper.getAdapterPosition() == 1) Glide.with(mContext).load(R.drawable.zhongxin_iv).into(picIv);
-            nameTv.setText(item.getName());
-            numTv.setText(item.getCardNum());
+            Glide.with(mContext).load(item.getImage()).into(picIv);
+            nameTv.setText(item.getBank_name());
+            numTv.setText(item.getBank_card());
         }
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.title_back_iv:
                 finish();
                 break;
             case R.id.add_bank_rl:
-                Intent intent = new Intent(mContext,TixianSecondActivity.class);
-                intent.putExtra("type","addCard");
+                Intent intent = new Intent(mContext, TixianSecondActivity.class);
+                intent.putExtra("type", "addCard");
                 startActivity(intent);
                 break;
         }

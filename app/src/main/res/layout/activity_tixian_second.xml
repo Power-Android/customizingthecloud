@@ -83,8 +83,8 @@
                 android:text="银行："
                 android:textSize="16sp"
                 android:textColor="@color/text_black"/>
-            <EditText
-                android:id="@+id/bank_et"
+            <TextView
+                android:id="@+id/bank_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"

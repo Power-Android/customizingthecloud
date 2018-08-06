@@ -15,9 +15,12 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.bean.BaseBean;
 import com.power.customizingthecloud.callback.DialogCallback;
+import com.power.customizingthecloud.callback.JsonCallback;
 import com.power.customizingthecloud.login.bean.RegisterBean;
 import com.power.customizingthecloud.utils.SendSmsTimerUtils;
+import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.Urls;
 
 import butterknife.BindView;
@@ -57,28 +60,61 @@ public class TixianFirstActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.title_back_iv:
                 finish();
                 break;
             case R.id.getcode_tv:
-                if (TextUtils.isEmpty(phoneEt.getText().toString())){
+                if (TextUtils.isEmpty(phoneEt.getText().toString())) {
                     Toast.makeText(this, "请输入手机号~", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 getCode(phoneEt.getText().toString());
                 break;
             case R.id.jump_tv:
-                if (TextUtils.isEmpty(phoneEt.getText().toString())){
+                if (TextUtils.isEmpty(phoneEt.getText().toString())) {
                     Toast.makeText(this, "请输入手机号~", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (TextUtils.isEmpty(codeEt.getText().toString())){
+                if (TextUtils.isEmpty(codeEt.getText().toString())) {
                     Toast.makeText(this, "请输入验证码~", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                startActivity(new Intent(mContext,TixianThreeActivity.class));
+                checkMobile();
                 break;
+        }
+    }
+
+    private void checkMobile() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("mobile", phoneEt.getText().toString());
+        params.put("code", codeEt.getText().toString());
+        OkGo.<BaseBean>post(Urls.BASEURL + "api/v2/user/tx-mobile")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        BaseBean bankNameBean = response.body();
+                        int code = bankNameBean.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, bankNameBean.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            startActivityForResult(new Intent(mContext, TixianThreeActivity.class),0);
+                        }
+                    }
+                });
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode==1){
+            finish();
         }
     }
 

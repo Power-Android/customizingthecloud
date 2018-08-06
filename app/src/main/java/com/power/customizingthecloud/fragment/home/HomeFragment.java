@@ -31,6 +31,7 @@ import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.activity.mine.FortuneCenterAcitivity;
 import com.power.customizingthecloud.activity.mine.LatestActivity;
+import com.power.customizingthecloud.activity.mine.LatestDetailActivity;
 import com.power.customizingthecloud.activity.mine.MyDonkeyEarsActivity;
 import com.power.customizingthecloud.activity.mine.MyMessageActivity;
 import com.power.customizingthecloud.base.BaseFragment;
@@ -193,11 +194,40 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             mBanner.setOnBannerListener(new OnBannerListener() {
                                 @Override
                                 public void OnBannerClick(int position) {
-                                    int state = homeslid.get(position).getState();
-                                    Intent intent = new Intent(mContext, RenYangDetailActivity.class);
-                                    intent.putExtra("state", state);
-                                    intent.putExtra("id", homeslid.get(position).getId() + "");
-                                    startActivity(intent);
+                                    switch (position) {
+                                        case 1:
+                                            Intent intent = new Intent(mContext, GoodDetailActivity.class);
+                                            intent.putExtra("id", homeslid.get(position).getTarge_url());
+                                            startActivity(intent);
+                                            break;
+                                        case 2:
+                                            Intent intent2 = new Intent(mContext, MiaoShaDetailActivity.class);
+                                            intent2.putExtra("id", homeslid.get(position).getTarge_url());
+                                            startActivity(intent2);
+                                            break;
+                                        case 3:
+                                            Intent intent3 = new Intent(mContext, JianKongActivity.class);
+                                            try {
+                                                int i = Integer.parseInt(homeslid.get(position).getTarge_url());
+                                                intent3.putExtra("class_id", i);
+                                                startActivity(intent3);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            break;
+                                        case 4:
+                                            int state = homeslid.get(position).getState();
+                                            Intent intent4 = new Intent(mContext, RenYangDetailActivity.class);
+                                            intent4.putExtra("state", state);
+                                            intent4.putExtra("id", homeslid.get(position).getTarge_url());
+                                            startActivity(intent4);
+                                            break;
+                                        case 5:
+                                            Intent intent5 = new Intent(mContext, LatestDetailActivity.class);
+                                            intent5.putExtra("id", homeslid.get(position).getTarge_url());
+                                            startActivity(intent5);
+                                            break;
+                                    }
                                 }
                             });
                             mTvToutiao.setText(data.getToutiao().getContent());
@@ -318,7 +348,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             }
                             if (SpUtils.getBoolean(mContext, "inviter_code", false)) {
                                 startActivity(new Intent(mContext, KaiDianActivity.class));
-                            }else {
+                            } else {
                                 showRenYangDialog();
                             }
                             break;
@@ -545,7 +575,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         mDialog.getView(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(mContext,RenYangListActivity.class));
+                startActivity(new Intent(mContext, RenYangListActivity.class));
                 mDialog.dismiss();
             }
         });

@@ -130,11 +130,9 @@ public class ShopMiaoFragment extends BaseFragment {
                                 mBanner.setOnBannerListener(new OnBannerListener() {
                                     @Override
                                     public void OnBannerClick(int position) {
-                                        if (good_slid.get(position).getType() == 1) {
-                                            Intent intent = new Intent(mContext, GoodDetailActivity.class);
-                                            intent.putExtra("id", good_slid.get(position).getId() + "");
-                                            startActivity(intent);
-                                        }
+                                        Intent intent = new Intent(mContext, GoodDetailActivity.class);
+                                        intent.putExtra("id", good_slid.get(position).getId() + "");
+                                        startActivity(intent);
                                     }
                                 });
                             }

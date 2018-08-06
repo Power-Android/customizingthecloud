@@ -1,5 +1,6 @@
 package com.power.customizingthecloud.activity.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,7 +17,6 @@ import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.BaseBean;
 import com.power.customizingthecloud.callback.DialogCallback;
-import com.power.customizingthecloud.login.RegisterActivity;
 import com.power.customizingthecloud.login.bean.RegisterBean;
 import com.power.customizingthecloud.utils.SendSmsTimerUtils;
 import com.power.customizingthecloud.utils.SpUtils;
@@ -65,6 +65,7 @@ public class BindCartActivity extends BaseActivity {
         HttpParams params = new HttpParams();
         params.put("card_name", getIntent().getStringExtra("card_name"));
         params.put("bank_card", getIntent().getStringExtra("bank_card"));
+        params.put("bank_type", getIntent().getStringExtra("bank_type"));
         params.put("card_mobile", phoneEt.getText().toString());
         params.put("code", codeEt.getText().toString());
         OkGo.<BaseBean>post(Urls.BASEURL + "api/v2/user/bind-bankcard")
@@ -77,6 +78,7 @@ public class BindCartActivity extends BaseActivity {
                         BaseBean body = response.body();
                         if (body.getCode() == 1) {
                             TUtils.showShort(mContext, body.getMessage());
+                            setResult(1,new Intent());
                             finish();
                         } else {
                             TUtils.showShort(mContext, body.getMessage());

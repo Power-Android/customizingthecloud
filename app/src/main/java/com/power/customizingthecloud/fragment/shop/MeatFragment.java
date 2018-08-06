@@ -169,11 +169,9 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
                                 mBanner.setOnBannerListener(new OnBannerListener() {
                                     @Override
                                     public void OnBannerClick(int position) {
-                                        if (good_sild.get(position).getType() == 1) {
-                                            Intent intent = new Intent(mContext, GoodDetailActivity.class);
-                                            intent.putExtra("id", good_sild.get(position).getId() + "");
-                                            startActivity(intent);
-                                        }
+                                        Intent intent = new Intent(mContext, GoodDetailActivity.class);
+                                        intent.putExtra("id", good_sild.get(position).getId() + "");
+                                        startActivity(intent);
                                     }
                                 });
                             }
@@ -296,7 +294,7 @@ public class MeatFragment extends BaseFragment implements View.OnClickListener {
             iv_top.setLayoutParams(layoutParams);
             Glide.with(MyApplication.getGloableContext()).load(item.getImage()).into(iv_top);
             helper.setText(R.id.tv_name, item.getName())
-                    .setText(R.id.tv_price, "¥"+item.getPrice());
+                    .setText(R.id.tv_price, "¥" + item.getPrice());
         }
     }
 

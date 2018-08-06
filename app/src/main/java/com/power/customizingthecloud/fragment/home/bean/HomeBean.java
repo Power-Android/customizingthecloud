@@ -127,7 +127,16 @@ public class HomeBean {
             private String targe_url;
             private int id;
             private int state;
+            private int targe_type;
             private String title;
+
+            public int getTarge_type() {
+                return targe_type;
+            }
+
+            public void setTarge_type(int targe_type) {
+                this.targe_type = targe_type;
+            }
 
             public void setImage_url(String image_url) {
                 this.image_url = image_url;
