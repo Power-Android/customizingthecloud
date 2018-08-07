@@ -16,9 +16,12 @@ import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
 import com.power.customizingthecloud.bean.BaseBean;
+import com.power.customizingthecloud.bean.MyBankListBean;
 import com.power.customizingthecloud.callback.JsonCallback;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.Urls;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +46,7 @@ public class TixianThreeActivity extends BaseActivity implements View.OnClickLis
         setContentView(R.layout.activity_tixian_three);
         ButterKnife.bind(this);
         initView();
+        initData();
     }
 
     private void initView() {
@@ -51,6 +55,31 @@ public class TixianThreeActivity extends BaseActivity implements View.OnClickLis
         titleContentTv.setText("提现");
         cardNameTv.setOnClickListener(this);
         tixianTv.setOnClickListener(this);
+    }
+
+    private void initData() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        OkGo.<MyBankListBean>get(Urls.BASEURL + "api/v2/user/bankcard-list")
+                .tag(this)
+                .headers(headers)
+                .execute(new JsonCallback<MyBankListBean>(MyBankListBean.class) {
+                    @Override
+                    public void onSuccess(Response<MyBankListBean> response) {
+                        MyBankListBean body = response.body();
+                        int code = body.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, body.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            List<MyBankListBean.DataEntity> data = body.getData();
+                            if (data!=null && data.size()>0){
+                                String bank_name = data.get(0).getBank_name();
+                                bank_id=data.get(0).getId()+"";
+                                cardNameTv.setText(bank_name);
+                            }
+                        }
+                    }
+                });
     }
 
     @Override

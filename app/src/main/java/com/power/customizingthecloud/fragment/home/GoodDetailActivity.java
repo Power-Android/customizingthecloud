@@ -282,7 +282,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com", "qq分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "1", GoodDetailActivity.this, SHARE_MEDIA.WEIXIN);
+                UMShareActivity.shareWebUrl("http://www.baidu.com", mData.getName(), mData.getThumb(), mData.getClass_name(), GoodDetailActivity.this, SHARE_MEDIA.WEIXIN);
                 //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
@@ -290,7 +290,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com", "qq分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "2", GoodDetailActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                UMShareActivity.shareWebUrl("http://www.baidu.com", mData.getName(), mData.getThumb(), mData.getClass_name(), GoodDetailActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
                 //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
@@ -298,7 +298,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com", "qq分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "3", GoodDetailActivity.this, SHARE_MEDIA.QZONE);
+                UMShareActivity.shareWebUrl("http://www.baidu.com", mData.getName(), mData.getThumb(), mData.getClass_name(), GoodDetailActivity.this, SHARE_MEDIA.QZONE);
                 //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
@@ -306,7 +306,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com", "qq分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "4", GoodDetailActivity.this, SHARE_MEDIA.QQ);
+                UMShareActivity.shareWebUrl("http://www.baidu.com", mData.getName(), mData.getThumb(), mData.getClass_name(), GoodDetailActivity.this, SHARE_MEDIA.QQ);
                 //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
@@ -314,7 +314,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com", "微博分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "5", GoodDetailActivity.this, SHARE_MEDIA.SINA);
+                UMShareActivity.shareWebUrl("http://www.baidu.com", mData.getName(), mData.getThumb(), mData.getClass_name(), GoodDetailActivity.this, SHARE_MEDIA.SINA);
                 //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });

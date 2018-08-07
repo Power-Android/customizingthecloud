@@ -274,6 +274,7 @@
         <activity android:name=".activity.mine.WentiDetailActivity"/>
         <activity android:name=".activity.mine.SelectTuiTypeActiviy"/>
         <activity android:name=".activity.mine.TuiHuoAndMoneyActivity"/>
+        <activity android:name=".activity.mine.CancelBindActivity"/>
         <activity android:name=".fragment.shop.SearchResultActivity"/>
         <!-- 会话界面 -->
         <activity

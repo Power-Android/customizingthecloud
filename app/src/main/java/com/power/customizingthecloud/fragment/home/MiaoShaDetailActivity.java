@@ -290,7 +290,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com", "qq分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "1", MiaoShaDetailActivity.this, SHARE_MEDIA.WEIXIN);
+                UMShareActivity.shareWebUrl("http://www.baidu.com", mData.getName(), mData.getImages().get(0).getImag(), mData.getClass_name(), MiaoShaDetailActivity.this, SHARE_MEDIA.WEIXIN);
                 //                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
@@ -298,7 +298,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com", "qq分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "2", MiaoShaDetailActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                UMShareActivity.shareWebUrl("http://www.baidu.com", mData.getName(), mData.getImages().get(0).getImag(), mData.getClass_name(), MiaoShaDetailActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
                 //                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
@@ -306,7 +306,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com", "qq分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "3", MiaoShaDetailActivity.this, SHARE_MEDIA.QZONE);
+                UMShareActivity.shareWebUrl("http://www.baidu.com", mData.getName(), mData.getImages().get(0).getImag(), mData.getClass_name(), MiaoShaDetailActivity.this, SHARE_MEDIA.QZONE);
                 //                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
@@ -314,7 +314,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com", "qq分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "4", MiaoShaDetailActivity.this, SHARE_MEDIA.QQ);
+                UMShareActivity.shareWebUrl("http://www.baidu.com", mData.getName(), mData.getImages().get(0).getImag(), mData.getClass_name(), MiaoShaDetailActivity.this, SHARE_MEDIA.QQ);
                 //                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
@@ -322,7 +322,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com", "微博分享", "http://img4.imgtn.bdimg.com/it/u=1972873509,2904368741&fm=27&gp=0.jpg", "5", MiaoShaDetailActivity.this, SHARE_MEDIA.SINA);
+                UMShareActivity.shareWebUrl("http://www.baidu.com", mData.getName(), mData.getImages().get(0).getImag(), mData.getClass_name(), MiaoShaDetailActivity.this, SHARE_MEDIA.SINA);
                 //                startActivity(new Intent(MiaoShaDetailActivity.this, ShareSuccessActivity.class));
             }
         });
