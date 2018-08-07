@@ -91,6 +91,15 @@ public class MeatBean {
             private int state;
             private String title;
             private int type;
+            private int targe_type;
+
+            public int getTarge_type() {
+                return targe_type;
+            }
+
+            public void setTarge_type(int targe_type) {
+                this.targe_type = targe_type;
+            }
 
             public void setImage_url(String image_url) {
                 this.image_url = image_url;

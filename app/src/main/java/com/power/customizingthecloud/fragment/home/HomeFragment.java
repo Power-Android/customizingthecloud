@@ -195,7 +195,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
                             mBanner.setOnBannerListener(new OnBannerListener() {
                                 @Override
                                 public void OnBannerClick(int position) {
-                                    switch (position) {
+                                    switch (homeslid.get(position).getTarge_type()) {
                                         case 1:
                                             Intent intent = new Intent(mContext, GoodDetailActivity.class);
                                             intent.putExtra("id", homeslid.get(position).getTarge_url());
