@@ -116,7 +116,7 @@ public class CertificationActivity extends BaseActivity implements View.OnClickL
                                     normal_ll.setVisibility(View.GONE);
                                     shenheingRl.setVisibility(View.VISIBLE);
                                     shenhefiledRl.setVisibility(View.GONE);
-                                }else {
+                                } else {
                                     normal_ll.setVisibility(View.VISIBLE);
                                     shenheingRl.setVisibility(View.GONE);
                                     shenhefiledRl.setVisibility(View.GONE);
@@ -277,7 +277,8 @@ public class CertificationActivity extends BaseActivity implements View.OnClickL
             return;
         }
         if (TextUtils.isEmpty(cutPath)) {
-            Toast.makeText(this, "请选择身份证正面照片~", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "请选择身份证正面照片~", Toast.LENGTH_SHORT).show();
+            shenhe("");
             return;
         }
         //压缩一下再上传，不然拍照基本都四五兆一张图片，上传太耗时间，而且服务器也有限制，不接受3M以上的图片
@@ -294,7 +295,6 @@ public class CertificationActivity extends BaseActivity implements View.OnClickL
                     @Override
                     public void accept(Throwable throwable) {
                         throwable.printStackTrace();
-
                     }
                 });
     }
@@ -334,7 +334,8 @@ public class CertificationActivity extends BaseActivity implements View.OnClickL
         HttpParams params = new HttpParams();
         params.put("true_name", nameTv.getText().toString());
         params.put("user_card", numTv.getText().toString());
-        params.put("card_img", image);
+        if (!TextUtils.isEmpty(image))
+            params.put("card_img", image);
         OkGo.<RegisterBean>post(Urls.BASEURL + "api/v2/user/card")
                 .headers(headers)
                 .params(params)

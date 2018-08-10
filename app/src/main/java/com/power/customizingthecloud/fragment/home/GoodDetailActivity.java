@@ -152,8 +152,8 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
         WebSettings webSettings = mWebview.getSettings();
         webSettings.setJavaScriptEnabled(true); // 设置支持javascript脚本
         //设置自适应屏幕，两者合用
-//        webSettings.setUseWideViewPort(true); //将图片调整到适合webview的大小
-//        webSettings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
+        webSettings.setUseWideViewPort(true); //将图片调整到适合webview的大小
+        webSettings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
 //        webSettings.setDefaultFontSize(40);
         mWebview.setWebChromeClient(new WebChromeClient());
     }

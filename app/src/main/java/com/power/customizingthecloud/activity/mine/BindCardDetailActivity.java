@@ -8,8 +8,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.bean.BaseBean;
+import com.power.customizingthecloud.bean.MyBankDetailBean;
+import com.power.customizingthecloud.callback.JsonCallback;
+import com.power.customizingthecloud.utils.SpUtils;
+import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
 
 import butterknife.BindView;
@@ -64,6 +74,36 @@ public class BindCardDetailActivity extends BaseActivity implements View.OnClick
         setContentView(R.layout.activity_bind_card_detail);
         ButterKnife.bind(this);
         initView();
+        initData();
+    }
+
+    private void initData() {
+        String bank_id = getIntent().getStringExtra("bank_id");
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("bank_id", bank_id);
+        OkGo.<MyBankDetailBean>get(Urls.BASEURL + "api/v2/user/bank-show")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<MyBankDetailBean>(MyBankDetailBean.class) {
+                    @Override
+                    public void onSuccess(Response<MyBankDetailBean> response) {
+                        MyBankDetailBean body = response.body();
+                        int code = body.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, body.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            MyBankDetailBean.DataEntity data = body.getData();
+                            nameTv.setText(data.getBank_name());
+                            Glide.with(mContext).load(data.getImage()).into(picIv);
+                            numTv.setText(data.getBank_card());
+                            dbxeTv.setText("¥" + data.getDanbi());
+                            mrxeTv.setText("¥" + data.getDay());
+                        }
+                    }
+                });
     }
 
     private void initView() {
@@ -125,10 +165,35 @@ public class BindCardDetailActivity extends BaseActivity implements View.OnClick
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                Toast.makeText(mContext, "您已取消绑定", Toast.LENGTH_SHORT).show();
-                finish();
+                unbindCard();
             }
+
         });
+    }
+
+    private void unbindCard() {
+        String bank_id = getIntent().getStringExtra("bank_id");
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Authorization", "Bearer " + SpUtils.getString(this, "token", ""));
+        HttpParams params = new HttpParams();
+        params.put("bank_id", bank_id);
+        OkGo.<BaseBean>get(Urls.BASEURL + "api/v2/user/unbind-bank")
+                .tag(this)
+                .headers(headers)
+                .params(params)
+                .execute(new JsonCallback<BaseBean>(BaseBean.class) {
+                    @Override
+                    public void onSuccess(Response<BaseBean> response) {
+                        BaseBean body = response.body();
+                        int code = body.getCode();
+                        if (code == 0) {
+                            Toast.makeText(mContext, body.getMessage(), Toast.LENGTH_SHORT).show();
+                        } else if (code == 1) {
+                            Toast.makeText(mContext, body.getMessage(), Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    }
+                });
     }
 
     @Override

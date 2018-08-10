@@ -130,7 +130,7 @@ public class CanWeiYuDingAcitivity extends BaseActivity implements View.OnClickL
                                     public void OnBannerClick(int position) {
                                         if (slid.get(position).getType() == 1) {
                                             Intent intent = new Intent(CanWeiYuDingAcitivity.this, ShopDetailActivity.class);
-                                            intent.putExtra("id", slid.get(position).getId() + "");
+                                            intent.putExtra("id", slid.get(position).getTarge_url());
                                             startActivity(intent);
                                         } else {
 

@@ -40,6 +40,7 @@ public class BindBankCardActivity extends BaseActivity implements View.OnClickLi
     ImageView titleBackIv;
     @BindView(R.id.title_content_tv)
     TextView titleContentTv;
+    private List<MyBankListBean.DataEntity> data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,7 @@ public class BindBankCardActivity extends BaseActivity implements View.OnClickLi
                         if (code == 0) {
                             Toast.makeText(mContext, body.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
-                            List<MyBankListBean.DataEntity> data = body.getData();
+                            data = body.getData();
                             BindCardAdapter adapter = new BindCardAdapter(R.layout.item_bind_cart, data);
                             recyclerView.setAdapter(adapter);
                             adapter.setOnItemClickListener(BindBankCardActivity.this);
@@ -85,7 +86,9 @@ public class BindBankCardActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        startActivity(new Intent(mContext, BindCardDetailActivity.class));
+        Intent intent = new Intent(mContext, BindCardDetailActivity.class);
+        intent.putExtra("bank_id",data.get(position).getId()+"");
+        startActivity(intent);
     }
 
     private class BindCardAdapter extends BaseQuickAdapter<MyBankListBean.DataEntity, BaseViewHolder> {
