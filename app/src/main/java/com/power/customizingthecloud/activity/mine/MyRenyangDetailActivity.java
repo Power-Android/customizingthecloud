@@ -48,6 +48,7 @@ public class MyRenyangDetailActivity extends BaseActivity {
     @BindView(R.id.chusheng_date_tv) TextView chushengDateTv;
     @BindView(R.id.renyang_date_tv) TextView renyangDateTv;
     @BindView(R.id.recyclerView) RecyclerView recyclerView;
+    private RengyangDetailBean.DataBean data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +81,7 @@ public class MyRenyangDetailActivity extends BaseActivity {
                     public void onSuccess(Response<RengyangDetailBean> response) {
                         RengyangDetailBean body = response.body();
                         if (body.getCode() == 1){
-                            RengyangDetailBean.DataBean data = body.getData();
+                            data = body.getData();
                             Glide.with(mContext).load(data.getImage()).into(picIv);
                             titleTv.setText(data.getTitle());
                             chengbenTv.setText("养殖成本：¥" + data.getPrice());
@@ -88,7 +89,7 @@ public class MyRenyangDetailActivity extends BaseActivity {
                             chandiTv.setText("产地：" + data.getPlace());
                             chushengDateTv.setText("出生日期：" + data.getBirth_date());
                             renyangDateTv.setText("认养时间：" + data.getPayment_time());
-                            numTv.setText("X "+data.getAmount());
+                            numTv.setText("X "+ data.getAmount());
                             List<String> list = data.getDonkey_images();
                             List<ImgBean> imgBeanList = new ArrayList<>();
                             for (int i = 0; i < list.size(); i++) {
@@ -126,7 +127,9 @@ public class MyRenyangDetailActivity extends BaseActivity {
                 startActivity(new Intent(mContext, JianKongActivity.class));
                 break;
             case R.id.check_hetong_tv:
-                startActivity(new Intent(mContext,RengYangHeTongActivity.class));
+                Intent intent = new Intent(mContext, RengYangHeTongActivity.class);
+                intent.putExtra("url",data.getContract_pdf());
+                startActivity(intent);
                 break;
         }
     }

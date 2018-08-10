@@ -212,7 +212,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="5dp"
         android:textSize="12sp"
-        android:text="填写邀请码，双方都可获得50驴耳朵喔~"
+        android:text="填写邀请码，双方都可获得驴耳朵喔~"
         android:textColor="@color/text_gray"/>
     <LinearLayout
         android:layout_width="wrap_content"

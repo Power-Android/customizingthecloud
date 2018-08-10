@@ -68,7 +68,16 @@ public class RengyangDetailBean implements Serializable {
         private String birth_date;
         private String payment_time;
         private String video_url;
+        private String contract_pdf;
         private List<String> donkey_images;
+
+        public String getContract_pdf() {
+            return contract_pdf;
+        }
+
+        public void setContract_pdf(String contract_pdf) {
+            this.contract_pdf = contract_pdf;
+        }
 
         public int getId() {
             return id;

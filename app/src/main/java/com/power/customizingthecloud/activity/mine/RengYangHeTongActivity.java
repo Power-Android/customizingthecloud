@@ -58,8 +58,7 @@ public class RengYangHeTongActivity extends BaseActivity implements View.OnClick
         titleBackIv.setOnClickListener(this);
         titleContentTv.setText("认养合同");
         initWeb();
-        mWebview.loadUrl("https://openapi.bestsign.info/openapi/v2/dist_v3/index.html#/donePage?developerId=1898248050875302504&data=FZiLywyKAh9Xywiiydj6jIf4psHZmcHXmsb4mYvYncj1ncrJkdiIA250DNeICfKLjIPJnsvYnYjXmsf0ncbWncbXncbWjJXJCNKKC1q5Dh" +
-                "vJpJiXDNu2Bxu3jJXJywGXBwiKrwrJpJjWmsnYpcb5psrWjJXJygaOjIPJnIrXjJXJD2KMANuZjIPJD3mWD2eVyhiUFe9VBx5MFhKGw3KTAh1bnszYkNmUAtjTjMe1zxWOCgLJpJjWncbJEr%3D%3D");
+        mWebview.loadUrl(getIntent().getStringExtra("url"));
     }
 
     private void initWeb() {
