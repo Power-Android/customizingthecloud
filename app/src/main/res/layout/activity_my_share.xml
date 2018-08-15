@@ -65,7 +65,7 @@
             android:layout_below="@id/tv_rule"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
-            android:text="他赚30，你赚10。他有，你也有哦！"
+            android:text="他赚，你也赚。他有，你也有哦！"
             android:textColor="@color/text_black"/>
         <TextView
             android:layout_width="wrap_content"

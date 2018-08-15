@@ -95,7 +95,6 @@ public class UMShareActivity extends BaseActivity {
         @Override
         public void onResult(SHARE_MEDIA platform) {
             //            Log.d("plat", "platform" + platform);
-
             Toast.makeText(MyApplication.getGloableContext(), "分享成功啦", Toast.LENGTH_SHORT).show();
         }
 

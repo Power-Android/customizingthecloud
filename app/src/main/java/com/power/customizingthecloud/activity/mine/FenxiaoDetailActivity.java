@@ -24,8 +24,8 @@ import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.base.UMShareActivity;
 import com.power.customizingthecloud.callback.DialogCallback;
-import com.power.customizingthecloud.fragment.home.ShareSuccessActivity;
 import com.power.customizingthecloud.fragment.home.bean.GoodDetailBean;
 import com.power.customizingthecloud.fragment.shop.GoodConfirmOrderActivity;
 import com.power.customizingthecloud.login.LoginActivity;
@@ -35,6 +35,7 @@ import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
 import com.power.customizingthecloud.view.SnappingStepper;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.youth.banner.Banner;
 
 import java.util.ArrayList;
@@ -216,6 +217,7 @@ public class FenxiaoDetailActivity extends BaseActivity implements View.OnClickL
     }
 
     private void showShareDialog() {
+        final String url="http://39.107.91.92:84/wap/scCommodityDetails.html?goodId="+getIntent().getStringExtra("id")+"&share=0";
         mBuilder = new BaseDialog.Builder(this);
         mDialog = mBuilder.setViewId(R.layout.dialog_share)
                 //设置dialogpadding
@@ -241,35 +243,40 @@ public class FenxiaoDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(FenxiaoDetailActivity.this,ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl(url, mData.getName(), mData.getThumb(), mData.getClass_name(), FenxiaoDetailActivity.this, SHARE_MEDIA.WEIXIN);
+                //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(FenxiaoDetailActivity.this,ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl(url, mData.getName(), mData.getThumb(), mData.getClass_name(), FenxiaoDetailActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(FenxiaoDetailActivity.this,ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl(url, mData.getName(), mData.getThumb(), mData.getClass_name(), FenxiaoDetailActivity.this, SHARE_MEDIA.QZONE);
+                //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(FenxiaoDetailActivity.this,ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl(url, mData.getName(), mData.getThumb(), mData.getClass_name(), FenxiaoDetailActivity.this, SHARE_MEDIA.QQ);
+                //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(FenxiaoDetailActivity.this,ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl(url, mData.getName(), mData.getThumb(), mData.getClass_name(), FenxiaoDetailActivity.this, SHARE_MEDIA.SINA);
+                //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
     }

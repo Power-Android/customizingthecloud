@@ -63,7 +63,6 @@ public class ShareSuccessActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.tv_gohome:
                 finish();
-                removeAllActivitys();
                 startActivity(new Intent(this, MainActivity.class));
                 break;
         }

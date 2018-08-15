@@ -36,7 +36,9 @@
                         android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
+                        android:gravity="left"
+                        android:maxEms="10"
+                        android:layout_centerVertical="true"
                         android:textColor="@color/text_black"
                         android:textSize="17sp"/>
                     <LinearLayout
@@ -54,6 +56,7 @@
                             android:id="@+id/tv_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:singleLine="true"
                             android:text=""
                             android:textColor="@color/red1"
                             android:textSize="16sp"/>
@@ -61,6 +64,7 @@
                             android:id="@+id/tv_unit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:singleLine="true"
                             android:text=""
                             android:textColor="@color/text_black"
                             android:textSize="16sp"/>
@@ -227,16 +231,16 @@
                 </LinearLayout>
                 <WebView
                     android:id="@+id/webview"
-                    android:layout_margin="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"/>
                 <ImageView
                     android:id="@+id/lv_xiangqing"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scaleType="fitXY"
-                    android:visibility="gone"
-                    android:src="@drawable/lv_xiangqing"/>
+                    android:src="@drawable/lv_xiangqing"
+                    android:visibility="gone"/>
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler"
                     android:layout_width="match_parent"

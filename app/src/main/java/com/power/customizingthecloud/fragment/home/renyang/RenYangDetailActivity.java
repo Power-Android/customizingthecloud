@@ -721,12 +721,10 @@ public class RenYangDetailActivity extends BaseActivity implements View.OnClickL
     @OnClick(R.id.des_ll)
     public void des() {
         initDesColor();
-        //        mWebview.setVisibility(View.VISIBLE);
-        mWebview.setVisibility(View.GONE);
+        mWebview.setVisibility(View.VISIBLE);
+        mWebview.loadDataWithBaseURL("", datas.getIntroduce() + js, "text/html", "UTF-8", null);
         mRecycler.setVisibility(View.GONE);
-
-
-        mTvIntro.setVisibility(View.VISIBLE);
+        mTvIntro.setVisibility(View.GONE);
         mLvXiangqing.setVisibility(View.GONE);
     }
 

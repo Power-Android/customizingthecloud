@@ -1,6 +1,5 @@
 package com.power.customizingthecloud.fragment.shop;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -19,11 +18,12 @@ import com.lzy.okgo.model.Response;
 import com.power.customizingthecloud.MyApplication;
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.base.UMShareActivity;
 import com.power.customizingthecloud.bean.VideoDetailBean;
 import com.power.customizingthecloud.callback.DialogCallback;
-import com.power.customizingthecloud.fragment.home.ShareSuccessActivity;
 import com.power.customizingthecloud.utils.Urls;
 import com.power.customizingthecloud.view.BaseDialog;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,6 +66,8 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
     private BaseDialog.Builder mBuilder;
     @BindView(R.id.webview)
     WebView mWebview;
+    private String url;
+    private VideoDetailBean.DataEntity data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +96,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
                         if (code == 0) {
                             Toast.makeText(VideoDetailActivity.this, bean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
-                            VideoDetailBean.DataEntity data = bean.getData();
+                            data = bean.getData();
                             mVideoplayer.setUp(data.getVideo_url(), JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
                             mVideoplayer.thumbImageView.setScaleType(ImageView.ScaleType.FIT_XY);
                             Glide.with(MyApplication.getGloableContext())
@@ -107,7 +109,8 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
                     }
                 });
         initWeb();
-        mWebview.loadUrl("http://39.107.91.92:84/wap/videoDetails.html?id="+kc_id);
+        url="http://39.107.91.92:84/wap/videoDetails.html?id="+kc_id;
+        mWebview.loadUrl(url);
     }
 
     private void initWeb() {
@@ -173,35 +176,40 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(VideoDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl(url, data.getTitle(), data.getImgurl(), data.getBody(), VideoDetailActivity.this, SHARE_MEDIA.WEIXIN);
+                //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_pengyouquan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(VideoDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl(url, data.getTitle(), data.getImgurl(), data.getBody(), VideoDetailActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_zone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(VideoDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl(url, data.getTitle(), data.getImgurl(), data.getBody(), VideoDetailActivity.this, SHARE_MEDIA.QZONE);
+                //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(VideoDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl(url, data.getTitle(), data.getImgurl(), data.getBody(), VideoDetailActivity.this, SHARE_MEDIA.QQ);
+                //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
         mDialog.getView(R.id.tv_sina).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                startActivity(new Intent(VideoDetailActivity.this, ShareSuccessActivity.class));
+                UMShareActivity.shareWebUrl(url, data.getTitle(), data.getImgurl(), data.getBody(), VideoDetailActivity.this, SHARE_MEDIA.SINA);
+                //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
     }

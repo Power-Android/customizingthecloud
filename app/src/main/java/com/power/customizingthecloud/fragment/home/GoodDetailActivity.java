@@ -257,6 +257,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
     }
 
     private void showShareDialog() {
+        final String url="http://39.107.91.92:84/wap/scCommodityDetails.html?goodId="+getIntent().getStringExtra("id")+"&share=0";
         mBuilder = new BaseDialog.Builder(this);
         mDialog = mBuilder.setViewId(R.layout.dialog_share)
                 //设置dialogpadding
@@ -282,7 +283,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com", mData.getName(), mData.getThumb(), mData.getClass_name(), GoodDetailActivity.this, SHARE_MEDIA.WEIXIN);
+                UMShareActivity.shareWebUrl(url, mData.getName(), mData.getThumb(), mData.getClass_name(), GoodDetailActivity.this, SHARE_MEDIA.WEIXIN);
                 //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
@@ -290,7 +291,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com", mData.getName(), mData.getThumb(), mData.getClass_name(), GoodDetailActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
+                UMShareActivity.shareWebUrl(url, mData.getName(), mData.getThumb(), mData.getClass_name(), GoodDetailActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE);
                 //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
@@ -298,7 +299,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com", mData.getName(), mData.getThumb(), mData.getClass_name(), GoodDetailActivity.this, SHARE_MEDIA.QZONE);
+                UMShareActivity.shareWebUrl(url, mData.getName(), mData.getThumb(), mData.getClass_name(), GoodDetailActivity.this, SHARE_MEDIA.QZONE);
                 //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
@@ -306,7 +307,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com", mData.getName(), mData.getThumb(), mData.getClass_name(), GoodDetailActivity.this, SHARE_MEDIA.QQ);
+                UMShareActivity.shareWebUrl(url, mData.getName(), mData.getThumb(), mData.getClass_name(), GoodDetailActivity.this, SHARE_MEDIA.QQ);
                 //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
@@ -314,7 +315,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                UMShareActivity.shareWebUrl("http://www.baidu.com", mData.getName(), mData.getThumb(), mData.getClass_name(), GoodDetailActivity.this, SHARE_MEDIA.SINA);
+                UMShareActivity.shareWebUrl(url, mData.getName(), mData.getThumb(), mData.getClass_name(), GoodDetailActivity.this, SHARE_MEDIA.SINA);
                 //                startActivity(new Intent(GoodDetailActivity.this, ShareSuccessActivity.class));
             }
         });
