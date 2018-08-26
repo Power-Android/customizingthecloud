@@ -120,6 +120,7 @@ public class TixianThreeActivity extends BaseActivity implements View.OnClickLis
         HttpParams params = new HttpParams();
         params.put("bank_id", bank_id);
         params.put("money", moneyEt.getText().toString());
+        params.put("type", getIntent().getStringExtra("type"));
         OkGo.<BaseBean>post(Urls.BASEURL + "api/v2/user/tx-money")
                 .tag(this)
                 .headers(headers)
@@ -128,6 +129,9 @@ public class TixianThreeActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void onSuccess(Response<BaseBean> response) {
                         BaseBean bankNameBean = response.body();
+                        if (bankNameBean==null){
+                            return;
+                        }
                         int code = bankNameBean.getCode();
                         if (code == 0) {
                             Toast.makeText(mContext, bankNameBean.getMessage(), Toast.LENGTH_SHORT).show();

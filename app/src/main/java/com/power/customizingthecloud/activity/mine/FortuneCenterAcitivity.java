@@ -95,7 +95,9 @@ public class FortuneCenterAcitivity extends BaseActivity implements View.OnClick
                 finish();
                 break;
             case R.id.yi_jian_ti_xian_tv:
-                startActivity(new Intent(mContext,TixianFirstActivity.class));
+                Intent intent = new Intent(mContext, TixianFirstActivity.class);
+                intent.putExtra("type","1");
+                startActivity(intent);
                 break;
             case R.id.ren_yang_zong_shu_rl:
                 startActivity(new Intent(mContext,MyRenyangCenterActivity.class));

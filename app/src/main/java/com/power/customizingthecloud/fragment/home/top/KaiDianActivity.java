@@ -212,7 +212,7 @@ public class KaiDianActivity extends BaseActivity implements View.OnClickListene
 
             Glide.with(mContext).load(item.getUser_avatar()).into((ImageView) helper.getView(R.id.item_face_iv));
             helper.setText(R.id.item_name_tv, item.getUser_name())
-                    .setText(R.id.item_gongxian_tv, item.getTotal_price());
+                    .setText(R.id.item_gongxian_tv, item.getTotal_price()+"");
         }
     }
 
@@ -228,7 +228,7 @@ public class KaiDianActivity extends BaseActivity implements View.OnClickListene
             Glide.with(mContext).load(item.getGoods_image()).into((ImageView) helper.getView(R.id.item_face_iv));
             helper.setText(R.id.item_name_tv, item.getGoods_name())
                     .setText(R.id.item_date_tv, item.getCreated_at())
-                    .setText(R.id.item_yongjin_tv, "所获佣金：￥" + item.getDistribution_price());
+                    .setText(R.id.item_yongjin_tv, "所获佣金：¥" + item.getDistribution_price());
         }
     }
 
@@ -245,7 +245,9 @@ public class KaiDianActivity extends BaseActivity implements View.OnClickListene
                 startActivity(new Intent(mContext, FenxiaoListActivoty.class));
                 break;
             case R.id.tixian_tv:
-                startActivity(new Intent(mContext, TixianFirstActivity.class));
+                Intent intent = new Intent(mContext, TixianFirstActivity.class);
+                intent.putExtra("type","2");
+                startActivity(intent);
                 break;
         }
     }

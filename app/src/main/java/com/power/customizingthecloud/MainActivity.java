@@ -1,9 +1,12 @@
 package com.power.customizingthecloud;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -64,6 +67,12 @@ public class MainActivity extends BaseActivity {
     private MarketFragment marketFragment;
     private MineFragment mineFragment;
     private long preTime;
+    private String[] permissions = {
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE
+            , android.Manifest.permission.READ_PHONE_STATE, android.Manifest.permission.CAMERA};
+    private static final int CODE_FOR_WRITE_PERMISSION = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +83,36 @@ public class MainActivity extends BaseActivity {
         addFragments(homeFragment);
         EventBus.getDefault().register(this);
         getRongToken();
+        for (int i = 0; i < permissions.length; i++) {
+            checkPermission(permissions[i]);
+        }
+    }
+
+    private void checkPermission(String permission) {
+        //使用兼容库就无需判断系统版本
+        int hasWriteStoragePermission = ContextCompat.checkSelfPermission(getApplication(),
+                permission);
+        if (hasWriteStoragePermission == PackageManager.PERMISSION_GRANTED) {
+            //拥有权限，执行操作
+        } else {
+            //没有权限，向用户请求权限
+            ActivityCompat.requestPermissions(this, new String[]{permission}, CODE_FOR_WRITE_PERMISSION);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        //通过requestCode来识别是否同一个请求
+        if (requestCode == CODE_FOR_WRITE_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //用户同意，执行操作
+            } else {
+                //用户不同意，向用户展示该权限作用
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    Toast.makeText(this, "应用需要此权限", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 
     private void getRongToken() {

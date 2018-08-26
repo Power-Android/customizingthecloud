@@ -103,7 +103,9 @@ public class TixianFirstActivity extends BaseActivity implements View.OnClickLis
                         if (code == 0) {
                             Toast.makeText(mContext, bankNameBean.getMessage(), Toast.LENGTH_SHORT).show();
                         } else if (code == 1) {
-                            startActivityForResult(new Intent(mContext, TixianThreeActivity.class),0);
+                            Intent intent = new Intent(mContext, TixianThreeActivity.class);
+                            intent.putExtra("type",getIntent().getStringExtra("type"));
+                            startActivityForResult(intent,0);
                         }
                     }
                 });
