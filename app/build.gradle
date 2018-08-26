@@ -6,10 +6,10 @@ android {
     defaultConfig {
         applicationId "com.power.customizingthecloud"
         minSdkVersion 21
-        targetSdkVersion 22
+        targetSdkVersion 26
         multiDexEnabled true
-        versionCode 2
-        versionName "1.1"
+        versionCode 3
+        versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         /*极光推送*/
         ndk {
