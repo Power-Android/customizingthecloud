@@ -109,7 +109,7 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
                     }
                 });
         initWeb();
-        url="http://39.107.91.92:84/wap/videoDetails.html?id="+kc_id;
+        url="http://www.ssydfarm.com/wap/videoDetails.html?id="+kc_id;
         mWebview.loadUrl(url);
     }
 
