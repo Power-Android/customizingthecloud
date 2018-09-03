@@ -54,7 +54,7 @@ public class DianRuleActivity extends BaseActivity implements View.OnClickListen
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("开店规则");
         initWeb();
-        mWebview.loadUrl("http://39.107.91.92:84/wap/protocol.html?id=2");
+        mWebview.loadUrl("http://www.ssydfarm.com/wap/protocol.html?id=2");
     }
 
     private void initWeb() {
