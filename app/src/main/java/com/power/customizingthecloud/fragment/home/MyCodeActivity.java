@@ -109,7 +109,7 @@ public class MyCodeActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void showShareDialog() {
-        final String url="http://39.107.91.92:84/wap/myQRcode.html?share=0&token="+"Bearer " + SpUtils.getString(mContext, "token", "");
+        final String url="http://www.ssydfarm.com/wap/myQRcode.html?share=0&token="+"Bearer " + SpUtils.getString(mContext, "token", "");
         mBuilder = new BaseDialog.Builder(this);
         mDialog = mBuilder.setViewId(R.layout.dialog_share)
                 //设置dialogpadding
