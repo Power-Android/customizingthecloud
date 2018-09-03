@@ -84,7 +84,7 @@ public class ZiXunDetailActivity extends BaseActivity implements View.OnClickLis
                 });*/
 
         initWeb();
-        mWebview.loadUrl("http://39.107.91.92:84/wap/informationDetails.html?type=1&id="+id);
+        mWebview.loadUrl("http://www.ssydfarm.com/wap/informationDetails.html?type=1&id="+id);
     }
 
     private void initWeb() {
