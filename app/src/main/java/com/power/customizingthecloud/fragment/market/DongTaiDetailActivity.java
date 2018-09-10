@@ -14,13 +14,11 @@ import android.text.TextWatcher;
 import android.text.style.StyleSpan;
 import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -309,15 +307,7 @@ public class DongTaiDetailActivity extends BaseActivity implements View.OnClickL
     private void showCommentPopWindow(View view, final String reply_user) {
         if (popWiw == null) {
             popWiw = new BaseSelectPopupWindow(mContext, R.layout.edit_data2);
-            // popWiw.setOpenKeyboard(true);
-            popWiw.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-            popWiw.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-            popWiw.setShowTitle(false);
         }
-        popWiw.setFocusable(true);
-        //        InputMethodManager im = (InputMethodManager)
-        //                mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        //        im.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
         SoftKeyboardTool.showSoftKeyboard(view);
         final EditText edt = (EditText) popWiw.getContentView().findViewById(R.id.edt_content);
         final TextView tv_send = (TextView) popWiw.getContentView().findViewById(R.id.tv_send);
@@ -327,9 +317,9 @@ public class DongTaiDetailActivity extends BaseActivity implements View.OnClickL
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
                 if (TextUtils.isEmpty(edt.getText())) {
-
+                    tv_send.setEnabled(false);
                 } else {
-
+                    tv_send.setEnabled(true);
                 }
             }
 

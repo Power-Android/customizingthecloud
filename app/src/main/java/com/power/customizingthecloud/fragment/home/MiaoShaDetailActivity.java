@@ -265,7 +265,7 @@ public class MiaoShaDetailActivity extends BaseActivity implements View.OnClickL
     }
 
     private void showShareDialog() {
-        final String url="http://39.107.91.92:84/wap/msCommodityDetails.html?goodId="+getIntent().getStringExtra("id")+"&share=0";
+        final String url=Urls.BASEURL+"wap/msCommodityDetails.html?goodId="+getIntent().getStringExtra("id")+"&share=0";
         mBuilder = new BaseDialog.Builder(this);
         mDialog = mBuilder.setViewId(R.layout.dialog_share)
                 //设置dialogpadding

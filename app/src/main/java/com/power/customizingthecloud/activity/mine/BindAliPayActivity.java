@@ -97,9 +97,9 @@ public class BindAliPayActivity extends BaseActivity {
         String url;
         HttpParams params = new HttpParams();
         if (isBind) {
-            url = Urls.BASEURL + "api/v2/user/unbind_alipay";
+            url = Urls.BASEURL + "api/v2/user/unbind-alipay";
         } else {
-            url = Urls.BASEURL + "api/v2/user/bind_alipay";
+            url = Urls.BASEURL + "api/v2/user/bind-alipay";
             String phone = SpUtils.getString(this, "phone", "");
             params.put("bind_alipay", phone);
         }

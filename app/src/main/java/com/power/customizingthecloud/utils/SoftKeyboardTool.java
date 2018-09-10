@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 
 public class SoftKeyboardTool {
     /**
-     * 为EditText设置弹出软键盘
-     *
+     * 弹出软键盘
      * @param view
      */
     public static void showSoftKeyboard(View view) {
@@ -28,8 +26,9 @@ public class SoftKeyboardTool {
     }
 
     //关闭软键盘
-    public static void closeKeyboard(EditText et) {
-        InputMethodManager imm = (InputMethodManager) et.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+    public static void closeKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
+

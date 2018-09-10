@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.utils.Urls;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +33,7 @@ public class ServiceRegulationsActivity extends BaseActivity {
         titleBackIv.setVisibility(View.VISIBLE);
         titleContentTv.setText("使用规则");
         initWeb();
-        mWebview.loadUrl("http://39.107.91.92:84/wap/protocol.html?id=4");
+        mWebview.loadUrl(Urls.BASEURL+"wap/protocol.html?id=4");
     }
 
     private void initWeb() {

@@ -194,6 +194,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
     private String buy_type;
     private String good_quantity;
     private DecimalFormat df = new DecimalFormat("########0.00");//转换成小数点后2位的格式
+    private int user_eselsohr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -252,6 +253,11 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
         mCbEar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (user_eselsohr<mEselsohr_total){
+                    Toast.makeText(GoodConfirmOrderActivity.this, "驴耳朵不足~", Toast.LENGTH_SHORT).show();
+                    mCbEar.setChecked(false);
+                    return;
+                }
                 if (isChecked) {
                     double v = Double.parseDouble(mOrder_good_total) - mDaijinquanprice - mEselsohr_total;
                     mTvTotalprice.setText("¥" + df.format(v));
@@ -353,6 +359,7 @@ public class GoodConfirmOrderActivity extends BaseActivity implements View.OnCli
                                     mTvZongprice2.setText("¥" + df.format(v));
                                     mEselsohr_total = dataObj.optInt("eselsohr_total");
                                     mTvEar.setText("可用" + mEselsohr_total + "驴耳朵抵用" + mEselsohr_total + "元");
+                                    user_eselsohr = dataObj.optInt("user_eselsohr");
                                     if (mCbEar.isChecked()) {
                                         double v1 = Double.parseDouble(mOrder_good_total) - mDaijinquanprice - mEselsohr_total;
                                         mTvTotalprice.setText("¥" + df.format(v1));

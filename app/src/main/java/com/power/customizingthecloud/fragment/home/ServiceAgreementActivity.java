@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.utils.Urls;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,7 +53,7 @@ public class ServiceAgreementActivity extends BaseActivity implements View.OnCli
         mTitleBackIv.setOnClickListener(this);
         mTitleContentTv.setText("服务协议");
         initWeb();
-        mWebview.loadUrl("http://39.107.91.92:84/wap/protocol.html?id=9");
+        mWebview.loadUrl(Urls.BASEURL+"wap/protocol.html?id=9");
     }
 
     private void initWeb() {

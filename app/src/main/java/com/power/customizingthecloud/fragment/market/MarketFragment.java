@@ -17,12 +17,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -131,6 +129,9 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
     public void myEvent(EventBean eventBean) {
         if (eventBean.getMsg().equals("userinfo")) {
             initData();
+        }
+        if (eventBean.getMsg().equals("closeSoftKeyboard")){
+            SoftKeyboardTool.closeKeyboard(mActivity);
         }
     }
 
@@ -374,18 +375,10 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
     private void showCommentPopWindow(final int adapterPosition, final int position, View view, final String feed_id, final String userid) {
         if (popWiw == null) {
             popWiw = new BaseSelectPopupWindow(mContext, R.layout.edit_data);
-            // popWiw.setOpenKeyboard(true);
-            popWiw.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-            popWiw.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-            popWiw.setShowTitle(false);
         }
-        popWiw.setFocusable(true);
-        //        InputMethodManager im = (InputMethodManager)
-        //                mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        //        im.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
         SoftKeyboardTool.showSoftKeyboard(view);
         final ImageView send = (ImageView) popWiw.getContentView().findViewById(R.id.query_iv);
-        final EditText edt = (EditText) popWiw.getContentView().findViewById(R.id.edt_content);
+        final EditText edt =  (EditText) popWiw.getContentView().findViewById(R.id.edt_content);
         final ImageView close = (ImageView) popWiw.getContentView().findViewById(R.id.cancle_iv);
         edt.setInputType(EditorInfo.TYPE_CLASS_TEXT);
         edt.addTextChangedListener(new TextWatcher() {
@@ -425,6 +418,7 @@ public class MarketFragment extends BaseFragment implements View.OnClickListener
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SoftKeyboardTool.closeKeyboard(edt);
                 popWiw.dismiss();
             }
         });

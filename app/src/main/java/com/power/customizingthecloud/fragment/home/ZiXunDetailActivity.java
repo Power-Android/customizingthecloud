@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.utils.Urls;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -84,7 +85,7 @@ public class ZiXunDetailActivity extends BaseActivity implements View.OnClickLis
                 });*/
 
         initWeb();
-        mWebview.loadUrl("http://39.107.91.92:84/wap/informationDetails.html?type=1&id="+id);
+        mWebview.loadUrl(Urls.BASEURL+"wap/informationDetails.html?type=1&id="+id);
     }
 
     private void initWeb() {

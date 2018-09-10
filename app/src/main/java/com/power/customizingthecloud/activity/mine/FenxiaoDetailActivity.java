@@ -162,7 +162,7 @@ public class FenxiaoDetailActivity extends BaseActivity implements View.OnClickL
                             mItemStepper.setMaxValue(mData.getGood_storage());
                             BannerUtils.startBanner(mBanner, imgList);
                             mTvName.setText(mData.getName());
-                            mTvShengyu.setText(mData.getGood_storage() + "");
+                            mTvShengyu.setText(mData.getPrice());
                             String spec_value = mData.getSpec_value();
                             String[] split = spec_value.split("@");
                             for (int i = 0; i < split.length; i++) {
@@ -217,7 +217,7 @@ public class FenxiaoDetailActivity extends BaseActivity implements View.OnClickL
     }
 
     private void showShareDialog() {
-        final String url="http://39.107.91.92:84/wap/scCommodityDetails.html?goodId="+getIntent().getStringExtra("id")+"&share=0";
+        final String url=Urls.BASEURL+"wap/scCommodityDetails.html?goodId="+getIntent().getStringExtra("id")+"&share=0";
         mBuilder = new BaseDialog.Builder(this);
         mDialog = mBuilder.setViewId(R.layout.dialog_share)
                 //设置dialogpadding

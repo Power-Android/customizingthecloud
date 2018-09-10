@@ -257,7 +257,7 @@ public class GoodDetailActivity extends BaseActivity implements View.OnClickList
     }
 
     private void showShareDialog() {
-        final String url="http://39.107.91.92:84/wap/scCommodityDetails.html?goodId="+getIntent().getStringExtra("id")+"&share=0";
+        final String url=Urls.BASEURL+"wap/scCommodityDetails.html?goodId="+getIntent().getStringExtra("id")+"&share=0";
         mBuilder = new BaseDialog.Builder(this);
         mDialog = mBuilder.setViewId(R.layout.dialog_share)
                 //设置dialogpadding

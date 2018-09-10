@@ -11,8 +11,11 @@ import com.bumptech.glide.request.RequestOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.power.customizingthecloud.R;
+import com.power.customizingthecloud.bean.EventBean;
 import com.power.customizingthecloud.fragment.market.ViewPagerActivity;
 import com.power.customizingthecloud.utils.ImageLoaderUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.Serializable;
 import java.util.List;
@@ -25,7 +28,7 @@ import java.util.List;
 public class NineGridTestLayout extends NineGridLayout {
 
     protected static final int MAX_W_H_RATIO = 3;
-    private RequestOptions options=new RequestOptions();
+    private RequestOptions options = new RequestOptions();
 
     public NineGridTestLayout(Context context) {
         super(context);
@@ -86,8 +89,9 @@ public class NineGridTestLayout extends NineGridLayout {
     }
 
     @Override
-    protected void onClickImage(int i, String url, List<String> urlList) {
+    protected void onClickImage(RatioImageView imageView, int i, String url, List<String> urlList) {
         //        Toast.makeText(mContext, "点击了图片" + url, Toast.LENGTH_SHORT).show();
+        EventBus.getDefault().postSticky(new EventBean("closeSoftKeyboard"));
         Intent intent = new Intent(mContext, ViewPagerActivity.class);
         intent.putExtra("pics", (Serializable) urlList);
         intent.putExtra("position", i);

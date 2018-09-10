@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.utils.Urls;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,7 +55,7 @@ public class ShareRuleActivity extends BaseActivity implements View.OnClickListe
         titleBackIv.setOnClickListener(this);
         titleContentTv.setText("分享规则");
         initWeb();
-        mWebview.loadUrl("http://39.107.91.92:84/wap/protocol.html?id=5");
+        mWebview.loadUrl(Urls.BASEURL+"wap/protocol.html?id=5");
     }
 
     private void initWeb() {

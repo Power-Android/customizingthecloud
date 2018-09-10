@@ -175,18 +175,18 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                             mBanner.setOnBannerListener(new OnBannerListener() {
                                 @Override
                                 public void OnBannerClick(int position) {
-//                                    String targe_url = good_slid.get(position).getTarge_url();
-//                                    try {
-//                                        Integer.parseInt(targe_url);
-//                                        Intent intent = new Intent(mContext, GoodDetailActivity.class);
-//                                        intent.putExtra("id", good_slid.get(position).getTarge_url());
-//                                        startActivity(intent);
-//                                    } catch (Exception e) {
-//                                        e.printStackTrace();
-//                                        Intent intent = new Intent(mContext, WebDetailActivity.class);
-//                                        intent.putExtra("url", good_slid.get(position).getTarge_url());
-//                                        startActivity(intent);
-//                                    }
+                                    //                                    String targe_url = good_slid.get(position).getTarge_url();
+                                    //                                    try {
+                                    //                                        Integer.parseInt(targe_url);
+                                    //                                        Intent intent = new Intent(mContext, GoodDetailActivity.class);
+                                    //                                        intent.putExtra("id", good_slid.get(position).getTarge_url());
+                                    //                                        startActivity(intent);
+                                    //                                    } catch (Exception e) {
+                                    //                                        e.printStackTrace();
+                                    //                                        Intent intent = new Intent(mContext, WebDetailActivity.class);
+                                    //                                        intent.putExtra("url", good_slid.get(position).getTarge_url());
+                                    //                                        startActivity(intent);
+                                    //                                    }
                                     switch (good_slid.get(position).getTarge_type()) {
                                         case 1:
                                             Intent intent = new Intent(mContext, GoodDetailActivity.class);
@@ -221,7 +221,7 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                                             startActivity(intent5);
                                             break;
                                         default:
-                                            Intent intent6=new Intent(mContext,WebDetailActivity.class);
+                                            Intent intent6 = new Intent(mContext, WebDetailActivity.class);
                                             intent6.putExtra("url", good_slid.get(position).getTarge_url());
                                             startActivity(intent6);
                                             break;
@@ -271,11 +271,19 @@ public class ShopAllFragment extends BaseFragment implements View.OnClickListene
                                 }
                             });
                             mHot_seckill = data.getHot_seckill();
-                            Glide.with(MyApplication.getGloableContext()).load(mHot_seckill.getImage()).into(iv_miaosha);
-                            mTvXianlianggou.setText(mHot_seckill.getSeckill_price() + "元");
-                            tv_goodname.setText(mHot_seckill.getName());
-                            long time = mHot_seckill.getSeckill_end_time() * 1000L - System.currentTimeMillis();
-                            mCvCountdownView.start(time);
+                            if (mHot_seckill == null) {
+                                ll_miaosha.setClickable(false);
+                            } else {
+                                Glide.with(MyApplication.getGloableContext()).load(mHot_seckill.getImage()).into(iv_miaosha);
+                                if (mHot_seckill.getSeckill_price() != null) {
+                                    mTvXianlianggou.setText(mHot_seckill.getSeckill_price() + "元");
+                                }else {
+                                    ll_miaosha.setClickable(false);
+                                }
+                                tv_goodname.setText(mHot_seckill.getName());
+                                long time = mHot_seckill.getSeckill_end_time() * 1000L - System.currentTimeMillis();
+                                mCvCountdownView.start(time);
+                            }
                         }
                     }
                 });

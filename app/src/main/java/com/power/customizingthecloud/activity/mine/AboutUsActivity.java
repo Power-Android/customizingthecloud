@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.power.customizingthecloud.R;
 import com.power.customizingthecloud.base.BaseActivity;
+import com.power.customizingthecloud.utils.Urls;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,7 +48,7 @@ public class AboutUsActivity extends BaseActivity implements View.OnClickListene
         titleBackIv.setOnClickListener(this);
         titleContentTv.setText("关于我们");
         initWeb();
-        mWebview.loadUrl("http://39.107.91.92:84/wap/protocol.html?id=3");
+        mWebview.loadUrl(Urls.BASEURL+"wap/protocol.html?id=3");
     }
 
     @Override

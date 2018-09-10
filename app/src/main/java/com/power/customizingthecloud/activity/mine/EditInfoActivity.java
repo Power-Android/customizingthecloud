@@ -1,6 +1,5 @@
 package com.power.customizingthecloud.activity.mine;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,12 +8,9 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +38,7 @@ import com.power.customizingthecloud.bean.ProviceBean;
 import com.power.customizingthecloud.bean.QuBean;
 import com.power.customizingthecloud.callback.DialogCallback;
 import com.power.customizingthecloud.callback.JsonCallback;
+import com.power.customizingthecloud.utils.SoftKeyboardTool;
 import com.power.customizingthecloud.utils.SpUtils;
 import com.power.customizingthecloud.utils.TUtils;
 import com.power.customizingthecloud.utils.Urls;
@@ -443,20 +440,11 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
     private void showNickName(final String type) {
         if (popWiw == null) {
             popWiw = new BaseSelectPopupWindow(this, R.layout.edit_data);
-            // popWiw.setOpenKeyboard(true);
-            popWiw.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-
-            popWiw.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-            popWiw.setShowTitle(false);
         }
-        popWiw.setFocusable(true);
-        InputMethodManager im = (InputMethodManager)
-                getSystemService(Context.INPUT_METHOD_SERVICE);
-        im.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-
         final ImageView send = (ImageView) popWiw.getContentView().findViewById(R.id.query_iv);
         final EditText edt = (EditText) popWiw.getContentView().findViewById(R.id.edt_content);
         final ImageView close = (ImageView) popWiw.getContentView().findViewById(R.id.cancle_iv);
+        SoftKeyboardTool.showSoftKeyboard(edt);
         if (type.equals("name")) {
             if (!TextUtils.isEmpty(edt.getText().toString())) {
                 edt.getText().clear();
@@ -471,7 +459,6 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
             edt.setHint("请输入年龄");
             edt.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
         }
-        //        edt.setImeOptions(EditorInfo.IME_ACTION_SEND);
         edt.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -522,6 +509,7 @@ public class EditInfoActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onClick(View view) {
                 popWiw.dismiss();
+                SoftKeyboardTool.closeKeyboard(edt);
             }
         });
 
